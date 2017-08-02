@@ -2,10 +2,10 @@ import firebase from 'firebase'
 
 export const initFirebase = () => {
   firebase.initializeApp({
-    apiKey: "AIzaSyBU4MlvJS5fn2RxoNuawOPf8RXSwE1-ZBs",
-    authDomain: "auth-7aab8.firebaseapp.com",
-    databaseURL: "https://auth-7aab8.firebaseio.com",
-    projectId: "auth-7aab8",
+    apiKey: "AIzaSyCHXizDBRTQ_0JpB5-k8FzCRu3UWgCNnxI",
+    authDomain: "plandy-91a56.firebaseapp.com",
+    databaseURL: "https://plandy-91a56.firebaseio.com",
+    projectId: "plandy-91a56",
   })
   return {type: 'FIREBASE_INITIALIZED'}
 }

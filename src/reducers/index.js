@@ -1,16 +1,17 @@
 import {combineReducers} from 'redux';
+import {simpleReducer} from './reducerHelpers';
+import auth from './auth'
+import core from './core'
+import clientDate from './clientDate'
+import firebaseListeners from './firebaseListeners'
 
 
 const rootReducer = combineReducers({
-	data: (state = 0, action) => {
-		if(action.type === 'CHANGE_STATE') return action.payload
-		return('dataBro')
-	},
-	fake: (state = 0, action) => { return('fakeBro')},
-	firebaseInitialized: (state = false, action) => {
-		if(action.type === 'FIREBASE_INITIALIZED') return true
-		return state
-	}
+	firebaseInitialized: simpleReducer({'FIREBASE_INITIALIZED': true}),
+	core,
+	auth,
+	clientDate,
+	firebaseListeners
 });
 
 export default rootReducer
