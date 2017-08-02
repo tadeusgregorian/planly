@@ -1,0 +1,29 @@
+.App {
+  text-align: center; }
+  .App fb {
+    display: flex; }
+
+.App-logo {
+  height: 80px; }
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white; }
+
+.App-intro {
+  font-size: large; }
+
+.sbutton {
+  border: 1px solid grey;
+  border-radius: 4px;
+  background-color: lightgrey;
+  color: grey;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  flex: 0 1 auto;
+  padding: 6px;
+  margin: 10px;
+  cursor: pointer; }

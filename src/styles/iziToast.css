@@ -1,0 +1,6 @@
+.iziToast {
+  min-height: initial !important;
+  font-weight: 300 !important; }
+
+.iziToast > .iziToast-body > strong {
+  font-weight: 400 !important; }
