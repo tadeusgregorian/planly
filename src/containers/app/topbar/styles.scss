@@ -1,11 +1,10 @@
 .topbarMain{
   width: 100%;
   height: 46px;
-  background-color: lightgrey;
-  border-bottom: 1px solid grey;
+  background-color: #00a3ef;
   padding: 0px;
   align-items: center;
-
+  color: white;
 
   .side{
     flex: 1;
@@ -21,8 +20,7 @@
     justify-content: flex-end;
     .logoutIcon{
       cursor: pointer;
+      color: white;
     }
   }
-
-
 }

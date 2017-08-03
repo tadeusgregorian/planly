@@ -17,9 +17,10 @@ class AdminpanelUsers extends React.Component {
 
 	render() {
 		return (
-			<div className="edit-users-content">
-				<fb className="newUserButtonWrapper">
-					<SButton label='Nutzer hinzufügen' onClick={() => this.openAddEditUserPopup()} />
+			<div className="adminpanelUsers">
+				<fb className="headline">
+					<fb className="headlineText">Mitarbeiter verwalten</fb>
+					<SButton slick label='neuer Mitarbeiter' onClick={() => this.openAddEditUserPopup()} />
 				</fb>
 				{this.props.users.map(user => (
 					<UserElement

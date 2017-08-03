@@ -1,13 +1,18 @@
-.adminpanel-body .edit-users-content {
-  padding: 12px;
+.adminpanelUsers {
   width: 100%;
   flex-direction: column;
   display: flex; }
-  .adminpanel-body .edit-users-content .newUserButtonWrapper {
-    padding: 6px 6px 6px 18px;
+  .adminpanelUsers .headline {
     font-size: 16px;
     border-bottom: 1px solid rgba(211, 211, 211, 0.68);
-    padding: 5px 20px 5px 5px; }
-    .adminpanel-body .edit-users-content .newUserButtonWrapper .newUserButton {
+    padding: 12px;
+    padding-left: 28px;
+    justify-content: space-between; }
+    .adminpanelUsers .headline .headlineText {
+      color: #009be4;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px; }
+    .adminpanelUsers .headline .newUserButton {
       margin-bottom: 4px;
       margin-left: -4px; }

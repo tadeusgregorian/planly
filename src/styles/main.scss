@@ -17,8 +17,14 @@ span {
 	margin: 0;
 }
 
+html{
+  height: 100%;
+}
+
 body{
+  height: 100%;
   margin: 0px;
+  background-color: #f6f6f6;
 }
 
 fb{
@@ -31,4 +37,8 @@ fb{
   .Container_Main_Inside{
     flex-direction: column;
   }
+}
+
+a{
+  text-decoration: none !important;
 }

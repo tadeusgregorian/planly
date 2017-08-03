@@ -1,7 +1,7 @@
 import React from 'react'
 import './styles.css'
 
-export default ({label, disabled, onClick, color, sStyle, right, left, tabInd}) => {
+export default ({label, disabled, onClick, color, sStyle, right, left, tabInd, slick}) => {
 	const colorStyle = {
 		color: 'white',
 		backgroundColor: color,
@@ -14,12 +14,24 @@ export default ({label, disabled, onClick, color, sStyle, right, left, tabInd}) 
     border: 'none',
 	}
 
+	const slickStyle = {
+		fontSize: 15,
+		height: 36,
+		backgroundColor: '#009be4',
+		borderColor: '#009be4',
+		color: 'white',
+		fontWeight: 400,
+		letterSpacing: '0.5',
+		textTransform: 'none'
+	}
+
 	const getStyle = () => {
 		let styleObj = {}
 
 		// styleObj is modified in this order.
-		if(color) 	 styleObj = { ...colorStyle }
-		if(disabled) styleObj = { ...disabledStyle }
+		if(slick)  	 styleObj = { ...slickStyle }
+		if(color) 	 styleObj = { ...styleObj, colorStyle }
+		if(disabled) styleObj = { ...styleObj, disabledStyle }
 		if(sStyle)   styleObj = { ...styleObj, ...sStyle}
 		if(left) styleObj.marginRight = 'auto'
 		if(right) styleObj.marginLeft = 'auto'
