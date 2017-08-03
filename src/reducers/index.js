@@ -4,6 +4,7 @@ import auth from './auth'
 import core from './core'
 import clientDate from './clientDate'
 import firebaseListeners from './firebaseListeners'
+import ui from './ui'
 
 
 const rootReducer = combineReducers({
@@ -11,7 +12,8 @@ const rootReducer = combineReducers({
 	core,
 	auth,
 	clientDate,
-	firebaseListeners
+	firebaseListeners,
+	ui
 });
 
 export default rootReducer

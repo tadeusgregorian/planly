@@ -47,7 +47,7 @@ export const createDataStatusReducer = (target) => {
 
 // this simple-reducer-creator takes an obj like {MY_ACTION_TYPE: 3232, MY_ACTION_TYPE2: 'PAYLOAD', default: 'defVal'}
 // if you give a key with 'default' it will take the value of that , for example: {default: myDevaultValue} otherwise default is null.
-// if there is a value 'PAYLOAD', it will assume that the action has got a payload and take that, like in the example.
+// if there is a value 'PAYLOAD', it will assume that the action has a payload and take that, like in the example.
 export const simpleReducer = (actionCases) => {
 	const defaultState = actionCases.hasOwnProperty('default') ? actionCases.default : null
 	return (state = defaultState , action) => {

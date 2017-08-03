@@ -13,7 +13,8 @@
   .adminpanel-body .userListItem .userName {
     flex: 1 0 auto;
     padding: 6px;
-    font-size: 17px; }
+    font-size: 17px;
+    align-items: center; }
   .adminpanel-body .userListItem .airplane {
     border-radius: 4px;
     width: 40px;

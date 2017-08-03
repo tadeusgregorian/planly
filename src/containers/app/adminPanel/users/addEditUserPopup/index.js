@@ -82,9 +82,6 @@ export default class AddEditUserPopup extends Component {
 	onNameInputChanged(input) {
 		this.setState({name: input.target.value})
 	}
-	onInitialsInputChanged(input) {
-		this.setState({nameInitials: input.target.value})
-	}
 
 	branchChipClicked = (bID) => {
 		const currentBs = this.state.branches
@@ -101,17 +98,13 @@ export default class AddEditUserPopup extends Component {
 
 	render() {
 		return (
-				<SModal.Main title='Neuer Benutzer' onClose={this.props.close}>
+				<SModal.Main title='Neuer Benutzer' onClose={this.props.onClose}>
 					<SModal.Body>
 				<fb className="addEditUserPopup">
 					{ this.state.userinputMissingText ? <fb className="userinputMissingText">{this.state.userinputMissingText}</fb> : null}
 					<fb className="inputItemWrapper">
 						<fb className="inputDescription" >Benutzername:</fb>
 						<input className="nameInputField" type="text" value={this.state.name} autoFocus onChange={this.onNameInputChanged.bind(this)}/>
-					</fb>
-					<fb className="inputItemWrapper">
-						<fb className="inputDescription">Namenskürzel:</fb>
-						<input className="initialsInputField" type="text" placeholder="4 Stellig" value={this.state.nameInitials} onChange={this.onInitialsInputChanged.bind(this)} maxLength="4" />
 					</fb>
 					{	this.props.branches.length > 1 &&
 						<fb className="inputItemWrapper">
@@ -136,6 +129,12 @@ export default class AddEditUserPopup extends Component {
 				</fb>
 			</SModal.Body>
 			<SModal.Footer>
+				<SButton
+					left
+					label='open fake'
+					onClick={this.props.openAnother}
+					color={'red'}
+				/>
 				<SButton
 					right
 					label={this.props.editing ? 'speichern' : 'Nurtzer Erstellen'}

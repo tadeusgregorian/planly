@@ -1,5 +1,6 @@
 .adminpanel {
-  justify-content: center; }
+  justify-content: center;
+  width: 100%; }
   .adminpanel .adminpanel-body {
     width: 100%;
     max-width: 990px;

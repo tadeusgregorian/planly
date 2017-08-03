@@ -1,6 +1,5 @@
 import React from 'react'
 import cN from 'classnames';
-import _ from 'lodash';
 import './styles.css'
 
 export default ({chips, selectedChips, chipClicked}) => {
@@ -10,12 +9,12 @@ export default ({chips, selectedChips, chipClicked}) => {
   return(
     <fb className="chipBarMain">
       {chips.map(g => {
-        let isSelected = (selectedChips.indexOf(g.ID) >= 0)
+        let isSelected = (selectedChips.indexOf(g.id) >= 0)
         return (
           <fb
-            key={g.ID}
+            key={g.id}
             className={cN({"chip": true, "selected": isSelected})}
-            onClick={() => chipClicked(g.ID)}>
+            onClick={() => chipClicked(g.id)}>
             {g.name}
           </fb>
         )

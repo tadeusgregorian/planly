@@ -4,6 +4,7 @@ import { Route, BrowserRouter as Router, Redirect } from 'react-router-dom'
 import { initFirebase } from 'actions'
 import { setAuthStateListener } from 'actions/listeners'
 import { initIziToast } from 'helpers'
+import ModalsManager from 'components/unique/modalsManager'
 import Login from './login'
 import Register from './register'
 import App from './app'
@@ -17,7 +18,7 @@ class Container extends Component {
   }
 
   render() {
-    const { authState } = this.props
+    const { authState, modals } = this.props
     const loggedIn 					=  authState === 'loggedIn'
     const isAuthenticating 	=  authState === 'isAuthenticating'
 
@@ -25,12 +26,15 @@ class Container extends Component {
 
     return (
       <Router>
-        <div className="Container_Main">
+        <fb className="Container_Main">
+          <fb className='Container_Main_Inside'>
             <Route path='/' exact   render={() => loggedIn ?  <Redirect to="/app" /> : <Redirect to="/login" /> } />
             <Route path='/login' 	  render={() => loggedIn ?  <Redirect to="/app" /> : <Login /> } />
             <Route path='/app'      render={() => loggedIn ?  <App /> : <Redirect to="/login" /> } />
             <Route path='/register' component={Register} />
-        </div>
+          </fb>
+          <ModalsManager />
+        </fb>
       </Router>
     )
   }
@@ -44,7 +48,8 @@ const mapDispatchToProps = {
 const mapStateToProps = (state) => ({
   firebaseInitialized: state.firebaseInitialized,
 	firebaseAuthListener: state.firebaseListeners.firebaseAuth,
-  authState: state.auth.authState
+  authState: state.auth.authState,
+  modals: state.ui.modals
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Container)

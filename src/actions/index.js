@@ -1,4 +1,4 @@
 export * from './auth'
-export * from './init'
+export * from './firebaseInit'
 export * from './register'
 export * from './users'
