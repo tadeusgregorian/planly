@@ -1,0 +1,28 @@
+.topbarMain{
+  width: 100%;
+  height: 46px;
+  background-color: lightgrey;
+  border-bottom: 1px solid grey;
+  padding: 0px;
+  align-items: center;
+
+
+  .side{
+    flex: 1;
+    height: 100%;
+    align-items: center;
+  }
+
+  .left{
+    margin-left: 60px;
+  }
+
+  .right{
+    justify-content: flex-end;
+    .logoutIcon{
+      cursor: pointer;
+    }
+  }
+
+
+}

@@ -1,0 +1,93 @@
+.adminpanel{
+	justify-content: center;
+
+	.adminpanel-body {
+		width: 100%;
+		max-width: 990px;
+		flex-direction: row;
+		justify-content: center;
+		display: flex;
+		flex: 1 0 auto;
+		margin-top: 30px;
+		margin-bottom: 20px;
+
+		button{
+			margin-bottom: 0px;
+		}
+
+		.adminpanel-navbar {
+			width: 250px;
+			border-right: 1px solid lightgrey;
+			display: flex;
+			flex: 0 0 auto;
+			flex-direction: column;
+
+			.selected {
+				background-color: #f94676;
+				color: white !important;
+			}
+
+			.navbar-item {
+				font-size: 14px;
+		    border-bottom: 1px solid rgba(211, 211, 211, 0.55);
+		    text-decoration: none;
+		    color: #676767;
+		    height: 44px;
+		    justify-content: center;
+		    align-items: center;
+		    display: -webkit-box;
+		    display: -ms-flexbox;
+		    display: flex;
+		    font-weight: 500;
+		    cursor: pointer;
+		    letter-spacing: 1px;
+		    text-transform: uppercase;
+
+				&:hover {
+					//background-color: rgba(0, 0, 0, 0.04);
+					padding-left: 6px;
+					border-left: 2px solid #f94676;
+				}
+			}
+		}
+
+		.adminPanelContent {
+			overflow-y: scroll;
+			width: 100%;
+
+			.inline-input-wrapper {
+				margin-bottom: 4px;
+			}
+
+			.newUserRow {
+				margin-bottom: 10px;
+				border-bottom: 1px solid lightgrey;
+				padding-bottom: 10px;
+			}
+		}
+
+		.head {
+			min-width: 180px;
+			flex: 1 0 auto;
+		}
+
+	}
+
+	.adminpanel {
+		#topbar {
+		    display: flex;
+		    flex: 0 0 auto;
+				box-shadow: 0 0px 6px 2px rgba(0, 0, 0, 0.25);
+		}
+		button {
+			height: 38px !important;
+		}
+	}
+}
+
+.edgebox{
+	background-color: #fff;
+	border: 1px solid;
+	border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+	border-radius: 3px;
+}

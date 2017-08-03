@@ -1,0 +1,13 @@
+.topbarButton{
+  padding: 0px 10px;
+  justify-content: center;
+  align-items: center;
+  color: #525252;
+  border-left: 1px solid grey;
+  height: 100%;
+  cursor: pointer;
+
+  &:last-child{
+    border-right: 1px solid grey;
+  }
+}

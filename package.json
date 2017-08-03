@@ -3,20 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "react": "^15.6.1",
-    "react-dom": "^15.5.4",
     "classnames": "^2.2.5",
     "firebase": "^3.2.1",
+    "izitoast": "^1.1.1",
     "lodash": "^4.15.0",
     "moment": "^2.14.1",
     "normalize.css": "^7.0.0",
+    "react": "^15.6.1",
+    "react-dom": "^15.5.4",
+    "react-modal": "^2.2.2",
     "react-redux": "^5.0.1",
     "react-router-dom": "^4.1.1",
     "redux": "^3.5.2",
     "redux-devtools-extension": "^2.13.2",
     "redux-thunk": "^2.1.0",
-    "reselect": "^3.0.0",
-    "izitoast": "^1.1.1"
+    "reselect": "^3.0.0"
   },
   "devDependencies": {
     "node-sass-chokidar": "0.0.1",

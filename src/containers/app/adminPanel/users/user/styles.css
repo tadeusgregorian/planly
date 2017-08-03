@@ -1,0 +1,47 @@
+.adminpanel-body .userListItem {
+  display: flex;
+  padding: 6px 6px 6px 18px;
+  font-size: 16px;
+  border-bottom: 1px solid rgba(211, 211, 211, 0.68);
+  padding: 5px 20px 5px 5px; }
+  .adminpanel-body .userListItem .color-box {
+    height: 20px;
+    width: 20px;
+    flex: 0 0 auto;
+    border-radius: 3px;
+    margin: 9px; }
+  .adminpanel-body .userListItem .userName {
+    flex: 1 0 auto;
+    padding: 6px;
+    font-size: 17px; }
+  .adminpanel-body .userListItem .airplane {
+    border-radius: 4px;
+    width: 40px;
+    height: 38px;
+    flex: 0 0 auto;
+    justify-content: center;
+    margin-right: 8px;
+    font-size: 20px;
+    background-color: #e8e8e8;
+    color: #6f6f6f;
+    cursor: pointer; }
+  .adminpanel-body .userListItem .editUserButton {
+    margin-right: 8px; }
+  .adminpanel-body .userListItem .deleteUserButton {
+    cursor: pointer; }
+
+.adminpanel-body .userListItem:last-of-type {
+  border: none; }
+
+.adminpanel-body .deleted {
+  color: lightgrey; }
+  .adminpanel-body .deleted .reactivateUserButton {
+    flex: 0 0 auto;
+    margin-right: 70px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    font-size: 11px;
+    color: #555555;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer; }

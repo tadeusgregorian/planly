@@ -1,0 +1,44 @@
+.edit-groups{
+  padding: 12px;
+  width: 100%;
+  flex-direction: column;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+
+  .new-group-button-wrapper{
+    font-size: 16px;
+    border-bottom: 1px solid rgba(211, 211, 211, 0.68);
+    padding: 2px 20px 13px 0px;
+  }
+
+  .groups-list-element{
+    font-size: 16px;
+    border-bottom: 1px solid rgba(211, 211, 211, 0.68);
+    padding: 5px 20px 5px 9px;
+    height: 50px;
+    align-items: center;
+
+    .groupIcon{
+      font-size: 14px;
+      color: grey;
+    }
+
+    .editGroupButton{
+      margin: 0 20px 0 0;
+    }
+
+    .deleteIcon{
+      cursor: pointer;
+
+      &.disabled{
+        color: lightgrey;
+        cursor: default;
+      }
+    }
+  }
+
+  .groups-list-element:last-of-type{
+    border: none;
+  }
+}

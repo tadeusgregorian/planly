@@ -1,0 +1,18 @@
+.branches-list-element {
+  font-size: 16px;
+  border-bottom: 1px solid rgba(211, 211, 211, 0.68);
+  padding: 5px 20px 5px 9px;
+  height: 50px;
+  align-items: center; }
+  .branches-list-element .icon {
+    flex: 0; }
+  .branches-list-element .branchIcon {
+    font-size: 14px;
+    color: grey; }
+  .branches-list-element .editBranchButton {
+    margin: 0 20px 0 0; }
+  .branches-list-element .deleteIcon {
+    cursor: pointer; }
+    .branches-list-element .deleteIcon.disabled {
+      color: lightgrey;
+      cursor: default; }

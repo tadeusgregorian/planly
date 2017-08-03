@@ -6,10 +6,11 @@ import { setAuthStateListener } from 'actions/listeners'
 import { initIziToast } from 'helpers'
 import Login from './login'
 import Register from './register'
+import App from './app'
 
 initIziToast()
 
-class App extends Component {
+class Container extends Component {
   componentWillMount = () => {
     if(!this.props.firebaseInitialized) this.props.initFirebase() // check before is a workaround for hot-reloading
     if(!this.props.firebaseAuthListener) this.props.setAuthStateListener()
@@ -18,24 +19,17 @@ class App extends Component {
   render() {
     const { authState } = this.props
     const loggedIn 					=  authState === 'loggedIn'
-    const loggedOut 				= !authState || authState === 'loggedOut'
     const isAuthenticating 	=  authState === 'isAuthenticating'
+
+    if(isAuthenticating) return (<fb>authenticating...</fb>)
 
     return (
       <Router>
-        <div className="App">
-          <div className="App-header">
-            <h2>Welcome to React Tades5678..</h2>
-          </div>
-          <fb style={{flexDirection: 'row'}}>
-            <Route path='/login'    component={Login}/>
+        <div className="Container_Main">
+            <Route path='/' exact   render={() => loggedIn ?  <Redirect to="/app" /> : <Redirect to="/login" /> } />
+            <Route path='/login' 	  render={() => loggedIn ?  <Redirect to="/app" /> : <Login /> } />
+            <Route path='/app'      render={() => loggedIn ?  <App /> : <Redirect to="/login" /> } />
             <Route path='/register' component={Register} />
-
-            <Route path='/' exact render={() => loggedIn ?  <Redirect to="/Apps/TaskManager/Kalender/Public" /> : <Redirect to="/Home" /> } />
-            <Route path='/Login' 	render={() => loggedIn ?  <Redirect to="/Apps/TaskManager/Kalender/Public" /> : <Login /> } />
-            <Route path='/Home'   render={() => loggedIn ?  <Redirect to="/Apps/TaskManager/Kalender/Public" /> : <Website /> } />
-            <Route path='/Apps' 	render={() => loggedOut ? <Redirect to="/Login" /> : <Apps /> } />
-          </fb>
         </div>
       </Router>
     )
@@ -49,7 +43,8 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state) => ({
   firebaseInitialized: state.firebaseInitialized,
-	firebaseAuthListener: state.firebaseListeners.firebaseAuth
+	firebaseAuthListener: state.firebaseListeners.firebaseAuth,
+  authState: state.auth.authState
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default connect(mapStateToProps, mapDispatchToProps)(Container)

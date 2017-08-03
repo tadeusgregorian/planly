@@ -1,0 +1,17 @@
+.topbarMain {
+  width: 100%;
+  height: 46px;
+  background-color: lightgrey;
+  border-bottom: 1px solid grey;
+  padding: 0px;
+  align-items: center; }
+  .topbarMain .side {
+    flex: 1;
+    height: 100%;
+    align-items: center; }
+  .topbarMain .left {
+    margin-left: 60px; }
+  .topbarMain .right {
+    justify-content: flex-end; }
+    .topbarMain .right .logoutIcon {
+      cursor: pointer; }

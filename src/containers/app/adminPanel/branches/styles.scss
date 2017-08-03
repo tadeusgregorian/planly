@@ -1,0 +1,18 @@
+.edit-branches{
+  padding: 12px;
+  width: 100%;
+  flex-direction: column;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+
+  .new-branch-button-wrapper{
+    font-size: 16px;
+    border-bottom: 1px solid rgba(211, 211, 211, 0.68);
+    padding: 2px 20px 13px 0px;
+  }
+
+  .branches-list-element:last-of-type{
+    border: none;
+  }
+}

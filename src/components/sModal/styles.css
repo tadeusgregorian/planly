@@ -1,0 +1,48 @@
+.sModalMain {
+  flex-direction: column;
+  cursor: default; }
+
+.sModalMain > * {
+  width: 100%; }
+
+.sModalHead {
+  border-bottom: 1px solid #e4e4e4;
+  height: 52px; }
+  .sModalHead .sModalTitle {
+    align-items: center;
+    padding-left: 16px;
+    padding-top: 1px;
+    font-size: 20px;
+    font-weight: 400;
+    color: #636363;
+    letter-spacing: 0.6px;
+    min-width: 0px; }
+    .sModalHead .sModalTitle .titleSpan {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap; }
+  .sModalHead .sModalX {
+    flex: 0 1 auto;
+    align-items: center;
+    padding: 6px;
+    padding-top: 8px;
+    cursor: pointer; }
+    .sModalHead .sModalX icon {
+      border: none;
+      font-size: 18px;
+      padding: 6px;
+      color: #989898; }
+    .sModalHead .sModalX icon:hover {
+      font-weight: bold; }
+
+.sModalBody {
+  flex-direction: column;
+  font-size: 17px;
+  max-height: 560px; }
+
+.sModalFooter {
+  padding: 16px;
+  border-top: 1px solid #ececec;
+  padding-right: 0px; }
+  .sModalFooter > * {
+    margin-right: 16px; }
