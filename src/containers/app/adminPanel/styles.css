@@ -4,7 +4,7 @@
   min-height: 600px; }
   .adminpanel .adminpanel-body {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1100px;
     flex-direction: row;
     justify-content: center;
     display: flex;
@@ -12,28 +12,28 @@
     margin-top: 30px;
     margin-bottom: 20px; }
     .adminpanel .adminpanel-body .adminpanel-navbar {
-      width: 250px;
+      width: 210px;
       border-right: 1px solid lightgrey;
       display: flex;
       flex: 0 0 auto;
       flex-direction: column;
       background-color: #f3f3f3; }
-      .adminpanel .adminpanel-body .adminpanel-navbar .selected {
-        background-color: white;
-        color: #009be4 !important; }
-      .adminpanel .adminpanel-body .adminpanel-navbar .navbar-item {
-        box-sizing: border-box;
-        display: flex;
-        font-size: 13px;
-        border-bottom: 1px solid rgba(211, 211, 211, 0.55);
-        color: #8a8a8a;
-        height: 34px;
-        justify-content: center;
-        align-items: center;
-        font-weight: 500;
-        cursor: pointer;
-        letter-spacing: 1px;
-        text-transform: uppercase; }
+    .adminpanel .adminpanel-body .selected {
+      background-color: white;
+      color: #009be4 !important; }
+    .adminpanel .adminpanel-body .navbar-item {
+      box-sizing: border-box;
+      display: flex;
+      font-size: 13px;
+      border-bottom: 1px solid rgba(211, 211, 211, 0.55);
+      color: #8a8a8a;
+      height: 34px;
+      justify-content: center;
+      align-items: center;
+      font-weight: 500;
+      cursor: pointer;
+      letter-spacing: 1px;
+      text-transform: uppercase; }
     .adminpanel .adminpanel-body .adminPanelContent {
       overflow-y: scroll;
       width: 100%; }

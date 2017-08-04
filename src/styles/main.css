@@ -906,7 +906,8 @@ body {
   background-color: #f6f6f6; }
 
 fb {
-  display: flex; }
+  display: flex;
+  box-sizing: border-box; }
 
 .Container_Main {
   flex-direction: column; }

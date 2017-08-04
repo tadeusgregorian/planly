@@ -1,10 +1,15 @@
 .adminpanel-body{
 	.userListItem{
-		display: flex;
-		padding: 6px 6px 6px 18px;
 		font-size: 16px;
 		border-bottom: 1px solid rgba(211, 211, 211, 0.68);
-		padding: 5px 20px 5px 5px;
+		padding: 2px 20px 2px 30px;
+		color: grey;
+		justify-content: flex-start;
+		cursor: pointer;
+
+		&:hover {
+			background-color: #f4fcff;
+		}
 
 		.color-box {
 			height: 20px;
@@ -14,37 +19,21 @@
 	    margin: 9px;
 		}
 
-		.userName{
+		.item{
+			font-size: 14px;
 			flex: 1 0 auto;
 			padding: 6px;
-			font-size: 17px;
 			align-items: center;
+			max-width: 180px;
 		}
 
-		.airplane{
-			border-radius: 4px;
-	    width: 40px;
-	    height: 38px;
-	    flex: 0 0 auto;
-	    justify-content: center;
-	    margin-right: 8px;
-	    font-size: 20px;
-	    background-color: #e8e8e8;
-			color: #6f6f6f;
-			cursor: pointer;
-		}
-
-		.editUserButton{
-			margin-right: 8px;
-		}
-
-		.deleteUserButton{
-			cursor: pointer;
+		.name{
+			font-size: 16px;
 		}
 	}
 
 	.userListItem:last-of-type{
-		border: none;
+		//border: none;
 	}
 
 	.deleted{
@@ -61,5 +50,17 @@
 			align-items: center;
 			cursor: pointer;
 		}
+	}
+
+	.icon{
+		justify-content: center;
+		align-items: center;
+		font-size: 14px;
+		margin-right: 6px;
+	}
+
+	.emailIcon{
+		font-size: 20px;
+		margin-right: 10px;
 	}
 }

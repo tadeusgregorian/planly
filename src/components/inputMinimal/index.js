@@ -5,22 +5,34 @@ import userIcon from './userIcon.png'
 import './styles.css'
 
 
-export default (props) => {
+export default ({
+	name,
+	defaultText,
+	password,
+	onInputChange,
+	onEnter,
+	value,
+	icon,
+	imgUrl,
+	iStyle,
+	rounded, // gives more border-radius to the inputfield
+	autoFocus,
+	autocompleteOn }) => {
 
 	const getBackgroundImage = () => {
-		if(props.icon === 'lock') 	return 'url('+lockIcon+')'
-		if(props.icon === 'email')	return 'url('+emailIcon+')'
-		if(props.icon === 'user') 	return 'url('+userIcon+')'
-		if(props.imgUrl) 						return 'url('+props.imgUrl+')'
+		if(icon === 'lock') 	return 'url('+lockIcon+')'
+		if(icon === 'email')	return 'url('+emailIcon+')'
+		if(icon === 'user') 	return 'url('+userIcon+')'
+		if(imgUrl) 						return 'url('+imgUrl+')'
 		return 'none'
 	}
 
-	const getStyle = () => ({
-		...props.iStyle,
-		backgroundImage: getBackgroundImage()
-	})
+	const getStyle = () => {
+		let styleObj = { ...iStyle, backgroundImage: getBackgroundImage() }
+		if(rounded) styleObj = { ...styleObj, borderRadius: 4 }
+		return styleObj
+	}
 
-	const {name, defaultText, password, onInputChange, onEnter, value} = props
 	return(
 		<div className='inputMinimalMain'>
 			<input
@@ -31,8 +43,8 @@ export default (props) => {
 				placeholder={defaultText}
 				onChange={(e)=> onInputChange(e.target.value)}
 				onKeyDown={(e)=> { if(e.key === 'Enter') onEnter && onEnter() }}
-				autoFocus={props.autoFocus}
-				autoComplete={props.autocompleteOn ? 'on' : 'new-password'}
+				autoFocus={autoFocus}
+				autoComplete={autocompleteOn ? 'on' : 'new-password'}
 			/>
 		</div>
 	)

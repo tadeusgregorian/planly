@@ -43,9 +43,9 @@ export default class Login extends PureComponent {
 		return (
 			<fb className='login-outer-container'>
 				<fb className="login-container">
-					<fb className="title">APOTOWER</fb>
-					<InputMinimal defaultText="Email" 		value={username} onInputChange={val => this.setState({username: val})} icon='email' autoFocus />
-					<InputMinimal defaultText="Passwort" 	value={password} onInputChange={val => this.setState({password: val})} icon='lock' onEnter={this.tryToLogin} password/>
+					<fb className="title">PLANLY</fb>
+					<InputMinimal defaultText="Email" 		value={username} onInputChange={val => this.setState({username: val})} icon='email' rounded autoFocus />
+					<InputMinimal defaultText="Passwort" 	value={password} onInputChange={val => this.setState({password: val})} icon='lock' rounded onEnter={this.tryToLogin} password/>
 					<SButton
 						label={loading ? '...' : 'Einloggen'}
 						onClick={this.tryToLogin}

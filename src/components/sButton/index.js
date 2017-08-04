@@ -1,7 +1,7 @@
 import React from 'react'
 import './styles.css'
 
-export default ({label, disabled, onClick, color, sStyle, right, left, tabInd, slick}) => {
+export default ({label, disabled, onClick, color, sStyle, right, left, tabInd, slick, icon, iconStyle}) => {
 	const colorStyle = {
 		color: 'white',
 		backgroundColor: color,
@@ -21,8 +21,9 @@ export default ({label, disabled, onClick, color, sStyle, right, left, tabInd, s
 		borderColor: '#009be4',
 		color: 'white',
 		fontWeight: 400,
-		letterSpacing: '0.5',
-		textTransform: 'none'
+		letterSpacing: 0.5,
+		textTransform: 'none',
+		minWidth: 0
 	}
 
 	const getStyle = () => {
@@ -30,11 +31,19 @@ export default ({label, disabled, onClick, color, sStyle, right, left, tabInd, s
 
 		// styleObj is modified in this order.
 		if(slick)  	 styleObj = { ...slickStyle }
-		if(color) 	 styleObj = { ...styleObj, colorStyle }
-		if(disabled) styleObj = { ...styleObj, disabledStyle }
+		if(color) 	 styleObj = { ...styleObj, ...colorStyle }
+		if(disabled) styleObj = { ...styleObj, ...disabledStyle }
 		if(sStyle)   styleObj = { ...styleObj, ...sStyle}
+		if(icon)		 styleObj = { ...styleObj, paddingLeft: 8}
 		if(left) styleObj.marginRight = 'auto'
 		if(right) styleObj.marginLeft = 'auto'
+		return styleObj
+	}
+
+	const getIconStyle = () => {
+		let styleObj = {}
+		if(slick || color) 	styleObj = { ...styleObj, color: 'white'}
+		if(iconStyle)				styleObj = { ...styleObj, ...iconStyle }
 		return styleObj
 	}
 
@@ -44,6 +53,9 @@ export default ({label, disabled, onClick, color, sStyle, right, left, tabInd, s
 			style={getStyle()}
 			onClick={!disabled && onClick}
 			tabIndex={tabInd}
-		>{label}</fb>
+		>
+			{icon && <icon style={getIconStyle()} className={icon + ' sButtonIcon'}/>}
+			{label}
+		</fb>
 	)
 }

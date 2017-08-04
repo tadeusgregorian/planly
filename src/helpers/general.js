@@ -28,3 +28,10 @@ export const deletePropAndReturnObj = (obj, prop) => {
 	delete obj_copy[prop]
 	return obj_copy
 }
+
+export const numToTriplex = (num) => {
+  if(num < 10) 	  return ('u00' + num)
+  if(num < 100) 	return ('u0' + num)
+  if(num < 1000)  return ('u' + num)
+  return('error_in_numToTriplex_tade')
+}

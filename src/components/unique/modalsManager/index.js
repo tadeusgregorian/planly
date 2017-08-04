@@ -7,6 +7,7 @@ class ModalsManager extends PureComponent {
 
   generateProps = (modal) => ({
     ...modal.props,
+    key: modal.modalID,
     onClose: () => this.props.closeModal(modal.modalID)
   })
 
@@ -15,7 +16,7 @@ class ModalsManager extends PureComponent {
     return (
       <fb className="modalsMangarMain">
         {modals.map(modal =>
-            React.createElement(modal.component, this.generateProps(modal))
+          React.createElement(modal.component, this.generateProps(modal))
         )}
       </fb>
     )

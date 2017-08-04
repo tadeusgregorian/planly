@@ -22,21 +22,22 @@ const getEmptyAccount = (adminEmail) => ({
     '001': {
       id: '001',
       name: 'Tadeus Gregorius',
-      email: adminEmail
+      email: adminEmail,
+      position: '001'
     }
   },
   branches: {
     '001': {
       id: '001',
-      name: 'Hauptfiliale'
+      name: 'Hauptfiliale', color: 'green'
     }
   },
   positions: {
     '001': {
-      id: '001', name: 'Manager'
+      id: '001', name: 'Manager', color: 'orange'
     },
     '002': {
-      id: '002', name: 'Mitarbeiter'
+      id: '002', name: 'Mitarbeiter', color: 'blue'
     }
   }
 })

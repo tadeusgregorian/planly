@@ -11,10 +11,6 @@ export function reactivateUser(userID) {
 	firebase.database().ref(getFirebasePath('users')).child(userID).child('deleted').set(null)
 }
 
-export function editUser(user) {
-	firebase.database().ref(getFirebasePath('users')).child(user.ID).set(user)
-}
-
-export function addNewUser(user) {
-	firebase.database().ref(getFirebasePath('users')).child(user.ID).set(user)
+export function saveUserToDB(user) {
+	firebase.database().ref(getFirebasePath('users')).child(user.id).set(user)
 }

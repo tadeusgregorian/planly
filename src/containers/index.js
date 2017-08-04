@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux'
 import { Route, BrowserRouter as Router, Redirect } from 'react-router-dom'
 import { initFirebase } from 'actions'
@@ -11,14 +11,14 @@ import App from './app'
 
 initIziToast()
 
-class Container extends Component {
+class Container extends PureComponent {
   componentWillMount = () => {
     if(!this.props.firebaseInitialized) this.props.initFirebase() // check before is a workaround for hot-reloading
     if(!this.props.firebaseAuthListener) this.props.setAuthStateListener()
   }
 
   render() {
-    const { authState, modals } = this.props
+    const { authState } = this.props
     const loggedIn 					=  authState === 'loggedIn'
     const isAuthenticating 	=  authState === 'isAuthenticating'
 
@@ -28,8 +28,8 @@ class Container extends Component {
       <Router>
         <fb className="Container_Main">
           <fb className='Container_Main_Inside'>
-            <Route path='/' exact   render={() => loggedIn ?  <Redirect to="/app" /> : <Redirect to="/login" /> } />
-            <Route path='/login' 	  render={() => loggedIn ?  <Redirect to="/app" /> : <Login /> } />
+            <Route path='/' exact   render={() => loggedIn ?  <Redirect to="/app/einstellungen" /> : <Redirect to="/login" /> } />
+            <Route path='/login' 	  render={() => loggedIn ?  <Redirect to="/app/einstellungen" /> : <Login /> } />
             <Route path='/app'      render={() => loggedIn ?  <App /> : <Redirect to="/login" /> } />
             <Route path='/register' component={Register} />
           </fb>
