@@ -1,0 +1,30 @@
+.emailStatusMain {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  height: 100%;
+  padding: 0px 12px;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 400;
+  border-left: 1px solid #e5e5e5;
+  background-color: white;
+  min-width: 100px; }
+  .emailStatusMain icon {
+    padding: 0px;
+    padding-right: 8px; }
+  .emailStatusMain.notInvited {
+    color: #ff3325;
+    background-color: #ffe8e8; }
+    .emailStatusMain.notInvited icon {
+      color: #ff3325; }
+  .emailStatusMain.invited {
+    color: orange;
+    background-color: #ffeecf; }
+    .emailStatusMain.invited icon {
+      color: orange; }
+  .emailStatusMain.active {
+    color: #00ad49;
+    background-color: #c2ffc2; }
+    .emailStatusMain.active icon {
+      color: #00ad49; }

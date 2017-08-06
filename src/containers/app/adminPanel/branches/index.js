@@ -32,7 +32,7 @@ class AdminpanelBranches extends React.Component {
 		const confPop = <ConfirmPopup
 			title={'Filiale löschen'}
 			text={<p>Soll Die Filiale <strong>{branch.name}</strong> wirklich gelöscht werden?</p>}
-			onAccept={() => deleteBranch(branch.ID, this.props.users)}
+			onAccept={() => deleteBranch(branch.id, this.props.users)}
 			onClose={this.props.closeConfirmPopup}
 			acceptBtnLabel='Löschen'
 			declineBtnLabel='Abbrechen'
@@ -49,7 +49,7 @@ class AdminpanelBranches extends React.Component {
 				</fb>
 				{ this.props.branches.map(branch =>
 					<Branch
-						key={branch.ID}
+						key={branch.id}
 						branch={branch}
 						users={this.props.users}
 						openAddEditBranchPopup={this.openAddEditBranchPopup}

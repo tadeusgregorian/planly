@@ -2,44 +2,27 @@
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  padding: 22px 0px;
-  min-width: 500px; }
-  .addEditUserPopup .inputItemWrapper {
-    display: flex;
-    flex: 1 0 auto;
-    padding: 8px 0;
-    border-bottom: 1px solid #eaeaea; }
-    .addEditUserPopup .inputItemWrapper:last-of-type {
-      border: none; }
-    .addEditUserPopup .inputItemWrapper .inputDescription {
-      white-space: nowrap;
-      flex: 0 0 auto;
-      align-items: center;
-      font-size: 18px;
-      width: 200px;
-      justify-content: flex-end;
-      margin-right: 12px; }
-    .addEditUserPopup .inputItemWrapper .initialsInputField {
-      flex: 0 1 150px; }
-    .addEditUserPopup .inputItemWrapper .hoursPerWeekInputField {
-      flex: 0 1 44px;
-      justify-content: center;
-      text-align: center; }
-    .addEditUserPopup .inputItemWrapper .nameInputField {
-      flex: 0 1 400px; }
-    .addEditUserPopup .inputItemWrapper .colorsWrapper {
-      display: flex;
-      flex-wrap: wrap;
-      margin-left: -4px; }
-      .addEditUserPopup .inputItemWrapper .colorsWrapper .userColor {
-        margin: 6px;
-        width: 36px;
-        height: 36px;
-        flex: 0 0 auto;
-        cursor: pointer; }
-        .addEditUserPopup .inputItemWrapper .colorsWrapper .userColor .icon {
-          border: none;
-          color: white; }
+  min-width: 700px;
+  font-size: 16px;
+  overflow: visible;
+  color: grey; }
+  .addEditUserPopup .emailFrozen {
+    width: 100%;
+    padding: 4px 10px;
+    box-sizing: border-box;
+    color: #a5a5a5;
+    background-color: #f1f1f1;
+    font-size: 16px;
+    height: 100%;
+    width: 100%;
+    font-weight: 300;
+    align-items: center; }
+  .addEditUserPopup .selectWrapper {
+    width: 200px;
+    padding: 4px; }
+    .addEditUserPopup .selectWrapper > .Select--single > .Select-control {
+      border-radius: 1px;
+      cursor: pointer; }
   .addEditUserPopup .userinputMissingText {
     background-color: #ff6b5c;
     height: 38px;
@@ -52,3 +35,11 @@
     align-items: center;
     font-size: 16px;
     margin-bottom: 22px; }
+
+.footerInfoText {
+  font-size: 14px;
+  justify-content: center;
+  align-items: center;
+  color: #6d6d6d;
+  padding-left: 10px;
+  font-weight: 300; }

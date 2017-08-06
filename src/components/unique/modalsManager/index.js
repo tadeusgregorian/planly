@@ -8,7 +8,7 @@ class ModalsManager extends PureComponent {
   generateProps = (modal) => ({
     ...modal.props,
     key: modal.modalID,
-    onClose: () => this.props.closeModal(modal.modalID)
+    closeModal: () => this.props.closeModal(modal.modalID)
   })
 
   render = () => {

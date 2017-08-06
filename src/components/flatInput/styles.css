@@ -1,0 +1,36 @@
+.flatInputMain {
+  width: 100%; }
+  .flatInputMain input[type=text], .flatInputMain [type=password] {
+    width: 100%;
+    padding: 4px 10px;
+    box-sizing: border-box;
+    border-radius: 0px;
+    border-image: none;
+    border-width: 1px;
+    box-shadow: none;
+    border-style: solid;
+    color: #565656;
+    background-color: 'white';
+    font-size: 16px;
+    background-image: none;
+    border: none;
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+    font-weight: 300; }
+  .flatInputMain input[type=text]::placeholder {
+    color: #ddd; }
+  .flatInputMain input[type=text]:focus::placeholder {
+    color: #e7f8ff;
+    opacity: 0.3; }
+  .flatInputMain input[type=password]::placeholder {
+    color: #a7a7a7; }
+  .flatInputMain input[type=text]:focus {
+    background-color: #e7f8ff;
+    color: #00abec;
+    box-shadow: none;
+    outline: none; }
+  .flatInputMain input[type=password]:focus {
+    border: 1px solid #7adaff;
+    box-shadow: none;
+    outline: none; }

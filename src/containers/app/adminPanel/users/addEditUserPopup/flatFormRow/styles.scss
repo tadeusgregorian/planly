@@ -1,0 +1,23 @@
+.flatFormRowMain{
+  display: flex;
+  flex: 1 0 auto;
+  border-bottom: 1px solid #e5e5e5;
+  min-height: 44px;
+  position: relative;
+
+  .label{
+    white-space: nowrap;
+    flex: 0 0 auto;
+    align-items: center;
+    width: 200px;
+    justify-content: flex-end;
+    background-color: #f1f1f1;
+    padding-right: 12px;
+    width: 212px;
+    border-right: 1px solid #d8d8d8;
+  }
+
+  .inputWrapper{
+    flex: 1 1 auto;
+  }
+}

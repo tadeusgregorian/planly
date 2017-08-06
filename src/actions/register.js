@@ -5,39 +5,38 @@ export const createAccount = (firebaseUserID, email) => {
   const accountID = generateGuid()
   let updates = {}
   updates['accounts/'+ accountID] = getEmptyAccount(email)
-  updates['allUsers/'+ firebaseUserID] = getFirstUser(accountID, email)
+  updates['allUsers/'+ firebaseUserID] = getFirstUser(accountID)
   firebase.database().ref().update(updates)
 }
 
 
-const getFirstUser = (accountID, email) => ({
+const getFirstUser = (accountID) => ({
   account: accountID,
-  userID: '001',
-  email: email
+  userID: '001'
 })
 
 const getEmptyAccount = (adminEmail) => ({
   creationDate: firebase.database.ServerValue.TIMESTAMP,
   users: {
-    '001': {
-      id: '001',
+    'u001': {
+      id: 'u001',
       name: 'Tadeus Gregorius',
       email: adminEmail,
-      position: '001'
+      position: 'u002'
     }
   },
   branches: {
-    '001': {
-      id: '001',
+    'u001': {
+      id: 'u001',
       name: 'Hauptfiliale', color: 'green'
     }
   },
   positions: {
-    '001': {
-      id: '001', name: 'Manager', color: 'orange'
+    'u001': {
+      id: 'u001', name: 'Manager', color: 'orange'
     },
-    '002': {
-      id: '002', name: 'Mitarbeiter', color: 'blue'
+    'u002': {
+      id: 'u002', name: 'Mitarbeiter', color: 'blue'
     }
   }
 })

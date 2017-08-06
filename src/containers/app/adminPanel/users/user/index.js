@@ -17,13 +17,9 @@ export default class UserElement extends PureComponent {
 		}
 
 		return(
-  		<fb className='userListItem' onClick={() => userClicked(user.id)}>
+  		<fb className='userListItem' onClick={() => userClicked(user)}>
     		<fb className="color-box" style={{background: color || 'lightgrey' }}></fb>
 				<fb className="item name">{name}</fb>
-				<fb className="item email">
-					<fb className="icon emailIcon icon-mail"></fb>
-					<fb className="emailText">{email}</fb>
-				</fb>
 				<fb className="item position" style={{color: position.color}}>
 					<fb className="icon positinIcon icon-bookmark"></fb>
 					<fb className="positionText">{position.name}</fb>

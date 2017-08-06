@@ -35,3 +35,5 @@ export const numToTriplex = (num) => {
   if(num < 1000)  return ('u' + num)
   return('error_in_numToTriplex_tade')
 }
+
+export const replaceDotsWithCommas = (str) => str.replace(/\./g, ',')

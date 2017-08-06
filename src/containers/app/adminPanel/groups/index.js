@@ -31,7 +31,7 @@ class AdminpanelGroups extends React.Component {
 		const confPop = <ConfirmPopup
 			title={'Gruppe löschen'}
 			text={<p>Soll Die Gruppe <strong>{group.name}</strong> wirklich gelöscht werden?</p>}
-			onAccept={() => deleteGroup(group.ID, this.props.users)}
+			onAccept={() => deleteGroup(group.id, this.props.users)}
 			onClose={this.props.closeConfirmPopup}
 			acceptBtnLabel='Löschen'
 			declineBtnLabel='Abbrechen'
@@ -49,7 +49,7 @@ class AdminpanelGroups extends React.Component {
 				</fb>
 				{ this.props.groups.map(group =>
 					<Group
-						key={group.ID}
+						key={group.id}
 						group={group}
 						users={this.props.users}
 						openAddEditGroupPopup={this.openAddEditGroupPopup}

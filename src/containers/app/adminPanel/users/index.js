@@ -25,6 +25,7 @@ class AdminpanelUsers extends React.Component {
 				{this.props.users.map(user => (
 					<UserElement
 						user={user}
+						userClicked={this.openAddEditUserPopup}
 						key={user.id}
 						position={this.props.positions.find(pos => pos.id === user.position)}
 						editUser={this.openAddEditUserPopup}
