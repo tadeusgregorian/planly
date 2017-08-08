@@ -1,13 +1,18 @@
-.edit-branches {
-  padding: 12px;
+.adminpanelBranches {
   width: 100%;
   flex-direction: column;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex; }
-  .edit-branches .new-branch-button-wrapper {
+  .adminpanelBranches .headline {
     font-size: 16px;
     border-bottom: 1px solid rgba(211, 211, 211, 0.68);
-    padding: 2px 20px 13px 0px; }
-  .edit-branches .branches-list-element:last-of-type {
-    border: none; }
+    padding: 12px;
+    padding-left: 28px;
+    justify-content: space-between; }
+    .adminpanelBranches .headline .headlineText {
+      color: #009be4;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px; }
+    .adminpanelBranches .headline .newUserButton {
+      margin-bottom: 4px;
+      margin-left: -4px; }

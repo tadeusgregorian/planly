@@ -1,5 +1,6 @@
 .flatInputMain {
-  width: 100%; }
+  align-self: stretch;
+  flex: 1; }
   .flatInputMain input[type=text], .flatInputMain [type=password] {
     width: 100%;
     padding: 4px 10px;

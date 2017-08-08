@@ -1,13 +1,20 @@
-import React from 'react'
+import React, { PureComponent } from 'react'
+import { connect } from 'react-redux'
 import './styles.css'
 
-export default () => {
+class Roster extends PureComponent {
 
-  console.log('ich bin DA!!! ROSTER');
-
-  return(
-    <fb className="rosterMain">
-      This is the Roster
-    </fb>
-  )
+  render() {
+    return(
+      <fb className="rosterMain">
+        <fb className='rosterSubBar'> The Sub bar </fb>
+      </fb>
+    )
+  }
 }
+
+const mapStateToProps = (state) => ({
+  users: state.core.usuers
+})
+
+export default connect(mapStateToProps)(Roster)

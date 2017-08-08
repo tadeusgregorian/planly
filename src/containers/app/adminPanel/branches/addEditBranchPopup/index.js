@@ -1,54 +1,55 @@
 import React, { PureComponent } from 'react'
+import { connect } from 'react-redux'
 import SModal from 'components/sModal'
 import SButton from 'components/sButton'
+import FlatInput from 'components/flatInput'
+import FlatFormRow from 'components/flatFormRow'
+import { saveBranchToDB } from 'actions'
+import { numToTriplex } from 'helpers'
 import './styles.css';
 
-export default class AddEditBranchPopup extends PureComponent {
-	constructor(props) {
-		super(props)
+class AddEditUserPopup extends PureComponent {
 
-		this.state = {
-			branchName: this.props.editing ? this.props.branch.name : ''
-		}
-	}
+	state = { branchName:  this.props.branch ? this.props.branch.name : '' }
 
-	onButtonClicked = () => {
-		if(this.state.branchName.length < 2) return
-		this.props.editing ?
-			this.props.editBranch({ ...this.props.branch, name: this.state.branchName}) :
-			this.props.addNewBranch(this.state.branchName)
+	getRandomColor = () => 'red'
+	getNextAvailableID = () => numToTriplex(this.props.branches.length + 1)
 
-		this.props.onClose()
-	}
-
-	onInputChanged = (input) => {
-		this.setState({branchName: input.target.value})
+	saveButtonClicked = () => {
+		const editMode = this.props.branch
+		if(editMode)  saveBranchToDB({ ...this.props.branch, name: this.state.branchName })
+		if(!editMode) saveBranchToDB({ id: this.getNextAvailableID(), color: this.getRandomColor(), name: this.state.branchName })
+		this.props.closeModal()
 	}
 
 	render() {
-		const title = this.props.editing ? 'Filieale bearbeiten' : 'Neue Filieale erstellen'
+		const { branchName } = this.state
+
 		return (
-			<SModal.Main onClose={this.props.onClose} title={title}>
+			<SModal.Main title={ this.props.branch ? 'Filiale bearbeiten' : 'Filiale erstellen' } onClose={this.props.closeModal}>
 				<SModal.Body>
-					<fb className="addEditBranchMain">
-						<input
-							type="text"
-							value={this.state.branchName}
-							className="branchNameInput"
-							placeholder="Name der Filiale"
-							onChange={this.onInputChanged}
-							onKeyDown={(e) => e.keyCode === 13 && this.onButtonClicked()}
-							autoFocus />
-						<SButton
-							label='BESTÄTIGEN'
-							disabled={this.state.branchName.length < 2}
-							onClick={this.onButtonClicked}
-							color={'#2ecc71'}
-						/>
+					<fb className="addEditBranchPopupMain">
+						<FlatFormRow label='Name der Filiale'>
+								<FlatInput value={branchName} onInputChange={(inp) => this.setState({branchName: inp})} autoFocus/>
+						</FlatFormRow>
 					</fb>
 				</SModal.Body>
+				<SModal.Footer>
+					<SButton
+						right
+						label='speichern'
+						onClick={this.saveButtonClicked}
+						disabled={!branchName}
+						color={'#2ECC71'}
+					/>
+				</SModal.Footer>
 			</SModal.Main>
-
-		);
+		)
 	}
 }
+
+const mapStateToProps = (state) => ({
+	branches: state.core.branches,
+})
+
+export default connect(mapStateToProps)(AddEditUserPopup)

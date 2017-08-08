@@ -1,0 +1,21 @@
+.adminpanelPositions{
+		width:100%;
+		flex-direction: column;
+		display: flex;
+
+	.headline{
+
+		font-size: 16px;
+		border-bottom: 1px solid rgba(211, 211, 211, 0.68);
+		padding: 12px;
+		padding-left: 28px;
+		justify-content: space-between;
+
+		.headlineText{
+			color: #009be4;
+	    justify-content: center;
+	    align-items: center;
+	    font-size: 24px;
+		}
+	}
+}

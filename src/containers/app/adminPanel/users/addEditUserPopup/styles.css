@@ -6,6 +6,25 @@
   font-size: 16px;
   overflow: visible;
   color: grey; }
+  .addEditUserPopup .flatFormRowMain:last-child {
+    border-bottom: none; }
+  .addEditUserPopup .errorText {
+    padding: 0px 17px;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 400;
+    border-left: 1px solid #e5e5e5;
+    min-width: 100px;
+    color: #ff3325;
+    background-color: #ffe8e8;
+    height: 37px;
+    border-bottom: 1px solid #ff8f88;
+    border-top: 1px solid #ff8f88; }
+    .addEditUserPopup .errorText .icon {
+      padding: 0px;
+      padding-right: 8px;
+      color: #ff3325;
+      padding-bottom: 1px; }
   .addEditUserPopup .emailFrozen {
     width: 100%;
     padding: 4px 10px;
@@ -18,11 +37,21 @@
     font-weight: 300;
     align-items: center; }
   .addEditUserPopup .selectWrapper {
-    width: 200px;
+    min-width: 200px;
     padding: 4px; }
-    .addEditUserPopup .selectWrapper > .Select--single > .Select-control {
-      border-radius: 1px;
-      cursor: pointer; }
+    .addEditUserPopup .selectWrapper.branchesSelectWrapper {
+      font-size: 18px; }
+    .addEditUserPopup .selectWrapper > .Select > .Select-control {
+      border-radius: 1px; }
+    .addEditUserPopup .selectWrapper .Select--multi .Select-value {
+      font-size: 0.9em;
+      line-height: 1.4;
+      margin-left: 3px;
+      margin-top: 3px;
+      vertical-align: top;
+      margin-right: 2px; }
+      .addEditUserPopup .selectWrapper .Select--multi .Select-value .Select-value-icon {
+        padding-bottom: 0px; }
   .addEditUserPopup .userinputMissingText {
     background-color: #ff6b5c;
     height: 38px;

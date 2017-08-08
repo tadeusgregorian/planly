@@ -1,4 +1,4 @@
-.addEditBranchMain {
-  padding: 26px; }
-  .addEditBranchMain .branchNameInput {
-    margin-right: 16px; }
+.addEditBranchPopupMain {
+  min-width: 600px; }
+  .addEditBranchPopupMain .flatFormRowMain:last-child {
+    border-bottom: none; }

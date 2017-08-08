@@ -1,0 +1,9 @@
+.addEditPositionPopupMain{
+  min-width: 600px;
+
+  .flatFormRowMain{
+    &:last-child{
+      border-bottom: none;
+    }
+  }
+}
