@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react'
 import { NavLink, Route } from 'react-router-dom'
 import { Redirect } from 'react-router'
@@ -5,8 +7,6 @@ import Users 			from './users'
 import Positions 	from './positions'
 import Branches 	from './branches'
 import './styles.css'
-
-
 
 export default class AdminPanel extends PureComponent {
 

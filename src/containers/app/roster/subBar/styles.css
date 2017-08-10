@@ -1,0 +1,41 @@
+.rosterSubBarMain {
+  background-color: white;
+  color: #008fd2;
+  height: 44px;
+  width: 100%;
+  overflow: hidden;
+  align-items: center;
+  padding: 0px 10px;
+  box-shadow: 0px 2px 4px -3px grey;
+  justify-content: center;
+  align-items: stretch;
+  overflow: visible; }
+  .rosterSubBarMain .centered {
+    flex: 0 1 1200px;
+    align-items: stretch;
+    padding-left: 1px; }
+    .rosterSubBarMain .centered .subBarButton {
+      border-left: 1px solid #e2e8ea;
+      color: grey;
+      align-items: center;
+      padding: 0 16px; }
+      .rosterSubBarMain .centered .subBarButton:last-child {
+        border-right: 1px solid #e2e8ea; }
+      .rosterSubBarMain .centered .subBarButton.branchSelector {
+        padding: 0px;
+        z-index: 10;
+        display: block;
+        width: 200px;
+        flex: 0 0 auto; }
+        .rosterSubBarMain .centered .subBarButton.branchSelector .Select {
+          height: 45px;
+          padding: 5px; }
+          .rosterSubBarMain .centered .subBarButton.branchSelector .Select:focus {
+            outline: none; }
+          .rosterSubBarMain .centered .subBarButton.branchSelector .Select .Select-control {
+            border: none;
+            outline: none; }
+            .rosterSubBarMain .centered .subBarButton.branchSelector .Select .Select-control:hover {
+              box-shadow: none; }
+            .rosterSubBarMain .centered .subBarButton.branchSelector .Select .Select-control:focus {
+              outline: none; }

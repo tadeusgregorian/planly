@@ -5,15 +5,15 @@ import SButton from 'components/sButton'
 import FlatInput from 'components/flatInput'
 import FlatFormRow from 'components/flatFormRow'
 import { savePositionToDB } from 'actions'
-import { numToTriplex } from 'helpers'
+import { getNextID } from 'helpers'
 import './styles.css';
 
-class AddEditUserPopup extends PureComponent {
+class AddEditPositionPopup extends PureComponent {
 
 	state = { positionName:  this.props.position ? this.props.position.name : '' }
 
 	getRandomColor = () => 'red'
-	getNextAvailableID = () => numToTriplex(this.props.positions.length + 1)
+	getNextAvailableID = () => getNextID( 'p', this.props.positions.length + 1)
 
 	saveButtonClicked = () => {
 		const editMode = this.props.position
@@ -52,4 +52,4 @@ const mapStateToProps = (state) => ({
 	positions: state.core.positions,
 })
 
-export default connect(mapStateToProps)(AddEditUserPopup)
+export default connect(mapStateToProps)(AddEditPositionPopup)

@@ -10,8 +10,6 @@ const modals = (state = [], action) => {
   ]}
 
   if(action.type === 'CLOSE_MODAL') {
-    console.log('what?')
-    console.log(action)
     return state.filter(modal => modal.modalID !== action.payload )
   }
   return []

@@ -29,11 +29,11 @@ export const deletePropAndReturnObj = (obj, prop) => {
 	return obj_copy
 }
 
-export const numToTriplex = (num) => {
-  if(num < 10) 	  return ('u00' + num)
-  if(num < 100) 	return ('u0' + num)
-  if(num < 1000)  return ('u' + num)
-  throw new Error('error_in_numToTriplex_tade')
+export const getNextID = (prefix, num) => {
+  if(num < 10) 	  return ( prefix + '00' + num)
+  if(num < 100) 	return ( prefix + '0' + num)
+  if(num < 1000)  return ( prefix + num)
+  throw new Error('error_in_getNextID_tade')
 }
 
 export const replaceDotsWithCommas = (str) => str.replace(/\./g, ',')

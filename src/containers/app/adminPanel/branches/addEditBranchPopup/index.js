@@ -5,7 +5,7 @@ import SButton from 'components/sButton'
 import FlatInput from 'components/flatInput'
 import FlatFormRow from 'components/flatFormRow'
 import { saveBranchToDB } from 'actions'
-import { numToTriplex } from 'helpers'
+import { getNextID } from 'helpers'
 import './styles.css';
 
 class AddEditUserPopup extends PureComponent {
@@ -13,7 +13,7 @@ class AddEditUserPopup extends PureComponent {
 	state = { branchName:  this.props.branch ? this.props.branch.name : '' }
 
 	getRandomColor = () => 'red'
-	getNextAvailableID = () => numToTriplex(this.props.branches.length + 1)
+	getNextAvailableID = () => getNextID('b', this.props.branches.length + 1)
 
 	saveButtonClicked = () => {
 		const editMode = this.props.branch

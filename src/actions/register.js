@@ -12,7 +12,7 @@ export const createAccount = (firebaseUserID, email) => {
 
 const getFirstUser = (accountID) => ({
   account: accountID,
-  userID: '001'
+  userID: 'u001'
 })
 
 const getEmptyAccount = (adminEmail) => ({
@@ -22,21 +22,21 @@ const getEmptyAccount = (adminEmail) => ({
       id: 'u001',
       name: 'Tadeus Gregorius',
       email: adminEmail,
-      position: 'u002'
+      position: 'p001'
     }
   },
   branches: {
-    'u001': {
-      id: 'u001',
+    'b001': {
+      id: 'b001',
       name: 'Hauptfiliale', color: 'green'
     }
   },
   positions: {
-    'u001': {
-      id: 'u001', name: 'Manager', color: 'orange'
+    'p001': {
+      id: 'p001', name: 'Manager', color: 'orange'
     },
-    'u002': {
-      id: 'u002', name: 'Mitarbeiter', color: 'blue'
+    'p002': {
+      id: 'p002', name: 'Mitarbeiter', color: 'blue'
     }
   }
 })

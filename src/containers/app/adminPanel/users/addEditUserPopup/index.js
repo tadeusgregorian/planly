@@ -1,3 +1,5 @@
+//@flow
+
 import React, { PureComponent } from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
@@ -10,20 +12,14 @@ import WithTooltip from 'components/withTooltip'
 import FlatFormRow from 'components/flatFormRow'
 import WeeklyHoursInput from './weeklyHoursInput'
 import moment from 'moment'
-import { saveUserToDB, sendEmailInvite } from 'actions'
-import { numToTriplex, isValidEmail, replaceCommasWithDots } from 'helpers'
-import './styles.css';
-
-const FLAVOURS = [
-	{ label: 'Chocolate', value: 'chocolate' },
-	{ label: 'Vanilla', value: 'vanilla' },
-	{ label: 'Strawberry', value: 'strawberry' },
-	{ label: 'Caramel', value: 'caramel' },
-	{ label: 'Cookies and Cream', value: 'cookiescream' },
-	{ label: 'Peppermint', value: 'peppermint' },
-];
+import { type userType } from 'types/index'
+import { saveUserToDB, sendEmailInvite } from 'actions/index'
+import { getNextID, isValidEmail, replaceCommasWithDots } from 'helpers/index'
+import './styles.css'
 
 class AddEditUserPopup extends PureComponent {
+	state: {user: userType , errorText: string}
+
 	constructor(props) {
 		super(props);
 
@@ -32,7 +28,7 @@ class AddEditUserPopup extends PureComponent {
 		const getThisMonday 		= () => moment().startOf('isoWeek').format('YYYYMMDD')
 		const pickRandomColor 	= () => 'orange' // TODO come back and fix this
 		const getDefaultBranch 	= () => branches.length === 1 ? {[branches[0].id]: true} : {}
-		const getFreshUserID		= () => numToTriplex(users.length + 1)
+		const getFreshUserID		= () => getNextID('u', users.length + 1)
 		const getFreshUserObj 	= () => ({
 			id: getFreshUserID(),
 			name: '',
@@ -40,7 +36,7 @@ class AddEditUserPopup extends PureComponent {
 			weeklyHours: {[getThisMonday()]: ''},
 			color: pickRandomColor(),
 			branches: getDefaultBranch(),
-			position: 'u001',
+			position: 'p001',
 			status: 'notInvited'
 		})
 
@@ -52,9 +48,6 @@ class AddEditUserPopup extends PureComponent {
 	}
 
 	weeklyHoursValid = () => {
-		//console.log(_.values(this.state.user.weeklyHours))
-		//console.log(!isNaN(parseFloat('')))
-		//console.log(_.values(this.props.weeklyHours).reduce((acc, val) => acc && !isNaN(parseFloat(val)) , true))
 		return _.values(this.state.user.weeklyHours).reduce(
 			(acc, val) => acc && !isNaN(parseFloat(replaceCommasWithDots(val))) , true
 		)

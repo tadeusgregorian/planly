@@ -2,25 +2,27 @@
   width: 100%;
   height: 46px;
   background-color: #00a3ef;
-  padding: 0px;
   align-items: center;
+  justify-content: center;
   color: white;
+  flex-direction: row;
 
-  .side{
-    flex: 1;
-    height: 100%;
-    align-items: center;
-  }
+  .centered{
+    flex: 0 1 1200px;
+    align-self: stretch;
 
-  .left{
-    margin-left: 60px;
-  }
+    .side{
+      flex: 1;
+      height: 100%;
+      align-items: center;
+    }
 
-  .right{
-    justify-content: flex-end;
-    .logoutIcon{
-      cursor: pointer;
-      color: white;
+    .right{
+      justify-content: flex-end;
+      .logoutIcon{
+        cursor: pointer;
+        color: white;
+      }
     }
   }
 }

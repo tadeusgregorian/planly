@@ -1,3 +1,5 @@
+//@flow
+
 import {combineReducers} from 'redux';
 import {simpleReducer} from './reducerHelpers';
 import auth from './auth'
