@@ -1,5 +1,4 @@
-import { getNextSmartWeek, getPrevSmartWeek, doubleD } from 'helpers/index'
-import moment from 'moment'
+import { getNextSmartWeek, getPrevSmartWeek } from 'helpers/index'
 
 export const changeCurrentBranch = (branchID) => ({
   type: 'SET_CURRENT_BRANCH',

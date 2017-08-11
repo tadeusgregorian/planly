@@ -1,6 +1,7 @@
+//@flow
 
 // This function holds the Information, where in the FirebaseDB each Node sits
-export const getFirebasePath	= (target) => {
+export const getFirebasePath	= (target: string): string => {
 
 	const accPath = 'accounts/' + window.accountID
 
@@ -10,6 +11,8 @@ export const getFirebasePath	= (target) => {
 		case 'positions': 			return accPath + '/positions/'
 		case 'accountDetails': 	return accPath + '/accountDetails/'
 		case 'queues': 					return accPath + '/queues/'
+		case 'roster': 					return accPath + '/roster/'
+		case 'shiftWeeks': 			return accPath + '/roster/shiftWeeks/'
 		default : throw new Error('target is not existing tade ( getFirebasePath ), target: ' + target)
 	}
 }

@@ -99,9 +99,6 @@ class AddEditUserPopup extends PureComponent {
 		const { name, email, weeklyHours, position, branches, status } = this.state.user
 		const editMode = this.props.user
 
-		console.log(branches)
-		//console.log(_.keys(branches))
-
 		return (
 			<SModal.Main title={ editMode ? 'Mitarbeiter bearbeiten' : 'Neuer Mitarbeiter' } onClose={this.props.closeModal}>
 				<SModal.Body>

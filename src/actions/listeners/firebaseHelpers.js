@@ -1,4 +1,9 @@
+//@flow
+
 import firebase from 'firebase'
+
+type cFbLType = (disp: ({})=>any, getS: ()=>any, t:string, dbP: string, qR?: ?any, oV?: ?boolean ) => any
+type trackFbLType = (disp: ({}) => any, getS: ()=>any, lT:string, nP: string) => any
 
 const addFBListener = (ref, fbAction, target, dispatch, childrenCount = 0) => {
 	let childrenAdded = 0
@@ -9,16 +14,17 @@ const addFBListener = (ref, fbAction, target, dispatch, childrenCount = 0) => {
 	})
 }
 
-export const trackFBListeners = (dispatch, getState, listenerTarget, newPath) => {
-	const listenerPath = getState().firebaseListeners[listenerTarget]
-	if(listenerPath) firebase.database().ref(listenerPath).off()
+//on every listenerTarget there is only one lister active ( previous listeners get removed )
+export const trackFBListeners: trackFbLType = (dispatch, getState, listenerTarget, newPath) => {
+	const prevListenerPath = getState().firebaseListeners[listenerTarget]
+	if(prevListenerPath) firebase.database().ref(prevListenerPath).off()
 	dispatch({type: 'ADD_FIREBASE_LISTENER', listenerTarget: listenerTarget, listenerPath: newPath})
 }
 
-// optionally you can give queryRef instead of dbPath to make a firebaseQuery beforehand.
+// optionally you can give queryRef additionally to a dbPath to make a firebaseQuery beforehand.
+// the dbPath is still needed, for the trackFBListeners-function.
 // the onValue is used for Listeners that just want to sync with a DB value. no child Events needed
-export const createFirebaseListener = (dispatch, getState, target, dbPath, queryRef = null, onValue = false) => {
-	console.log(target);
+export const createFirebaseListener:cFbLType  = (dispatch, getState, target, dbPath, queryRef = null, onValue = false) => {
 	return new Promise((resolve, reject) => {
 
 		trackFBListeners(dispatch, getState, target, dbPath)

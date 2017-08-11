@@ -5,7 +5,7 @@ export default class UserElement extends PureComponent {
 
 	render() {
 		const {userClicked, user, position } = this.props
-		const {deleted, color, name, email} = user
+		const {deleted, color, name} = user
 
 		if(deleted) {
 			return (
