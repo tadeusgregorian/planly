@@ -18,45 +18,40 @@
     padding-left: 1px;
 
     .subBarButton{
-      border-left: 1px solid #e2e8ea;
+      border-right: 1px solid #e2e8ea;
       color: grey;
       align-items: center;
       padding: 0 16px;
-
-      &:last-child{
-        border-right: 1px solid #e2e8ea;
-      }
+      cursor: pointer;
 
       &.branchSelector{
         padding: 0px;
-        z-index: 10;
-        display: block;
         width: 200px;
-        flex: 0 0 auto;
+        border: none;
 
-        .Select{
-          height: 45px;
-          padding: 5px;
+        .Dropdown-root{
+          height: 100%;
+          width: 100%;
 
-          &:focus{
-            outline: none;
+          .Dropdown-control{
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            height: 100%;
+            border: none;
+            border-right: 1px solid #e2e8ea;
+            border-left: 1px solid #e2e8ea;
+            border-radius: 0px;
+            padding: 0 0 0 8px;
+
+            .Dropdown-arrow{
+              right: 12px;
+              top: 20px;
+            }
           }
 
-          .Select-control{
-            border: none;
-            outline: none;
-
-            &:hover{
-              box-shadow: none;
-            }
-
-            &:focus{
-              outline: none;
-            }
-
-            .Select-placeholder:focus{
-
-            }
+          .Dropdown-menu{
+            margin-top: 0px
           }
         }
       }

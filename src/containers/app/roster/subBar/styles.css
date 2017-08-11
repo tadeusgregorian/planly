@@ -15,27 +15,30 @@
     align-items: stretch;
     padding-left: 1px; }
     .rosterSubBarMain .centered .subBarButton {
-      border-left: 1px solid #e2e8ea;
+      border-right: 1px solid #e2e8ea;
       color: grey;
       align-items: center;
-      padding: 0 16px; }
-      .rosterSubBarMain .centered .subBarButton:last-child {
-        border-right: 1px solid #e2e8ea; }
+      padding: 0 16px;
+      cursor: pointer; }
       .rosterSubBarMain .centered .subBarButton.branchSelector {
         padding: 0px;
-        z-index: 10;
-        display: block;
         width: 200px;
-        flex: 0 0 auto; }
-        .rosterSubBarMain .centered .subBarButton.branchSelector .Select {
-          height: 45px;
-          padding: 5px; }
-          .rosterSubBarMain .centered .subBarButton.branchSelector .Select:focus {
-            outline: none; }
-          .rosterSubBarMain .centered .subBarButton.branchSelector .Select .Select-control {
+        border: none; }
+        .rosterSubBarMain .centered .subBarButton.branchSelector .Dropdown-root {
+          height: 100%;
+          width: 100%; }
+          .rosterSubBarMain .centered .subBarButton.branchSelector .Dropdown-root .Dropdown-control {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            height: 100%;
             border: none;
-            outline: none; }
-            .rosterSubBarMain .centered .subBarButton.branchSelector .Select .Select-control:hover {
-              box-shadow: none; }
-            .rosterSubBarMain .centered .subBarButton.branchSelector .Select .Select-control:focus {
-              outline: none; }
+            border-right: 1px solid #e2e8ea;
+            border-left: 1px solid #e2e8ea;
+            border-radius: 0px;
+            padding: 0 0 0 8px; }
+            .rosterSubBarMain .centered .subBarButton.branchSelector .Dropdown-root .Dropdown-control .Dropdown-arrow {
+              right: 12px;
+              top: 20px; }
+          .rosterSubBarMain .centered .subBarButton.branchSelector .Dropdown-root .Dropdown-menu {
+            margin-top: 0px; }
