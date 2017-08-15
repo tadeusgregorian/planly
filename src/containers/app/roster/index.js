@@ -1,7 +1,7 @@
 // @flow
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import ShiftWeek from './shiftWeek'
+import WeekPlan from './weekPlan'
 import SubBar from './subBar'
 import './styles.css'
 
@@ -12,7 +12,7 @@ class Roster extends PureComponent {
     return(
       <fb className="rosterMain">
         <SubBar />
-        <ShiftWeek />
+        <WeekPlan />
       </fb>
     )
   }

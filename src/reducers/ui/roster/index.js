@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux'
-import { simpleReducer } from '../reducerHelpers'
+import { simpleReducer } from '../../reducerHelpers'
 import { getRealCurrentSmartWeek } from 'helpers/index'
+import weekPlan from './weekPlan'
 
 const currentBranch = simpleReducer({
   default: 'b001',
@@ -14,5 +15,6 @@ const currentSmartWeek = simpleReducer({
 
 export default combineReducers({
   currentBranch,
-  currentSmartWeek
+  currentSmartWeek,
+  weekPlan
 })

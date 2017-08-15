@@ -6,5 +6,10 @@
 
   &:last-child{
     border-bottom: none;
+    border-bottom-right-radius: 2px;
+
+    .userCellMain{
+      border-bottom-left-radius: 2px;
+    }
   }
 }

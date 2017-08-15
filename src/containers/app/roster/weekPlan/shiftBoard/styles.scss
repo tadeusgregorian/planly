@@ -1,0 +1,18 @@
+.shiftBoardMain{
+  width: 1200px;
+  flex: 1 0 auto;
+  flex-direction: column;
+  //border-top: 1px solid lightgrey;
+  background-color: white;
+  min-height: 100px;
+  font-weight: 300;
+  position: relative;
+
+  border: 1px solid;
+  border-color: #D0D1D5 #dfe0e4 #d0d1d5;
+  border-bottom-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+
+  margin-bottom: 30px;
+  box-sizing: content-box;
+}

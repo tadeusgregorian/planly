@@ -13,19 +13,20 @@ export default class UserRow extends PureComponent{
 
   constructor(p: propsType){
     super(p)
-
     this.weekDays = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
   }
 
   render(){
-    const shiftDays = this.props.shiftDays || {}
+    const { user, shiftDays = {} } = this.props
 
     return(
       <fb className="userRowMain">
-        <UserCell user={this.props.user} />
-        { this.weekDays.map(day =>
-          <ShiftCell day={day} key={day} shift={shiftDays[day]} />
-        )}
+        <UserCell user={user} />
+          <fb className='ShiftCellsWrapper'>
+            { this.weekDays.map(day =>
+              <ShiftCell day={day} user={user.id} key={day} shift={shiftDays[day]} />
+            )}
+        </fb>
       </fb>
     )
   }

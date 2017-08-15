@@ -1,21 +1,29 @@
-import { getNextSmartWeek, getPrevSmartWeek } from 'helpers/index'
+//@flow
 
-export const changeCurrentBranch = (branchID) => ({
+import { getNextSmartWeek, getPrevSmartWeek } from 'helpers/index'
+import type { focusedCellType, ThunkAction } from 'types/index'
+
+export const changeCurrentBranch = (branchID: string) => ({
   type: 'SET_CURRENT_BRANCH',
   payload: branchID
 })
 
-export const changeCurrentSmartWeek = (smartWeek) => ({
+export const changeCurrentSmartWeek = (smartWeek: number) => ({
   type: 'SET_CURRENT_SMART_WEEK',
   payload: smartWeek
 })
 
-export const goToNextWeek = () => (dispatch, getState) => {
+export const goToNextWeek: ThunkAction = () => (dispatch, getState) => {
   const nextSW = getNextSmartWeek(getState().ui.roster.currentSmartWeek)
   dispatch({type: 'SET_CURRENT_SMART_WEEK', payload: nextSW})
 }
 
-export const goToLastWeek = () => (dispatch, getState) => {
+export const goToLastWeek: ThunkAction = () => (dispatch, getState) => {
   const prevSW = getPrevSmartWeek(getState().ui.roster.currentSmartWeek)
   dispatch({type: 'SET_CURRENT_SMART_WEEK', payload: prevSW})
 }
+
+export const focusShiftCell = (focusedCell: focusedCellType) => ({
+  type: 'FOCUS_SHIFT_CELL',
+  payload: focusedCell
+})

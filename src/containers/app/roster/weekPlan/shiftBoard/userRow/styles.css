@@ -1,0 +1,10 @@
+.userRowMain {
+  flex-direction: row;
+  height: 40px;
+  border-bottom: 1px solid #dfe0e4;
+  width: 100%; }
+  .userRowMain:last-child {
+    border-bottom: none;
+    border-bottom-right-radius: 2px; }
+    .userRowMain:last-child .userCellMain {
+      border-bottom-left-radius: 2px; }

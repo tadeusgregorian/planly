@@ -1,15 +1,18 @@
 .emailStatusMain{
   position: absolute;
-  right: 0px;
-  top: 0px;
-  height: 100%;
+  right: 7px;
+  top: 4px;
   padding: 0px 12px;
   align-items: center;
   font-size: 14px;
   font-weight: 400;
-  border-left: 1px solid #e5e5e5;
+  border: 1px solid #ffd281;
   background-color: white;
   min-width: 100px;
+  bottom: 4px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
 
   icon{
     padding: 0px;
