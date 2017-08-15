@@ -1,7 +1,7 @@
 //@flow
 
 import { getNextSmartWeek, getPrevSmartWeek } from 'helpers/index'
-import type { focusedCellType, ThunkAction } from 'types/index'
+import type { FocusedCell, ThunkAction } from 'types/index'
 
 export const changeCurrentBranch = (branchID: string) => ({
   type: 'SET_CURRENT_BRANCH',
@@ -23,7 +23,7 @@ export const goToLastWeek: ThunkAction = () => (dispatch, getState) => {
   dispatch({type: 'SET_CURRENT_SMART_WEEK', payload: prevSW})
 }
 
-export const focusShiftCell = (focusedCell: focusedCellType) => ({
+export const focusShiftCell = (focusedCell: FocusedCell) => ({
   type: 'FOCUS_SHIFT_CELL',
   payload: focusedCell
 })

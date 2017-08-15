@@ -1,6 +1,6 @@
 //@flow
 import moment from 'moment'
-import type { shiftType } from 'types/index'
+import type { Shift, MinimalShift } from 'types/index'
 
 export const getRealCurrentSmartWeek = () :number => {
   const calendarWeek = moment().week()
@@ -53,7 +53,7 @@ export const minToTimeString = (mins: number): string => {
   return doubleD(hours) + ':' + doubleD(minutes)
 }
 
-export const shiftToString = (shift: shiftType): string =>
+export const shiftToString = (shift: MinimalShift): string =>
   minToTime(shift.s).str + ' - ' + minToTime(shift.e).str
 
 export const 	timeStringToMin = (str: string) => {
@@ -67,3 +67,7 @@ export const intervalsOverlap = (start1: number, end1: number, start2: number, e
 	if(start1 < start2) return (end1 - start2) >= 0
 	if(start1 === start2) return true
 }
+
+export const shiftToMinimalShift = (shift: Shift): MinimalShift => ({
+  s: shift.s, e: shift.e, b: shift.b
+})

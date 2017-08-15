@@ -24,9 +24,11 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      color: lightgrey;
+      color: grey;
       border-bottom-right-radius: 4px; }
       .breakInputMain .inputWrapper .breakInput:focus {
         outline: none; }
+        .breakInputMain .inputWrapper .breakInput:focus::placeholder {
+          color: white; }
       .breakInputMain .inputWrapper .breakInput::placeholder {
         color: #a0a0a0; }

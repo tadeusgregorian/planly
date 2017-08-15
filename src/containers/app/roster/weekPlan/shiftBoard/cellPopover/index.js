@@ -1,13 +1,13 @@
 //@flow
 import React, { PureComponent } from 'react'
-import { cellChanged, timeInpOK, withColon, from4To5 } from './localHelpers'
+import { cellChanged, timeInpOK, withColon, from4To5, shiftDataValid, zipShift } from './localHelpers'
 import { minToTimeString } from 'helpers/index'
-import type { focusedCellType, shiftType } from 'types/index'
+import type { FocusedCell, Shift, MinimalShift } from 'types/index'
 import InputWindow from './inputWindow'
 import BreakInput from './breakInput'
 import './styles.css'
 
-type Props = { cell: focusedCellType, shift: shiftType }
+type Props = { cell: FocusedCell, shift: Shift, saveShift: (MinimalShift)=>void }
 type State = { startTime: string, endTime: string, breakMinutes: string }
 
 type InpCallback = (SyntheticInputEvent) =>void
@@ -22,7 +22,7 @@ class CellPopover extends PureComponent {
   constructor(props: Props){
     super(props)
 
-    this.state      = {
+    this.state = {
       startTime: '',
       endTime: '',
       breakMinutes: ''
@@ -32,10 +32,10 @@ class CellPopover extends PureComponent {
 
   componentWillMount = () => this.populateState(this.props.shift)
 
-  populateState = ({ e, s, b }: shiftType) => {
+  populateState = ({ e, s, b }: Shift) => {
     const startTime     = Number.isInteger(s) ? minToTimeString(s) : ''
     const endTime       = Number.isInteger(e) ? minToTimeString(e) : ''
-    const breakMinutes  = Number.isInteger(b) ? minToTimeString(e) : ''
+    const breakMinutes  = b && Number.isInteger(b) ? b.toString()  : ''
     this.setState({ startTime, endTime, breakMinutes })
   }
 
@@ -52,7 +52,7 @@ class CellPopover extends PureComponent {
 
   startTimeChanged: InpCallback = (inp) => this.updateStateIfOK('startTime', inp.target.value)
   endTimeChanged:   InpCallback = (inp) => this.updateStateIfOK('endTime', inp.target.value)
-  updateBreak:      InpCallback = (inp) => this.setState({breakMinutes: inp.target.value })
+  updateBreak = (val: string) => this.setState({breakMinutes: val })
 
   focusStartTime  = () => {this.inputRefs.startTime && this.inputRefs.startTime.focus()}
   focusEndTime    = () => {this.inputRefs.endTime   && this.inputRefs.endTime.focus()}
@@ -63,12 +63,19 @@ class CellPopover extends PureComponent {
     if(timeInpOK(prevState, colonizedState)) this.setState({[target]: colonizedState})
   }
 
+  onKeyDown = (e: SyntheticKeyboardEvent) => e.key === 'Enter' && this.tryToSaveChanges()
+  tryToSaveChanges = () => {
+    shiftDataValid({ ...this.state }) ?
+      this.props.saveShift(zipShift({ ...this.state })) :
+      console.log('WRONG')
+  }
+
   render(){
     const { width, height, left, top } = this.props.cell
     const sizeAndPos = { width: width + 1, left , top: top - 1 }
 
     return(
-      <fb className="cellPopoverMain" style={sizeAndPos}>
+      <fb className="cellPopoverMain" style={sizeAndPos} onKeyDown={this.onKeyDown}>
         <InputWindow
           startTime={this.state.startTime}
           endTime={this.state.endTime}
@@ -81,7 +88,7 @@ class CellPopover extends PureComponent {
           height={height}
         />
         <BreakInput
-          breakMinutes={this.state.breakMinutes}
+          value={this.state.breakMinutes}
           updateBreak={this.updateBreak}
         />
       </fb>

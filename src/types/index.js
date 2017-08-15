@@ -19,32 +19,56 @@ export type userType = {
 }
 
 // roster-types
+export type Day = 'mo' | 'tu' | 'we' | 'th' | 'fr' | 'sa' | 'su'
 
-export type shiftType = {
+
+export type MinimalShift = {|
   s: number,
   e: number,
-  b?: number,
-}
-
-export type shiftDaysType = {|
-  mo?: shiftType,
-  tu?: shiftType,
-  we?: shiftType,
-  th?: shiftType,
-  fr?: shiftType,
-  sa?: shiftType,
-  su?: shiftType
+  b?: ?number,
 |}
 
-export type shiftsType = {
-  [string]: shiftDaysType
-}
+export type Shift = {|
+  s: number,
+  e: number,
+  b?: ?number,
+  user: string,
+  day: Day
+|}
 
-export type focusedCellType = {
+export type PreDBShift = {|
+  s: number,
+  e: number,
+  b?: ?number,
+  day: Day,
+  user: string,
+  branch: string
+|}
+
+export type DBShift = {|
+  s: number,
+  e: number,
+  b?: ?number,
+  day: Day,
+  user: string,
+  branch: string,
+  branchDay: string,
+  userDay: string
+|}
+
+export type Shifts = Array<Shift>
+
+export type FocusedCell = {|
   day: string,
   user: string,
   top: number,
   left: number,
   width: number,
   height: number
-}
+|}
+
+export type ShiftInput = {|
+  startTime: string,
+  endTime: string,
+  breakMinutes: string
+|}

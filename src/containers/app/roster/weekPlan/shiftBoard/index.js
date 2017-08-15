@@ -1,7 +1,7 @@
 //@flow
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import type { userType, shiftType, shiftsType, focusedCellType } from 'types/index'
+import type { userType, Shift, MinimalShift, Shifts, FocusedCell } from 'types/index'
 import getFocusedShift from 'selectors/focusedShift'
 import UserRow from './userRow'
 import CellPopover from './cellPopover'
@@ -10,10 +10,11 @@ import './styles.css'
 class ShiftBoard extends PureComponent{
   props: {
     users: [userType],
-    shifts: shiftsType,
-    focusedCell: focusedCellType,
-    focusedShift: shiftType,
+    shifts: Shifts,
+    focusedCell: FocusedCell,
+    focusedShift: Shift,
     focusShiftCell: ({}) => void,
+    saveShift: (MinimalShift) => void
   }
 
   onClick = ({target}: any) => {
@@ -32,9 +33,9 @@ class ShiftBoard extends PureComponent{
     const { users, shifts, focusedCell, focusedShift } = this.props
     return(
       <fb className="shiftBoardMain" onClick={this.onClick}>
-        { focusedCell && <CellPopover cell={focusedCell} shift={focusedShift} /> }
+        { focusedCell && <CellPopover cell={focusedCell} shift={focusedShift} saveShift={this.props.saveShift} /> }
         { users.map(user =>
-          <UserRow user={user} key={user.id} shiftDays={shifts[user.id]}/>
+          <UserRow user={user} key={user.id} shifts={shifts.filter(s => s.user === user.id)}/>
         )}
       </fb>
     )

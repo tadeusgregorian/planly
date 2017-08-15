@@ -9,3 +9,5 @@ export const initFirebase = () => {
   })
   return {type: 'FIREBASE_INITIALIZED'}
 }
+
+export const db = () => firebase.database()
