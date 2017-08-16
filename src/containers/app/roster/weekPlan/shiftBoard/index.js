@@ -14,7 +14,8 @@ class ShiftBoard extends PureComponent{
     focusedCell: FocusedCell,
     focusedShift: Shift,
     focusShiftCell: ({}) => void,
-    saveShift: (MinimalShift) => void
+    saveShift: (MinimalShift) => void,
+    unfocusShiftCell: ()=>void
   }
 
   onClick = ({target}: any) => {
@@ -33,10 +34,18 @@ class ShiftBoard extends PureComponent{
     const { users, shifts, focusedCell, focusedShift } = this.props
     return(
       <fb className="shiftBoardMain" onClick={this.onClick}>
-        { focusedCell && <CellPopover cell={focusedCell} shift={focusedShift} saveShift={this.props.saveShift} /> }
-        { users.map(user =>
-          <UserRow user={user} key={user.id} shifts={shifts.filter(s => s.user === user.id)}/>
-        )}
+        <fb className='content'>
+          { users.map(user =>
+            <UserRow user={user} key={user.id} shifts={shifts.filter(s => s.user === user.id)}/>
+          )}
+        </fb>
+        { focusedCell &&
+          <CellPopover
+            cell={focusedCell}
+            shift={focusedShift}
+            saveShift={this.props.saveShift}
+            closePopover={this.props.unfocusShiftCell}/>
+          }
       </fb>
     )
   }

@@ -1,22 +1,25 @@
 .inputWindowMain {
   border: 1px solid #00a3ef;
   background: white;
-  padding: 0px 25px;
-  cursor: pointer; }
+  padding: 0px 23px;
+  cursor: pointer;
+  justify-content: center; }
   .inputWindowMain .seperator {
-    margin: 0px 3px;
     align-items: center;
-    justify-content: center; }
+    justify-content: center;
+    margin: 0 4px; }
   .inputWindowMain .inpWrapper .timeInput {
     border: none;
     color: #2E2E2E !important;
     font-size: 16px;
     font-weight: 300;
     width: 100%;
-    cursor: pointer; }
+    cursor: pointer;
+    font-weight: 400; }
     .inputWindowMain .inpWrapper .timeInput.start {
       margin-left: auto; }
     .inputWindowMain .inpWrapper .timeInput:focus {
       outline: none; }
     .inputWindowMain .inpWrapper .timeInput::placeholder {
-      color: #cccccc; }
+      color: #e0e0e0;
+      font-size: 16px; }

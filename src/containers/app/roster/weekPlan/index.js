@@ -1,19 +1,31 @@
 // @flow
+
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import ShiftBoard from './shiftBoard'
 import ActionBar from './actionBar'
-import type { MinimalShift } from 'types/index'
+import type { MinimalShift, FocusedCell, Shifts } from 'types/index'
 import { setShiftWeekListener } from 'actions/listeners'
-import { focusShiftCell } from 'actions/ui'
+import { focusShiftCell, unfocusShiftCell } from 'actions/ui/roster'
 import { writeShiftToDB } from 'actions/roster'
 import './styles.css'
 
+type Props = {
+  setShiftWeekListener: ()=>void,
+  shiftWeek: Shifts,
+  currentBranch: string,
+  currentSmartWeek: string,
+  focusedCell: FocusedCell,
+  unfocusShiftCell: ()=>void,
+  focusShiftCell: (FocusedCell)=>void
+}
+
 class WeekPlan extends PureComponent{
+  props: Props
 
   componentDidMount = () => this.props.setShiftWeekListener()
 
-  componentWillReceiveProps = (np) => {
+  componentWillReceiveProps = (np: Props) => {
     const { currentBranch, setShiftWeekListener, currentSmartWeek } = this.props
     const branchChanged = np.currentBranch !== currentBranch
     const smartWeekChanged = np.currentSmartWeek !== currentSmartWeek
@@ -21,24 +33,26 @@ class WeekPlan extends PureComponent{
   }
 
   saveShiftToDB = (shift: MinimalShift) => {
-    const smartWeek: string = this.props.currentSmartWeek
-    const branch: string    = this.props.currentBranch
+    const smartWeek         = this.props.currentSmartWeek
+    const branch            = this.props.currentBranch
     const { user, day }     = this.props.focusedCell
     writeShiftToDB(smartWeek, { ...shift, branch, user, day })
+    this.props.unfocusShiftCell()
   }
 
   render(){
     return(
       <fb className="shiftWeekWrapper">
-        <fb className='shiftWeekMain'>
-          <ActionBar />
-          <ShiftBoard
-            shifts={this.props.shiftWeek}
-            focusShiftCell={this.props.focusShiftCell}
-            focusedCell={this.props.focusedCell}
-            saveShift={this.saveShiftToDB}
-          />
-        </fb>
+          <fb className='shiftWeekMain'>
+            <ActionBar />
+            <ShiftBoard
+              shifts={this.props.shiftWeek}
+              focusShiftCell={this.props.focusShiftCell}
+              focusedCell={this.props.focusedCell}
+              saveShift={this.saveShiftToDB}
+              unfocusShiftCell={this.props.unfocusShiftCell}
+            />
+          </fb>
       </fb>
     )
   }
@@ -46,7 +60,8 @@ class WeekPlan extends PureComponent{
 
 const actionsToProps = {
   setShiftWeekListener,
-  focusShiftCell
+  focusShiftCell,
+  unfocusShiftCell
 }
 
 const mapStateToProps = (state) => ({

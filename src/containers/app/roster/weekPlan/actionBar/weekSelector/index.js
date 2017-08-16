@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
-import { changeCurrentSmartWeek, goToLastWeek, goToNextWeek } from 'actions/ui'
+import { changeCurrentSmartWeek, goToLastWeek, goToNextWeek } from 'actions/ui/roster'
 import { getWeek } from 'helpers/index'
 import moment from 'moment'
 import './styles.css'

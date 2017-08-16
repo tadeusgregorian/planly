@@ -5,9 +5,15 @@ import { minToTimeString } from 'helpers/index'
 import type { FocusedCell, Shift, MinimalShift } from 'types/index'
 import InputWindow from './inputWindow'
 import BreakInput from './breakInput'
+import CloseButton from './closeButton'
 import './styles.css'
 
-type Props = { cell: FocusedCell, shift: Shift, saveShift: (MinimalShift)=>void }
+type Props = {
+  cell: FocusedCell,
+  shift: Shift,
+  saveShift: (MinimalShift)=>void,
+  closePopover: ()=>void 
+}
 type State = { startTime: string, endTime: string, breakMinutes: string }
 
 type InpCallback = (SyntheticInputEvent) =>void
@@ -90,6 +96,9 @@ class CellPopover extends PureComponent {
         <BreakInput
           value={this.state.breakMinutes}
           updateBreak={this.updateBreak}
+        />
+        <CloseButton
+          closePopover={this.props.closePopover}
         />
       </fb>
     )

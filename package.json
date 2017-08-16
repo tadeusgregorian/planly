@@ -9,6 +9,7 @@
     "lodash": "^4.15.0",
     "moment": "^2.14.1",
     "normalize.css": "^7.0.0",
+    "popper.js": "^1.12.1",
     "react": "^15.6.1",
     "react-datepicker": "^0.52.0",
     "react-dom": "^15.5.4",

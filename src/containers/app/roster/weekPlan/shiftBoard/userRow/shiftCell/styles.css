@@ -1,4 +1,5 @@
 .shiftCellMain {
+  position: relative;
   border-left: 1px solid #dfe0e4;
   justify-content: center;
   align-items: center;
@@ -8,3 +9,18 @@
     height: 20px;
     background-color: red;
     pointer-events: none; }
+  .shiftCellMain .shiftTimes {
+    pointer-events: none; }
+  .shiftCellMain .breakTime {
+    position: absolute;
+    bottom: 0px;
+    height: 13px;
+    font-size: 9px;
+    font-weight: 500;
+    justify-content: flex-end;
+    pointer-events: none;
+    right: 2px;
+    align-items: center;
+    color: lightgrey;
+    border-radius: 1px;
+    align-items: center; }

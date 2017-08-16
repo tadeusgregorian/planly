@@ -1,10 +1,8 @@
 // @flow
-
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import { changeCurrentBranch } from 'actions/ui'
+import { changeCurrentBranch } from 'actions/ui/roster'
 import Dropdown from 'react-dropdown'
-import { createDummyShift } from 'actions/index'
 import './styles.css'
 
 
@@ -23,7 +21,7 @@ class SubBar extends PureComponent {
               onChange={(opt) => changeCurrentBranch(opt.value)}
             />
           </fb>
-          <fb className='subBarButton' onClick={createDummyShift}>Wochenplan</fb>
+          <fb className='subBarButton'>Wochenplan</fb>
           <fb className='subBarButton'>Vorlagen</fb>
           <fb className='subBarButton'>Überstunden</fb>
         </fb>

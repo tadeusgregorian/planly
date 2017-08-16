@@ -1,4 +1,12 @@
 .rosterMain {
-  width: 100%;
   flex-direction: column;
-  overflow: hidden; }
+  align-items: center;
+  width: 100vw; }
+  .rosterMain ::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 0px;
+    height: 8px; }
+  .rosterMain ::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.5); }

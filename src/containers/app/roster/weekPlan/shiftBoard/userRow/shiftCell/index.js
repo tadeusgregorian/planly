@@ -11,7 +11,8 @@ export default ({shift, day, user}: props) => {
 
   return(
     <fb className="shiftCellMain" data-celltype='shiftcell' data-day={day} data-user={user} style={{width: shiftCellWidth}}>
-      { shift && shiftToString(shift) }
+      <fb className='shiftTimes'>{ shift && shiftToString(shift) }</fb>
+      { shift && shift.b && <fb className='breakTime'>{shift.b}</fb> }
     </fb>
   )
 }

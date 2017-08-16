@@ -21,9 +21,15 @@ export default (props: Props) => {
 
   return(
     <fb className="breakInputMain">
-      <fb className='label' >Pause</fb>
-      <fb className='inputWrapper' >
-        <input className='breakInput' type='text' placeholder='0 min' value={props.value} onKeyDown={onKeyDown} onChange={()=>''}/>
+      <fb className='left'>
+        <fb className='label' >P</fb>
+        <fb className='inputWrapper' >
+          <input className='breakInput' type='text' placeholder='min' value={props.value} onKeyDown={onKeyDown} onChange={()=>''}/>
+        </fb>
+        {/* <fb className='unit'>min</fb> */}
+      </fb>
+      <fb className='right'>
+        <fb className='moreButton'>MEHR</fb>
       </fb>
     </fb>
   )

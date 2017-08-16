@@ -6,7 +6,7 @@ import WeekSelector from './weekSelector'
 import DatePicker from 'react-datepicker';
 import DateDisplay from './dateDisplay'
 import { smartWeekToMoment, momentToSmartWeek } from 'helpers/index'
-import { changeCurrentSmartWeek } from 'actions/ui'
+import { changeCurrentSmartWeek } from 'actions/ui/roster'
 import './styles.css'
 
 const ActionBar = (props) => {

@@ -1,7 +1,7 @@
 .shiftBoardMain {
-  width: 1200px;
   flex: 1 0 auto;
   flex-direction: column;
+  overflow-x: visible;
   background-color: white;
   min-height: 100px;
   font-weight: 300;
@@ -12,3 +12,5 @@
   border-bottom-left-radius: 2px;
   margin-bottom: 30px;
   box-sizing: content-box; }
+  .shiftBoardMain .content {
+    flex-direction: column; }
