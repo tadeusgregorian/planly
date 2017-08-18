@@ -8,7 +8,14 @@ const focusedCell = simpleReducer({
   remove_shiftWeek     : null,
 })
 
+const optionsExpanded = (state = false, a) => {
+  if(a.type === 'TOGGLE_POPOVER_OPTIONS') return !state
+  if(a.type === 'UNFOCUS_SHIFT_CELL') return false
+  return false
+}
+
 
 export default combineReducers({
-  focusedCell
+  focusedCell,
+  optionsExpanded
 })

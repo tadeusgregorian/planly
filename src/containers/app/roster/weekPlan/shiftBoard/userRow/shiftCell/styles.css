@@ -1,14 +1,25 @@
+.hasNoteCellIcon {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  padding: 0px;
+  color: orange;
+  font-size: 16px; }
+  .hasNoteCellIcon.inPopover {
+    top: 4px;
+    right: 4px; }
+  .hasNoteCellIcon:hover {
+    color: red; }
+
 .shiftCellMain {
   position: relative;
   border-left: 1px solid #dfe0e4;
   justify-content: center;
   align-items: center;
   cursor: pointer; }
-  .shiftCellMain .testBox {
-    width: 20px;
-    height: 20px;
-    background-color: red;
-    pointer-events: none; }
+  .shiftCellMain.highlighted {
+    background-color: #00a3ef;
+    color: #fbfcfd; }
   .shiftCellMain .shiftTimes {
     pointer-events: none; }
   .shiftCellMain .breakTime {

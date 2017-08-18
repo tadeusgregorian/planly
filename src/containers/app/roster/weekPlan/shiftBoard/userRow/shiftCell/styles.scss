@@ -1,3 +1,22 @@
+// carefull! this class applies also to the note-icon in the popover-window!
+.hasNoteCellIcon{
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  padding: 0px;
+  color: orange;
+  font-size: 16px;
+
+  &.inPopover{
+    top: 4px;
+    right: 4px;
+  }
+
+  &:hover{
+    color: red;
+  }
+}
+
 .shiftCellMain{
   position: relative;
   border-left: 1px solid #dfe0e4;
@@ -5,11 +24,9 @@
   align-items: center;
   cursor: pointer;
 
-  .testBox{
-    width: 20px;
-    height: 20px;
-    background-color: red;
-    pointer-events: none;
+  &.highlighted{
+    background-color: #00a3ef;
+    color: #fbfcfd;
   }
 
   .shiftTimes{

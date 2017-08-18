@@ -1,4 +1,4 @@
-.breakInputMain{
+.inputTongueMain{
   height: 26px;
   width: 100%;
   background-color: white;
@@ -9,7 +9,7 @@
 
   .left{
     flex: 1 1;
-    border-right: 1px solid grey;
+    border-right: 1px solid #00a3ef;
 
     .label{
       flex: 1 1 auto;
@@ -41,11 +41,11 @@
         width: 100%;
         border: none;
         padding-left: 0px;
-        font-size: 16px;
+        font-size: 14px;
         align-items: center;
         justify-content: center;
         text-align: center;
-        color: #616161;
+        color: #383838;
         font-weight: 400;
 
         &:focus{

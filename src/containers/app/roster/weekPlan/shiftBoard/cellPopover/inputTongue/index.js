@@ -5,7 +5,8 @@ import './styles.css'
 
 type Props = {
   value: string,
-  updateBreak: (string)=>void
+  updateBreak: (string)=>void,
+  toggleOptions: ()=>void
 }
 
 export default (props: Props) => {
@@ -20,17 +21,14 @@ export default (props: Props) => {
   }
 
   return(
-    <fb className="breakInputMain">
+    <fb className="inputTongueMain">
       <fb className='left'>
         <fb className='label' >P</fb>
         <fb className='inputWrapper' >
           <input className='breakInput' type='text' placeholder='min' value={props.value} onKeyDown={onKeyDown} onChange={()=>''}/>
         </fb>
-        {/* <fb className='unit'>min</fb> */}
       </fb>
-      <fb className='right'>
-        <fb className='moreButton'>MEHR</fb>
-      </fb>
+      <fb className='right' onClick={props.toggleOptions}>MEHR</fb>
     </fb>
   )
 }

@@ -72,3 +72,14 @@ export type ShiftInput = {
   endTime: string,
   breakMinutes: string
 }
+
+export type Note = {
+  id:         string,
+  user?:      string,
+  day:        string,
+  type:       string,
+  timeStamp:  number,
+  branch:     string,
+  author:     string,
+  text:       string
+}

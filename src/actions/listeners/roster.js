@@ -1,14 +1,33 @@
+//@flow
 
 import { createFirebaseListener } from './firebaseHelpers'
 import { getFirebasePath } from '../actionHelpers'
+import type { ThunkAction } from 'types/index'
 import { db } from '../firebaseInit'
 
-export const setShiftWeekListener = () => (dispatch, getState) => {
-  const smartWeek   = getState().ui.roster.currentSmartWeek
-  const branch      = getState().ui.roster.currentBranch
+const getWeekAndBranch = (getState) => ({
+  smartWeek:  getState().ui.roster.currentSmartWeek,
+  branch:     getState().ui.roster.currentBranch
+})
+
+export const setRosterListeners = (): ThunkAction => (dispatch, getState) => {
+  setShiftWeekListener(dispatch, getState)
+  setNotesListener(dispatch, getState)
+  dispatch({type: 'remove_shiftWeek'})
+}
+
+const setShiftWeekListener = (dispatch, getState: any) => {
+  const { smartWeek, branch } = getWeekAndBranch(getState)
   const path        = getFirebasePath('shiftWeeks') + '/' + smartWeek
   const queryRef    = db().ref(path).orderByChild('branch').equalTo(branch)
 
-  dispatch({type: 'remove_shiftWeek'})
   createFirebaseListener(dispatch, getState, 'shiftWeek', path, queryRef)
+}
+
+const setNotesListener = (dispatch, getState: any) => {
+  const { smartWeek, branch } = getWeekAndBranch(getState)
+  const path        = getFirebasePath('notes') + '/' + smartWeek
+  const queryRef    = db().ref(path).orderByChild('branch').equalTo(branch)
+
+  createFirebaseListener(dispatch, getState, 'notes', path, queryRef)
 }

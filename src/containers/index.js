@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux'
 import { Route, BrowserRouter as Router, Redirect } from 'react-router-dom'
 import { initFirebase } from 'actions'
-import { setAuthStateListener } from 'actions/listeners'
+import { setAuthStateListener, registerInitialListeners } from 'actions/listeners'
 import { initIziToast } from 'helpers'
 import ModalsManager from 'components/unique/modalsManager'
 import moment from 'moment'
@@ -13,12 +13,14 @@ import Register from './register'
 import App from './app'
 
 initIziToast()
+moment.locale('de')
 
 class Container extends PureComponent {
   componentWillMount = () => {
-    moment.locale('de')
     if(!this.props.firebaseInitialized) this.props.initFirebase() // check before is a workaround for hot-reloading
-    if(!this.props.firebaseAuthListener) this.props.setAuthStateListener()
+    if(!this.props.firebaseAuthListener) this.props.setAuthStateListener().then((user) => {
+      this.props.registerInitialListeners()
+    })
   }
 
   render() {
@@ -46,7 +48,8 @@ class Container extends PureComponent {
 
 const mapDispatchToProps = {
   initFirebase,
-  setAuthStateListener
+  setAuthStateListener,
+  registerInitialListeners
 }
 
 const mapStateToProps = (state) => ({

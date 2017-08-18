@@ -1,25 +1,35 @@
 import firebase from 'firebase'
-import { registerInitialListeners } from './init'
 import { trackFBListeners } from './firebaseHelpers'
 import { checkClientDate } from '../clientDateCheck'
 
 
 export const setAuthStateListener = () => {
   return (dispatch, getState) => {
-    trackFBListeners(dispatch, getState, 'firebaseAuth', 'noPath')
-    dispatch({type: 'USER_IS_AUTHENTICATING'})
+    return new Promise((resolve, reject) => {
 
-    firebase.auth().onAuthStateChanged((user) => {
-      dispatch({type: user ? 'USER_LOGGED_IN' : 'USER_LOGGED_OUT'})
+      trackFBListeners(dispatch, getState, 'firebaseAuth', 'noPath')
+      dispatch({type: 'USER_IS_AUTHENTICATING'})
 
-      if (!user) return // only if logging in from here on
-      firebase.database().ref('allUsers/' + user.uid + '/account').once('value')
-        .then(snap => {
-          dispatch({type: 'SET_ACCOUNT_ID', payload: snap.val()})
-          window.accountID = snap.val() // this is little hacky.. so helper function can have access to accountID without getState()
-          checkClientDate(dispatch)
-          registerInitialListeners(dispatch, getState)
-        })
+      firebase.auth().onAuthStateChanged((user) => {
+        dispatch({type: user ? 'USER_LOGGED_IN' : 'USER_LOGGED_OUT'})
+
+        console.log('Getting here ?', user);
+
+        if (!user) reject()
+        if (!user) return // only if logging in from here on
+
+        firebase.database().ref('allUsers/' + user.uid).once('value')
+          .then(snap => {
+            if(!snap.val()) return
+
+            dispatch({type: 'SET_ACCOUNT_ID',       payload: snap.val().account})
+            dispatch({type: 'SET_CURRENT_USER_ID',  payload: snap.val().userID})
+
+            window.accountID = snap.val().account // this is little hacky.. so helper function can have access to accountID without getState()
+            checkClientDate(dispatch)
+            resolve(true)
+          })
+      })
     })
   }
 }

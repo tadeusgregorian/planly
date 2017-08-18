@@ -19,8 +19,7 @@ export const goToLastWeek: ThunkAction = () => (dispatch, getState) => {
   dispatch({type: 'SET_CURRENT_SMART_WEEK', payload: prevSW})
 }
 
-export const focusShiftCell = (focusedCell: FocusedCell) =>
-  ({ type: 'FOCUS_SHIFT_CELL', payload: focusedCell })
+export const focusShiftCell = (fC: FocusedCell) => ({ type: 'FOCUS_SHIFT_CELL', payload: fC })
+export const unfocusShiftCell = () => ({ type: 'UNFOCUS_SHIFT_CELL' })
 
-export const unfocusShiftCell = () =>
-  ({ type: 'UNFOCUS_SHIFT_CELL' })
+export const toggleOptions = () => ({ type: 'TOGGLE_POPOVER_OPTIONS' })

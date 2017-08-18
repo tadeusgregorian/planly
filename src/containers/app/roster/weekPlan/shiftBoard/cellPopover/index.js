@@ -1,18 +1,21 @@
 //@flow
 import React, { PureComponent } from 'react'
-import { cellChanged, timeInpOK, withColon, from4To5, shiftDataValid, zipShift } from './localHelpers'
-import { minToTimeString } from 'helpers/index'
-import type { FocusedCell, Shift, MinimalShift } from 'types/index'
+import { cellChanged, timeInpOK, withColon, from4To5, shiftDataValid, zipShift, shiftToShiftInput } from './localHelpers'
+import type { FocusedCell, Shift, MinimalShift, Note } from 'types/index'
 import InputWindow from './inputWindow'
-import BreakInput from './breakInput'
+import InputTongue from './inputTongue'
 import CloseButton from './closeButton'
+import ExpandedOptions from './expandedOptions'
 import './styles.css'
 
 type Props = {
   cell: FocusedCell,
   shift: Shift,
+  optionsExpanded: boolean,
+  note: Note,
+  toggleOptions: ()=>void,
   saveShift: (MinimalShift)=>void,
-  closePopover: ()=>void 
+  closePopover: ()=>void
 }
 type State = { startTime: string, endTime: string, breakMinutes: string }
 
@@ -38,12 +41,7 @@ class CellPopover extends PureComponent {
 
   componentWillMount = () => this.populateState(this.props.shift)
 
-  populateState = ({ e, s, b }: Shift) => {
-    const startTime     = Number.isInteger(s) ? minToTimeString(s) : ''
-    const endTime       = Number.isInteger(e) ? minToTimeString(e) : ''
-    const breakMinutes  = b && Number.isInteger(b) ? b.toString()  : ''
-    this.setState({ startTime, endTime, breakMinutes })
-  }
+  populateState = (shift: Shift) => this.setState({ ...shiftToShiftInput(shift)})
 
   componentWillReceiveProps = (nextProps: Props) => {
     if(cellChanged(this.props.cell, nextProps.cell)) {
@@ -79,27 +77,27 @@ class CellPopover extends PureComponent {
   render(){
     const { width, height, left, top } = this.props.cell
     const sizeAndPos = { width: width + 1, left , top: top - 1 }
+    const { cell, shift, toggleOptions, optionsExpanded, note } = this.props
 
     return(
       <fb className="cellPopoverMain" style={sizeAndPos} onKeyDown={this.onKeyDown}>
-        <InputWindow
-          startTime={this.state.startTime}
-          endTime={this.state.endTime}
-          getStartTimeRef={ref => {this.inputRefs.startTime = ref}}
-          getEndTimeRef={ref => {this.inputRefs.endTime = ref}}
-          startTimeChanged={this.startTimeChanged}
-          endTimeChanged={this.endTimeChanged}
-          focusStartTime={this.focusStartTime}
-          focusEndTime={this.focusEndTime}
-          height={height}
-        />
-        <BreakInput
-          value={this.state.breakMinutes}
-          updateBreak={this.updateBreak}
-        />
-        <CloseButton
-          closePopover={this.props.closePopover}
-        />
+        { optionsExpanded && <ExpandedOptions cell={cell} shift={shift} toggleOptions={toggleOptions} /> }
+        <fb className='compact'>
+          <InputWindow
+            startTime={this.state.startTime}
+            endTime={this.state.endTime}
+            getStartTimeRef={ref => {this.inputRefs.startTime = ref}}
+            getEndTimeRef={ref => {this.inputRefs.endTime = ref}}
+            startTimeChanged={this.startTimeChanged}
+            endTimeChanged={this.endTimeChanged}
+            focusStartTime={this.focusStartTime}
+            focusEndTime={this.focusEndTime}
+            height={height}
+            hasNote={!!note}
+          />
+          <CloseButton closePopover={this.props.closePopover} />
+          <InputTongue value={this.state.breakMinutes} updateBreak={this.updateBreak} toggleOptions={toggleOptions}/>
+        </fb>
       </fb>
     )
   }

@@ -1,4 +1,4 @@
-.shiftBoardMain {
+#shiftBoardMain {
   flex: 1 0 auto;
   flex-direction: column;
   overflow-x: visible;
@@ -12,5 +12,5 @@
   border-bottom-left-radius: 2px;
   margin-bottom: 30px;
   box-sizing: content-box; }
-  .shiftBoardMain .content {
+  #shiftBoardMain .content {
     flex-direction: column; }

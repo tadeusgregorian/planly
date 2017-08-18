@@ -1,5 +1,4 @@
 //@flow
-
 import React from 'react'
 import { minToTimeString } from 'helpers/index'
 import './styles.css'
@@ -7,6 +6,7 @@ import './styles.css'
 type props = {
   startTime: string,
   endTime: string,
+  hasNote: boolean,
   getStartTimeRef: (HTMLInputElement)=>void,
   getEndTimeRef: (HTMLInputElement)=>void,
   startTimeChanged: (SyntheticInputEvent)=>void,
@@ -33,7 +33,6 @@ export default (props: props) => {
       props.focusEndTime()
     }
   }
-
 
   return(
     <fb className="inputWindowMain" style={{height: props.height + 2 }}>
@@ -63,6 +62,7 @@ export default (props: props) => {
           ref={props.getEndTimeRef}
            />
        </fb>
+       { props.hasNote && <icon className='hasNoteCellIcon icon icon-comment inPopover' /> }
     </fb>
   )
 }

@@ -4,15 +4,14 @@ const modals = (state = [], action) => {
     ...state, {
       modalID: action.payload.modalID,
       component: action.payload.component,
-      props: action.payload.props,
-      blop: 'blob'
+      props: action.payload.props
     }
   ]}
 
   if(action.type === 'CLOSE_MODAL') {
     return state.filter(modal => modal.modalID !== action.payload )
   }
-  return []
+  return state
 }
 
 export default modals

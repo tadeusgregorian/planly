@@ -12,6 +12,7 @@ class ModalsManager extends PureComponent {
   })
 
   render = () => {
+    
     const { modals } = this.props
     return (
       <fb className="modalsMangarMain">

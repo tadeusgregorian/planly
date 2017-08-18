@@ -1,7 +1,7 @@
 //@flow
 
-import type { FocusedCell, ShiftInput, MinimalShift } from 'types/index'
-import { timeStringToMin } from 'helpers/index'
+import type { Shift, FocusedCell, ShiftInput, MinimalShift } from 'types/index'
+import { timeStringToMin, minToTimeString } from 'helpers/index'
 
 export const cellChanged = (prevCell: FocusedCell, nextCell: FocusedCell) => {
   return (prevCell.day !== nextCell.day || prevCell.user !== nextCell.user)
@@ -63,3 +63,10 @@ export const zipShift = (shiftObj: ShiftInput): MinimalShift => ({
   e: timeStringToMin(shiftObj.endTime),
   b: cleanBreak(shiftObj.breakMinutes)
 })
+
+export const shiftToShiftInput = (shift: Shift): ShiftInput => {
+  const startTime     = Number.isInteger(shift.s) ? minToTimeString(shift.s) : ''
+  const endTime       = Number.isInteger(shift.e) ? minToTimeString(shift.e) : ''
+  const breakMinutes  = shift.b && Number.isInteger(shift.b) ? shift.b.toString()  : ''
+  return { startTime, endTime, breakMinutes }
+}

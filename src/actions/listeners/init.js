@@ -2,7 +2,7 @@
 import { createFirebaseListener } from './firebaseHelpers'
 import { getFirebasePath } from '../actionHelpers'
 
-export const registerInitialListeners = (disp, getS) => {
+export const registerInitialListeners = () => (disp, getS) => {
   setAccountDetailsListener(disp, getS)
   registerUsersListener(disp, getS)
   registerPositionsListener(disp, getS)
