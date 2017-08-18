@@ -18,9 +18,9 @@ moment.locale('de')
 class Container extends PureComponent {
   componentWillMount = () => {
     if(!this.props.firebaseInitialized) this.props.initFirebase() // check before is a workaround for hot-reloading
-    if(!this.props.firebaseAuthListener) this.props.setAuthStateListener().then((user) => {
-      this.props.registerInitialListeners()
-    })
+    if(!this.props.firebaseAuthListener) this.props.setAuthStateListener()
+      .then((user) => {this.props.registerInitialListeners()})
+      .catch()
   }
 
   render() {

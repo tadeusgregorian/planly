@@ -6,6 +6,8 @@ import getFocusedShift from 'selectors/focusedShift'
 import { toggleOptions } from 'actions/ui/roster'
 import UserRow from './userRow'
 import CellPopover from './cellPopover'
+import { openNotesModal } from 'actions/ui'
+import type { NoteModalProps } from 'actions/ui/modals'
 import './styles.css'
 
 type Props = {
@@ -18,7 +20,8 @@ type Props = {
   toggleOptions: ()=>void,
   focusShiftCell: ({}) => void,
   saveShift: (MinimalShift) => void,
-  unfocusShiftCell: ()=>void
+  unfocusShiftCell: ()=>void,
+  openNotesModal: (NoteModalProps)=>{}
 }
 
 class ShiftBoard extends PureComponent{
@@ -31,8 +34,10 @@ class ShiftBoard extends PureComponent{
     const left    = target.offsetLeft
     const width   = target.offsetWidth
     const height  = target.offsetHeight
-    const isShiftCell = target.getAttribute('data-celltype') === 'shiftcell'
+    const isShiftCell = target.getAttribute('data-target-type') === 'shiftcell'
+    const isNoteIcon  = target.getAttribute('data-target-type') === 'noteicon'
 
+    if(isNoteIcon)  this.props.openNotesModal({ day, user, type: 'shiftNote'})
     if(isShiftCell) this.props.focusShiftCell({day, user, top, left, width, height})
   }
 
@@ -58,6 +63,7 @@ class ShiftBoard extends PureComponent{
             cell={focusedCell}
             shift={focusedShift}
             note={notes.find(n => n.user === focusedCell.user && n.day === focusedCell.day )}
+            openNotesModal={this.props.openNotesModal}
             saveShift={this.props.saveShift}
             toggleOptions={this.props.toggleOptions}
             optionsExpanded={optionsExpanded}
@@ -69,7 +75,8 @@ class ShiftBoard extends PureComponent{
 }
 
 const actionsToProps = {
-  toggleOptions
+  toggleOptions,
+  openNotesModal
 }
 
 const mapStateToProps = (state) => ({

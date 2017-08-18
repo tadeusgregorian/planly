@@ -1,37 +1,47 @@
 //@flow
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import type { userType, Note, ThunkAction } from 'types/index'
+import type { userType, Note } from 'types/index'
 import SModal from 'components/sModal'
-import { writeShiftNoteToDB } from 'actions/roster'
+import { writeNoteToDB } from 'actions/roster'
 import './styles.css'
 
 type Props = {
+  smartWeek: string,
+  branch: string,
   users: Array<userType>,
   notes: Array<Note>,
-  currentUsersNote: Note,
   currentUserID: string,
-  closeModal: ()=>{},
-  writeShiftNoteToDB: (string)=>ThunkAction
+  user?: string, // The user that the shiftCell belongs to ( if its a shiftNote )
+  day: string,
+  type: 'shiftNote' | 'dayNote',
+  closeModal: ()=>{}
 }
 
+type State = { text: string, editMode: boolean }
+
 class NotesPopup extends PureComponent{
-  state: { text: string, editMode: boolean }
+  state: State
   props: Props
 
   constructor(props: Props){
     super(props)
 
-    this.state = {
-      text: this.props.currentUsersNote ?  this.props.currentUsersNote.text : '',
-      editMode: !this.props.currentUsersNote
-    }
+    const currentUsersNote = props.notes.find(n => n.user === props.currentUserID )
+    const currentUsersNoteText = currentUsersNote ?  currentUsersNote.text : ''
+
+    this.state = { text: currentUsersNoteText, editMode: !currentUsersNote }
   }
 
   saveClicked = () => {
-    this.props.writeShiftNoteToDB(this.state.text)
+    const { smartWeek, branch, user, day, type } = this.props
+    const { text }  = this.state
+    const author    = this.props.currentUserID
+
+    writeNoteToDB({ smartWeek, branch, author, text, type, user, day })
     this.setState({editMode: false})
   }
+
   editClicked = () =>   this.setState({editMode: true})
   textChanged = (e) =>  this.setState({text: e.target.value})
 
@@ -71,17 +81,18 @@ class NotesPopup extends PureComponent{
 
 
 
-const mapStateToProps = (state) => {
-  const fCell            = state.ui.roster.weekPlan.focusedCell
-  const currentUserID    = state.auth.currentUserID
-  const notes            = state.roster.notes.filter(n => n.day === fCell.day && n.user === fCell.user)
-  const currentUsersNote = notes.find(n => n.user === currentUserID )
+const mapStateToProps = (state, ownProps) => {
+  const { day, user, type } = ownProps
+  const smartWeek           = state.ui.roster.currentSmartWeek
+  const branch              = state.ui.roster.currentBranch
+  const users               = state.core.users
+  const currentUserID       = state.auth.currentUserID
+  const dayNoteFilter       = (note) => note.day === day
+  const shiftNoteFilter     = (note) => note.day === day && note.user === user
+  const notes               = state.roster.notes.filter(n => type === 'shiftNote' ? shiftNoteFilter(n) : dayNoteFilter(n))
+  const currentUsersNote    = notes.find(n => n.user === currentUserID )
 
-  return { users: state.core.users, currentUserID, notes, currentUsersNote }
+  return { smartWeek, branch, users, currentUserID, notes, currentUsersNote }
 }
 
-const actionsToProps = {
-  writeShiftNoteToDB
-}
-
-export default connect(mapStateToProps, actionsToProps)(NotesPopup)
+export default connect(mapStateToProps)(NotesPopup)

@@ -6,6 +6,7 @@ import InputWindow from './inputWindow'
 import InputTongue from './inputTongue'
 import CloseButton from './closeButton'
 import ExpandedOptions from './expandedOptions'
+import type { NoteModalProps } from 'actions/ui/modals'
 import './styles.css'
 
 type Props = {
@@ -13,6 +14,7 @@ type Props = {
   shift: Shift,
   optionsExpanded: boolean,
   note: Note,
+  openNotesModal: (NoteModalProps)=>{},
   toggleOptions: ()=>void,
   saveShift: (MinimalShift)=>void,
   closePopover: ()=>void
@@ -77,11 +79,11 @@ class CellPopover extends PureComponent {
   render(){
     const { width, height, left, top } = this.props.cell
     const sizeAndPos = { width: width + 1, left , top: top - 1 }
-    const { cell, shift, toggleOptions, optionsExpanded, note } = this.props
+    const { cell, toggleOptions, optionsExpanded, note, openNotesModal } = this.props
 
     return(
       <fb className="cellPopoverMain" style={sizeAndPos} onKeyDown={this.onKeyDown}>
-        { optionsExpanded && <ExpandedOptions cell={cell} shift={shift} toggleOptions={toggleOptions} /> }
+        { optionsExpanded && <ExpandedOptions cell={cell} openNotesModal={openNotesModal} /> }
         <fb className='compact'>
           <InputWindow
             startTime={this.state.startTime}

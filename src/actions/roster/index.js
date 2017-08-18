@@ -1,6 +1,6 @@
 // @flow
 
-import type { ThunkAction } from 'types/index'
+//import type { ThunkAction } from 'types/index'
 import { db } from '../firebaseInit'
 import firebase from 'firebase'
 import { getFirebasePath } from './../actionHelpers'
@@ -20,14 +20,18 @@ export const writeShiftToDB = (smartWeek: string, shift: PreDBShift) => {
   db().ref(getFirebasePath('shiftWeeks')).child(smartWeek).child(key).set(dbShift)
 }
 
-export const writeShiftNoteToDB = (text: string): ThunkAction => (dispatch, getState: any) => {
-  if(!getState().ui.roster.weekPlan.focusedCell) throw new Error('TADE: trying to write note to DB with focusedCell = null')
-  const author            = getState().auth.currentUserID
-  const { user, day }     = getState().ui.roster.weekPlan.focusedCell
-  const smartWeek         = getState().ui.roster.currentSmartWeek
-  const branch            = getState().ui.roster.currentBranch
+export type PreDBNote = {
+  smartWeek: string,
+  branch: string,
+  author: string,
+  text: string,
+  type: string,
+  user?: string,
+  day: string
+}
+
+export const writeNoteToDB = ({smartWeek, branch, author, text, type, user, day}: PreDBNote) => {
   const timeStamp         = firebase.database.ServerValue.TIMESTAMP
-  const type              = 'shiftNote' // can be shiftNote or dayNote
-  const id                = branch + user + day + author
+  const id                = user ? (branch + user + day + author) : (branch + day + author)
   db().ref(getFirebasePath('notes')).child(smartWeek).child(id).set({branch, user, day, author, timeStamp, type, text, id})
 }
