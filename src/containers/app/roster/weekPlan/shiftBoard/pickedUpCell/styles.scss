@@ -1,0 +1,28 @@
+.pickedUpCellMain{
+  justify-content: center;
+  align-items: center;
+
+  background: #f7f7f7;
+  box-shadow: 0px 1px 6px 1px grey;
+  position: absolute;
+  pointer-events: none;
+
+  .shiftTime{
+
+  }
+
+  .breakTime{
+    position: absolute;
+    bottom: 0px;
+    height: 13px;
+    font-size: 9px;
+    font-weight: 500;
+    justify-content: flex-end;
+    pointer-events: none;
+    right: 2px;
+    align-items: center;
+    color: lightgrey;
+    border-radius: 1px;
+    align-items: center;
+  }
+}

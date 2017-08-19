@@ -15,11 +15,14 @@
   position: relative;
   border-left: 1px solid #dfe0e4;
   justify-content: center;
-  align-items: center;
-  cursor: pointer; }
+  align-items: center; }
   .shiftCellMain.highlighted {
     background-color: #00a3ef;
     color: #fbfcfd; }
+  .shiftCellMain.shadowed {
+    background-color: #c8eeff;
+    box-shadow: inset 0px 1px 4px rgba(0, 0, 0, 0.32);
+    color: grey; }
   .shiftCellMain .shiftTimes {
     pointer-events: none; }
   .shiftCellMain .breakTime {

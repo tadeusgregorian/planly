@@ -16,6 +16,15 @@
   margin-bottom: 30px;
   box-sizing: content-box;
 
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+
+  cursor: pointer;
+
+  &.cursorMove{
+    cursor: move !important;
+  }
   .content{
     flex-direction: column;
   }

@@ -4,7 +4,7 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import ShiftBoard from './shiftBoard'
 import ActionBar from './actionBar'
-import type { MinimalShift, FocusedCell, Shifts, Note } from 'types/index'
+import type { Shift, ShiftCell, Shifts, Note } from 'types/index'
 import { setRosterListeners } from 'actions/listeners'
 import { focusShiftCell, unfocusShiftCell } from 'actions/ui/roster'
 import { writeShiftToDB } from 'actions/roster'
@@ -16,9 +16,9 @@ type Props = {
   notes: Array<Note>,
   currentBranch: string,
   currentSmartWeek: string,
-  focusedCell: FocusedCell,
+  focusedCell: ShiftCell,
   unfocusShiftCell: ()=>void,
-  focusShiftCell: (FocusedCell)=>void
+  focusShiftCell: (ShiftCell)=>void
 }
 
 class WeekPlan extends PureComponent{
@@ -33,12 +33,10 @@ class WeekPlan extends PureComponent{
     if(branchChanged || smartWeekChanged) setRosterListeners()
   }
 
-  saveShiftToDB = (shift: MinimalShift) => {
+  saveShiftToDB = (shift: Shift) => {
     const smartWeek         = this.props.currentSmartWeek
     const branch            = this.props.currentBranch
-    const { user, day }     = this.props.focusedCell
-    writeShiftToDB(smartWeek, { ...shift, branch, user, day })
-    this.props.unfocusShiftCell()
+    writeShiftToDB(smartWeek, { ...shift, branch })
   }
 
   render(){

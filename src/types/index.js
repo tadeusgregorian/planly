@@ -23,15 +23,15 @@ export type Day = 'mo' | 'tu' | 'we' | 'th' | 'fr' | 'sa' | 'su'
 
 
 export type MinimalShift = {
-  s: number,
-  e: number,
-  b?: ?number,
+  s:  number,
+  e:  number,
+  b?: number | null,
 }
 
 export type Shift = {
   s: number,
   e: number,
-  b?: ?number,
+  b?: number | null,
   user: string,
   day: Day
 }
@@ -39,7 +39,7 @@ export type Shift = {
 export type PreDBShift = {
   s: number,
   e: number,
-  b?: ?number,
+  b?: number | null,
   day: Day,
   user: string,
   branch: string
@@ -48,7 +48,7 @@ export type PreDBShift = {
 export type DBShift = {
   s: number,
   e: number,
-  b?: ?number,
+  b: number | null,
   day: Day,
   user: string,
   branch: string,
@@ -58,7 +58,7 @@ export type DBShift = {
 
 export type Shifts = Array<Shift>
 
-export type FocusedCell = {
+export type ShiftCell = {
   day: Day,
   user: string,
   top: number,

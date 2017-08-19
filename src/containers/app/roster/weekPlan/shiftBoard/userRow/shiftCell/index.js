@@ -7,11 +7,11 @@ import { type Note } from 'types/index'
 import cn from 'classnames'
 import './styles.css'
 
-type props = {day: string, user: string, shift: ?MinimalShift, highlighted: boolean, note: ?Note}
+type props = {day: string, user: string, shift: ?MinimalShift, highlighted: boolean, note: ?Note, shadowed: boolean}
 
-export default ({ shift, day, user, highlighted, note }: props) => {
+export default ({ shift, day, user, highlighted, note, shadowed }: props) => {
   return(
-    <fb className={cn({shiftCellMain: true, highlighted: highlighted})}
+    <fb className={cn({shiftCellMain: true, highlighted, shadowed })}
       data-target-type='shiftcell'
       data-day={day}
       data-user={user}

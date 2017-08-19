@@ -1,6 +1,5 @@
 // @flow
 
-//import type { ThunkAction } from 'types/index'
 import { db } from '../firebaseInit'
 import firebase from 'firebase'
 import { getFirebasePath } from './../actionHelpers'
@@ -11,7 +10,10 @@ export const removeShiftWeek = () => ({type: 'remove_shiftWeek'})
 const getShiftKey = (shift) => shift.branch + shift.user + shift.day
 
 const extendShiftForDB = (sh: PreDBShift) => ({
-  ...sh, branchDay: (sh.branch + sh.day), userDay: (sh.user + sh.day)
+  ...sh,
+  b: sh.b || null, // firebase needs null to delete a node ( undefined throws an error )
+  branchDay: (sh.branch + sh.day),
+  userDay: (sh.user + sh.day)
 })
 
 export const writeShiftToDB = (smartWeek: string, shift: PreDBShift) => {
@@ -32,6 +34,6 @@ export type PreDBNote = {
 
 export const writeNoteToDB = ({smartWeek, branch, author, text, type, user, day}: PreDBNote) => {
   const timeStamp         = firebase.database.ServerValue.TIMESTAMP
-  const id                = user ? (branch + user + day + author) : (branch + day + author)
+  const id                = (type === 'shiftNote' && user) ? (branch + user + day + author) : (branch + day + author)
   db().ref(getFirebasePath('notes')).child(smartWeek).child(id).set({branch, user, day, author, timeStamp, type, text, id})
 }

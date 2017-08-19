@@ -6,7 +6,13 @@ import UserCell from './userCell'
 import { shiftToMinimalShift } from 'helpers/index'
 import './styles.css'
 
-type propsType = {user: userType, shifts: Shifts, highlightedDay: ?string | boolean, notes: Array<Note>}
+type propsType = {
+  user: userType,
+  shifts: Shifts,
+  highlightedDay: string | false,
+  shadowedDay: string | false,
+  notes: Array<Note>
+}
 
 export default class UserRow extends PureComponent{
   weekDays: Array<string>
@@ -18,7 +24,7 @@ export default class UserRow extends PureComponent{
   }
 
   render(){
-    const { user, shifts, highlightedDay, notes } = this.props
+    const { user, shifts, highlightedDay, notes, shadowedDay } = this.props
 
     return(
       <fb className="userRowMain">
@@ -29,12 +35,14 @@ export default class UserRow extends PureComponent{
               const minimalShift  = shift && shiftToMinimalShift(shift)
               const note          = notes.find(n => n.day === day)
               const highlighted   = highlightedDay === day
+              const shadowed      = shadowedDay === day
               return <ShiftCell
                 day={day}
                 user={user.id}
                 key={day}
                 shift={minimalShift}
                 note={note}
+                shadowed={shadowed}
                 highlighted={highlighted} />
             })}
         </fb>

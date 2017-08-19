@@ -1,7 +1,7 @@
 //@flow
 import React, { PureComponent } from 'react'
 import { cellChanged, timeInpOK, withColon, from4To5, shiftDataValid, zipShift, shiftToShiftInput } from './localHelpers'
-import type { FocusedCell, Shift, MinimalShift, Note } from 'types/index'
+import type { ShiftCell, Shift, Note } from 'types/index'
 import InputWindow from './inputWindow'
 import InputTongue from './inputTongue'
 import CloseButton from './closeButton'
@@ -10,19 +10,22 @@ import type { NoteModalProps } from 'actions/ui/modals'
 import './styles.css'
 
 type Props = {
-  cell: FocusedCell,
+  cell: ShiftCell,
   shift: Shift,
   optionsExpanded: boolean,
   note: Note,
   openNotesModal: (NoteModalProps)=>{},
   toggleOptions: ()=>void,
-  saveShift: (MinimalShift)=>void,
-  closePopover: ()=>void
+  saveShift: (Shift)=>void,
+  closePopover: ()=>void,
+  unfocusShiftCell: ()=>void
 }
-type State = { startTime: string, endTime: string, breakMinutes: string }
+type State = {
+  startTime: string,
+  endTime: string,
+  breakMinutes: string
+}
 
-type InpCallback = (SyntheticInputEvent) =>void
-type UpdateStateIfOK = (string, string) => void
 type InputRefs = { startTime: ?HTMLInputElement, endTime: ?HTMLInputElement }
 
 class CellPopover extends PureComponent {
@@ -38,7 +41,11 @@ class CellPopover extends PureComponent {
       endTime: '',
       breakMinutes: ''
     }
-    this.inputRefs  = { startTime: null, endTime: null}
+    
+    this.inputRefs  = {
+      startTime: null,
+      endTime: null
+    }
   }
 
   componentWillMount = () => this.populateState(this.props.shift)
@@ -56,24 +63,29 @@ class CellPopover extends PureComponent {
     if (from4To5(ps.startTime, this.state.startTime)) this.focusEndTime()
   }
 
-  startTimeChanged: InpCallback = (inp) => this.updateStateIfOK('startTime', inp.target.value)
-  endTimeChanged:   InpCallback = (inp) => this.updateStateIfOK('endTime', inp.target.value)
+  startTimeChanged = (inp: SyntheticInputEvent) => this.updateStateIfOK('startTime', inp.target.value)
+  endTimeChanged = (inp: SyntheticInputEvent) => this.updateStateIfOK('endTime', inp.target.value)
   updateBreak = (val: string) => this.setState({breakMinutes: val })
 
   focusStartTime  = () => {this.inputRefs.startTime && this.inputRefs.startTime.focus()}
   focusEndTime    = () => {this.inputRefs.endTime   && this.inputRefs.endTime.focus()}
 
-  updateStateIfOK: UpdateStateIfOK = (target, newState) => {
+  updateStateIfOK = (target: string, newState: string) => {
     const prevState       = this.state[target]
     const colonizedState  = withColon(prevState, newState)
     if(timeInpOK(prevState, colonizedState)) this.setState({[target]: colonizedState})
   }
 
   onKeyDown = (e: SyntheticKeyboardEvent) => e.key === 'Enter' && this.tryToSaveChanges()
+
   tryToSaveChanges = () => {
-    shiftDataValid({ ...this.state }) ?
-      this.props.saveShift(zipShift({ ...this.state })) :
-      console.log('WRONG')
+    if(shiftDataValid({ ...this.state })){
+      const { day, user } = this.props.cell
+      const minimalShift = zipShift({ ...this.state })
+      const shift = { ...minimalShift, day, user }
+      this.props.saveShift(shift)
+      this.props.unfocusShiftCell()
+    }
   }
 
   render(){

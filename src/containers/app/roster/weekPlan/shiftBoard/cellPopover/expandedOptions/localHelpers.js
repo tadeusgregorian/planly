@@ -1,9 +1,9 @@
 //@flow
 
-import type { FocusedCell } from 'types/index'
+import type { ShiftCell } from 'types/index'
 import { popOptionsWidth, popOptionsHeight } from 'constants/roster'
 
-export const getPosition = (cell: FocusedCell) => {
+export const getPosition = (cell: ShiftCell) => {
   const sBDomElem = document.getElementById('shiftBoardMain')
   const sBWidth  = sBDomElem ? sBDomElem.offsetWidth : 0
   const sBHeight = sBDomElem ? sBDomElem.offsetHeight : 0
