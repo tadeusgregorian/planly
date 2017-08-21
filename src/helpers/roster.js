@@ -1,6 +1,6 @@
 //@flow
 import moment from 'moment'
-import type { Shift, MinimalShift } from 'types/index'
+import type { Shift, MinimalShift, ShiftCell, Notes } from 'types/index'
 
 export const getRealCurrentSmartWeek = () :number => {
   const calendarWeek = moment().week()
@@ -71,3 +71,6 @@ export const intervalsOverlap = (start1: number, end1: number, start2: number, e
 export const shiftToMinimalShift = (shift: Shift): MinimalShift => ({
   s: shift.s, e: shift.e, b: shift.b
 })
+
+export const getNoteOfCell = (notes: Notes, cell: ShiftCell) =>
+  notes.find(n => n.user === cell.user && n.day === cell.day)

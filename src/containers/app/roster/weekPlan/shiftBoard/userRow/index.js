@@ -1,13 +1,14 @@
 //@flow
 import React, { PureComponent } from 'react'
-import type { userType, Shifts, Note } from 'types/index'
-import ShiftCell from './shiftCell'
+import type { User, Shifts, Note } from 'types/index'
+import ShiftCell from '../shiftCell'
 import UserCell from './userCell'
 import { shiftToMinimalShift } from 'helpers/index'
+import { weekDays } from 'constants/roster'
 import './styles.css'
 
 type propsType = {
-  user: userType,
+  user: User,
   shifts: Shifts,
   highlightedDay: string | false,
   shadowedDay: string | false,
@@ -15,13 +16,8 @@ type propsType = {
 }
 
 export default class UserRow extends PureComponent{
-  weekDays: Array<string>
   props: propsType
 
-  constructor(p: propsType){
-    super(p)
-    this.weekDays = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
-  }
 
   render(){
     const { user, shifts, highlightedDay, notes, shadowedDay } = this.props
@@ -30,7 +26,7 @@ export default class UserRow extends PureComponent{
       <fb className="userRowMain">
         <UserCell user={user} />
           <fb className='ShiftCellsWrapper'>
-            { this.weekDays.map(day => {
+            { weekDays.map(day => {
               const shift         = shifts.find(shift => shift.day === day)
               const minimalShift  = shift && shiftToMinimalShift(shift)
               const note          = notes.find(n => n.day === day)

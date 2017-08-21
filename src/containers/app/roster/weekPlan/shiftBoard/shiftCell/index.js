@@ -7,7 +7,14 @@ import { type Note } from 'types/index'
 import cn from 'classnames'
 import './styles.css'
 
-type props = {day: string, user: string, shift: ?MinimalShift, highlighted: boolean, note: ?Note, shadowed: boolean}
+type props = {
+  day: string,
+  user: string,
+  highlighted?: boolean,
+  shadowed?: boolean,
+  note?: Note,
+  shift?: MinimalShift,
+}
 
 export default ({ shift, day, user, highlighted, note, shadowed }: props) => {
   return(

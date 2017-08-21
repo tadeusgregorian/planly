@@ -1,7 +1,7 @@
 //@flow
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import type { userType, Note } from 'types/index'
+import type { User, Note } from 'types/index'
 import SModal from 'components/sModal'
 import { writeNoteToDB } from 'actions/roster'
 import './styles.css'
@@ -9,7 +9,7 @@ import './styles.css'
 type Props = {
   smartWeek: string,
   branch: string,
-  users: Array<userType>,
+  users: Array<User>,
   notes: Array<Note>,
   currentUserID: string,
   user?: string, // The user that the shiftCell belongs to ( if its a shiftNote )

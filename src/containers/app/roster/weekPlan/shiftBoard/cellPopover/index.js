@@ -1,7 +1,9 @@
 //@flow
 import React, { PureComponent } from 'react'
 import { cellChanged, timeInpOK, withColon, from4To5, shiftDataValid, zipShift, shiftToShiftInput } from './localHelpers'
+import { connect } from 'react-redux'
 import type { ShiftCell, Shift, Note } from 'types/index'
+import { toggleOptions, unfocusShiftCell } from 'actions/ui/roster'
 import InputWindow from './inputWindow'
 import InputTongue from './inputTongue'
 import CloseButton from './closeButton'
@@ -41,7 +43,7 @@ class CellPopover extends PureComponent {
       endTime: '',
       breakMinutes: ''
     }
-    
+
     this.inputRefs  = {
       startTime: null,
       endTime: null
@@ -109,7 +111,7 @@ class CellPopover extends PureComponent {
             height={height}
             hasNote={!!note}
           />
-          <CloseButton closePopover={this.props.closePopover} />
+          <CloseButton closePopover={this.props.unfocusShiftCell} />
           <InputTongue value={this.state.breakMinutes} updateBreak={this.updateBreak} toggleOptions={toggleOptions}/>
         </fb>
       </fb>
@@ -117,4 +119,13 @@ class CellPopover extends PureComponent {
   }
 }
 
-export default CellPopover
+const actionsToProps = {
+  toggleOptions,
+  unfocusShiftCell
+}
+
+const mapStateToProps = (state) => ({
+  optionsExpanded: state.ui.roster.weekPlan.optionsExpanded,
+})
+
+export default connect(mapStateToProps, actionsToProps)(CellPopover)

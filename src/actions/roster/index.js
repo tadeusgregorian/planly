@@ -12,6 +12,7 @@ const getShiftKey = (shift) => shift.branch + shift.user + shift.day
 const extendShiftForDB = (sh: PreDBShift) => ({
   ...sh,
   b: sh.b || null, // firebase needs null to delete a node ( undefined throws an error )
+  isOpen: sh.isOpen || null, // same here
   branchDay: (sh.branch + sh.day),
   userDay: (sh.user + sh.day)
 })

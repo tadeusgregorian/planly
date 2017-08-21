@@ -13,6 +13,10 @@
       // border-color: #e5e6e9 #dfe0e4 #d0d1d5;
       border-radius: 2px;
       flex-direction: column;
+
+      -moz-user-select: -moz-none;
+      -khtml-user-select: none;
+      -webkit-user-select: none;
     }
 
     ::-webkit-scrollbar {

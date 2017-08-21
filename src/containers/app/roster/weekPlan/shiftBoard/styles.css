@@ -1,7 +1,6 @@
 #shiftBoardMain {
   flex: 1 0 auto;
   flex-direction: column;
-  overflow-x: visible;
   background-color: white;
   min-height: 100px;
   font-weight: 300;
@@ -12,11 +11,10 @@
   border-bottom-left-radius: 2px;
   margin-bottom: 30px;
   box-sizing: content-box;
-  -moz-user-select: -moz-none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
   cursor: pointer; }
   #shiftBoardMain.cursorMove {
     cursor: move !important; }
-  #shiftBoardMain .content {
+  #shiftBoardMain .openShifts {
+    flex-direction: column; }
+  #shiftBoardMain .assignedShifts {
     flex-direction: column; }

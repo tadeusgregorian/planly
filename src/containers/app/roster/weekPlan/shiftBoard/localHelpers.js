@@ -1,7 +1,6 @@
 //@flow
 
-import type { ShiftCell, Day, Shifts, Shift } from 'types/index'
-import { weekDays } from 'constants/roster'
+import type { ShiftCell, Shifts, Shift, Notes } from 'types/index'
 
 export const elementIsShiftCell = (el: HTMLElement): boolean =>
   !!(el.getAttribute && el.getAttribute('data-target-type') === 'shiftcell')
@@ -46,3 +45,12 @@ export const isSameCell = (c1: ShiftCell, c2: ShiftCell): boolean => {
 
 export const getShiftOfCell = (shifts: Shifts, cell: ShiftCell): ?Shift =>
   shifts.find(s => s.user === cell.user && s.day === cell.day )
+
+export const getShiftsOfUser = (shifts: Shifts, userID: string): Shifts =>
+ shifts.filter(s => s.user === userID)
+
+export const getNotesOfUser = (notes: Notes, userID: string): Notes =>
+ notes.filter(n => n.user === userID)
+
+ export const getShadowedDay = (shadowedCell: ?ShiftCell, userID: string): string | false =>
+  !!shadowedCell && shadowedCell.user === userID && shadowedCell.day

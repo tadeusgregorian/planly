@@ -7,13 +7,13 @@ export type ThunkAction = (dispatch: Dispatch, getState: GetState) => any
 
 // core-types
 
-export type userType = {
+export type User = {
   id: string,
   name: string,
   color: string,
   position: string,
   branches: {},
-  email: string,
+  email: ?string,
   weeklyHours: {},
   status: 'notInvited' | 'invited' | 'active'
 }
@@ -33,7 +33,8 @@ export type Shift = {
   e: number,
   b?: number | null,
   user: string,
-  day: Day
+  day: Day,
+  isOpen?: boolean
 }
 
 export type PreDBShift = {
@@ -42,7 +43,8 @@ export type PreDBShift = {
   b?: number | null,
   day: Day,
   user: string,
-  branch: string
+  branch: string,
+  isOpen?: boolean,
 }
 
 export type DBShift = {
@@ -53,7 +55,8 @@ export type DBShift = {
   user: string,
   branch: string,
   branchDay: string,
-  userDay: string
+  userDay: string,
+  isOpen?: boolean
 }
 
 export type Shifts = Array<Shift>
@@ -83,3 +86,5 @@ export type Note = {
   author:     string,
   text:       string
 }
+
+export type Notes = Array<Note>

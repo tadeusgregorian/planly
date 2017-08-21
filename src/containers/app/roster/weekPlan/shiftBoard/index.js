@@ -1,166 +1,73 @@
 //@flow
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import type { userType, Shift, Shifts, ShiftCell, Note } from 'types/index'
-import getFocusedShift from 'selectors/focusedShift'
-import { toggleOptions } from 'actions/ui/roster'
-import { elementIsShiftCell, elementIsNoteIcon, targetToShiftCell, getParentShiftCell, getShiftOfCell } from './localHelpers'
-import UserRow from './userRow'
-import CellPopover from './cellPopover'
+
+import { focusShiftCell } from 'actions/ui/roster'
+import { getShiftOfCell, getShiftsOfUser, getNotesOfUser, getShadowedDay } from './localHelpers'
 import { openNotesModal } from 'actions/ui'
-import type { NoteModalProps } from 'actions/ui/modals'
+import { generateGuid } from 'helpers/general'
+import { weekDays } from 'constants/roster'
+
+import UserRow from './userRow'
+import OpenShifts from './openShifts'
+import CellPopover from './cellPopover'
+import getFocusedShift from 'selectors/focusedShift'
+import withMouseEvents from './withMouseEvents'
 import PickedUpCell from './pickedUpCell'
 import './styles.css'
 
-type Props = {
-  users: [userType],
+import type { User, Shift, Shifts, ShiftCell, Note } from 'types/index'
+import type { NoteModalProps } from 'actions/ui/modals'
+
+export type Props = {
+  users: [User],
   shifts: Shifts,
   notes: Array<Note>,
   focusedCell: ShiftCell,
   focusedShift: Shift,
   optionsExpanded: boolean,
-  toggleOptions: ()=>void,
+  pickedUpCell: ?ShiftCell, // comes from HOC
+  shadowedCell: ?ShiftCell, // comes from HOC
   focusShiftCell: ({}) => void,
   saveShift: (Shift)=> void,
-  unfocusShiftCell: ()=>void,
-  openNotesModal: (NoteModalProps)=>{}
+  openNotesModal: (NoteModalProps)=>{},
+  getPickedUpCellRef: (HTMLElement)=>void
 }
 
 class ShiftBoard extends PureComponent{
   props: Props
-  cellUnderMouse: ?ShiftCell
-  mouseIsDown: boolean
-  isDragging: boolean
-  mousePosStart: {x: number, y: number}
-  mousePosDelta: {x: number, y: number}
-  PickedUpCellRef: ?HTMLElement
-  state: { pickedUpCell: ?ShiftCell, shadowedCell: ?ShiftCell }
-
-  constructor(props: Props){
-    super(props)
-
-    this.mouseIsDown = false
-    this.state = { pickedUpCell: null, shadowedCell: null }
-  }
-
-  componentDidMount = () => {
-    document.addEventListener('mouseover', this.onMouseOver)
-    document.addEventListener('mousemove', this.onMouseMove)
-    document.addEventListener('mousedown', this.onMouseDown)
-    document.addEventListener('mouseup',   this.onMouseUp)
-  }
-
-  componentWillUnmount = () => {
-    document.removeEventListener('mouseover', this.onMouseOver)
-    document.removeEventListener('mousemove', this.onMouseMove)
-    document.removeEventListener('mousedown', this.onMouseDown)
-    document.removeEventListener('mouseup',   this.onMouseUp)
-  }
-
-  onMouseOver = ({target}: any) => {
-    if(!this.mouseIsDown) return
-    this.cellUnderMouse = getParentShiftCell(target)
-    //dont allow to shadow Cells that already have a shift.
-    if(this.cellUnderMouse && getShiftOfCell(this.props.shifts, this.cellUnderMouse)){
-      this.cellUnderMouse = null
-    }
-    this.setState({shadowedCell: this.cellUnderMouse})
-  }
-
-  onMouseDown = (e: any) => {
-    const pressedCell = getParentShiftCell(e.target)
-    if (!pressedCell) return
-    // dont allow picking cells Up that dont have shifts
-    if (!getShiftOfCell(this.props.shifts, pressedCell)) return
-    this.mousePosStart = {x: e.pageX, y: e.pageY}
-    this.mouseIsDown = true
-    setTimeout(()=> this.pickUpCell(pressedCell), 200)
-  }
-
-  onMouseUp = ({target}: any) => {
-    if(!this.isDragging){
-      const shiftCell = targetToShiftCell(target)
-      elementIsNoteIcon(target)  && this.props.openNotesModal({ day: shiftCell.day, user: shiftCell.user , type: 'shiftNote'})
-      elementIsShiftCell(target) && this.props.focusShiftCell(shiftCell)
-    }
-
-    this.mouseIsDown = false
-    this.mousePosStart = {x: 0, y: 0}
-    this.state.pickedUpCell && this.dropCell()
-  }
-
-  onMouseMove = (e: any) => {
-    if (!this.state.pickedUpCell || !this.PickedUpCellRef) return
-    this.mousePosDelta = {
-      x: e.pageX - this.mousePosStart.x,
-      y: e.pageY - this.mousePosStart.y
-    }
-    this.PickedUpCellRef.style.left = (this.state.pickedUpCell.left + this.mousePosDelta.x) + 'px'
-    this.PickedUpCellRef.style.top =  (this.state.pickedUpCell.top + this.mousePosDelta.y) + 'px'
-  }
-
-  pickUpCell = (cell) => {
-    if(this.mouseIsDown){
-      this.isDragging = true
-      this.setState({pickedUpCell: cell})
-      const shiftBoard = document.getElementById("shiftBoardMain")
-      shiftBoard && shiftBoard.classList.add('cursorMove')
-    }
-  }
-
-  dropCell = () => {
-    const { shadowedCell, pickedUpCell } = this.state
-    const { shifts, saveShift } = this.props
-    if(pickedUpCell && shadowedCell){
-      const pickedUpShift =  getShiftOfCell(shifts, pickedUpCell)
-      if(shadowedCell && pickedUpShift){
-        const newShift = { ...pickedUpShift, day: shadowedCell.day, user: shadowedCell.user }
-        saveShift(newShift)
-      }
-    }
-
-    this.isDragging = false
-    this.setState({pickedUpCell: null, shadowedCell: null})
-    const shiftBoard = document.getElementById("shiftBoardMain")
-    shiftBoard && shiftBoard.classList.remove('cursorMove')
-  }
 
 
   render(){
-    const { users, shifts, focusedCell, focusedShift, optionsExpanded, notes } = this.props
-    const { pickedUpCell, shadowedCell } = this.state
+    const { users, shifts, focusedCell, notes } = this.props
+    const { pickedUpCell, shadowedCell, getPickedUpCellRef } = this.props
     return(
       <fb id="shiftBoardMain">
-        <fb className='content'>
+        <OpenShifts shifts={shifts} notes={notes} shadowedCell={shadowedCell} highlightedCell={null} />
+        <fb className='assignedShifts'>
           { users.map(user => {
-            const shiftsOfUser = shifts.filter(s => s.user === user.id)
-            const notesOfUser  = notes.filter(n => n.user === user.id)
-            const highlightedDay = optionsExpanded && focusedCell && focusedCell.user === user.id && focusedCell.day
-            const shadowedDay = (!!shadowedCell) && shadowedCell.user === user.id && shadowedCell.day
+            //const highlightedDay =  focusedCell && focusedCell.user === user.id && focusedCell.day
             return <UserRow
               key={user.id}
               user={user}
-              shifts={shiftsOfUser}
-              notes={notesOfUser}
-              shadowedDay={shadowedDay}
-              highlightedDay={highlightedDay}/>
+              shifts={getShiftsOfUser(shifts, user.id)}
+              notes={getNotesOfUser(notes, user.id)}
+              shadowedDay={getShadowedDay(shadowedCell, user.id)}
+              highlightedDay={false}
+            />
           })}
         </fb>
         { focusedCell &&
           <CellPopover
             cell={focusedCell}
-            shift={focusedShift}
+            shift={this.props.focusedShift}
             note={notes.find(n => n.user === focusedCell.user && n.day === focusedCell.day )}
             openNotesModal={this.props.openNotesModal}
-            saveShift={this.props.saveShift}
-            unfocusShiftCell={this.props.unfocusShiftCell}
-            toggleOptions={this.props.toggleOptions}
-            optionsExpanded={optionsExpanded}
-            closePopover={this.props.unfocusShiftCell}/>
+            saveShift={this.props.saveShift}/>
           }
           { pickedUpCell &&
             <PickedUpCell
-              getRef={(el:HTMLElement) => {this.PickedUpCellRef = el}}
+              getRef={getPickedUpCellRef}
               shift={getShiftOfCell(shifts, pickedUpCell)}
               cell={pickedUpCell} />
           }
@@ -170,14 +77,16 @@ class ShiftBoard extends PureComponent{
 }
 
 const actionsToProps = {
-  toggleOptions,
-  openNotesModal
+  openNotesModal,
+  focusShiftCell
 }
 
 const mapStateToProps = (state) => ({
   users: state.core.users,
+  focusedCell: state.ui.roster.weekPlan.focusedCell,
+  notes: state.roster.notes,
+  shifts: state.roster.shiftWeek,
   focusedShift: getFocusedShift(state),
-  optionsExpanded: state.ui.roster.weekPlan.optionsExpanded,
 })
 
-export default connect(mapStateToProps, actionsToProps)(ShiftBoard)
+export default connect(mapStateToProps, actionsToProps)(withMouseEvents(ShiftBoard))

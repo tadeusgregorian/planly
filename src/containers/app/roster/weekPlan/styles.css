@@ -7,7 +7,10 @@
     padding: 10px 10px 0px 0px;
     width: 1200px;
     border-radius: 2px;
-    flex-direction: column; }
+    flex-direction: column;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none; }
   .shiftWeekWrapper ::-webkit-scrollbar {
     -webkit-appearance: none;
     width: 0px;

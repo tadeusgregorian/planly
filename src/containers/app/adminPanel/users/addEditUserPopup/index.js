@@ -12,13 +12,13 @@ import WithTooltip from 'components/withTooltip'
 import FlatFormRow from 'components/flatFormRow'
 import WeeklyHoursInput from './weeklyHoursInput'
 import moment from 'moment'
-import { type userType } from 'types/index'
+import { type User } from 'types/index'
 import { saveUserToDB, sendEmailInvite } from 'actions/index'
 import { getNextID, isValidEmail, replaceCommasWithDots } from 'helpers/index'
 import './styles.css'
 
 class AddEditUserPopup extends PureComponent {
-	state: {user: userType , errorText: string}
+	state: {user: User , errorText: string}
 
 	constructor(props) {
 		super(props);
