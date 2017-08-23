@@ -1,7 +1,5 @@
-//@flow
 import { createDataStatusReducer, createFirebaseReducer_array } from '../reducerHelpers'
 import { combineReducers } from 'redux'
-import type { DBShift } from 'types/index'
 import _ from 'lodash'
 
 // we extract this because there is userDay, and branchDay in DB ( just needed for mobile )
@@ -10,7 +8,7 @@ const extractNeeded = (data) => {
   return { s, e, b, user, day, isOpen }
 }
 
-const sameShift = (s1: DBShift, s2: DBShift) => s1.user === s2.user && s1.day === s2.day
+const sameShift = (s1, s2) => s1.user === s2.user && s1.day === s2.day
 
 const shiftWeekReducer = (state = [], a) => {
   switch(a.type) {
