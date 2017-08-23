@@ -67,7 +67,8 @@ export type ShiftCell = {
   top: number,
   left: number,
   width: number,
-  height: number
+  height: number,
+  isOpen?: ?boolean
 }
 
 export type ShiftInput = {

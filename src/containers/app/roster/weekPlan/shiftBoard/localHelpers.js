@@ -25,12 +25,13 @@ export const closest = (el: any, fn: (any)=>boolean) => {
 export const targetToShiftCell = (target: HTMLElement): ShiftCell => {
   const day       = target.getAttribute('data-day')
   const user      = target.getAttribute('data-user')
+  const isOpen    = target.getAttribute('data-shift-type') === 'openshift'
   const top       = target.offsetTop
   const left      = target.offsetLeft
   const width     = target.offsetWidth
   const height    = target.offsetHeight
 
-  const shiftCell: ShiftCell = ({ day, user, top, left, width, height } : any) // forcefully Typekasting
+  const shiftCell: ShiftCell = ({ day, user, top, left, width, height, isOpen } : any) // forcefully Typekasting
   return shiftCell
 }
 

@@ -43,7 +43,11 @@ class ShiftBoard extends PureComponent{
     const { pickedUpCell, shadowedCell, getPickedUpCellRef } = this.props
     return(
       <fb id="shiftBoardMain">
-        <OpenShifts shifts={shifts} notes={notes} shadowedCell={shadowedCell} highlightedCell={null} />
+        {/* <OpenShifts
+          shifts={shifts.filter(s => s.isOpen)}
+          notes={notes}
+          shadowedCell={shadowedCell}
+          highlightedCell={null} /> */}
         <fb className='assignedShifts'>
           { users.map(user => {
             //const highlightedDay =  focusedCell && focusedCell.user === user.id && focusedCell.day

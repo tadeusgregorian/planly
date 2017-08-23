@@ -1,9 +1,14 @@
 .openShiftsMain{
   flex-direction: row;
-
+  border-bottom: 1px solid #dfe0e4;
 
   .label{
-    background: orange;
+    align-items: center;
+    color: #0099e0;
+    font-weight: 400;
+    padding-left: 14px;
+    background: #f7f7f7;
     flex: 1 1;
+    //flex-direction: column;
   }
 }

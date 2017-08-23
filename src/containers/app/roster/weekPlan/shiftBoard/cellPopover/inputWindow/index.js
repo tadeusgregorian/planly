@@ -1,6 +1,7 @@
 //@flow
 import React from 'react'
 import { minToTimeString } from 'helpers/index'
+import { shiftCellHeight } from 'constants/roster'
 import './styles.css'
 
 type props = {
@@ -35,7 +36,7 @@ export default (props: props) => {
   }
 
   return(
-    <fb className="inputWindowMain" style={{height: props.height + 2 }}>
+    <fb className="inputWindowMain" style={{height: shiftCellHeight + 1 }}>
       <fb className='inpWrapper'>
         <input
           className="timeInput start"

@@ -4,12 +4,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { changeCurrentSmartWeek, goToLastWeek, goToNextWeek } from 'actions/ui/roster'
 import { getWeek } from 'helpers/index'
-import moment from 'moment'
 import './styles.css'
 
 const WeekSelect = ({currentSmartWeek, goToNextWeek, goToLastWeek}) => {
-
-  console.log(moment().year(2017).week(11).startOf('week').add(1, 'week').week())
 
   return(
     <fb className="weekSelectorMain">

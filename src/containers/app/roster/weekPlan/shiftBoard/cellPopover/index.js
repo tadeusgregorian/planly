@@ -1,6 +1,7 @@
 //@flow
 import React, { PureComponent } from 'react'
 import { cellChanged, timeInpOK, withColon, from4To5, shiftDataValid, zipShift, shiftToShiftInput } from './localHelpers'
+import { generateGuid } from 'helpers/index'
 import { connect } from 'react-redux'
 import type { ShiftCell, Shift, Note } from 'types/index'
 import { toggleOptions, unfocusShiftCell } from 'actions/ui/roster'
@@ -82,9 +83,10 @@ class CellPopover extends PureComponent {
 
   tryToSaveChanges = () => {
     if(shiftDataValid({ ...this.state })){
-      const { day, user } = this.props.cell
+      const { day, user, isOpen } = this.props.cell
       const minimalShift = zipShift({ ...this.state })
-      const shift = { ...minimalShift, day, user }
+      let shift = { ...minimalShift, day, user, isOpen: !!isOpen }
+      if(isOpen && user === 'open') shift.user = generateGuid() // TODO: really hacky i know.. dont know how to clean this.
       this.props.saveShift(shift)
       this.props.unfocusShiftCell()
     }

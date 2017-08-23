@@ -1,4 +1,42 @@
 .openShiftsDayColumnMain{
   min-height: 40px;
-  background: red;
+  flex-direction: column;
+  justify-content: flex-start;
+  //border-right: 1px solid #dfe0e4;
+
+  &:last-of-type{
+    //border-right: none;
+  }
+
+
+  .shiftCellMain{
+    //border: none;
+    border-bottom: 1px solid rgb(223, 224, 228);
+
+    &:last-of-type{
+      border-bottom: none;
+    }
+  }
+
+  .openShiftInputCell{
+    flex: 1 1;
+    background-color: #f7f7f7;
+
+    &:hover:before {
+      font-family: 'icomoon' !important;
+      content: "\e145";
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      top: 2px;
+      right: 3px;
+      background-color: #caeeff;
+      color: #00a3ef;
+      text-align: center;
+      display: flex;
+      width: 20px;
+      height: 20px;
+      border-radius: 2px;
+    }
+  }
 }
