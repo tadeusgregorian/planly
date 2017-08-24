@@ -15,7 +15,9 @@ export type User = {
   branches: {},
   email: ?string,
   weeklyHours: {},
-  status: 'notInvited' | 'invited' | 'active'
+  status: 'notInvited' | 'invited' | 'active',
+  isAdmin?: true,
+  isSuperAdmin?: true
 }
 
 export type Position = {

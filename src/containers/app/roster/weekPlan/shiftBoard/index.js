@@ -6,7 +6,7 @@ import { focusShiftCell } from 'actions/ui/roster'
 import { getShiftOfCell, getShiftsOfUser, getNotesOfUser, getShadowedDay } from './localHelpers'
 import { openNotesModal } from 'actions/ui'
 
-
+import getCurrentUser from 'selectors/currentUser'
 import UserRow from './userRow'
 import OpenShifts from './openShifts'
 import CellPopover from './cellPopover'
@@ -30,6 +30,7 @@ export type Props = {
   optionsExpanded: boolean,
   pickedUpCell: ?ShiftCell, // comes from HOC
   shadowedCell: ?ShiftCell, // comes from HOC
+  currentUser: ?User,       // used in the HOC
   focusShiftCell: ({}) => void,
   saveShift: (Shift)=> void,
   openNotesModal: (NoteModalProps)=>{},
@@ -95,6 +96,7 @@ const mapStateToProps = (state) => ({
   notes: state.roster.notes,
   shifts: state.roster.shiftWeek,
   focusedShift: getFocusedShift(state),
+  currentUser: getCurrentUser(state)
 })
 
 export default connect(mapStateToProps, actionsToProps)(withMouseEvents(ShiftBoard))

@@ -1,9 +1,10 @@
 //@flow
-
 import React, { PureComponent } from 'react'
+import { connect } from 'react-redux'
 import { shiftCellWidth } from 'constants/roster'
-import type { Notes, Shifts, Position } from 'types/index'
+import type { Notes, Shifts, Position, User } from 'types/index'
 import { shiftToMinimalShift, generateGuid } from 'helpers/index'
+import getCurrentUser from 'selectors/currentUser'
 import ShiftCell from '../../shiftCell'
 import './styles.css'
 
@@ -11,10 +12,11 @@ type Props = {
   day: string,
   shifts: Shifts,
   notes: Notes,
-  positions: Array<Position>
+  positions: Array<Position>,
+  currentUser: User
 }
 
-export default class DayColumn extends PureComponent{
+class DayColumn extends PureComponent<void, Props, void>{
   generatedUID: string
 
   componentDidMount = () => { this.generatedUID = generateGuid() }
@@ -26,7 +28,8 @@ export default class DayColumn extends PureComponent{
   }
 
   render(){
-    const { shifts, day, notes, positions } = this.props
+    const { shifts, day, notes, positions, currentUser } = this.props
+    const { isAdmin } = currentUser
 
     return(
       <fb className="openShiftsDayColumnMain" style={{width: shiftCellWidth}}>
@@ -43,14 +46,24 @@ export default class DayColumn extends PureComponent{
               />
           })
         }
-        <ShiftCell
+        { <ShiftCell
           user={this.generatedUID}
           day={day}
           note={notes.find(n => n.user === this.generatedUID)}
           shiftType='openshift'
-          cssClass='openShiftInputCell'
-        />
+          cssClasses={['openShiftInputCell', (isAdmin ? 'admin' : '')]}
+        /> }
+        {/*  This Dummy Cell is just filling the empty column to a min of 1 */}
+        {/* { !currentUser.isAdmin && !shifts.length && <fb className='dummyCell openShiftInputCell'
+          ></fb>
+        } */}
       </fb>
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  currentUser: getCurrentUser(state)
+})
+
+export default connect(mapStateToProps)(DayColumn)

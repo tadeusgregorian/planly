@@ -16,18 +16,19 @@ type Props = {
   position?: Position, // for open Shifts only
   shiftType: 'openshift' | 'usershift',
   style?: {},
-  cssClass?: string,
+  cssClasses?: Array<string>,
 }
 
-const ShiftCell = ({ shift, day, user, highlighted, note, shadowed, shiftType, style, cssClass, position }: Props) => {
+const ShiftCell = ({ shift, day, user, highlighted, note, shadowed, shiftType, style, cssClasses, position }: Props) => {
   const posInitials = position && position.name.substr(0, 2)
   const posBoxStyle = position && {
      color: position.color,
      height: shiftCellHeight - 3,
      backgroundColor: shadeColor(position.color, 0.8)
    }
+   const cssClassesObj = cssClasses ? cssClasses.reduce((acc, val) => ({ ...acc, [val]: true }), {}) : {}
   return(
-    <fb className={cn({shiftCellMain: true, highlighted, shadowed, [cssClass ? cssClass : '']: true })}
+    <fb className={cn({shiftCellMain: true, highlighted, shadowed, ...cssClassesObj })}
       data-target-type='shiftcell'
       data-day={day}
       data-user={user}

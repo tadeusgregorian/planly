@@ -18,8 +18,9 @@ type Enhancer = (component: Class<React$Component<void, Props, void>>) =>
 
 const enhancer:Enhancer = (Component) => {
   return class WithMouseLogic extends PureComponent {
-    cellUnderMouse: ?ShiftCell
 
+    cellUnderMouse: ?ShiftCell
+    isAdmin: boolean
     mouseIsDown: boolean
     isDragging: boolean
     mousePosStart: {x: number, y: number}
@@ -32,21 +33,27 @@ const enhancer:Enhancer = (Component) => {
       super(props)
 
       this.mouseIsDown = false
+      // props.currentUser comes from connect from the ShiftBoard Class
+      this.isAdmin = !!(this.props.currentUser && this.props.currentUser.isAdmin)
       this.state = { pickedUpCell: null, shadowedCell: null }
     }
 
     componentDidMount = () => {
-      document.addEventListener('mouseover', this.onMouseOver)
-      document.addEventListener('mousemove', this.onMouseMove)
-      document.addEventListener('mousedown', this.onMouseDown)
       document.addEventListener('mouseup',   this.onMouseUp)
+      if(this.isAdmin){ // only admin has drag and drop
+        document.addEventListener('mousemove', this.onMouseMove)
+        document.addEventListener('mouseover', this.onMouseOver)
+        document.addEventListener('mousedown', this.onMouseDown)
+      }
     }
 
     componentWillUnmount = () => {
-      document.removeEventListener('mouseover', this.onMouseOver)
-      document.removeEventListener('mousemove', this.onMouseMove)
-      document.removeEventListener('mousedown', this.onMouseDown)
       document.removeEventListener('mouseup',   this.onMouseUp)
+      if(this.isAdmin){ // only admin has drag and drop
+        document.removeEventListener('mouseover', this.onMouseOver)
+        document.removeEventListener('mousemove', this.onMouseMove)
+        document.removeEventListener('mousedown', this.onMouseDown)
+      }
     }
 
     onMouseOver = ({target}: any) => {
@@ -117,13 +124,14 @@ const enhancer:Enhancer = (Component) => {
       shiftBoard && shiftBoard.classList.remove('cursorMove')
     }
 
-    render = () => (
+    render = () => {
+      return (
         <Component  { ...this.props }
           pickedUpCell={this.state.pickedUpCell}
           shadowedCell={this.state.shadowedCell}
           getPickedUpCellRef={(el) => {this.PickedUpCellRef = el}}
         />
-    )
+    )}
   }
 }
 

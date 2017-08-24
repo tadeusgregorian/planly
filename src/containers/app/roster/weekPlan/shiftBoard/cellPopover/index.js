@@ -114,8 +114,6 @@ class CellPopover extends PureComponent {
     const { width, height, left, top, isOpen } = this.props.cell
     const sizeAndPos = { width: width + 1, left , top: top - 1 }
     const { cell, toggleOptions, optionsExpanded, note, openNotesModal } = this.props
-    console.log(this.state);
-    console.log(this.props.shift);
 
     return(
       <fb className="cellPopoverMain" style={sizeAndPos}>
