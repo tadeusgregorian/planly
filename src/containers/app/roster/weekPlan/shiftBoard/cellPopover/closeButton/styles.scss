@@ -1,19 +1,21 @@
 .closeButtonMain{
   position: absolute;
-  width: 18px;
-  height: 18px;
-  background-color: white;
+  width: 15px;
+  height: 14px;
   justify-content: center;
   align-items: center;
-  top: -8px;
-  right: -8px;
-  color: #00a3ef;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  border-radius: 20px;
+  top: 0px;
+  right: 0px;
+  color: #ffffff;
   cursor: pointer;
+  font-size: 12px;
+  background: #00a3ef;
+  padding: 0px;
+  font-weight: 600;
+  border-bottom-left-radius: 4px;
+  padding-bottom: 1px;
 
   &:hover{
-    color: orange;
+    background: #007ab3;
   }
 }

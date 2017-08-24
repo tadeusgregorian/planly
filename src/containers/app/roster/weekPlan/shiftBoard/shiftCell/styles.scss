@@ -8,8 +8,8 @@
   font-size: 16px;
 
   &.inPopover{
-    top: 4px;
-    right: 4px;
+    top: 15px;
+    right: 2px;
   }
 
   &:hover{
@@ -34,6 +34,20 @@
     background-color: #c8eeff;
     box-shadow: inset 0px 1px 4px rgba(0, 0, 0, 0.32);
     color: grey;
+  }
+
+  .posBox{
+    position: absolute;
+    left: 0px;
+    background: #ffe1e1;
+    font-size: 12px;
+    text-transform: uppercase;
+    width: 22px;
+    justify-content: center;
+    margin-left: 1px;
+    align-items: center;
+    font-weight: 400;
+    border-radius: 1px;
   }
 
   .shiftTimes{

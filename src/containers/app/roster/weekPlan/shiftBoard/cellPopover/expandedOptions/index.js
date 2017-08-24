@@ -15,7 +15,7 @@ export default (props: Props) => {
   return(
     <fb className="expandedOptionsMain" style={getPosition(props.cell)}>
       <fb className='optionsButton' onClick={notesClicked} >Notiz</fb>
-      <fb className='optionsButton'>Krankmeldung</fb>
+      <fb className='optionsButton'>Krank gemeldet</fb>
       <fb className='optionsButton'>Extrastunden</fb>
     </fb>
   )

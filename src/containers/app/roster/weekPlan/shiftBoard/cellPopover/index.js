@@ -1,22 +1,25 @@
 //@flow
 import React, { PureComponent } from 'react'
-import { cellChanged, timeInpOK, withColon, from4To5, shiftDataValid, zipShift, shiftToShiftInput } from './localHelpers'
-import { generateGuid } from 'helpers/index'
 import { connect } from 'react-redux'
-import type { ShiftCell, Shift, Note } from 'types/index'
+import { cellChanged, timeInpOK, withColon, from4To5, shiftDataValid, zipShift, shiftToShiftInput } from './localHelpers'
 import { toggleOptions, unfocusShiftCell } from 'actions/ui/roster'
+
+import PositionsBubble from './positionsBubble'
 import InputWindow from './inputWindow'
 import InputTongue from './inputTongue'
 import CloseButton from './closeButton'
 import ExpandedOptions from './expandedOptions'
-import type { NoteModalProps } from 'actions/ui/modals'
 import './styles.css'
+
+import type { ShiftCell, Shift, Note, Position } from 'types/index'
+import type { NoteModalProps } from 'actions/ui/modals'
 
 type Props = {
   cell: ShiftCell,
   shift: Shift,
   optionsExpanded: boolean,
   note: Note,
+  positions: Array<Position>,
   openNotesModal: (NoteModalProps)=>{},
   toggleOptions: ()=>void,
   saveShift: (Shift)=>void,
@@ -26,7 +29,8 @@ type Props = {
 type State = {
   startTime: string,
   endTime: string,
-  breakMinutes: string
+  breakMinutes: string,
+  position: string
 }
 
 type InputRefs = { startTime: ?HTMLInputElement, endTime: ?HTMLInputElement }
@@ -42,7 +46,8 @@ class CellPopover extends PureComponent {
     this.state = {
       startTime: '',
       endTime: '',
-      breakMinutes: ''
+      breakMinutes: '',
+      position: '' // positionID ( used for open shifts )
     }
 
     this.inputRefs  = {
@@ -53,7 +58,15 @@ class CellPopover extends PureComponent {
 
   componentWillMount = () => this.populateState(this.props.shift)
 
-  populateState = (shift: Shift) => this.setState({ ...shiftToShiftInput(shift)})
+  componentDidMount     = () => window.addEventListener('keydown', this.onKeyDown)
+  componentWillUnmount  = () => window.removeEventListener('keydown', this.onKeyDown)
+
+  populateState = (shift: Shift) => {
+    this.setState({
+      ...shiftToShiftInput(shift),
+      position: shift.position
+    })
+  }
 
   componentWillReceiveProps = (nextProps: Props) => {
     if(cellChanged(this.props.cell, nextProps.cell)) {
@@ -82,23 +95,30 @@ class CellPopover extends PureComponent {
   onKeyDown = (e: SyntheticKeyboardEvent) => e.key === 'Enter' && this.tryToSaveChanges()
 
   tryToSaveChanges = () => {
-    if(shiftDataValid({ ...this.state })){
-      const { day, user, isOpen } = this.props.cell
-      const minimalShift = zipShift({ ...this.state })
+    const { startTime, endTime, breakMinutes, position } = this.state
+    const { day, user, isOpen } = this.props.cell
+    const shiftInput = { startTime, endTime, breakMinutes }
+
+    if(isOpen && !position) return
+    if(shiftDataValid(shiftInput)){
+      const minimalShift = zipShift(shiftInput)
       let shift = { ...minimalShift, day, user, isOpen: !!isOpen }
-      if(isOpen && user === 'open') shift.user = generateGuid() // TODO: really hacky i know.. dont know how to clean this.
+      if(isOpen) shift = { ...shift, isOpen, position }
+
       this.props.saveShift(shift)
       this.props.unfocusShiftCell()
     }
   }
 
   render(){
-    const { width, height, left, top } = this.props.cell
+    const { width, height, left, top, isOpen } = this.props.cell
     const sizeAndPos = { width: width + 1, left , top: top - 1 }
     const { cell, toggleOptions, optionsExpanded, note, openNotesModal } = this.props
+    console.log(this.state);
+    console.log(this.props.shift);
 
     return(
-      <fb className="cellPopoverMain" style={sizeAndPos} onKeyDown={this.onKeyDown}>
+      <fb className="cellPopoverMain" style={sizeAndPos}>
         { optionsExpanded && <ExpandedOptions cell={cell} openNotesModal={openNotesModal} /> }
         <fb className='compact'>
           <InputWindow
@@ -113,9 +133,14 @@ class CellPopover extends PureComponent {
             height={height}
             hasNote={!!note}
           />
-          <CloseButton closePopover={this.props.unfocusShiftCell} />
           <InputTongue value={this.state.breakMinutes} updateBreak={this.updateBreak} toggleOptions={toggleOptions}/>
+          <CloseButton closePopover={this.props.unfocusShiftCell} />
         </fb>
+        { isOpen && <PositionsBubble
+          positions={this.props.positions}
+          selectedPos={this.state.position}
+          selectPos={(posID) => this.setState({position: posID})} />
+        }
       </fb>
     )
   }
@@ -128,6 +153,7 @@ const actionsToProps = {
 
 const mapStateToProps = (state) => ({
   optionsExpanded: state.ui.roster.weekPlan.optionsExpanded,
+  positions: state.core.positions
 })
 
 export default connect(mapStateToProps, actionsToProps)(CellPopover)

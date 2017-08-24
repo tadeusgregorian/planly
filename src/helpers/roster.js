@@ -56,7 +56,8 @@ export const minToTimeString = (mins: number): string => {
 export const shiftToString = (shift: MinimalShift): string =>
   minToTime(shift.s).str + ' - ' + minToTime(shift.e).str
 
-export const 	timeStringToMin = (str: string) => {
+export const 	timeStringToMin = (str: string): number => {
+  if(str === '') return 0
 	let hours = parseInt(str.substr(0, 2), 10)
 	let minutes = parseInt(str.substr(3, 2), 10)
 	return (hours * 60 + minutes)

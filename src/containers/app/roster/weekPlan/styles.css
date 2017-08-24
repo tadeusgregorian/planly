@@ -4,7 +4,7 @@
   .shiftWeekWrapper .shiftWeekMain {
     margin: 0 auto;
     flex: 0 0 auto;
-    padding: 10px 10px 0px 0px;
+    padding: 4px 10px 0px 0px;
     width: 1200px;
     border-radius: 2px;
     flex-direction: column;

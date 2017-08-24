@@ -18,6 +18,18 @@ export type User = {
   status: 'notInvited' | 'invited' | 'active'
 }
 
+export type Position = {
+  id: string,
+  name: string,
+  color: string
+}
+
+export type Branch = {
+  id: string,
+  name: string,
+  color: string
+}
+
 // roster-types
 export type Day = 'mo' | 'tu' | 'we' | 'th' | 'fr' | 'sa' | 'su'
 
@@ -34,7 +46,8 @@ export type Shift = {
   b?: number | null,
   user: string,
   day: Day,
-  isOpen?: boolean
+  isOpen?: boolean,
+  position?: string,
 }
 
 export type PreDBShift = {
@@ -45,6 +58,7 @@ export type PreDBShift = {
   user: string,
   branch: string,
   isOpen?: boolean,
+  positioin?: string,
 }
 
 export type DBShift = {
@@ -56,7 +70,8 @@ export type DBShift = {
   branch: string,
   branchDay: string,
   userDay: string,
-  isOpen?: boolean
+  isOpen?: boolean,
+  position?: string,
 }
 
 export type Shifts = Array<Shift>

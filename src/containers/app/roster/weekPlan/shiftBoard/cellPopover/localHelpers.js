@@ -42,6 +42,7 @@ export const from4To5 = (prevString: string, nextString: string) =>
 
 export const shiftDataValid = (shiftObj: ShiftInput): boolean => {
   const { startTime, endTime, breakMinutes } = shiftObj
+  if( startTime === '' && endTime === '') return true
 
   let check = (str) => {
     if(str.length !== 5) return false

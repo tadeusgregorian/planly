@@ -12,7 +12,7 @@ export const getPosition = (cell: ShiftCell) => {
   const toTheBottom = sBHeight - cell.top + 5 > popOptionsHeight
 
   return {
-    right: toTheRight ? -(popOptionsWidth) + 1 : cell.width,
+    right: toTheRight ? -(popOptionsWidth) - 1 : cell.width + 2,
     top: toTheBottom ? 0 : sBHeight - cell.top - popOptionsHeight ,
     width: popOptionsWidth,
     height: popOptionsHeight

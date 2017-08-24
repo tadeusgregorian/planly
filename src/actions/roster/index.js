@@ -9,13 +9,17 @@ export const removeShiftWeek = () => ({type: 'remove_shiftWeek'})
 
 const getShiftKey = (shift) => shift.branch + shift.user + shift.day
 
-const extendShiftForDB = (sh: PreDBShift) => ({
-  ...sh,
-  b: sh.b || null, // firebase needs null to delete a node ( undefined throws an error )
-  isOpen: sh.isOpen || null, // same here
-  branchDay: (sh.branch + sh.day),
-  userDay: (sh.user + sh.day)
-})
+const extendShiftForDB = (sh: PreDBShift) => (
+  sh.s === 0 && sh.e === 0 ?
+    null :
+    {
+    ...sh,
+    b: sh.b || null, // firebase needs null to delete a node ( undefined throws an error )
+    isOpen: sh.isOpen || null, // same here
+    branchDay: (sh.branch + sh.day),
+    userDay: (sh.user + sh.day)
+  }
+)
 
 export const writeShiftToDB = (smartWeek: string, shift: PreDBShift) => {
   const dbShift = extendShiftForDB(shift)

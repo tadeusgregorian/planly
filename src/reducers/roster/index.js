@@ -4,8 +4,8 @@ import _ from 'lodash'
 
 // we extract this because there is userDay, and branchDay in DB ( just needed for mobile )
 const extractNeeded = (data) => {
-  const { s, e, b, user, day, isOpen } = data
-  return { s, e, b, user, day, isOpen }
+  const { s, e, b, user, day, isOpen, position } = data
+  return { s, e, b, user, day, isOpen, position }
 }
 
 const sameShift = (s1, s2) => s1.user === s2.user && s1.day === s2.day

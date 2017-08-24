@@ -37,6 +37,7 @@ export default class UserRow extends PureComponent{
                 user={user.id}
                 key={day}
                 shift={minimalShift}
+                shiftType='usershift'
                 note={note}
                 shadowed={shadowed}
                 highlighted={highlighted} />

@@ -11,10 +11,9 @@ import EmailStatus from './emailStatus'
 import WithTooltip from 'components/withTooltip'
 import FlatFormRow from 'components/flatFormRow'
 import WeeklyHoursInput from './weeklyHoursInput'
-import moment from 'moment'
 import { type User } from 'types/index'
 import { saveUserToDB, sendEmailInvite } from 'actions/index'
-import { getNextID, isValidEmail, replaceCommasWithDots } from 'helpers/index'
+import { getNextID, isValidEmail, replaceCommasWithDots, getThisMondaySmart } from 'helpers/index'
 import './styles.css'
 
 class AddEditUserPopup extends PureComponent {
@@ -25,7 +24,6 @@ class AddEditUserPopup extends PureComponent {
 
 		const { user, users, branches } = this.props
 
-		const getThisMonday 		= () => moment().startOf('isoWeek').format('YYYYMMDD')
 		const pickRandomColor 	= () => 'orange' // TODO come back and fix this
 		const getDefaultBranch 	= () => branches.length === 1 ? {[branches[0].id]: true} : {}
 		const getFreshUserID		= () => getNextID('u', users.length + 1)
@@ -33,7 +31,7 @@ class AddEditUserPopup extends PureComponent {
 			id: getFreshUserID(),
 			name: '',
 			email: '',
-			weeklyHours: {[getThisMonday()]: ''},
+			weeklyHours: {[getThisMondaySmart()]: ''},
 			color: pickRandomColor(),
 			branches: getDefaultBranch(),
 			position: 'p001',

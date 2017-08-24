@@ -5,8 +5,7 @@ import { connect } from 'react-redux'
 import { focusShiftCell } from 'actions/ui/roster'
 import { getShiftOfCell, getShiftsOfUser, getNotesOfUser, getShadowedDay } from './localHelpers'
 import { openNotesModal } from 'actions/ui'
-import { generateGuid } from 'helpers/general'
-import { weekDays } from 'constants/roster'
+
 
 import UserRow from './userRow'
 import OpenShifts from './openShifts'
@@ -14,13 +13,16 @@ import CellPopover from './cellPopover'
 import getFocusedShift from 'selectors/focusedShift'
 import withMouseEvents from './withMouseEvents'
 import PickedUpCell from './pickedUpCell'
+import ShiftBoardHead from './shiftBoardHead'
+
 import './styles.css'
 
-import type { User, Shift, Shifts, ShiftCell, Note } from 'types/index'
+import type { User, Shift, Shifts, ShiftCell, Note, Position } from 'types/index'
 import type { NoteModalProps } from 'actions/ui/modals'
 
 export type Props = {
-  users: [User],
+  users: Array<User>,
+  positions: Array<Position>,
   shifts: Shifts,
   notes: Array<Note>,
   focusedCell: ShiftCell,
@@ -37,17 +39,18 @@ export type Props = {
 class ShiftBoard extends PureComponent{
   props: Props
 
-
   render(){
-    const { users, shifts, focusedCell, notes } = this.props
+    const { users, shifts, focusedCell, notes, positions } = this.props
     const { pickedUpCell, shadowedCell, getPickedUpCellRef } = this.props
     return(
       <fb id="shiftBoardMain">
-        {/* <OpenShifts
+        <ShiftBoardHead />
+        <OpenShifts
           shifts={shifts.filter(s => s.isOpen)}
           notes={notes}
+          positions={positions}
           shadowedCell={shadowedCell}
-          highlightedCell={null} /> */}
+          highlightedCell={null} />
         <fb className='assignedShifts'>
           { users.map(user => {
             //const highlightedDay =  focusedCell && focusedCell.user === user.id && focusedCell.day
@@ -87,6 +90,7 @@ const actionsToProps = {
 
 const mapStateToProps = (state) => ({
   users: state.core.users,
+  positions: state.core.positions,
   focusedCell: state.ui.roster.weekPlan.focusedCell,
   notes: state.roster.notes,
   shifts: state.roster.shiftWeek,

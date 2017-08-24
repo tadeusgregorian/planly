@@ -6,17 +6,18 @@ import DayColumn from './dayColumn'
 import ShiftCell from '../shiftCell'
 import './styles.css'
 
-import type { Shifts, Note } from 'types/index'
+import type { Shifts, Note, Position } from 'types/index'
 
 type Props = {
   shifts: Shifts,
+  positions: Array<Position>,
   shadowedCell: ?ShiftCell,
   notes: Array<Note>
 }
 
-export default (props: Props) => {
+const OpenShifts = (props: Props) => {
 
-  const { shifts, notes, shadowedCell } = props
+  const { shifts, notes, shadowedCell, positions } = props
 
   return(
     <fb className="openShiftsMain">
@@ -28,6 +29,7 @@ export default (props: Props) => {
             <DayColumn
               shifts={shifts.filter(s => s.day === day)}
               notes={notes.filter(n => n.day === day)}
+              positions={positions}
               key={day}
               day={day}
               shadowedUser={shadowedCell && shadowedCell.day === day && shadowedCell.user}
@@ -37,3 +39,5 @@ export default (props: Props) => {
     </fb>
   )
 }
+
+export default OpenShifts

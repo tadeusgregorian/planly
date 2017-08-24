@@ -1,6 +1,9 @@
 .openShiftsMain{
+  background: white;
   flex-direction: row;
   border-bottom: 1px solid #dfe0e4;
+  border-left: 1px solid #dfe0e4;
+  border-right: 1px solid #dfe0e4;
 
   .label{
     align-items: center;

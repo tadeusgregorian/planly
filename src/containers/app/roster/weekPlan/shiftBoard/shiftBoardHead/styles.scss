@@ -1,0 +1,33 @@
+.shiftBoardHeadMain{
+  height: 24px;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 300;
+  border-bottom: 1px solid #dfe0e4;
+  color: #828282;
+  border-top: 1px solid #dfe0e4;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 4px;
+  border-left: 1px solid #dfe0e4;
+  border-right: 1px solid #dfe0e4;
+  background: white;
+
+  .bigLeft{
+    flex: 1 1 auto;
+    padding-left: 12px;
+    font-weight: 400;
+    font-size: 12px;
+    text-transform: uppercase;
+  }
+
+  .weekDay{
+    flex: 0 0 auto;
+        justify-content: center;
+        text-transform: uppercase;
+        height: 100%;
+        align-items: center;
+        border-left: 1px solid #ececec;
+        background: white;
+  }
+}
