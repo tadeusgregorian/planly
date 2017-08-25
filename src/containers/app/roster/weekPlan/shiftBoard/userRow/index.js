@@ -12,7 +12,8 @@ type propsType = {
   shifts: Shifts,
   highlightedDay: string | false,
   shadowedDay: string | false,
-  notes: Array<Note>
+  notes: Array<Note>,
+  currentUser: User
 }
 
 export default class UserRow extends PureComponent{
@@ -20,7 +21,7 @@ export default class UserRow extends PureComponent{
 
 
   render(){
-    const { user, shifts, highlightedDay, notes, shadowedDay } = this.props
+    const { user, shifts, highlightedDay, notes, shadowedDay, currentUser } = this.props
 
     return(
       <fb className="userRowMain">
@@ -32,10 +33,12 @@ export default class UserRow extends PureComponent{
               const note          = notes.find(n => n.day === day)
               const highlighted   = highlightedDay === day
               const shadowed      = shadowedDay === day
+              const blocked       = !currentUser.isAdmin && currentUser.id !== user.id
               return <ShiftCell
                 day={day}
                 user={user.id}
                 key={day}
+                blocked={blocked}
                 shift={minimalShift}
                 shiftType='usershift'
                 note={note}

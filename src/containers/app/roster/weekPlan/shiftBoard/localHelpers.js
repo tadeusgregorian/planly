@@ -1,6 +1,6 @@
 //@flow
 
-import type { ShiftCell, Shifts, Shift, Notes } from 'types/index'
+import type { ShiftCell, Shifts, Notes } from 'types/index'
 
 export const elementIsShiftCell = (el: HTMLElement): boolean =>
   !!(el.getAttribute && el.getAttribute('data-target-type') === 'shiftcell')
@@ -26,12 +26,13 @@ export const targetToShiftCell = (target: HTMLElement): ShiftCell => {
   const day       = target.getAttribute('data-day')
   const user      = target.getAttribute('data-user')
   const isOpen    = target.getAttribute('data-shift-type') === 'openshift'
+  const blocked   = target.getAttribute('data-clickable') === 'blocked'
   const top       = target.offsetTop
   const left      = target.offsetLeft
   const width     = target.offsetWidth
   const height    = target.offsetHeight
 
-  const shiftCell: ShiftCell = ({ day, user, top, left, width, height, isOpen } : any) // forcefully Typekasting
+  const shiftCell: ShiftCell = ({ day, user, top, left, width, height, isOpen, blocked } : any) // forcefully Typekasting
   return shiftCell
 }
 
@@ -43,9 +44,6 @@ export const isSameCell = (c1: ShiftCell, c2: ShiftCell): boolean => {
   }
   return true
 }
-
-export const getShiftOfCell = (shifts: Shifts, cell: ShiftCell): ?Shift =>
-  shifts.find(s => s.user === cell.user && s.day === cell.day )
 
 export const getShiftsOfUser = (shifts: Shifts, userID: string): Shifts =>
  shifts.filter(s => s.user === userID)

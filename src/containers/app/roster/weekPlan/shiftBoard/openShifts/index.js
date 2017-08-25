@@ -6,18 +6,19 @@ import DayColumn from './dayColumn'
 import ShiftCell from '../shiftCell'
 import './styles.css'
 
-import type { Shifts, Note, Position } from 'types/index'
+import type { Shifts, Note, Position, User } from 'types/index'
 
 type Props = {
   shifts: Shifts,
   positions: Array<Position>,
   shadowedCell: ?ShiftCell,
-  notes: Array<Note>
+  notes: Array<Note>,
+  currentUser: User
 }
 
 const OpenShifts = (props: Props) => {
 
-  const { shifts, notes, shadowedCell, positions } = props
+  const { shifts, notes, shadowedCell, positions, currentUser } = props
 
   return(
     <fb className="openShiftsMain">
@@ -27,6 +28,7 @@ const OpenShifts = (props: Props) => {
       </fb>
         { weekDays.map(day =>
             <DayColumn
+              currentUser={currentUser}
               shifts={shifts.filter(s => s.day === day)}
               notes={notes.filter(n => n.day === day)}
               positions={positions}

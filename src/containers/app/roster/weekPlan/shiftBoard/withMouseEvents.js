@@ -1,13 +1,12 @@
 //@flow
-
 import React, { PureComponent } from 'react'
 import type { ShiftCell } from 'types/index'
 import {
   elementIsShiftCell,
   elementIsNoteIcon,
   targetToShiftCell,
-  getParentShiftCell,
-  getShiftOfCell } from './localHelpers'
+  getParentShiftCell } from './localHelpers'
+import { getShiftOfCell } from 'helpers/index'
 import type { Props } from './index'
 
 type State = { pickedUpCell: ?ShiftCell, shadowedCell: ?ShiftCell }
@@ -79,6 +78,7 @@ const enhancer:Enhancer = (Component) => {
     onMouseUp = ({target}: any) => {
       if(!this.isDragging){
         const shiftCell = targetToShiftCell(target)
+        if(shiftCell.blocked) return
         elementIsNoteIcon(target)  && this.props.openNotesModal({ day: shiftCell.day, user: shiftCell.user , type: 'shiftNote'})
         elementIsShiftCell(target) && this.props.focusShiftCell(shiftCell)
       }

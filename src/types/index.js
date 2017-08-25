@@ -1,9 +1,9 @@
 //@flow
 
 export type Action = {type: string}
-export type GetState = () => {}
+export type GetState = () => any
 export type Dispatch = (action: Action | ThunkAction | Array<Action>) => any // eslint-disable-line no-use-before-define
-export type ThunkAction = (dispatch: Dispatch, getState: GetState) => any
+export type ThunkAction = (any)=> (dispatch: Dispatch, getState: GetState) => any
 
 // core-types
 
@@ -52,6 +52,8 @@ export type Shift = {
   position?: string,
 }
 
+export type Shifts = Array<Shift>
+
 export type PreDBShift = {
   s: number,
   e: number,
@@ -76,8 +78,6 @@ export type DBShift = {
   position?: string,
 }
 
-export type Shifts = Array<Shift>
-
 export type ShiftCell = {
   day: Day,
   user: string,
@@ -85,7 +85,8 @@ export type ShiftCell = {
   left: number,
   width: number,
   height: number,
-  isOpen?: ?boolean
+  isOpen?: ?boolean,
+  blocked?: ?boolean
 }
 
 export type ShiftInput = {

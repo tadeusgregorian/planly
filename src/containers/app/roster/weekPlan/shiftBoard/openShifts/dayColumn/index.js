@@ -1,10 +1,8 @@
 //@flow
 import React, { PureComponent } from 'react'
-import { connect } from 'react-redux'
 import { shiftCellWidth } from 'constants/roster'
 import type { Notes, Shifts, Position, User } from 'types/index'
 import { shiftToMinimalShift, generateGuid } from 'helpers/index'
-import getCurrentUser from 'selectors/currentUser'
 import ShiftCell from '../../shiftCell'
 import './styles.css'
 
@@ -16,7 +14,7 @@ type Props = {
   currentUser: User
 }
 
-class DayColumn extends PureComponent<void, Props, void>{
+export default class DayColumn extends PureComponent<void, Props, void>{
   generatedUID: string
 
   componentDidMount = () => { this.generatedUID = generateGuid() }
@@ -40,6 +38,7 @@ class DayColumn extends PureComponent<void, Props, void>{
                 user={shift.user}
                 shift={minimalShift}
                 day={day}
+                blocked={!isAdmin && currentUser.position !== shift.position }
                 position={positions.find(p => p.id === shift.position)}
                 note={notes.find(n => n.user === shift.user)}
                 shiftType='openshift'
@@ -51,6 +50,7 @@ class DayColumn extends PureComponent<void, Props, void>{
           day={day}
           note={notes.find(n => n.user === this.generatedUID)}
           shiftType='openshift'
+          blocked={!isAdmin}
           cssClasses={['openShiftInputCell', (isAdmin ? 'admin' : '')]}
         /> }
         {/*  This Dummy Cell is just filling the empty column to a min of 1 */}
@@ -61,9 +61,3 @@ class DayColumn extends PureComponent<void, Props, void>{
     )
   }
 }
-
-const mapStateToProps = (state) => ({
-  currentUser: getCurrentUser(state)
-})
-
-export default connect(mapStateToProps)(DayColumn)

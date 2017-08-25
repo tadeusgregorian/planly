@@ -17,22 +17,24 @@ type Props = {
   shiftType: 'openshift' | 'usershift',
   style?: {},
   cssClasses?: Array<string>,
+  blocked?: ?boolean
 }
 
-const ShiftCell = ({ shift, day, user, highlighted, note, shadowed, shiftType, style, cssClasses, position }: Props) => {
+const ShiftCell = ({ shift, day, user, highlighted, note, shadowed, shiftType, style, cssClasses, position, blocked }: Props) => {
   const posInitials = position && position.name.substr(0, 2)
   const posBoxStyle = position && {
      color: position.color,
      height: shiftCellHeight - 3,
      backgroundColor: shadeColor(position.color, 0.8)
    }
-   const cssClassesObj = cssClasses ? cssClasses.reduce((acc, val) => ({ ...acc, [val]: true }), {}) : {}
+   const cssClassesObj = cssClasses ? cssClasses.reduce((acc, val) => ({ ...acc, [val]: true }), {}) : {} // turnes the classesArray to an obj for classnames
   return(
     <fb className={cn({shiftCellMain: true, highlighted, shadowed, ...cssClassesObj })}
       data-target-type='shiftcell'
       data-day={day}
       data-user={user}
       data-shift-type={shiftType ? shiftType : ''}
+      data-clickable={blocked ? 'blocked' : ''}
       style={{width: shiftCellWidth, height: shiftCellHeight, ...style}}
     >
       <fb className='shiftTimes'>{ shift && shiftToString(shift) }</fb>
