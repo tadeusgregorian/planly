@@ -13,6 +13,7 @@ const getWeekAndBranch = (getState) => ({
 export const setRosterListeners: ThunkAction = () => (dispatch, getState) => {
   setShiftWeekListener(dispatch, getState)
   setNotesListener(dispatch, getState)
+  setShiftEditsListener(dispatch, getState)
   dispatch({type: 'remove_shiftWeek'})
 }
 
@@ -30,4 +31,9 @@ const setNotesListener = (dispatch, getState: any) => {
   const queryRef    = db().ref(path).orderByChild('branch').equalTo(branch)
 
   createFirebaseListener(dispatch, getState, 'notes', path, queryRef)
+}
+
+const setShiftEditsListener = (dispatch, getState: any) => {
+  const path = getFirebasePath('shiftEdits')
+  createFirebaseListener(dispatch, getState, 'shiftEdits', path)
 }

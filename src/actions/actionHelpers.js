@@ -14,6 +14,7 @@ export const getFirebasePath	= (target: string): string => {
 		case 'roster': 					return accPath + '/roster/'
 		case 'shiftWeeks': 			return accPath + '/roster/shiftWeeks/'
 		case 'notes': 					return accPath + '/roster/notes/'
+		case 'shiftEdits': 			return accPath + '/roster/shiftEdits/'
 		default : throw new Error('target is not existing tade ( getFirebasePath ), target: ' + target)
 	}
 }

@@ -48,7 +48,7 @@ export type Shift = {
   b?: number | null,
   user: string,
   day: Day,
-  isOpen?: boolean,
+  isOpen?: ?boolean,
   position?: string,
 }
 
@@ -61,7 +61,8 @@ export type PreDBShift = {
   day: Day,
   user: string,
   branch: string,
-  isOpen?: boolean,
+  // $FlowFixMe -> just dont know what is wrong here... Flow doesnt get null stuff
+  isOpen?: ?boolean,
   positioin?: string,
 }
 
@@ -74,9 +75,9 @@ export type DBShift = {
   branch: string,
   branchDay: string,
   userDay: string,
-  isOpen?: boolean,
+  isOpen: true | null,
   position?: string,
-}
+} | null
 
 export type ShiftCell = {
   day: Day,

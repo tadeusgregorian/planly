@@ -14,7 +14,7 @@ const shiftWeekReducer = (state = [], a) => {
   switch(a.type) {
 		case 'value_received_shiftWeek' : return _.values(a.payload).map(data => extractNeeded(data))
     case 'child_added_shiftWeek'    : return [ ...state, extractNeeded(a.payload) ]
-    case 'child_changed_shiftWeek'  : return state.map(shift => sameShift(shift, a.payload) ? a.payload : shift )
+    case 'child_changed_shiftWeek'  : return state.map(shift => sameShift(shift, a.payload) ? extractNeeded(a.payload) : shift )
     case 'child_removed_shiftWeek'  : return state.filter(shift => !sameShift(shift, a.payload))
     case 'remove_shiftWeek'				  : return []
     default: return state
@@ -23,6 +23,7 @@ const shiftWeekReducer = (state = [], a) => {
 
 export default combineReducers({
   notes: createFirebaseReducer_array('notes'),
+  shiftEdits: createFirebaseReducer_array('shiftEdits'),
   shiftWeek: shiftWeekReducer,
   shiftWeekDataStatus: createDataStatusReducer('shiftWeek')
 })

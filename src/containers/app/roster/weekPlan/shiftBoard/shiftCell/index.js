@@ -21,6 +21,7 @@ type Props = {
 }
 
 const ShiftCell = ({ shift, day, user, highlighted, note, shadowed, shiftType, style, cssClasses, position, blocked }: Props) => {
+  //shift && console.log(typeof shift.b);
   const posInitials = position && position.name.substr(0, 2)
   const posBoxStyle = position && {
      color: position.color,
@@ -40,7 +41,7 @@ const ShiftCell = ({ shift, day, user, highlighted, note, shadowed, shiftType, s
       <fb className='shiftTimes'>{ shift && shiftToString(shift) }</fb>
       { position && <fb className='posBox' style={posBoxStyle} >{posInitials}</fb> }
       { note  && <icon className='icon icon-comment hasNoteCellIcon' data-day={day} data-user={user} data-target-type='noteicon' />}
-      { shift && shift.b && <fb className='breakTime'>{shift.b}</fb> }
+      { shift && !!shift.b && <fb className='breakTime'>{shift.b}</fb> }
     </fb>
   )
 }
