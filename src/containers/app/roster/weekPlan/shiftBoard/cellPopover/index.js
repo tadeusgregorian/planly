@@ -8,20 +8,19 @@ import AddEditShift from './addEditShift'
 import ResolveEdit from './resolveEdit'
 import './styles.css'
 
-import type { User, ShiftCell } from 'types/index'
+//import type { ShiftCell, Shift, ShiftEdit, User, Note } from 'types/index'
 
-type Props = {
-  unfocusShiftCell: ()=>void,
-  currentUser: User,
-  cell: ShiftCell,
-}
+const CellPopover = (props: any) => {
+  const hasEdit = props.cell && props.cell.hasEdit
 
-const CellPopover = (props: Props) => {
-  const { cell } = props
-
-  if(cell.hasEdit) return <ResolveEdit { ...props } />
+  //return <ResolveEdit { ...props } />
+  if(hasEdit) return <ResolveEdit { ...props } />
   return <AddEditShift { ...props } />
 }
+
+
+
+
 
 const actionsToProps = {
   unfocusShiftCell

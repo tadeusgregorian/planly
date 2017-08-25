@@ -17,6 +17,7 @@ const extendShiftForDB = (sh: PreDBShift): DBShift => (
     ...sh,
     b: sh.b || 0,
     isOpen: (!!sh.isOpen) || null, // firebase needs null to delete a node ( undefined throws an error )
+    position: sh.position || null,
     branchDay: (sh.branch + sh.day),
     userDay: (sh.user + sh.day)
   }

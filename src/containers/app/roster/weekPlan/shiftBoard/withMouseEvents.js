@@ -70,6 +70,7 @@ const enhancer:Enhancer = (Component) => {
       if (!pressedCell) return
       if (!pressedCell.hasShift) return // dont allow draggint empty cells
       if (pressedCell.hasEdit) return   // dont allow dragging cells with shiftEdit
+      console.log('HEREE');
 
       this.mousePosStart = {x: e.pageX, y: e.pageY}
       this.mouseIsDown = true
@@ -114,7 +115,8 @@ const enhancer:Enhancer = (Component) => {
       if(pickedUpCell && shadowedCell){
         const pickedUpShift =  getShiftOfCell(shifts, pickedUpCell)
         if(shadowedCell && pickedUpShift){
-          const newShift = { ...pickedUpShift, day: shadowedCell.day, user: shadowedCell.user }
+          const { s, e, b } = pickedUpShift
+          const newShift = { s, e, b, day: shadowedCell.day, user: shadowedCell.user }
           saveShift(newShift)
         }
       }

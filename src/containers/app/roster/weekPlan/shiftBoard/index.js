@@ -12,6 +12,7 @@ import UserRow from './userRow'
 import OpenShifts from './openShifts'
 import CellPopover from './cellPopover'
 import getFocusedShift from 'selectors/focusedShift'
+import getFocusedShiftEdit from 'selectors/focusedShiftEdit'
 import withMouseEvents from './withMouseEvents'
 import PickedUpCell from './pickedUpCell'
 import ShiftBoardHead from './shiftBoardHead'
@@ -29,6 +30,7 @@ export type Props = {
   notes: Array<Note>,
   focusedCell: ShiftCell,
   focusedShift: Shift,
+  focusedShiftEdit: ShiftEdit,
   optionsExpanded: boolean,
   pickedUpCell: ?ShiftCell, // comes from HOC
   shadowedCell: ?ShiftCell, // comes from HOC
@@ -74,6 +76,7 @@ class ShiftBoard extends PureComponent{
           <CellPopover
             cell={focusedCell}
             shift={this.props.focusedShift}
+            shiftEdit={this.props.focusedShiftEdit}
             currentUser={currentUser}
             note={notes.find(n => n.user === focusedCell.user && n.day === focusedCell.day )}
             openNotesModal={this.props.openNotesModal}
@@ -103,6 +106,7 @@ const mapStateToProps = (state) => ({
   shifts: state.roster.shiftWeek,
   shiftEdits: state.roster.shiftEdits,
   focusedShift: getFocusedShift(state),
+  focusedShiftEdit: getFocusedShiftEdit(state),
   currentUser: getCurrentUser(state)
 })
 

@@ -26,6 +26,7 @@ type Props = {
   closePopover: ()=>void,
   unfocusShiftCell: ()=>void
 }
+
 type State = {
   startTime: string,
   endTime: string,
@@ -35,7 +36,7 @@ type State = {
 
 type InputRefs = { startTime: ?HTMLInputElement, endTime: ?HTMLInputElement }
 
-class CellPopover extends PureComponent {
+class CellPopover extends PureComponent<void, Props, State> {
   state: State
   props: Props
   inputRefs: InputRefs
