@@ -39,13 +39,13 @@ export type Day = 'mo' | 'tu' | 'we' | 'th' | 'fr' | 'sa' | 'su'
 export type MinimalShift = {
   s:  number,
   e:  number,
-  b?: number | null,
+  b: number,
 }
 
 export type Shift = {
   s: number,
   e: number,
-  b?: number | null,
+  b: number,
   user: string,
   day: Day,
   isOpen?: ?boolean,
@@ -57,7 +57,7 @@ export type Shifts = Array<Shift>
 export type PreDBShift = {
   s: number,
   e: number,
-  b?: number | null,
+  b: number,
   day: Day,
   user: string,
   branch: string,
@@ -69,7 +69,7 @@ export type PreDBShift = {
 export type DBShift = {
   s: number,
   e: number,
-  b: number | null,
+  b: number,
   day: Day,
   user: string,
   branch: string,
@@ -87,7 +87,9 @@ export type ShiftCell = {
   width: number,
   height: number,
   isOpen?: ?boolean,
-  blocked?: ?boolean
+  blocked?: ?boolean,
+  hasShift?: true,
+  hasEdit?: true
 }
 
 export type ShiftInput = {
@@ -108,3 +110,15 @@ export type Note = {
 }
 
 export type Notes = Array<Note>
+
+export type ShiftEdit = {
+  s: number,
+  e: number,
+  b: number,
+  user: string,
+  day: Day,
+  smartWeek: string,
+  branch: string
+}
+
+export type ShiftEdits = Array<ShiftEdit>

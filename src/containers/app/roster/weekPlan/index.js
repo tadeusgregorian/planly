@@ -38,11 +38,16 @@ class WeekPlan extends PureComponent{
   }
 
   render(){
+    const { currentSmartWeek, currentBranch } = this.props
     return(
       <fb className="shiftWeekWrapper">
         <fb className='shiftWeekMain'>
           <ActionBar />
-          <ShiftBoard  saveShift={this.saveShiftToDB} />
+          <ShiftBoard
+            saveShift={this.saveShiftToDB}
+            smartWeek={currentSmartWeek}
+            branch={currentBranch}
+          />
         </fb>
       </fb>
     )

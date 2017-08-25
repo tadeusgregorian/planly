@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import { focusShiftCell } from 'actions/ui/roster'
 import { openNotesModal } from 'actions/ui'
-import { getShiftsOfUser, getNotesOfUser, getShadowedDay } from './localHelpers'
+import { getShiftsOfUser, getNotesOfUser, getShadowedDay, getShiftEditsOfUser } from './localHelpers'
 import { getShiftOfCell } from 'helpers/index'
 
 import getCurrentUser from 'selectors/currentUser'
@@ -17,12 +17,15 @@ import PickedUpCell from './pickedUpCell'
 import ShiftBoardHead from './shiftBoardHead'
 import './styles.css'
 
-import type { User, Shift, Shifts, ShiftCell, Note, Position } from 'types/index'
+import type { User, Shift, Shifts, ShiftCell, Note, Position, ShiftEdit } from 'types/index'
 
 export type Props = {
+  smartWeek: string,
+  branch: string,
   users: Array<User>,
   positions: Array<Position>,
   shifts: Shifts,
+  shiftEdits: Array<ShiftEdit>,
   notes: Array<Note>,
   focusedCell: ShiftCell,
   focusedShift: Shift,
@@ -40,7 +43,7 @@ class ShiftBoard extends PureComponent{
   props: Props
 
   render(){
-    const { users, shifts, focusedCell, notes, positions, currentUser } = this.props
+    const { users, shifts, shiftEdits, focusedCell, notes, positions, currentUser, smartWeek, branch } = this.props
     const { pickedUpCell, shadowedCell, getPickedUpCellRef } = this.props // from HOC
     return(
       <fb id="shiftBoardMain">
@@ -59,6 +62,7 @@ class ShiftBoard extends PureComponent{
               key={user.id}
               user={user}
               currentUser={currentUser}
+              shiftEdits={getShiftEditsOfUser(shiftEdits, user.id, smartWeek, branch)}
               shifts={getShiftsOfUser(shifts, user.id)}
               notes={getNotesOfUser(notes, user.id)}
               shadowedDay={getShadowedDay(shadowedCell, user.id)}
@@ -70,6 +74,7 @@ class ShiftBoard extends PureComponent{
           <CellPopover
             cell={focusedCell}
             shift={this.props.focusedShift}
+            currentUser={currentUser}
             note={notes.find(n => n.user === focusedCell.user && n.day === focusedCell.day )}
             openNotesModal={this.props.openNotesModal}
             saveShift={this.props.saveShift}/>
@@ -96,6 +101,7 @@ const mapStateToProps = (state) => ({
   focusedCell: state.ui.roster.weekPlan.focusedCell,
   notes: state.roster.notes,
   shifts: state.roster.shiftWeek,
+  shiftEdits: state.roster.shiftEdits,
   focusedShift: getFocusedShift(state),
   currentUser: getCurrentUser(state)
 })

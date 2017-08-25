@@ -68,8 +68,9 @@ const enhancer:Enhancer = (Component) => {
     onMouseDown = (e: any) => {
       const pressedCell = getParentShiftCell(e.target)
       if (!pressedCell) return
-      // dont allow picking cells Up that dont have shifts
-      if (!getShiftOfCell(this.props.shifts, pressedCell)) return
+      if (!pressedCell.hasShift) return // dont allow draggint empty cells
+      if (pressedCell.hasEdit) return   // dont allow dragging cells with shiftEdit
+
       this.mousePosStart = {x: e.pageX, y: e.pageY}
       this.mouseIsDown = true
       setTimeout(()=> this.pickUpCell(pressedCell), 200)

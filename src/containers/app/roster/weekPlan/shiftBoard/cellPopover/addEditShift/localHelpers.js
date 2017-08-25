@@ -57,7 +57,7 @@ export const shiftDataValid = (shiftObj: ShiftInput): boolean => {
 
 // returns either a Number or NULL
 
-const cleanBreak = (inp: string) => inp && inp !== '0' ? parseInt(inp, 10) : null
+const cleanBreak = (inp: string) => (inp && inp !== '0') ? parseInt(inp, 10) : 0
 
 export const zipShift = (shiftObj: ShiftInput): MinimalShift => ({
   s: timeStringToMin(shiftObj.startTime),

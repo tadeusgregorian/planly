@@ -1,19 +1,34 @@
 import _ from 'lodash'
 import {deletePropAndReturnObj} from 'helpers'
 
+export const createFirebaseReducer_array = (target, comparer, extractor) => {
+  const isSame = comparer || ((e1, e2)=> e1.id === e2.id) // comparing id property by default
+  const extract = extractor || ((e)=>e) // returning object without manipulation by default
 
-export const createFirebaseReducer_array = (target) => {
-	return (state = [], action) => {
-		switch (action.type) {
-		case 'value_received_' + target : return [..._.values(action.payload)]
-		case 'child_added_'    + target : return [...state, action.payload]
-		case 'child_changed_'  + target : return state.map(d => d.id === action.payload.id ? action.payload : d)
-		case 'child_removed_'  + target : return state.filter(d => d.id !== action.payload.id)
+	return (state = [], a) => {
+		switch (a.type) {
+		case 'value_received_' + target : return _.values(a.payload).map(extract)
+		case 'child_added_'    + target : return [...state, extract(a.payload)]
+		case 'child_changed_'  + target : return state.map(el => isSame(a.payload, el) ? a.payload : el)
+		case 'child_removed_'  + target : return state.filter(el => !isSame(el, a.payload))
 		case 'remove_'				 + target : return []
 		default: return state;
 		}
 	}
 }
+
+// export const createFirebaseReducer_array = (target) => {
+// 	return (state = [], action) => {
+// 		switch (action.type) {
+// 		case 'value_received_' + target : return [..._.values(action.payload)]
+// 		case 'child_added_'    + target : return [...state, action.payload]
+// 		case 'child_changed_'  + target : return state.map(d => d.id === action.payload.id ? action.payload : d)
+// 		case 'child_removed_'  + target : return state.filter(d => d.id !== action.payload.id)
+// 		case 'remove_'				 + target : return []
+// 		default: return state;
+// 		}
+// 	}
+// }
 
 export const createFirebaseReducer_object = (target) => {
 	return (state = {}, action) => {

@@ -34,7 +34,8 @@ const writeShiftToShiftWeek = (smartWeek: string, shift: PreDBShift) => {
 const writeShiftToShiftEdits = (smartWeek: string, shift: PreDBShift) => {
   const key = getShiftEditKey(shift, smartWeek)
   const dbShift = extendShiftForDB(shift)
-  db().ref(getFirebasePath('shiftEdits')).child(key).set(dbShift)
+  const dbShiftEdit = { ...dbShift, smartWeek }
+  db().ref(getFirebasePath('shiftEdits')).child(key).set(dbShiftEdit)
 }
 
 export type PreDBNote = {

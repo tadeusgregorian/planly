@@ -1,6 +1,6 @@
 //@flow
 import React, { PureComponent } from 'react'
-import type { User, Shifts, Note } from 'types/index'
+import type { User, Shifts, Note, ShiftEdits } from 'types/index'
 import ShiftCell from '../shiftCell'
 import UserCell from './userCell'
 import { shiftToMinimalShift } from 'helpers/index'
@@ -10,6 +10,7 @@ import './styles.css'
 type propsType = {
   user: User,
   shifts: Shifts,
+  shiftEdits: ShiftEdits,
   highlightedDay: string | false,
   shadowedDay: string | false,
   notes: Array<Note>,
@@ -19,17 +20,17 @@ type propsType = {
 export default class UserRow extends PureComponent{
   props: propsType
 
-
   render(){
-    const { user, shifts, highlightedDay, notes, shadowedDay, currentUser } = this.props
+    const { user, shifts, highlightedDay, notes, shadowedDay, currentUser, shiftEdits } = this.props
 
     return(
       <fb className="userRowMain">
         <UserCell user={user} />
           <fb className='ShiftCellsWrapper'>
             { weekDays.map(day => {
-              const shift         = shifts.find(shift => shift.day === day)
+              const shift         = shifts.find(s => s.day === day)
               const minimalShift  = shift && shiftToMinimalShift(shift)
+              const shiftEdit     = shiftEdits.find(s => s.day === day)
               const note          = notes.find(n => n.day === day)
               const highlighted   = highlightedDay === day
               const shadowed      = shadowedDay === day
@@ -40,6 +41,7 @@ export default class UserRow extends PureComponent{
                 key={day}
                 blocked={blocked}
                 shift={minimalShift}
+                shiftEdit={shiftEdit}
                 shiftType='usershift'
                 note={note}
                 shadowed={shadowed}
