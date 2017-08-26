@@ -1,11 +1,13 @@
 //@flow
 import React from 'react'
 import type { ShiftCell } from 'types/index'
-import type { NoteModalProps } from 'actions/ui/modals'
 import { getPosition } from './localHelpers'
 import './styles.css'
 
-type Props = { cell: ShiftCell, openNotesModal: (NoteModalProps)=>{} }
+type Props = {
+  cell: ShiftCell,
+  openNotesModal: ({})=>{}
+}
 
 export default (props: Props) => {
 

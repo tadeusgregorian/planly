@@ -1,7 +1,7 @@
 //@flow
 import React, { PureComponent } from 'react'
 import type { User, Shifts, Note, ShiftEdits } from 'types/index'
-import ShiftCell from '../shiftCell'
+import ShiftCell from '../../shiftCell'
 import UserCell from './userCell'
 import { shiftToMinimalShift } from 'helpers/index'
 import { weekDays } from 'constants/roster'

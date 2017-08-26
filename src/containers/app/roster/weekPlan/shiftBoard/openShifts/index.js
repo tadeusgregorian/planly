@@ -1,6 +1,9 @@
 //@flow
 import React from 'react'
+import { connect } from 'react-redux'
 import { weekDays } from 'constants/roster'
+
+import getCurrentUser from 'selectors/currentUser'
 
 import DayColumn from './dayColumn'
 import ShiftCell from '../shiftCell'
@@ -42,4 +45,11 @@ const OpenShifts = (props: Props) => {
   )
 }
 
-export default OpenShifts
+const mapStateToProps = (state) => ({
+  shifts: state.roster.shiftWeek.filter(s => s.isOpen),
+  notes: state.roster.notes,
+  currentUser: getCurrentUser(state),
+  positions: state.core.positions,
+})
+
+export default connect(mapStateToProps)(OpenShifts)

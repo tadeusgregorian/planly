@@ -23,7 +23,7 @@ export default ({ cell, shift, getRef }: Props) => {
   return(
     <fb className="pickedUpCellMain" style={style} ref={(ref) => getRef(ref)}>
       { shift && <fb className='shiftTime'>{shiftToString(shift)}</fb>}
-      { shift && shift.b && <fb className='breakTime'>{shift.b}</fb> }
+      { !!shift && !!shift.b && <fb className='breakTime'>{shift.b}</fb> }
     </fb>
   )
 }

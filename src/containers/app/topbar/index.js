@@ -1,9 +1,18 @@
+//@flow
 import React from 'react'
-import { logoutFromFirebase } from 'actions'
+import { connect } from 'react-redux'
+import { logoutFromFirebase } from 'actions/auth'
+
+import getCurrentUser from 'selectors/currentUser'
 import TopbarButton from './topbarButton'
+import type { User } from 'types/index'
 import './styles.css'
 
-export default () => {
+type Props = {
+  currentUser: User
+}
+
+ const Topbar = (props:Props) => {
 
   const logoutPressed = () => {
     logoutFromFirebase()
@@ -18,9 +27,17 @@ export default () => {
           <TopbarButton label='Einstellungen' to='/app/einstellungen' />
         </fb>
         <fb className="side right">
+          <fb className='userName'>{props.currentUser && props.currentUser.name}</fb>
           <icon className="logoutIcon icon-cancel" onClick={logoutPressed} />
         </fb>
       </fb>
     </fb>
   )
 }
+
+const mapStateToProps = (state) => ({
+  currentUser: getCurrentUser(state)
+})
+
+
+export default connect(mapStateToProps)(Topbar)

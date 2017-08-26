@@ -12,6 +12,5 @@ export const openModal: OpenModal = (modalID, component, props) => ({
 
 export const closeModal: CloseModal = (modalID) => ({ type: 'CLOSE_MODAL', payload: modalID })
 
-
-export type NoteModalProps = {day: string, user?: string, type: string}
-export const openNotesModal = (props: NoteModalProps) => openModal('notes', NotesPopup, props)
+export const openNotesModal = (props: {day: string, user?: string, type: 'shiftNote' | 'dayNote'}) =>
+  openModal('notes', NotesPopup, props)

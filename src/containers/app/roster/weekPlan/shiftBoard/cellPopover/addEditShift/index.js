@@ -1,8 +1,13 @@
 //@flow
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
+
 import { cellChanged, timeInpOK, withColon, from4To5, shiftDataValid, zipShift, shiftToShiftInput } from './localHelpers'
-import { toggleOptions } from 'actions/ui/roster'
+import { toggleOptions, unfocusShiftCell } from 'actions/ui/roster'
+import { openNotesModal } from 'actions/ui/modals'
+
+import getFocusedShift from 'selectors/focusedShift'
+import getFocusedNotes from 'selectors/focusedNotes'
 
 import PositionsBubble from './positionsBubble'
 import InputWindow from './inputWindow'
@@ -12,7 +17,6 @@ import ExpandedOptions from './expandedOptions'
 import './styles.css'
 
 import type { ShiftCell, Shift, Note, Position } from 'types/index'
-import type { NoteModalProps } from 'actions/ui/modals'
 
 type Props = {
   cell: ShiftCell,
@@ -20,7 +24,7 @@ type Props = {
   optionsExpanded: boolean,
   note: Note,
   positions: Array<Position>,
-  openNotesModal: (NoteModalProps)=>{},
+  openNotesModal: ({})=>{},
   toggleOptions: ()=>void,
   saveShift: (Shift)=>void,
   closePopover: ()=>void,
@@ -146,12 +150,20 @@ class CellPopover extends PureComponent<void, Props, State> {
 }
 
 const actionsToProps = {
-  toggleOptions
+  toggleOptions,
+  openNotesModal,
+  unfocusShiftCell,
 }
 
 const mapStateToProps = (state) => ({
   optionsExpanded: state.ui.roster.weekPlan.optionsExpanded,
-  positions: state.core.positions
+  positions: state.core.positions,
+  cell: state.ui.roster.weekPlan.focusedCell,
+  shift: getFocusedShift(state),
+  notes: getFocusedNotes(state),
+  shifts: state.roster.shiftWeek,
+  shiftEdits: state.roster.shiftEdits,
+  focusedShift: getFocusedShift(state),
 })
 
 export default connect(mapStateToProps, actionsToProps)(CellPopover)

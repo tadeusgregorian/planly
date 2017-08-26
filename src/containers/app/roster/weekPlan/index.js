@@ -2,12 +2,15 @@
 
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import ShiftBoard from './shiftBoard'
-import ActionBar from './actionBar'
-import type { Shift, Note, User } from 'types/index'
 import { setRosterListeners } from 'actions/listeners'
 import { writeShiftToDB } from 'actions/roster'
 import getCurrentUser from 'selectors/currentUser'
+
+import WithMouseEvents from './shiftBoard/withMouseEvents'
+import ShiftBoard from './shiftBoard'
+import ActionBar from './actionBar'
+
+import type { Shift, Note, User } from 'types/index'
 import './styles.css'
 
 type Props = {
@@ -38,16 +41,13 @@ class WeekPlan extends PureComponent{
   }
 
   render(){
-    const { currentSmartWeek, currentBranch } = this.props
     return(
       <fb className="shiftWeekWrapper">
         <fb className='shiftWeekMain'>
           <ActionBar />
-          <ShiftBoard
-            saveShift={this.saveShiftToDB}
-            smartWeek={currentSmartWeek}
-            branch={currentBranch}
-          />
+          <WithMouseEvents saveShift={this.saveShiftToDB}>
+            <ShiftBoard />
+          </WithMouseEvents>
         </fb>
       </fb>
     )

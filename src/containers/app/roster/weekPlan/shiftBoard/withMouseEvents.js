@@ -1,141 +1,182 @@
 //@flow
 import React, { PureComponent } from 'react'
-import type { ShiftCell } from 'types/index'
+import { connect } from 'react-redux'
+
+import { openNotesModal } from 'actions/ui/modals'
+import { focusShiftCell } from 'actions/ui/roster'
 import {
   elementIsShiftCell,
   elementIsNoteIcon,
   targetToShiftCell,
   getParentShiftCell } from './localHelpers'
 import { getShiftOfCell } from 'helpers/index'
-import type { Props } from './index'
+import getCurrentUser from 'selectors/currentUser'
 
-type State = { pickedUpCell: ?ShiftCell, shadowedCell: ?ShiftCell }
+import PickedUpCell from './pickedUpCell'
 
-type Enhancer = (component: Class<React$Component<void, Props, void>>) =>
-  Class<React$Component<void, Props, State>>
+import type { User, ShiftCell, Shift, Shifts } from 'types/index'
 
+type MSProps = {
+  currentUser: User,
+  shifts: Shifts,
+}
 
-const enhancer:Enhancer = (Component) => {
-  return class WithMouseLogic extends PureComponent {
+type MAProps = {
+  openNotesModal: (any)=>any,
+  focusShiftCell: (ShiftCell)=>any,
+}
 
-    cellUnderMouse: ?ShiftCell
-    isAdmin: boolean
-    mouseIsDown: boolean
-    isDragging: boolean
-    mousePosStart: {x: number, y: number}
-    mousePosDelta: {x: number, y: number}
-    PickedUpCellRef: ?HTMLElement
+type OwnProps = {
+  saveShift: (Shift)=>void,
+  children: any
+}
 
-    state: State
+type Props = OwnProps & MSProps & MAProps
 
-    constructor(props: any){
-      super(props)
+type State = {
+  pickedUpCell: ?ShiftCell,
+  shadowedCell: ?ShiftCell
+}
 
-      this.mouseIsDown = false
-      // props.currentUser comes from connect from the ShiftBoard Class
-      this.isAdmin = !!(this.props.currentUser && this.props.currentUser.isAdmin)
-      this.state = { pickedUpCell: null, shadowedCell: null }
+class WithMouseLogic extends PureComponent<void, Props, State> {
+  state: State
+  props: Props
+
+  isAdmin: boolean
+  mouseIsDown: boolean
+  isDragging: boolean
+  mousePosStart: {x: number, y: number}
+  mousePosDelta: {x: number, y: number}
+  PickedUpCellRef: ?HTMLElement
+
+  constructor(props: Props){
+    super(props)
+
+    this.mouseIsDown = false
+    this.isAdmin = !!(this.props.currentUser && this.props.currentUser.isAdmin)
+    this.state = {
+      pickedUpCell: null,
+      shadowedCell: null
+    }
+  }
+
+  componentDidMount = () => {
+    console.log(this.isAdmin);
+    document.addEventListener('mouseup',   this.onMouseUp)
+    if(this.isAdmin){ // only admin has drag and drop
+      document.addEventListener('mousemove', this.onMouseMove)
+      document.addEventListener('mouseover', this.onMouseOver)
+      document.addEventListener('mousedown', this.onMouseDown)
+    }
+  }
+
+  componentWillUnmount = () => {
+    document.removeEventListener('mouseup',   this.onMouseUp)
+    if(this.isAdmin){ // only admin has drag and drop
+      document.removeEventListener('mouseover', this.onMouseOver)
+      document.removeEventListener('mousemove', this.onMouseMove)
+      document.removeEventListener('mousedown', this.onMouseDown)
+    }
+  }
+
+  onMouseOver = ({target}: any) => {
+    if(!this.mouseIsDown) return
+    const cellUnderMouse = getParentShiftCell(target)
+    //dont allow to shadow Cells that already have a shift.
+    const isCellAndEmpty = cellUnderMouse && !cellUnderMouse.hasShift && !cellUnderMouse.hasEdit
+    const shadowedCell = isCellAndEmpty ? cellUnderMouse : null
+
+    this.setState({shadowedCell: shadowedCell})
+  }
+
+  onMouseDown = (e: any) => {
+    const pressedCell = getParentShiftCell(e.target)
+    if (!pressedCell) return
+    if (!pressedCell.hasShift) return // dont allow draggint empty cells
+    if (pressedCell.hasEdit) return   // dont allow dragging cells with shiftEdit
+
+    this.mousePosStart = {x: e.pageX, y: e.pageY}
+    this.mouseIsDown = true
+    setTimeout(()=> this.pickUpCell(pressedCell), 200)
+  }
+
+  onMouseUp = ({target}: any) => {
+    if(!this.isDragging){
+      const shiftCell = targetToShiftCell(target)
+      if(shiftCell.blocked) return
+      elementIsNoteIcon(target)  && this.props.openNotesModal({ day: shiftCell.day, user: shiftCell.user , type: 'shiftNote'})
+      elementIsShiftCell(target) && this.props.focusShiftCell(shiftCell)
     }
 
-    componentDidMount = () => {
-      document.addEventListener('mouseup',   this.onMouseUp)
-      if(this.isAdmin){ // only admin has drag and drop
-        document.addEventListener('mousemove', this.onMouseMove)
-        document.addEventListener('mouseover', this.onMouseOver)
-        document.addEventListener('mousedown', this.onMouseDown)
-      }
+    this.mouseIsDown = false
+    this.mousePosStart = {x: 0, y: 0}
+    this.state.pickedUpCell && this.dropCell()
+  }
+
+  onMouseMove = (e: any) => {
+    if (!this.state.pickedUpCell || !this.PickedUpCellRef) return
+    this.mousePosDelta = {
+      x: e.pageX - this.mousePosStart.x,
+      y: e.pageY - this.mousePosStart.y
     }
+    this.PickedUpCellRef.style.left = (this.state.pickedUpCell.left + this.mousePosDelta.x) + 'px'
+    this.PickedUpCellRef.style.top =  (this.state.pickedUpCell.top + this.mousePosDelta.y) + 'px'
+  }
 
-    componentWillUnmount = () => {
-      document.removeEventListener('mouseup',   this.onMouseUp)
-      if(this.isAdmin){ // only admin has drag and drop
-        document.removeEventListener('mouseover', this.onMouseOver)
-        document.removeEventListener('mousemove', this.onMouseMove)
-        document.removeEventListener('mousedown', this.onMouseDown)
-      }
-    }
-
-    onMouseOver = ({target}: any) => {
-      if(!this.mouseIsDown) return
-      this.cellUnderMouse = getParentShiftCell(target)
-      //dont allow to shadow Cells that already have a shift.
-      if(this.cellUnderMouse && getShiftOfCell(this.props.shifts, this.cellUnderMouse)){
-        this.cellUnderMouse = null
-      }
-      this.setState({shadowedCell: this.cellUnderMouse})
-    }
-
-    onMouseDown = (e: any) => {
-      const pressedCell = getParentShiftCell(e.target)
-      if (!pressedCell) return
-      if (!pressedCell.hasShift) return // dont allow draggint empty cells
-      if (pressedCell.hasEdit) return   // dont allow dragging cells with shiftEdit
-      console.log('HEREE');
-
-      this.mousePosStart = {x: e.pageX, y: e.pageY}
-      this.mouseIsDown = true
-      setTimeout(()=> this.pickUpCell(pressedCell), 200)
-    }
-
-    onMouseUp = ({target}: any) => {
-      if(!this.isDragging){
-        const shiftCell = targetToShiftCell(target)
-        if(shiftCell.blocked) return
-        elementIsNoteIcon(target)  && this.props.openNotesModal({ day: shiftCell.day, user: shiftCell.user , type: 'shiftNote'})
-        elementIsShiftCell(target) && this.props.focusShiftCell(shiftCell)
-      }
-
-      this.mouseIsDown = false
-      this.mousePosStart = {x: 0, y: 0}
-      this.state.pickedUpCell && this.dropCell()
-    }
-
-    onMouseMove = (e: any) => {
-      if (!this.state.pickedUpCell || !this.PickedUpCellRef) return
-      this.mousePosDelta = {
-        x: e.pageX - this.mousePosStart.x,
-        y: e.pageY - this.mousePosStart.y
-      }
-      this.PickedUpCellRef.style.left = (this.state.pickedUpCell.left + this.mousePosDelta.x) + 'px'
-      this.PickedUpCellRef.style.top =  (this.state.pickedUpCell.top + this.mousePosDelta.y) + 'px'
-    }
-
-    pickUpCell = (cell: ShiftCell) => {
-      if(this.mouseIsDown){
-        this.isDragging = true
-        this.setState({pickedUpCell: cell})
-        const shiftBoard = document.getElementById("shiftBoardMain")
-        shiftBoard && shiftBoard.classList.add('cursorMove')
-      }
-    }
-
-    dropCell = () => {
-      const { shadowedCell, pickedUpCell } = this.state
-      const { shifts, saveShift } = this.props
-      if(pickedUpCell && shadowedCell){
-        const pickedUpShift =  getShiftOfCell(shifts, pickedUpCell)
-        if(shadowedCell && pickedUpShift){
-          const { s, e, b } = pickedUpShift
-          const newShift = { s, e, b, day: shadowedCell.day, user: shadowedCell.user }
-          saveShift(newShift)
-        }
-      }
-
-      this.isDragging = false
-      this.setState({pickedUpCell: null, shadowedCell: null})
+  pickUpCell = (cell: ShiftCell) => {
+    if(this.mouseIsDown){
+      this.isDragging = true
+      this.setState({pickedUpCell: cell})
       const shiftBoard = document.getElementById("shiftBoardMain")
-      shiftBoard && shiftBoard.classList.remove('cursorMove')
+      shiftBoard && shiftBoard.classList.add('cursorMove')
+    }
+  }
+
+  dropCell = () => {
+    const { shadowedCell, pickedUpCell } = this.state
+    const { shifts, saveShift } = this.props
+    if(pickedUpCell && shadowedCell){
+      const pickedUpShift =  getShiftOfCell(shifts, pickedUpCell)
+      if(shadowedCell && pickedUpShift){
+        const { s, e, b } = pickedUpShift
+        const newShift = { s, e, b, day: shadowedCell.day, user: shadowedCell.user }
+        saveShift(newShift)
+      }
     }
 
-    render = () => {
-      return (
-        <Component  { ...this.props }
-          pickedUpCell={this.state.pickedUpCell}
-          shadowedCell={this.state.shadowedCell}
-          getPickedUpCellRef={(el) => {this.PickedUpCellRef = el}}
-        />
-    )}
+    this.isDragging = false
+    this.setState({pickedUpCell: null, shadowedCell: null})
+    const shiftBoard = document.getElementById("shiftBoardMain")
+    shiftBoard && shiftBoard.classList.remove('cursorMove')
+  }
+
+  render = () => {
+    const { pickedUpCell, shadowedCell } = this.state
+    const { shifts } = this.props
+
+
+    return (
+      <fb style={{position: 'relative'}}>
+        {React.cloneElement(this.props.children, {...this.props, shadowedCell })}
+        { pickedUpCell &&
+          <PickedUpCell
+            getRef={(el) => {this.PickedUpCellRef = el}}
+            shift={getShiftOfCell(shifts, pickedUpCell)}
+            cell={pickedUpCell} />
+        }
+      </fb>
+    )
   }
 }
 
-export default enhancer
+const actionsToProps: MAProps = {
+  openNotesModal,
+  focusShiftCell
+}
+
+const mapStateToProps = (state: any, ow: OwnProps): MSProps => ({
+  currentUser: getCurrentUser(state),
+  shifts: state.roster.shiftWeek
+})
+
+export default connect(mapStateToProps, actionsToProps)(WithMouseLogic)

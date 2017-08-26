@@ -18,9 +18,11 @@ moment.locale('de')
 class Container extends PureComponent {
   componentWillMount = () => {
     if(!this.props.firebaseInitialized) this.props.initFirebase() // check before is a workaround for hot-reloading
-    if(!this.props.firebaseAuthListener) this.props.setAuthStateListener()
-      .then((user) => {this.props.registerInitialListeners()})
-      .catch()
+    if(!this.props.firebaseAuthListener){
+      // giving registerInitialListeners as a callback cause i want it to be called on every login by firebase
+      // by chaining it with a .then this will only called the first time after login ( not the next time after logging in and out) yes i was dead by this bug. dead
+      this.props.setAuthStateListener(this.props.registerInitialListeners)
+    }
   }
 
   render() {

@@ -77,4 +77,4 @@ export const getNoteOfCell = (notes: Notes, cell: ShiftCell) =>
   notes.find(n => n.user === cell.user && n.day === cell.day)
 
 export const getShiftOfCell = (shifts: Shifts, cell: ShiftCell): ?Shift =>
-  shifts.find(s => s.user === cell.user && s.day === cell.day )
+  cell && shifts.find(s => s.user === cell.user && s.day === cell.day )
