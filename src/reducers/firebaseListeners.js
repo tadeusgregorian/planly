@@ -1,4 +1,4 @@
-
+export type FirebaseListeners = {}
 // For keeping track of all listeners that are registered in Firebase. To avoid double listeners.
 export default (state = {}, action) => {
 	switch (action.type) {

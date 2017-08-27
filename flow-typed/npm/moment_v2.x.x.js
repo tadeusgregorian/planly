@@ -1,5 +1,7 @@
 // flow-typed signature: b066790a0280dbd8ea71ea2a212c78ef
 // flow-typed version: b43dff3e0e/moment_v2.x.x/flow_>=v0.28.x
+/* eslint-disable no-use-before-define */
+/* eslint-disable no-unused-vars */
 
 type moment$MomentOptions = {
   y?: number|string,
@@ -43,6 +45,7 @@ type moment$MomentCreationData = {
   isUTC: bool,
   strict: bool,
 };
+
 
 type moment$CalendarFormat = string | (moment: moment$Moment) => string;
 

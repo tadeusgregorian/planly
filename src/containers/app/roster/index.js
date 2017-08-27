@@ -12,7 +12,7 @@ class Roster extends PureComponent {
     return(
       <fb className="rosterMain">
         <SubBar />
-        <WeekPlan />
+        <WeekPlan test='bonobo'/>
       </fb>
     )
   }

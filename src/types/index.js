@@ -1,4 +1,5 @@
 //@flow
+import type { RootReducer } from 'reducers/index'
 
 export type Action = {type: string}
 export type GetState = () => any
@@ -6,6 +7,13 @@ export type Dispatch = (action: Action | ThunkAction | Array<Action>) => any // 
 export type ThunkAction = (any, any, any)=> (dispatch: Dispatch, getState: GetState) => any
 
 // core-types
+
+export type State = RootReducer
+
+export type DataStatus =
+  'REQUESTED' |
+  'NOT_REQUESTED' |
+  'LOADED'
 
 export type User = {
   id: string,
@@ -19,18 +27,21 @@ export type User = {
   isAdmin?: true,
   isSuperAdmin?: true
 }
+export type Users = Array<User>
 
 export type Position = {
   id: string,
   name: string,
   color: string
 }
+export type Positions = Array<Position>
 
 export type Branch = {
   id: string,
   name: string,
   color: string
 }
+export type Branches = Array<Branch>
 
 // roster-types
 export type Day = 'mo' | 'tu' | 'we' | 'th' | 'fr' | 'sa' | 'su'

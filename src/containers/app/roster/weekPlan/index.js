@@ -2,6 +2,8 @@
 
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
+import type { Connector } from 'react-redux'
+import type { State } from 'types/index'
 import { setRosterListeners } from 'actions/listeners'
 
 import WithMouseEvents from './shiftBoard/withMouseEvents'
@@ -9,11 +11,17 @@ import ShiftBoard from './shiftBoard'
 import ActionBar from './actionBar'
 import './styles.css'
 
-type Props = {
-  currentBranch: string,
-  currentSmartWeek: string,
-  setRosterListeners: ()=>void,
+type OwnProps = {
+  test: string
 }
+
+type ConnectedProps = {
+  currentBranch: string,
+  currentSmartWeek: number,
+  setRosterListeners: ()=>void
+}
+
+type Props = ConnectedProps & OwnProps
 
 class WeekPlan extends PureComponent{
   props: Props
@@ -45,10 +53,10 @@ const actionsToProps = {
   setRosterListeners
 }
 
-const mapStateToProps = (state) => ({
-  shiftWeekDataStatus: state.roster.shiftWeekDataStatus,
+const mapStateToProps = (state: State) => ({
   currentBranch: state.ui.roster.currentBranch,
-  currentSmartWeek: state.ui.roster.currentSmartWeek,
+  currentSmartWeek: state.ui.roster.currentSmartWeek
 })
 
-export default connect(mapStateToProps, actionsToProps)(WeekPlan)
+const connector: Connector<OwnProps, Props> = connect(mapStateToProps, actionsToProps)
+export default connector(WeekPlan)

@@ -1,4 +1,12 @@
-const modals = (state = [], action) => {
+//@flow
+export type Modal = {
+  modalID: string,
+  component: Class<React$Component<*, *, *>>,
+  props?: {}
+}
+
+export type Modals = Array<Modal>
+const modals = (state: Modals = [], action: any): Modals => {
 
   if(action.type === 'OPEN_MODAL') { return [
     ...state, {

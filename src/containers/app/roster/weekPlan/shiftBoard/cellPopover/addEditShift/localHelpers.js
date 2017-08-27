@@ -37,7 +37,7 @@ const isValidTimeString = (ts) => {
 }
 
 // returns true if a string grows from a length of 4 -> 5
-export const from4To5 = (prevString: string, nextString: string) =>
+export const from4To5 = (prevString: string, nextString: string): boolean =>
   prevString.length === 4 && nextString.length === 5
 
 export const shiftDataValid = (shiftObj: ShiftInput): boolean => {
