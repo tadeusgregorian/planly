@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 
 import { openNotesModal } from 'actions/ui/modals'
 import { focusShiftCell } from 'actions/ui/roster'
+import { saveShiftToDB } from 'actions/roster'
 import {
   elementIsShiftCell,
   elementIsNoteIcon,
@@ -24,10 +25,10 @@ type MSProps = {
 type MAProps = {
   openNotesModal: (any)=>any,
   focusShiftCell: (ShiftCell)=>any,
+  saveShiftToDB: (Shift)=>any
 }
 
 type OwnProps = {
-  saveShift: (Shift)=>void,
   children: any
 }
 
@@ -134,13 +135,13 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
 
   dropCell = () => {
     const { shadowedCell, pickedUpCell } = this.state
-    const { shifts, saveShift } = this.props
+    const { shifts } = this.props
     if(pickedUpCell && shadowedCell){
       const pickedUpShift =  getShiftOfCell(shifts, pickedUpCell)
       if(shadowedCell && pickedUpShift){
         const { s, e, b } = pickedUpShift
         const newShift = { s, e, b, day: shadowedCell.day, user: shadowedCell.user }
-        saveShift(newShift)
+        this.props.saveShiftToDB(newShift)
       }
     }
 
@@ -153,7 +154,6 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
   render = () => {
     const { pickedUpCell, shadowedCell } = this.state
     const { shifts } = this.props
-
 
     return (
       <fb style={{position: 'relative'}}>
@@ -171,7 +171,8 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
 
 const actionsToProps: MAProps = {
   openNotesModal,
-  focusShiftCell
+  focusShiftCell,
+  saveShiftToDB
 }
 
 const mapStateToProps = (state: any, ow: OwnProps): MSProps => ({

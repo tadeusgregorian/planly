@@ -8,26 +8,25 @@ import CellPopover from './cellPopover'
 import ShiftBoardHead from './shiftBoardHead'
 import './styles.css'
 
-import type { Shift, ShiftCell } from 'types/index'
+import type { ShiftCell } from 'types/index'
 
 export type Props = {
   focusedCell: ?ShiftCell,
   shadowedCell: ?ShiftCell, // comes from HOC
-  saveShift: (Shift)=> void,
 }
 
 class ShiftBoard extends PureComponent{
   props: Props
 
   render(){
-    const { focusedCell, shadowedCell, saveShift } = this.props
+    const { focusedCell, shadowedCell } = this.props
 
     return(
       <fb id="shiftBoardMain">
           <ShiftBoardHead />
           <OpenShifts />
           <UserShifts shadowedCell={shadowedCell} />
-          { focusedCell && <CellPopover saveShift={saveShift} focusedCell={focusedCell}/> }
+          { focusedCell && <CellPopover focusedCell={focusedCell}/> }
       </fb>
     )
   }

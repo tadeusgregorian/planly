@@ -3,7 +3,7 @@
 export type Action = {type: string}
 export type GetState = () => any
 export type Dispatch = (action: Action | ThunkAction | Array<Action>) => any // eslint-disable-line no-use-before-define
-export type ThunkAction = (any)=> (dispatch: Dispatch, getState: GetState) => any
+export type ThunkAction = (any, any, any)=> (dispatch: Dispatch, getState: GetState) => any
 
 // core-types
 
@@ -61,10 +61,9 @@ export type PreDBShift = {
   day: Day,
   user: string,
   branch: string,
-  position?: ?string,
-  // $FlowFixMe -> just dont know what is wrong here... Flow doesnt get null stuff
-  isOpen?: ?boolean,
-  positioin?: string,
+  position?: string,
+  // $FlowFixMe
+  isOpen?: ?boolean
 }
 
 export type DBShift = {
@@ -77,8 +76,8 @@ export type DBShift = {
   branchDay: string,
   userDay: string,
   isOpen: true | null,
-  position?: string | null,
-} | null
+  position: string | null,
+}
 
 export type ShiftCell = {
   day: Day,
@@ -110,7 +109,18 @@ export type Note = {
   text:       string
 }
 
+export type PreDBNote = {
+  smartWeek: string,
+  branch: string,
+  author: string,
+  text: string,
+  type: string,
+  user?: string,
+  day: string
+}
+
 export type Notes = Array<Note>
+
 
 export type ShiftEdit = {
   s: number,
@@ -123,3 +133,8 @@ export type ShiftEdit = {
 }
 
 export type ShiftEdits = Array<ShiftEdit>
+
+export type DBShiftEdit = ShiftEdit & {
+  branchDay: string,
+  userDay: string
+}

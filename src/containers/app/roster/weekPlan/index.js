@@ -3,21 +3,15 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { setRosterListeners } from 'actions/listeners'
-import { writeShiftToDB } from 'actions/roster'
-import getCurrentUser from 'selectors/currentUser'
 
 import WithMouseEvents from './shiftBoard/withMouseEvents'
 import ShiftBoard from './shiftBoard'
 import ActionBar from './actionBar'
-
-import type { Shift, Note, User } from 'types/index'
 import './styles.css'
 
 type Props = {
-  notes: Array<Note>,
   currentBranch: string,
   currentSmartWeek: string,
-  currentUser: User,
   setRosterListeners: ()=>void,
 }
 
@@ -33,19 +27,12 @@ class WeekPlan extends PureComponent{
     if(branchChanged || smartWeekChanged) setRosterListeners()
   }
 
-  saveShiftToDB = (shift: Shift) => {
-    const smartWeek         = this.props.currentSmartWeek
-    const branch            = this.props.currentBranch
-    const isAdmin           = !!this.props.currentUser.isAdmin
-    writeShiftToDB(smartWeek, { ...shift, branch }, isAdmin)
-  }
-
   render(){
     return(
       <fb className="shiftWeekWrapper">
         <fb className='shiftWeekMain'>
           <ActionBar />
-          <WithMouseEvents saveShift={this.saveShiftToDB}>
+          <WithMouseEvents>
             <ShiftBoard />
           </WithMouseEvents>
         </fb>
@@ -62,7 +49,6 @@ const mapStateToProps = (state) => ({
   shiftWeekDataStatus: state.roster.shiftWeekDataStatus,
   currentBranch: state.ui.roster.currentBranch,
   currentSmartWeek: state.ui.roster.currentSmartWeek,
-  currentUser: getCurrentUser(state)
 })
 
 export default connect(mapStateToProps, actionsToProps)(WeekPlan)

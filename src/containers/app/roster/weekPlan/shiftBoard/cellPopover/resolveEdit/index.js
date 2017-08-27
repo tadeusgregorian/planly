@@ -9,6 +9,7 @@ import getFocusedShiftEdit from 'selectors/focusedShiftEdit'
 
 import { getPosition, getDirection, cellChanged } from './localHelpers'
 import { unfocusShiftCell } from 'actions/ui/roster'
+import { acceptEdit, rejectEdit } from 'actions/roster'
 
 import { shiftToString } from 'helpers/index'
 import { shiftCellHeight } from 'constants/roster'
@@ -20,7 +21,7 @@ import type { ShiftCell, Shift, ShiftEdit, User } from 'types/index'
 type Props = {
   cell: ShiftCell,
   shift: ?Shift,
-  shiftEdit: ?ShiftEdit,
+  shiftEdit: ShiftEdit,
   currentUser: User,
   saveShift: (Shift)=>void,
   unfocusShiftCell: ()=>void
@@ -47,6 +48,15 @@ class ResolveEdit extends PureComponent{
 
   close = () => this.props.unfocusShiftCell()
 
+  acceptClicked = () => {
+    acceptEdit(this.props.shiftEdit)
+    this.props.unfocusShiftCell()
+  }
+  rejectClicked = () => {
+    rejectEdit(this.props.shiftEdit)
+    this.props.unfocusShiftCell()
+  }
+
   render(){
     const { cell, shiftEdit, currentUser } = this.props
     const { isAdmin } = currentUser
@@ -61,8 +71,10 @@ class ResolveEdit extends PureComponent{
         </fb>
       </fb>,
       <fb className='buttonsWrapper' key='btn1'>
-        { isAdmin && <fb className='actionButton'>übernehmen</fb> }
-        <fb className='actionButton' key='btn2'>{ isAdmin ? 'ablehnen' : 'zurücknehmen'}</fb>
+        { isAdmin && <fb className='actionButton' onClick={this.acceptClicked}>übernehmen</fb> }
+        <fb className='actionButton' key='btn2' onClick={this.rejectClicked}>
+          { isAdmin ? 'ablehnen' : 'zurücknehmen'}
+        </fb>
       </fb>
     ]
 
@@ -76,7 +88,7 @@ class ResolveEdit extends PureComponent{
 }
 
 const actionsToProps = {
-  unfocusShiftCell,
+  unfocusShiftCell
 }
 
 const mapStateToProps = (state) => ({

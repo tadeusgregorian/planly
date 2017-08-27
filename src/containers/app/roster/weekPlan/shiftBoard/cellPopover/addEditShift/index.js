@@ -5,7 +5,9 @@ import { connect } from 'react-redux'
 import { cellChanged, timeInpOK, withColon, from4To5, shiftDataValid, zipShift, shiftToShiftInput } from './localHelpers'
 import { toggleOptions, unfocusShiftCell } from 'actions/ui/roster'
 import { openNotesModal } from 'actions/ui/modals'
+import { saveShiftToDB, saveShiftEditToDB } from 'actions/roster'
 
+import getCurrentUser from 'selectors/currentUser'
 import getFocusedShift from 'selectors/focusedShift'
 import getFocusedNotes from 'selectors/focusedNotes'
 
@@ -16,7 +18,7 @@ import CloseButton from './closeButton'
 import ExpandedOptions from './expandedOptions'
 import './styles.css'
 
-import type { ShiftCell, Shift, Note, Position } from 'types/index'
+import type { ShiftCell, Shift, Note, Position, User } from 'types/index'
 
 type Props = {
   cell: ShiftCell,
@@ -24,9 +26,11 @@ type Props = {
   optionsExpanded: boolean,
   note: Note,
   positions: Array<Position>,
+  currentUser: User,
   openNotesModal: ({})=>{},
   toggleOptions: ()=>void,
-  saveShift: (Shift)=>void,
+  saveShiftToDB: (Shift)=>void,
+  saveShiftEditToDB: (Shift)=>void,
   closePopover: ()=>void,
   unfocusShiftCell: ()=>void
 }
@@ -44,9 +48,12 @@ class CellPopover extends PureComponent<void, Props, State> {
   state: State
   props: Props
   inputRefs: InputRefs
+  isAdmin: boolean
 
   constructor(props: Props){
     super(props)
+
+    this.isAdmin = !!props.currentUser.isAdmin
 
     this.state = {
       startTime: '',
@@ -101,7 +108,8 @@ class CellPopover extends PureComponent<void, Props, State> {
 
   tryToSaveChanges = () => {
     const { startTime, endTime, breakMinutes, position } = this.state
-    const { day, user, isOpen } = this.props.cell
+    const { saveShiftToDB, saveShiftEditToDB, unfocusShiftCell, cell } = this.props
+    const { day, user, isOpen } = cell
     const shiftInput = { startTime, endTime, breakMinutes }
 
     if(isOpen && !position) return
@@ -110,8 +118,8 @@ class CellPopover extends PureComponent<void, Props, State> {
       let shift = { ...minimalShift, day, user, isOpen: !!isOpen }
       if(isOpen) shift = { ...shift, isOpen, position }
 
-      this.props.saveShift(shift)
-      this.props.unfocusShiftCell()
+      this.isAdmin ? saveShiftToDB(shift) : saveShiftEditToDB(shift)
+      unfocusShiftCell()
     }
   }
 
@@ -153,6 +161,8 @@ const actionsToProps = {
   toggleOptions,
   openNotesModal,
   unfocusShiftCell,
+  saveShiftToDB,
+  saveShiftEditToDB
 }
 
 const mapStateToProps = (state) => ({
@@ -164,6 +174,7 @@ const mapStateToProps = (state) => ({
   shifts: state.roster.shiftWeek,
   shiftEdits: state.roster.shiftEdits,
   focusedShift: getFocusedShift(state),
+  currentUser: getCurrentUser(state),
 })
 
 export default connect(mapStateToProps, actionsToProps)(CellPopover)

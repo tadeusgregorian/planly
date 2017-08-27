@@ -3,51 +3,98 @@
 import { db } from '../firebaseInit'
 import firebase from 'firebase'
 import { getFirebasePath } from './../actionHelpers'
-import type { PreDBShift, DBShift } from 'types/index'
+import type { PreDBShift, DBShift, Shift, ShiftEdit, DBShiftEdit, ThunkAction, PreDBNote } from 'types/index'
 
 export const removeShiftWeek = () => ({type: 'remove_shiftWeek'})
 
-const getShiftKey = (shift) => shift.branch + shift.user + shift.day
-const getShiftEditKey = (shift, smartWeek) => smartWeek + getShiftKey(shift)
+const getShiftKey = (shift: PreDBShift | ShiftEdit) => shift.branch + shift.user + shift.day
+const getShiftEditKey = (shiftEdit: ShiftEdit) => shiftEdit.smartWeek + getShiftKey(shiftEdit)
 
-const extendShiftForDB = (sh: PreDBShift): DBShift => (
-  sh.s === 0 && sh.e === 0 ?
-    null :
-    {
-    ...sh,
-    b: sh.b || 0,
-    isOpen: (!!sh.isOpen) || null, // firebase needs null to delete a node ( undefined throws an error )
-    position: sh.position || null,
-    branchDay: (sh.branch + sh.day),
-    userDay: (sh.user + sh.day)
-  }
-)
+const toDBShift = (sh: PreDBShift): DBShift => ({
+  ...sh,
+  b: sh.b || 0,
+  isOpen:  sh.isOpen ? true : null, // firebase needs null to delete a node ( undefined throws an error )
+  position: sh.position ? sh.position : null,
+  branchDay: (sh.branch + sh.day),
+  userDay: (sh.user + sh.day)
+})
 
-export const writeShiftToDB = (smartWeek: string, shift: PreDBShift, isAdmin: boolean) =>
-  isAdmin ? writeShiftToShiftWeek(smartWeek, shift) : writeShiftToShiftEdits(smartWeek, shift)
+const toDBShiftEdit = (sh: ShiftEdit): DBShiftEdit => ({
+  ...sh,
+  b: sh.b || 0,
+  branchDay: (sh.branch + sh.day),
+  userDay: (sh.user + sh.day)
+})
 
-const writeShiftToShiftWeek = (smartWeek: string, shift: PreDBShift) => {
-  const key = getShiftKey(shift)
-  const dbShift = extendShiftForDB(shift)
-  db().ref(getFirebasePath('shiftWeeks')).child(smartWeek).child(key).set(dbShift)
+const getWeekAndBranch = (getState): {smartWeek: string, branch: string} => {
+  const smartWeek = getState().ui.roster.currentSmartWeek
+  const branch = getState().ui.roster.currentBranch
+  return { smartWeek, branch }
 }
 
-const writeShiftToShiftEdits = (smartWeek: string, shift: PreDBShift) => {
-  const key = getShiftEditKey(shift, smartWeek)
-  const dbShift = extendShiftForDB(shift)
-  const dbShiftEdit = { ...dbShift, smartWeek }
-  db().ref(getFirebasePath('shiftEdits')).child(key).set(dbShiftEdit)
+export const saveShiftToDB:ThunkAction = (shift: Shift) => (disp, getState) => {
+  const { smartWeek, branch } = getWeekAndBranch(getState)
+  const update = getShiftUpdate(shift, smartWeek, branch)
+  db().ref().update(update)
 }
 
-export type PreDBNote = {
-  smartWeek: string,
-  branch: string,
-  author: string,
-  text: string,
-  type: string,
-  user?: string,
-  day: string
+export const saveShiftEditToDB:ThunkAction = (shift: Shift) => (disp, getState) => {
+  const { smartWeek, branch } = getWeekAndBranch(getState)
+  const update = getShiftEditUpdate(shift, smartWeek, branch)
+  db().ref().update(update)
 }
+
+// takes a Shift as an argument and turns it into a ShiftEdit -> because AddEditPopover sends a shift to this
+const getShiftEditUpdate = (shift: Shift, smartWeek: string, branch: string, remove = false) => {
+  const shiftEdit: ShiftEdit = { ...shift, smartWeek, branch }
+  const dbShiftEdit          = toDBShiftEdit(shiftEdit)
+  const data                 = remove ? null : dbShiftEdit
+  const key = getShiftEditKey(shiftEdit)
+  return {[ getFirebasePath('shiftEdits') + key]: data}
+}
+
+const getShiftUpdate = (shift: Shift, smartWeek: string, branch: string, remove = false) => {
+  const preDBShift  = { ...shift, branch }
+  const dbShift     = toDBShift(preDBShift)
+  const data        = remove ? null : dbShift
+  const key         = getShiftKey(preDBShift)
+  return {[ getFirebasePath('shiftWeeks') + smartWeek + '/' + key]: data}
+}
+
+export const acceptEdit = (shiftEdit: ShiftEdit) => {
+  const { smartWeek, branch } = shiftEdit
+  const asShift: Shift = (shiftEdit: any) // explicit type casting for flow...
+  const update1 = getShiftEditUpdate(asShift, smartWeek, branch, true)
+  const update2 = getShiftUpdate(asShift, smartWeek, branch)
+  db().ref().update({ ...update1, ...update2 })
+}
+
+export const rejectEdit = (shiftEdit: ShiftEdit) => {
+  const { smartWeek, branch } = shiftEdit
+  const asShift: Shift = (shiftEdit: any) // explicit type casting for flow...
+  const update = getShiftEditUpdate(asShift, smartWeek, branch, true)
+  db().ref().update(update)
+}
+
+export const assignOpenShift:ThunkAction = (openShift: Shift, user: string) => (disp, getState) => {
+  const { smartWeek, branch } = getWeekAndBranch(getState)
+  const { s, e, b, day } = openShift
+  const shift: Shift = { s, e, b, day, user }
+  const update1 = getShiftUpdate(openShift, smartWeek, branch, true) // deleting openShift
+  const update2 = getShiftUpdate(shift, smartWeek, branch)           // creating new userShift
+  db().ref().update({ ...update1, ...update2 })
+}
+
+
+
+
+
+
+
+
+
+
+
 
 export const writeNoteToDB = ({smartWeek, branch, author, text, type, user, day}: PreDBNote) => {
   const timeStamp         = firebase.database.ServerValue.TIMESTAMP

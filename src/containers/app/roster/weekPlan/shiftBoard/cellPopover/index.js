@@ -1,23 +1,33 @@
 //@flow
 import React from 'react'
+import { connect } from 'react-redux'
 
+import getCurrentUser from 'selectors/currentUser'
+
+import GrabOpenShift from './grabOpenShift'
 import AddEditShift from './addEditShift'
 import ResolveEdit from './resolveEdit'
 import './styles.css'
 
-import type { ShiftCell, Shift } from 'types/index'
+import type { ShiftCell, User } from 'types/index'
 
 type Props = {
   focusedCell: ShiftCell,
-  saveShift: (Shift)=>void
+  currentUser: User,
 }
 
 const CellPopover = (props: Props) => {
-  const hasEdit = props.focusedCell && props.focusedCell.hasEdit
-  const { saveShift } = props
+  const hasEdit = props.focusedCell.hasEdit
+  const isOpen  = props.focusedCell.isOpen
+  const isAdmin = props.currentUser.isAdmin
 
-  if(hasEdit) return  <ResolveEdit saveShift={saveShift} />
-  return              <AddEditShift saveShift={saveShift} />
+  if(isOpen && !isAdmin) return <GrabOpenShift />
+  if(hasEdit) return <ResolveEdit />
+  return <AddEditShift />
 }
 
-export default CellPopover
+const mapStateToProps = (state) => ({
+  currentUser: getCurrentUser(state)
+})
+
+export default connect(mapStateToProps)(CellPopover)
