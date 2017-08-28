@@ -1,0 +1,23 @@
+.actionBar_editsDisplayMain{
+  position: relative;
+  .content{
+    background: red;
+    height: 100%;
+    border-radius: 2px;
+    background: #00a3ef;
+    color: white;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    padding: 0px 8px;
+
+    .count{
+      flex: 1;
+      font-size: 18px;
+    }
+    .penIcon{
+      flex: 1;
+      margin-left: 8px;
+    }
+  }
+}

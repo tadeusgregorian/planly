@@ -1,14 +1,15 @@
 //@flow
 import type { RootReducer } from 'reducers/index'
 
+export type Store = RootReducer
+export type GetState = ()=> Store
+
 export type Action = {type: string}
-export type GetState = () => any
 export type Dispatch = (action: Action | ThunkAction | Array<Action>) => any // eslint-disable-line no-use-before-define
 export type ThunkAction = (any, any, any)=> (dispatch: Dispatch, getState: GetState) => any
 
 // core-types
 
-export type State = RootReducer
 
 export type DataStatus =
   'REQUESTED' |
@@ -139,7 +140,7 @@ export type ShiftEdit = {
   b: number,
   user: string,
   day: Day,
-  smartWeek: string,
+  smartWeek: number,
   branch: string
 }
 

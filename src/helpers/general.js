@@ -49,3 +49,11 @@ export const withoutProp = (obj, prop) => {
 	delete obj_copy[prop]
 	return obj_copy
 }
+
+// checks if the function fn is true for a node or a parent node.
+export const closest = (el: any, fn: (any)=>boolean) => {
+  while (el) {
+    if (fn(el)) return el;
+    el = el.parentNode;
+  }
+}

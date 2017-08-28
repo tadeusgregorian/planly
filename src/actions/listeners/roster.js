@@ -10,10 +10,16 @@ const getWeekAndBranch = (getState) => ({
   branch:     getState().ui.roster.currentBranch
 })
 
-export const setRosterListeners: ThunkAction = () => (dispatch, getState) => {
+export const setInitialRosterListeners: ThunkAction = () => (dispatch, getState) => {
   setShiftWeekListener(dispatch, getState)
   setNotesListener(dispatch, getState)
   setShiftEditsListener(dispatch, getState)
+  dispatch({type: 'remove_shiftWeek'})
+}
+
+export const setRosterListeners: ThunkAction = () => (dispatch, getState) => {
+  setShiftWeekListener(dispatch, getState)
+  setNotesListener(dispatch, getState)
   dispatch({type: 'remove_shiftWeek'})
 }
 

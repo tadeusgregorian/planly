@@ -1170,3 +1170,28 @@ fb {
 
 a {
   text-decoration: none !important; }
+
+.popover_at:after, .popover_at:before {
+  bottom: 100%;
+  right: 50%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none; }
+
+.popover_at.arrowRight:after, .popover_at.arrowRight:before {
+  right: 22px; }
+
+.popover_at:after {
+  border-color: rgba(213, 43, 128, 0);
+  border-bottom-color: white;
+  border-width: 6px;
+  margin-left: -6px; }
+
+.popover_at:before {
+  border-color: rgba(0, 25, 245, 0);
+  border-bottom-color: white;
+  border-width: 9px;
+  margin-left: -9px; }

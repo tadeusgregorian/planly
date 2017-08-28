@@ -3,8 +3,8 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
-import type { State } from 'types/index'
-import { setRosterListeners } from 'actions/listeners'
+import type { Store } from 'types/index'
+import { setRosterListeners, setInitialRosterListeners } from 'actions/listeners'
 
 import WithMouseEvents from './shiftBoard/withMouseEvents'
 import ShiftBoard from './shiftBoard'
@@ -18,7 +18,8 @@ type OwnProps = {
 type ConnectedProps = {
   currentBranch: string,
   currentSmartWeek: number,
-  setRosterListeners: ()=>void
+  setRosterListeners: ()=>void,
+  setInitialRosterListeners: ()=>void
 }
 
 type Props = ConnectedProps & OwnProps
@@ -26,7 +27,7 @@ type Props = ConnectedProps & OwnProps
 class WeekPlan extends PureComponent{
   props: Props
 
-  componentDidMount = () => this.props.setRosterListeners()
+  componentDidMount = () => { this.props.setInitialRosterListeners() }
 
   componentWillReceiveProps = (np: Props) => {
     const { currentBranch, setRosterListeners, currentSmartWeek } = this.props
@@ -50,10 +51,11 @@ class WeekPlan extends PureComponent{
 }
 
 const actionsToProps = {
-  setRosterListeners
+  setRosterListeners,
+  setInitialRosterListeners
 }
 
-const mapStateToProps = (state: State) => ({
+const mapStateToProps = (state: Store) => ({
   currentBranch: state.ui.roster.currentBranch,
   currentSmartWeek: state.ui.roster.currentSmartWeek
 })

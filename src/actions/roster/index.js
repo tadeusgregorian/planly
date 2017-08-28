@@ -3,7 +3,8 @@
 import { db } from '../firebaseInit'
 import firebase from 'firebase'
 import { getFirebasePath } from './../actionHelpers'
-import type { PreDBShift, DBShift, Shift, ShiftEdit, DBShiftEdit, ThunkAction, PreDBNote } from 'types/index'
+import type { PreDBShift, DBShift, Shift, ShiftEdit, DBShiftEdit, ThunkAction, PreDBNote, GetState } from 'types/index'
+
 
 export const removeShiftWeek = () => ({type: 'remove_shiftWeek'})
 
@@ -26,7 +27,7 @@ const toDBShiftEdit = (sh: ShiftEdit): DBShiftEdit => ({
   userDay: (sh.user + sh.day)
 })
 
-const getWeekAndBranch = (getState): {smartWeek: string, branch: string} => {
+const getWeekAndBranch = (getState: GetState): {smartWeek: number, branch: string} => {
   const smartWeek = getState().ui.roster.currentSmartWeek
   const branch = getState().ui.roster.currentBranch
   return { smartWeek, branch }
@@ -45,7 +46,7 @@ export const saveShiftEditToDB:ThunkAction = (shift: Shift) => (disp, getState) 
 }
 
 // takes a Shift as an argument and turns it into a ShiftEdit -> because AddEditPopover sends a shift to this
-const getShiftEditUpdate = (shift: Shift, smartWeek: string, branch: string, remove = false) => {
+const getShiftEditUpdate = (shift: Shift, smartWeek: number, branch: string, remove = false) => {
   const shiftEdit: ShiftEdit = { ...shift, smartWeek, branch }
   const dbShiftEdit          = toDBShiftEdit(shiftEdit)
   const data                 = remove ? null : dbShiftEdit
@@ -53,7 +54,7 @@ const getShiftEditUpdate = (shift: Shift, smartWeek: string, branch: string, rem
   return {[ getFirebasePath('shiftEdits') + key]: data}
 }
 
-const getShiftUpdate = (shift: Shift, smartWeek: string, branch: string, remove = false) => {
+const getShiftUpdate = (shift: Shift, smartWeek: number, branch: string, remove = false) => {
   const preDBShift  = { ...shift, branch }
   const dbShift     = toDBShift(preDBShift)
   const data        = remove ? null : dbShift
