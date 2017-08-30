@@ -1,12 +1,27 @@
 // @flow
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import { changeCurrentBranch } from 'actions/ui/roster'
+import type { Store } from 'types/index'
+import { NavLink } from 'react-router-dom'
+import {
+  changeCurrentBranch,
+  leaveTemplateMode,
+  enterTemplateMode,
+  changeCurrentTemplate
+} from 'actions/ui/roster'
 import Dropdown from 'react-dropdown'
 import './styles.css'
 
 
 class SubBar extends PureComponent {
+
+  weekPlanClicked = () => {
+    this.props.leaveTemplateMode()
+  }
+
+  templatesClicked = () => { 
+    this.props.enterTemplateMode()
+  }
 
   render(){
     const { currentBranch, changeCurrentBranch, branches } = this.props
@@ -21,9 +36,15 @@ class SubBar extends PureComponent {
               onChange={(opt) => changeCurrentBranch(opt.value)}
             />
           </fb>
-          <fb className='subBarButton'>Wochenplan</fb>
-          <fb className='subBarButton'>Vorlagen</fb>
-          <fb className='subBarButton'>Überstunden</fb>
+          <NavLink to='/app/dienstplan/wochenplan'>
+            <fb className='subBarButton' onClick={this.weekPlanClicked}>Wochenplan</fb>
+          </NavLink>
+          <NavLink to='/app/dienstplan/wochenplan'>
+            <fb className='subBarButton' onClick={this.templatesClicked}>Vorlagen</fb>
+          </NavLink>
+          <NavLink to='/app/dienstplan/overtime'>
+            <fb className='subBarButton'>Überstunden</fb>
+          </NavLink>
         </fb>
       </fb>
     )
@@ -31,12 +52,16 @@ class SubBar extends PureComponent {
 }
 
 const actionsToProps = {
-  changeCurrentBranch
+  changeCurrentBranch,
+  leaveTemplateMode,
+  enterTemplateMode,
+  changeCurrentTemplate
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: Store) => ({
   currentBranch: state.ui.roster.currentBranch,
-  branches: state.core.branches
+  branches: state.core.branches,
+  templatesFlat: state.roster.templatesFlat,
 })
 
 export default connect (mapStateToProps, actionsToProps)(SubBar)

@@ -1,7 +1,20 @@
 //@flow
 
+type TargetKey =
+  'users'
+| 'branches'
+| 'positions'
+| 'accountDetails'
+| 'queues'
+| 'roster'
+| 'shiftWeeks'
+| 'notes'
+| 'shiftEdits'
+| 'templatesFlat'
+| 'templateWeeks'
+
 // This function holds the Information, where in the FirebaseDB each Node sits
-export const getFirebasePath	= (target: string): string => {
+export const getFirebasePath	= (target: TargetKey): string => {
 
 	const accPath = 'accounts/' + window.accountID
 
@@ -15,6 +28,8 @@ export const getFirebasePath	= (target: string): string => {
 		case 'shiftWeeks': 			return accPath + '/roster/shiftWeeks/'
 		case 'notes': 					return accPath + '/roster/notes/'
 		case 'shiftEdits': 			return accPath + '/roster/shiftEdits/'
+		case 'templatesFlat': 	return accPath + '/roster/templatesFlat/'
+		case 'templateWeeks': 	return accPath + '/roster/templateWeeks/'
 		default : throw new Error('target is not existing tade ( getFirebasePath ), target: ' + target)
 	}
 }

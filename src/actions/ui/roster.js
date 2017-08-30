@@ -8,6 +8,15 @@ export const changeCurrentBranch = (branchID: string) =>
 export const changeCurrentSmartWeek = (smartWeek: number) =>
   ({ type: 'SET_CURRENT_SMART_WEEK', payload: smartWeek })
 
+export const changeCurrentTemplate = (templateID: string) =>
+  ({ type: 'SET_CURRENT_TEMPLATE', payload: templateID })
+
+export const enterTemplateMode = () =>
+  ({ type: 'ENTER_TEMPLATE_MODE' })
+
+export const leaveTemplateMode = () =>
+  ({ type: 'LEAVE_TEMPLATE_MODE' })
+
 export const goToNextWeek: ThunkAction = () => (dispatch, getState) => {
   const nextSW = getNextSmartWeek(getState().ui.roster.currentSmartWeek)
   dispatch({type: 'SET_CURRENT_SMART_WEEK', payload: nextSW})

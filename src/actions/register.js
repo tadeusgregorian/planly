@@ -26,7 +26,7 @@ type DBAccount = {
 const getEmptyAccount = (adminEmail): DBAccount => ({
   creationDate: firebase.database.ServerValue.TIMESTAMP,
   users: {
-    'u001': {
+    u001: {
       id: 'u001',
       name: 'Tadeus Gregorius',
       email: adminEmail,
@@ -40,16 +40,16 @@ const getEmptyAccount = (adminEmail): DBAccount => ({
     }
   },
   branches: {
-    'b001': {
+    b001: {
       id: 'b001',
       name: 'Hauptfiliale', color: 'green'
     }
   },
   positions: {
-    'p001': {
+    p001: {
       id: 'p001', name: 'Manager', color: 'orange'
     },
-    'p002': {
+    p002: {
       id: 'p002', name: 'Mitarbeiter', color: 'blue'
     }
   }

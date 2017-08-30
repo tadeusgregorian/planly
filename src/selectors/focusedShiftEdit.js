@@ -5,7 +5,7 @@ import type { ShiftEdits, ShiftCell } from 'types/index'
 
 
 const getShiftEdits = (state) => state.roster.shiftEdits
-const getShiftCell	= (state) => state.ui.roster.weekPlan.focusedCell
+const getShiftCell	= (state) => state.ui.roster.shiftBoard.focusedCell
 const getSmartWeek	= (state) => state.ui.roster.currentSmartWeek
 const getBranch	    = (state) => state.ui.roster.currentBranch
 

@@ -166,12 +166,11 @@ const actionsToProps = {
 }
 
 const mapStateToProps = (state) => ({
-  optionsExpanded: state.ui.roster.weekPlan.optionsExpanded,
+  optionsExpanded: state.ui.roster.shiftBoard.optionsExpanded,
   positions: state.core.positions,
-  cell: state.ui.roster.weekPlan.focusedCell,
+  cell: state.ui.roster.shiftBoard.focusedCell,
   shift: getFocusedShift(state),
   notes: getFocusedNotes(state),
-  shifts: state.roster.shiftWeek,
   shiftEdits: state.roster.shiftEdits,
   focusedShift: getFocusedShift(state),
   currentUser: getCurrentUser(state),

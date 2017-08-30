@@ -2,7 +2,7 @@
 
 import { createFirebaseListener } from './firebaseHelpers'
 import { getFirebasePath } from '../actionHelpers'
-import type { ThunkAction } from 'types/index'
+import type { ThunkAction, GetState } from 'types/index'
 import { db } from '../firebaseInit'
 
 const getWeekAndBranch = (getState) => ({
@@ -14,12 +14,18 @@ export const setInitialRosterListeners: ThunkAction = () => (dispatch, getState)
   setShiftWeekListener(dispatch, getState)
   setNotesListener(dispatch, getState)
   setShiftEditsListener(dispatch, getState)
+  setTemplatesFlatListener(dispatch, getState)
   dispatch({type: 'remove_shiftWeek'})
 }
 
-export const setRosterListeners: ThunkAction = () => (dispatch, getState) => {
-  setShiftWeekListener(dispatch, getState)
-  setNotesListener(dispatch, getState)
+export const setRosterListeners: ThunkAction = () => (dispatch, getState: GetState) => {
+  const { templateMode } = getState().ui.roster
+  if(templateMode) {
+    setTemplateWeekListener(dispatch, getState)
+  } else {
+    setShiftWeekListener(dispatch, getState)
+    setNotesListener(dispatch, getState)
+  }
   dispatch({type: 'remove_shiftWeek'})
 }
 
@@ -29,6 +35,17 @@ const setShiftWeekListener = (dispatch, getState: any) => {
   const queryRef    = db().ref(path).orderByChild('branch').equalTo(branch)
 
   createFirebaseListener(dispatch, getState, 'shiftWeek', path, queryRef)
+}
+
+export const setTemplateWeekListener = (dispatch: Dispatch , getState: GetState) => {
+  const templateID = getState().ui.roster.currentTemplate
+  const path       = getFirebasePath('templateWeeks') + '/' + templateID
+  createFirebaseListener(dispatch, getState, 'shiftWeek', path)
+}
+
+const setTemplatesFlatListener = (dispatch: Dispatch, getState: GetState) => {
+  const path        = getFirebasePath('templatesFlat')
+  createFirebaseListener(dispatch, getState, 'templatesFlat', path)
 }
 
 const setNotesListener = (dispatch, getState: any) => {

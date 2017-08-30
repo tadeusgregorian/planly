@@ -1,43 +1,47 @@
 //@flow
 import React from 'react'
 import { connect } from 'react-redux'
+import type { Connector } from 'react-redux'
+import type { Store } from 'types/index'
 import { weekDays } from 'constants/roster'
 
 import getCurrentUser from 'selectors/currentUser'
 
 import DayColumn from './dayColumn'
-import ShiftCell from '../shiftCell'
 import './styles.css'
 
 import type { Shifts, Note, Position, User } from 'types/index'
 
-type Props = {
+type OwnProps = {
   shifts: Shifts,
+}
+
+type ConProps = {
   positions: Array<Position>,
-  shadowedCell: ?ShiftCell,
   notes: Array<Note>,
   currentUser: User
 }
 
+type Props = OwnProps & ConProps
+
 const OpenShifts = (props: Props) => {
 
-  const { shifts, notes, shadowedCell, positions, currentUser } = props
+  const { shifts, notes, positions, currentUser } = props
+  const openShifts = shifts.filter(s => s.isOpen)
 
   return(
     <fb className="openShiftsMain">
       <fb className='label' >
         <fb className='text'>Offene Schichten</fb>
-        {/* <icon className='icon icon-high-five2' /> */}
       </fb>
         { weekDays.map(day =>
             <DayColumn
               currentUser={currentUser}
-              shifts={shifts.filter(s => s.day === day)}
+              shifts={openShifts.filter(s => s.day === day)}
               notes={notes.filter(n => n.day === day)}
               positions={positions}
               key={day}
               day={day}
-              shadowedUser={shadowedCell && shadowedCell.day === day && shadowedCell.user}
             />
           )
         }
@@ -45,11 +49,11 @@ const OpenShifts = (props: Props) => {
   )
 }
 
-const mapStateToProps = (state) => ({
-  shifts: state.roster.shiftWeek.filter(s => s.isOpen),
+const mapStateToProps = (state: Store) => ({
   notes: state.roster.notes,
   currentUser: getCurrentUser(state),
   positions: state.core.positions,
 })
 
-export default connect(mapStateToProps)(OpenShifts)
+const connector: Connector<OwnProps, Props> = connect(mapStateToProps)
+export default connector(OpenShifts)

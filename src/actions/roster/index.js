@@ -3,8 +3,8 @@
 import { db } from '../firebaseInit'
 import firebase from 'firebase'
 import { getFirebasePath } from './../actionHelpers'
+import { generateGuid } from 'helpers/general'
 import type { PreDBShift, DBShift, Shift, ShiftEdit, DBShiftEdit, ThunkAction, PreDBNote, GetState } from 'types/index'
-
 
 export const removeShiftWeek = () => ({type: 'remove_shiftWeek'})
 
@@ -27,21 +27,20 @@ const toDBShiftEdit = (sh: ShiftEdit): DBShiftEdit => ({
   userDay: (sh.user + sh.day)
 })
 
-const getWeekAndBranch = (getState: GetState): {smartWeek: number, branch: string} => {
-  const smartWeek = getState().ui.roster.currentSmartWeek
-  const branch = getState().ui.roster.currentBranch
-  return { smartWeek, branch }
-}
-
-export const saveShiftToDB:ThunkAction = (shift: Shift) => (disp, getState) => {
-  const { smartWeek, branch } = getWeekAndBranch(getState)
-  const update = getShiftUpdate(shift, smartWeek, branch)
-  db().ref().update(update)
+export const saveShiftToDB:ThunkAction = (shift: Shift) => (disp, getState: GetState) => {
+  const branch        = getState().ui.roster.currentBranch
+  const smartWeek     = getState().ui.roster.currentSmartWeek
+  const tempID        = getState().ui.roster.currentTemplate
+  const templateMode  = getState().ui.roster.templateMode
+  templateMode
+    ? db().ref().update( getShiftUpdate(shift, tempID, branch, false, true) )
+    : db().ref().update( getShiftUpdate(shift, smartWeek, branch) )
 }
 
 export const saveShiftEditToDB:ThunkAction = (shift: Shift) => (disp, getState) => {
-  const { smartWeek, branch } = getWeekAndBranch(getState)
-  const update = getShiftEditUpdate(shift, smartWeek, branch)
+  const smartWeek = getState().ui.roster.currentSmartWeek
+  const branch    = getState().ui.roster.currentBranch
+  const update    = getShiftEditUpdate(shift, smartWeek, branch)
   db().ref().update(update)
 }
 
@@ -54,12 +53,13 @@ const getShiftEditUpdate = (shift: Shift, smartWeek: number, branch: string, rem
   return {[ getFirebasePath('shiftEdits') + key]: data}
 }
 
-const getShiftUpdate = (shift: Shift, smartWeek: number, branch: string, remove = false) => {
+const getShiftUpdate = (shift: Shift, targetID: number | string , branch: string, remove = false, template = false) => {
   const preDBShift  = { ...shift, branch }
   const dbShift     = toDBShift(preDBShift)
   const data        = remove ? null : dbShift
   const key         = getShiftKey(preDBShift)
-  return {[ getFirebasePath('shiftWeeks') + smartWeek + '/' + key]: data}
+  const location    = template ? 'templateWeeks' : 'shiftWeeks'
+  return {[ getFirebasePath(location) + targetID + '/' + key]: data}
 }
 
 export const acceptEdit = (shiftEdit: ShiftEdit) => {
@@ -78,7 +78,8 @@ export const rejectEdit = (shiftEdit: ShiftEdit) => {
 }
 
 export const assignOpenShift:ThunkAction = (openShift: Shift, user: string) => (disp, getState) => {
-  const { smartWeek, branch } = getWeekAndBranch(getState)
+  const smartWeek = getState().ui.roster.currentSmartWeek
+  const branch    = getState().ui.roster.currentBranch
   const { s, e, b, day } = openShift
   const shift: Shift = { s, e, b, day, user }
   const update1 = getShiftUpdate(openShift, smartWeek, branch, true) // deleting openShift
@@ -88,17 +89,22 @@ export const assignOpenShift:ThunkAction = (openShift: Shift, user: string) => (
 
 
 
-
-
-
-
-
-
-
-
-
 export const writeNoteToDB = ({smartWeek, branch, author, text, type, user, day}: PreDBNote) => {
   const timeStamp         = firebase.database.ServerValue.TIMESTAMP
   const id                = (type === 'shiftNote' && user) ? (branch + user + day + author) : (branch + day + author)
   db().ref(getFirebasePath('notes')).child(smartWeek).child(id).set({branch, user, day, author, timeStamp, type, text, id})
+}
+
+export const createNewTempForBranch = (branch: string) => {
+  const tempID  = generateGuid()
+  const tempObj = { id: tempID, name: 'unbenannt', branch }
+  const path    = getFirebasePath('templatesFlat')
+  return db().ref(path).child(tempID).set(tempObj).then(()=> tempID)
+}
+
+export const saveTemplateName = (tempID: string, name: string) => {
+  console.log(tempID);
+  console.log(name);
+  const path    = getFirebasePath('templatesFlat')
+  db().ref(path).child(tempID).child('name').set(name)
 }

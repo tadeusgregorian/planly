@@ -1,3 +1,4 @@
+//@flow
 export const userCellWidth = 200;
 export const shiftCellWidth = 143;
 export const shiftCellHeight = 40;

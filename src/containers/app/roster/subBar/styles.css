@@ -19,7 +19,8 @@
       color: grey;
       align-items: center;
       padding: 0 16px;
-      cursor: pointer; }
+      cursor: pointer;
+      height: 100%; }
       .rosterSubBarMain .centered .subBarButton.branchSelector {
         padding: 0px;
         width: 200px;

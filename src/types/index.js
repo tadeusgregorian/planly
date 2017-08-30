@@ -150,3 +150,11 @@ export type DBShiftEdit = ShiftEdit & {
   branchDay: string,
   userDay: string
 }
+
+export type TemplateFlat = {
+  id: string,
+  name: string,
+  branch: string
+}
+
+export type TemplatesFlat = Array<TemplateFlat>

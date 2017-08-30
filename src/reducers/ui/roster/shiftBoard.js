@@ -8,6 +8,7 @@ const focusedCell = simpleReducer({
   default              : null,
   FOCUS_SHIFT_CELL     : 'PAYLOAD',
   UNFOCUS_SHIFT_CELL   : null,
+  SET_TEMPLATE_MODE    : null,
   remove_shiftWeek     : null,
 })
 
@@ -18,7 +19,7 @@ const optionsExpanded = (state = false, a) => {
   return false
 }
 
-export type WeekPlan = {
+export type ShiftBoard = {
   focusedCell: FocusedCell,
   optionsExpanded: OptionsExpanded
 }

@@ -3,7 +3,7 @@ import { createSelector } from 'reselect'
 import type { Notes, ShiftCell } from 'types/index'
 
 const getNotes      = (state) => state.roster.notes
-const getShiftCell	= (state) => state.ui.roster.weekPlan.focusedCell
+const getShiftCell	= (state) => state.ui.roster.shiftBoard.focusedCell
 
 const getFocusedShiftEdit = (notes: Notes, focusedCell: ShiftCell): Notes => {
   if(!focusedCell) return []

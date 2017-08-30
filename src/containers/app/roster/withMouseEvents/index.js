@@ -63,7 +63,7 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
 
   componentDidMount = () => {
     console.log(this.isAdmin);
-    document.addEventListener('mouseup',   this.onMouseUp)
+    document.addEventListener('click',   this.onClick)
     if(this.isAdmin){ // only admin has drag and drop
       document.addEventListener('mousemove', this.onMouseMove)
       document.addEventListener('mouseover', this.onMouseOver)
@@ -72,7 +72,7 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
   }
 
   componentWillUnmount = () => {
-    document.removeEventListener('mouseup',   this.onMouseUp)
+    document.removeEventListener('click',   this.onClick)
     if(this.isAdmin){ // only admin has drag and drop
       document.removeEventListener('mouseover', this.onMouseOver)
       document.removeEventListener('mousemove', this.onMouseMove)
@@ -101,7 +101,7 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
     setTimeout(()=> this.pickUpCell(pressedCell), 200)
   }
 
-  onMouseUp = ({target}: any) => {
+  onClick = ({target}: any) => {
     if(!this.isDragging){
       const shiftCell = targetToShiftCell(target)
       if(shiftCell.blocked) return
@@ -157,7 +157,7 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
 
     return (
       <fb style={{position: 'relative'}}>
-        {React.cloneElement(this.props.children, {...this.props, shadowedCell })}
+        {React.cloneElement(this.props.children, { shadowedCell })}
         { pickedUpCell &&
           <PickedUpCell
             getRef={(el) => {this.PickedUpCellRef = el}}
