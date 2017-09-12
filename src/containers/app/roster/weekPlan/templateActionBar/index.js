@@ -19,32 +19,25 @@ type ConnectedProps = {
 type Props = OwnProps & ConnectedProps
 
 class TemplateActionBar extends PureComponent {
-  componentDidMount = () => {
-    this.tempsFlatOfBranch().length
-      ? this.changeTemplate(this.firstTempID())
-      : this.createTemplate()
+
+  changeTemplate = (tempID) => {
+    this.props.changeCurrentTemplate(tempID)
   }
 
-  tempsFlatOfBranch = () =>
-    this.props.templatesFlat.filter(t => t.branch === this.props.currentBranch)
-
-  firstTempID = () =>
-    this.tempsFlatOfBranch()[0] && this.tempsFlatOfBranch()[0].id
-
-  changeTemplate = (tempID) => { this.props.changeCurrentTemplate(tempID) }
-  
-  // creates Template and jumps to that one after creation.
   createTemplate = () => {
     createNewTempForBranch(this.props.currentBranch)
       .then((newTempID) => this.changeTemplate(newTempID))
   }
 
   render(){
+    const { templatesFlat, currentBranch } = this.props
+    const tempsFlatOfBranch = templatesFlat.filter(t => t.branch === currentBranch)
+
     return(
       <fb className="actionBarMain">
         <fb>Vorlage:</fb>
         <TemplateSelect
-          templatesFlat={this.tempsFlatOfBranch()}
+          templatesFlat={tempsFlatOfBranch}
           currentTemplate={this.props.currentTemplate}
           saveTemplateName={saveTemplateName}
           changeTemplate={this.changeTemplate}

@@ -1,6 +1,6 @@
 //@flow
 import { getNextSmartWeek, getPrevSmartWeek } from 'helpers/index'
-import type { ShiftCell, ThunkAction } from 'types/index'
+import type { ShiftCell, ThunkAction, GetState } from 'types/index'
 
 export const changeCurrentBranch = (branchID: string) =>
   ({ type: 'SET_CURRENT_BRANCH', payload: branchID })
@@ -11,8 +11,12 @@ export const changeCurrentSmartWeek = (smartWeek: number) =>
 export const changeCurrentTemplate = (templateID: string) =>
   ({ type: 'SET_CURRENT_TEMPLATE', payload: templateID })
 
-export const enterTemplateMode = () =>
-  ({ type: 'ENTER_TEMPLATE_MODE' })
+export const enterTemplateMode: ThunkAction = () => (dispatch, getState: GetState) => {
+  // at the same time we set currentTemplate to the default one ( equal to the branchID )
+  const branchID = getState().ui.roster.currentBranch
+  dispatch({ type: 'SET_CURRENT_TEMPLATE', payload: branchID })
+  dispatch({ type: 'ENTER_TEMPLATE_MODE' })
+}
 
 export const leaveTemplateMode = () =>
   ({ type: 'LEAVE_TEMPLATE_MODE' })

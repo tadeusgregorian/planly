@@ -1,5 +1,6 @@
 //@flow
 import React from 'react'
+import _ from 'lodash'
 import { connect } from 'react-redux'
 import { getShiftsOfUser, getNotesOfUser, getShadowedDay, getShiftEditsOfUser } from '../localHelpers'
 import getCurrentUser from 'selectors/currentUser'
@@ -24,10 +25,11 @@ type Props = {
 const UserShifts = (props: Props) => {
 
   const { shiftEdits, smartWeek, branch, shadowedCell, notes, shifts, users, currentUser } = props
+  const usersOfBranch = users.filter(u => _.keys(u.branches).includes(branch))
 
   return(
     <fb className='assignedShifts'>
-      { users.map(user => {
+      { usersOfBranch.map(user => {
         return <UserRow
           key={user.id}
           user={user}

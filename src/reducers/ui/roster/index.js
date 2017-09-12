@@ -17,9 +17,13 @@ const currentSmartWeek = simpleReducer({
   LEAVE_TEMPLATE_MODE: getRealCurrentSmartWeek(),
 })
 
+// sorry hacky: when changing current branch -> we set the currentTemplate
+// to the branchID ( because there is always the default template with a
+// templateID equal to the branchID
 const currentTemplate = simpleReducer({
-  default: null,
-  SET_CURRENT_TEMPLATE: 'PAYLOAD'
+  default: '0',
+  SET_CURRENT_TEMPLATE: 'PAYLOAD',
+  SET_CURRENT_BRANCH: 'PAYLOAD'
 })
 
 const templateMode = simpleReducer({

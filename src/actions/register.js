@@ -52,5 +52,10 @@ const getEmptyAccount = (adminEmail): DBAccount => ({
     p002: {
       id: 'p002', name: 'Mitarbeiter', color: 'blue'
     }
+  },
+  templatesFlat:{
+    branch: 'b001',
+    name: 'unbenannt',
+    id: 'b001'
   }
 })

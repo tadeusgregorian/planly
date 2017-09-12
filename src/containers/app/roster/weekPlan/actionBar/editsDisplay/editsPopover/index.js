@@ -32,8 +32,6 @@ class EditsPopover extends PureComponent{
     const t = e.target
     if(!isInsidePopover(e.target)){
       this.props.closePopover()
-      e.stopPropagation()
-      e.preventDefault()
       return
     }
     if (!isEditRow(t)) return

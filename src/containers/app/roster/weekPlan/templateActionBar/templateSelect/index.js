@@ -45,25 +45,27 @@ export default class TemplateSelect extends PureComponent{
     if(!currentTemplate || !templatesFlat.length) return (<fb>loading...</fb>)
 
     return(
-      <fb className='templateSelect'>
+      <fb className='templateSelectMain'>
         { this.state.editNameMode ?
-          <fb>
+          <fb className='editNameWrapper'>
             <input
+              className='nameInput'
               type='text'
               value={this.state.nameInput}
               placeholder={currentTempName}
+              onKeyDown={(e)=> { if(e.key === 'Enter') this.saveButtonClicked() }}
               onChange={({target})=>{this.setState({nameInput: target.value })}}
             />
-            <fb onClick={this.saveButtonClicked}>speichern</fb>
-            <fb onClick={this.leaveEditNameMode}>abbrechen</fb>
+            <fb className='saveBtn' onClick={this.saveButtonClicked}>speichern</fb>
+            <fb className='cancelBtn' onClick={this.leaveEditNameMode}>abbrechen</fb>
           </fb> :
-          <fb>
+          <fb className='selectWrapper'>
             <Dropdown
               value={{value: currentTemplate, label: currentTempName}}
               options={templatesFlat.map(t => ({value: t.id, label: t.name}))}
               onChange={(option) => changeTemplate(option.value)}
             />
-            <fb className='icon icon-pencil' onClick={this.enterEditNameMode}></fb>
+            <fb className='icon icon-pencil pencilIcon' onClick={this.enterEditNameMode}></fb>
           </fb>
         }
       </fb>

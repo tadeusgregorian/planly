@@ -9,6 +9,7 @@ import WeekSelector from './weekSelector'
 import DatePicker from 'react-datepicker';
 import DateDisplay from './dateDisplay'
 import EditsDisplay from './editsDisplay'
+import OptionsDropdown from './optionsDropdown'
 import { smartWeekToMoment, momentToSmartWeek } from 'helpers/index'
 import { changeCurrentSmartWeek } from 'actions/ui/roster'
 import './styles.css'
@@ -32,6 +33,7 @@ const ActionBar = (props) => {
         customInput={<DateDisplay mom={smartWeekToMoment(props.currentSmartWeek)} />}
       />
       <fb className='right'>
+        <OptionsDropdown />
         <EditsDisplay />
       </fb>
     </fb>
