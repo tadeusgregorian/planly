@@ -1,0 +1,39 @@
+// carefull! this class applies also to the note-icon in the popover-window! dirtyyyyy
+.hasNoteCellIcon{
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  padding: 0px;
+  color: orange;
+  font-size: 16px;
+
+  &.inPopover{
+    top: 15px;
+    right: 2px;
+  }
+
+  &:hover{
+    color: red;
+  }
+}
+
+.shiftCellMain{
+  position: relative;
+  border-left: 1px solid #dfe0e4;
+  justify-content: center;
+  align-items: center;
+  flex: 0 0 auto;
+  padding: 1px;
+  border-bottom: 1px solid #dfe0e4;
+
+  &.highlighted{
+    background-color: #00a3ef;
+    color: #fbfcfd;
+  }
+
+  &.shadowed{
+    background-color: #c8eeff;
+    box-shadow: inset 0px 1px 4px rgba(0, 0, 0, 0.32);
+    color: grey;
+  }
+}

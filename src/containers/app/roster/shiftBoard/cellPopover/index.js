@@ -17,12 +17,12 @@ type Props = {
 }
 
 const CellPopover = (props: Props) => {
-  const hasEdit = props.focusedCell.hasEdit
-  const isOpen  = props.focusedCell.isOpen
-  const isAdmin = props.currentUser.isAdmin
+  // const hasEdit = props.focusedCell.hasEdit
+  // const isOpen  = props.focusedCell.isOpen
+  //const isAdmin = props.currentUser.isAdmin
 
-  if(isOpen && !isAdmin) return <GrabOpenShift />
-  if(hasEdit) return <ResolveEdit />
+  // if(isOpen && !isAdmin) return <GrabOpenShift />
+  // if(hasEdit) return <ResolveEdit />
   return <AddEditShift />
 }
 

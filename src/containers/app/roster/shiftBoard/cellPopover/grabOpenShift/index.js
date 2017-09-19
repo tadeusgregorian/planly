@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import getFocusedShift from 'selectors/focusedShift'
 
 import { shiftCellWidth, shiftCellHeight } from 'constants/roster'
-import { unfocusShiftCell } from 'actions/ui/roster'
+import { unfocusShift } from 'actions/ui/roster'
 import { assignOpenShift } from 'actions/roster'
 
 import './styles.css'
@@ -15,7 +15,7 @@ import type { ShiftCell, Shift } from 'types/index'
 
 type Props = {
   cell: ShiftCell,
-  shift: Shift,
+  focusedShift: Shift,
   userID: string,
   assignOpenShift: (Shift, string)=>void,
   unfocusShiftCell: ()=>void
@@ -27,16 +27,16 @@ class GrabOpenShift extends PureComponent{
   close = () => this.props.unfocusShiftCell()
 
   acceptClicked = () => {
-    this.props.assignOpenShift(this.props.shift, this.props.userID)
+    this.props.assignOpenShift(this.props.focusedShift, this.props.userID)
     this.props.unfocusShiftCell()
   }
 
   render(){
     const { cell } = this.props
     const popPosition = {
-      width: shiftCellWidth,
-      left: cell.left,
-      top: cell.top + shiftCellHeight
+      // width: shiftCellWidth,
+      // left: cell.left,
+      // top: cell.top + shiftCellHeight
     }
 
     return(
@@ -52,13 +52,12 @@ class GrabOpenShift extends PureComponent{
 }
 
 const actionsToProps = {
-  unfocusShiftCell,
+  unfocusShift,
   assignOpenShift
 }
 
 const mapStateToProps = (state) => ({
   cell: state.ui.roster.shiftBoard.focusedCell,
-  shift: getFocusedShift(state),
   focusedShift: getFocusedShift(state),
   userID: state.auth.currentUserID,
 })

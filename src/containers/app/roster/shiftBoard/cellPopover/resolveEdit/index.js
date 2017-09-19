@@ -4,11 +4,10 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 
 import getCurrentUser from 'selectors/currentUser'
-import getFocusedShift from 'selectors/focusedShift'
 import getFocusedShiftEdit from 'selectors/focusedShiftEdit'
 
 import { getPosition, getDirection, cellChanged } from './localHelpers'
-import { unfocusShiftCell } from 'actions/ui/roster'
+import { unfocusShift } from 'actions/ui/roster'
 import { acceptEdit, rejectEdit } from 'actions/roster'
 
 import { shiftToString } from 'helpers/index'
@@ -20,7 +19,6 @@ import type { ShiftCell, Shift, ShiftEdit, User } from 'types/index'
 
 type Props = {
   cell: ShiftCell,
-  shift: ?Shift,
   shiftEdit: ShiftEdit,
   currentUser: User,
   saveShift: (Shift)=>void,
@@ -88,14 +86,12 @@ class ResolveEdit extends PureComponent{
 }
 
 const actionsToProps = {
-  unfocusShiftCell
+  unfocusShift
 }
 
 const mapStateToProps = (state) => ({
   cell: state.ui.roster.shiftBoard.focusedCell,
-  shift: getFocusedShift(state),
   shiftEdit: getFocusedShiftEdit(state),
-  focusedShift: getFocusedShift(state),
   currentUser: getCurrentUser(state)
 })
 

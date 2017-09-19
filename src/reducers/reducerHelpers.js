@@ -1,8 +1,8 @@
 import _ from 'lodash'
 import {withoutProp} from 'helpers'
 
-export const createFirebaseReducer_array = (target, comparer, extractor) => {
-  const isSame = comparer || ((e1, e2)=> e1.id === e2.id) // comparing id property by default
+export const createFirebaseReducer_array = (target, extractor) => {
+  const isSame = (e1, e2)=> e1.id === e2.id // comparing id property by default
   const extract = extractor || ((e)=>e) // returning object without manipulation by default
 
 	return (state = [], a) => {

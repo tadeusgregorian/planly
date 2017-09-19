@@ -2,15 +2,15 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
-import type { Store } from 'types/index'
+import _ from 'lodash'
 
-import UserShifts from './userShifts'
-import OpenShifts from './openShifts'
-import CellPopover from './cellPopover'
+import { getShiftsOfUser, getNotesOfUser, getShadowedDay, getShiftEditsOfUser } from './localHelpers'
+import type { User, Shifts, Note, ShiftEdit, ShiftCell, Store, ShiftRef } from 'types/index'
+import getCurrentUser from 'selectors/currentUser'
+
 import ShiftBoardHead from './shiftBoardHead'
+import UserRow from './userRow'
 import './styles.css'
-
-import type { ShiftCell, Shifts } from 'types/index'
 
 type OwnProps = {
   shifts: Shifts,
@@ -18,32 +18,59 @@ type OwnProps = {
 }
 
 type ConProps = {
-  focusedCell: ?ShiftCell,
+  smartWeek: number,
+  branch: string,
+  users: Array<User>,
+  shifts: Shifts,
+  shiftEdits: Array<ShiftEdit>,
+  notes: Array<Note>,
+  currentUser: User,
+  shadowedCell: ?ShiftCell,
+  focusedShiftRef: ?ShiftRef,
 }
 
-type Props = ConProps & OwnProps
+type Props = OwnProps & ConProps
 
 class ShiftBoard extends PureComponent{
   props: Props
 
   render(){
-    const { focusedCell, shadowedCell, shifts } = this.props
+    const { shiftEdits, smartWeek, branch, shadowedCell, notes, shifts, users, currentUser, focusedShiftRef } = this.props
+    const usersOfBranch = users.filter(u => _.keys(u.branches).includes(branch))
 
     return(
       <fb id="shiftBoardMain">
           <ShiftBoardHead />
-          <OpenShifts shifts={shifts} />
-          <UserShifts shifts={shifts} shadowedCell={shadowedCell}/>
-          { focusedCell && <CellPopover focusedCell={focusedCell}/> }
+          <fb className='assignedShifts'>
+            { usersOfBranch.map(user => {
+              return <UserRow
+                key={user.id}
+                user={user}
+                currentUser={currentUser}
+                shiftEdits={getShiftEditsOfUser(shiftEdits, user.id, smartWeek, branch)}
+                shifts={getShiftsOfUser(shifts, user.id)}
+                notes={getNotesOfUser(notes, user.id)}
+                shadowedDay={getShadowedDay(shadowedCell, user.id)}
+                focusedShiftRef={focusedShiftRef && focusedShiftRef.user === user.id ? focusedShiftRef : null}
+                highlightedDay={false}
+              />
+            })}
+          </fb>
       </fb>
     )
   }
 }
 
 const mapStateToProps = (state: Store) => ({
-  focusedCell: state.ui.roster.shiftBoard.focusedCell,
+  branch: state.ui.roster.currentBranch,
+  smartWeek: state.ui.roster.currentSmartWeek,
+  users: state.core.users,
+  notes: state.roster.notes,
+  shifts: state.roster.shiftWeek,
+  shiftEdits: state.roster.shiftEdits,
+  focusedShiftRef: state.ui.roster.shiftBoard.focusedShiftRef,
+  currentUser: getCurrentUser(state)
 })
-
 
 const connector: Connector<OwnProps, Props> = connect(mapStateToProps)
 export default connector(ShiftBoard)

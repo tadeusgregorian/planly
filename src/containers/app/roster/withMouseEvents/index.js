@@ -3,19 +3,17 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 
 import { openNotesModal } from 'actions/ui/modals'
-import { focusShiftCell } from 'actions/ui/roster'
+import { focusShift, createShift } from 'actions/ui/roster'
 import { saveShiftToDB } from 'actions/roster'
 import {
-  elementIsShiftCell,
-  elementIsNoteIcon,
-  targetToShiftCell,
-  getParentShiftCell } from './localHelpers'
-import { getShiftOfCell } from 'helpers/index'
+  getParentShift,
+  getParentCell } from './localHelpers'
+import { getShiftOfCell, generateGuid } from 'helpers/index'
 import getCurrentUser from 'selectors/currentUser'
 
-import PickedUpCell from './pickedUpCell'
+import PickedUpShift from './pickedUpShift'
 
-import type { User, ShiftCell, Shift, Shifts } from 'types/index'
+import type { User, ShiftCell, ShiftRef, Shift, Shifts, Store } from 'types/index'
 
 type MSProps = {
   currentUser: User,
@@ -24,7 +22,7 @@ type MSProps = {
 
 type MAProps = {
   openNotesModal: (any)=>any,
-  focusShiftCell: (ShiftCell)=>any,
+  focusShift: (ShiftRef)=>any,
   saveShiftToDB: (Shift)=>any
 }
 
@@ -82,16 +80,16 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
 
   onMouseOver = ({target}: any) => {
     if(!this.mouseIsDown) return
-    const cellUnderMouse = getParentShiftCell(target)
+    const cellUnderMouse = getParentCell(target)
     //dont allow to shadow Cells that already have a shift.
-    const isCellAndEmpty = cellUnderMouse && !cellUnderMouse.hasShift && !cellUnderMouse.hasEdit
+    const isCellAndEmpty = cellUnderMouse && !cellUnderMouse.hasShift
     const shadowedCell = isCellAndEmpty ? cellUnderMouse : null
 
     this.setState({shadowedCell: shadowedCell})
   }
 
   onMouseDown = (e: any) => {
-    const pressedCell = getParentShiftCell(e.target)
+    const pressedCell = getParentCell(e.target)
     if (!pressedCell) return
     if (!pressedCell.hasShift) return // dont allow draggint empty cells
     if (pressedCell.hasEdit) return   // dont allow dragging cells with shiftEdit
@@ -103,10 +101,14 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
 
   onClick = ({target}: any) => {
     if(!this.isDragging){
-      const shiftCell = targetToShiftCell(target)
-      if(shiftCell.blocked) return
-      elementIsNoteIcon(target)  && this.props.openNotesModal({ day: shiftCell.day, user: shiftCell.user , type: 'shiftNote'})
-      elementIsShiftCell(target) && this.props.focusShiftCell(shiftCell)
+
+      const targetShift = getParentShift(target)
+      const targetCell = getParentCell(target)
+
+      if(targetShift) return this.props.focusShift(targetShift)
+      if(targetCell)  return this.props.createShift(targetCell)
+
+      // elementIsShiftCell(target) && this.props.focusShiftCell(shiftCell)
     }
 
     this.mouseIsDown = false
@@ -140,7 +142,8 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
       const pickedUpShift =  getShiftOfCell(shifts, pickedUpCell)
       if(shadowedCell && pickedUpShift){
         const { s, e, b } = pickedUpShift
-        const newShift = { s, e, b, day: shadowedCell.day, user: shadowedCell.user }
+        const id = generateGuid()
+        const newShift = { id, s, e, b, day: shadowedCell.day, user: shadowedCell.user }
         this.props.saveShiftToDB(newShift)
       }
     }
@@ -171,11 +174,12 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
 
 const actionsToProps: MAProps = {
   openNotesModal,
-  focusShiftCell,
+  focusShift,
+  createShift,
   saveShiftToDB
 }
 
-const mapStateToProps = (state: any, ow: OwnProps): MSProps => ({
+const mapStateToProps = (state: Store, ow: OwnProps): MSProps => ({
   currentUser: getCurrentUser(state),
   shifts: state.roster.shiftWeek
 })

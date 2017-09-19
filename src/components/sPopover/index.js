@@ -15,7 +15,6 @@ export default (props: Props) => {
   //const display =  props.open ? 'initial' : 'none'
   const { targetElement, width } = props
   const top = (targetElement && targetElement.offsetHeight + 1 ) || 0
-  console.log(props.options);
 
   return(
     <fb className="sPopoverMain">

@@ -8,9 +8,6 @@ import type { PreDBShift, DBShift, Shift, ShiftEdit, DBShiftEdit, ThunkAction, P
 
 export const removeShiftWeek = () => ({type: 'remove_shiftWeek'})
 
-const getShiftKey = (shift: PreDBShift | ShiftEdit) => shift.branch + shift.user + shift.day
-const getShiftEditKey = (shiftEdit: ShiftEdit) => shiftEdit.smartWeek + getShiftKey(shiftEdit)
-
 const toDBShift = (sh: PreDBShift): DBShift => ({
   ...sh,
   b: sh.b || 0,
@@ -28,6 +25,7 @@ const toDBShiftEdit = (sh: ShiftEdit): DBShiftEdit => ({
 })
 
 export const saveShiftToDB:ThunkAction = (shift: Shift) => (disp, getState: GetState) => {
+  console.log(shift);
   const branch        = getState().ui.roster.currentBranch
   const smartWeek     = getState().ui.roster.currentSmartWeek
   const tempID        = getState().ui.roster.currentTemplate
@@ -49,17 +47,15 @@ const getShiftEditUpdate = (shift: Shift, smartWeek: number, branch: string, rem
   const shiftEdit: ShiftEdit = { ...shift, smartWeek, branch }
   const dbShiftEdit          = toDBShiftEdit(shiftEdit)
   const data                 = remove ? null : dbShiftEdit
-  const key = getShiftEditKey(shiftEdit)
-  return {[ getFirebasePath('shiftEdits') + key]: data}
+  return {[ getFirebasePath('shiftEdits') + shift.id]: data}
 }
 
 const getShiftUpdate = (shift: Shift, targetID: number | string , branch: string, remove = false, template = false) => {
   const preDBShift  = { ...shift, branch }
   const dbShift     = toDBShift(preDBShift)
   const data        = remove ? null : dbShift
-  const key         = getShiftKey(preDBShift)
   const location    = template ? 'templateWeeks' : 'shiftWeeks'
-  return {[ getFirebasePath(location) + targetID + '/' + key]: data}
+  return {[ getFirebasePath(location) + targetID + '/' + shift.id]: data}
 }
 
 export const acceptEdit = (shiftEdit: ShiftEdit) => {
@@ -80,14 +76,12 @@ export const rejectEdit = (shiftEdit: ShiftEdit) => {
 export const assignOpenShift:ThunkAction = (openShift: Shift, user: string) => (disp, getState) => {
   const smartWeek = getState().ui.roster.currentSmartWeek
   const branch    = getState().ui.roster.currentBranch
-  const { s, e, b, day } = openShift
-  const shift: Shift = { s, e, b, day, user }
+  const { s, e, b, day, id } = openShift
+  const shift: Shift = { s, e, b, day, user, id }
   const update1 = getShiftUpdate(openShift, smartWeek, branch, true) // deleting openShift
   const update2 = getShiftUpdate(shift, smartWeek, branch)           // creating new userShift
   db().ref().update({ ...update1, ...update2 })
 }
-
-
 
 export const writeNoteToDB = ({smartWeek, branch, author, text, type, user, day}: PreDBNote) => {
   const timeStamp         = firebase.database.ServerValue.TIMESTAMP
@@ -103,8 +97,6 @@ export const createNewTempForBranch = (branch: string) => {
 }
 
 export const saveTemplateName = (tempID: string, name: string) => {
-  console.log(tempID);
-  console.log(name);
   const path    = getFirebasePath('templatesFlat')
   db().ref(path).child(tempID).child('name').set(name)
 }

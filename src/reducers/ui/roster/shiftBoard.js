@@ -1,13 +1,12 @@
 //@flow
 import { combineReducers } from 'redux'
 import { simpleReducer } from '../../reducerHelpers'
-import type { ShiftCell } from 'types/index'
+import type { ShiftRef } from 'types/index'
 
-type FocusedCell = null | ShiftCell
-const focusedCell = simpleReducer({
+const focusedShiftRef = simpleReducer({
   default              : null,
-  FOCUS_SHIFT_CELL     : 'PAYLOAD',
-  UNFOCUS_SHIFT_CELL   : null,
+  FOCUS_SHIFT          : 'PAYLOAD',
+  UNFOCUS_SHIFT        : null,
   SET_TEMPLATE_MODE    : null,
   remove_shiftWeek     : null,
 })
@@ -20,11 +19,11 @@ const optionsExpanded = (state = false, a) => {
 }
 
 export type ShiftBoard = {
-  focusedCell: FocusedCell,
+  focusedShiftRef: ?ShiftRef,
   optionsExpanded: OptionsExpanded
 }
 
 export default combineReducers({
-  focusedCell,
+  focusedShiftRef,
   optionsExpanded
 })

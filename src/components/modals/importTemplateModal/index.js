@@ -32,7 +32,6 @@ class ImportTemplateModal extends PureComponent {
   state: State
 
   importButtonClicked = () => {
-    console.log('jetzt importiern tade');
   }
 
   render(){

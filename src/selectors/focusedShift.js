@@ -12,8 +12,7 @@ const isComplimentary = (s: Shift, f: ShiftCell) => s.day === f.day && s.user ==
 const getFocusedShift = (shiftWeek, focusedCell) => {
   if(!focusedCell) return null
 
-  const focusedShift = shiftWeek.find(shift => isComplimentary(shift, focusedCell))
-  return focusedShift || { s: '', e: '', b: '' }
+  return shiftWeek.find(shift => isComplimentary(shift, focusedCell)) || null
 }
 
 export default createSelector([getShiftWeek, getShiftCell], getFocusedShift)

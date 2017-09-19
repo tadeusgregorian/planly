@@ -13,7 +13,7 @@ export const isSameCell = (c1: ShiftCell, c2: ShiftCell): boolean => {
 export const getShiftsOfUser = (shifts: Shifts, userID: string): Shifts =>
  shifts.filter(s => s.user === userID)
 
-export const getShiftEditsOfUser = (shiftEdits: ShiftEdits, userID: string, smartWeek: string, branch: string): ShiftEdits =>
+export const getShiftEditsOfUser = (shiftEdits: ShiftEdits, userID: string, smartWeek: number, branch: string): ShiftEdits =>
  shiftEdits.filter(s => s.user === userID && s.smartWeek === smartWeek && s.branch === branch)
 
 export const getNotesOfUser = (notes: Notes, userID: string): Notes =>

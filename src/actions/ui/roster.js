@@ -1,6 +1,6 @@
 //@flow
-import { getNextSmartWeek, getPrevSmartWeek } from 'helpers/index'
-import type { ShiftCell, ThunkAction, GetState } from 'types/index'
+import { getNextSmartWeek, getPrevSmartWeek, generateGuid } from 'helpers/index'
+import type { ThunkAction, GetState, ShiftRef, ShiftCell } from 'types/index'
 
 export const changeCurrentBranch = (branchID: string) =>
   ({ type: 'SET_CURRENT_BRANCH', payload: branchID })
@@ -31,11 +31,18 @@ export const goToLastWeek: ThunkAction = () => (dispatch, getState) => {
   dispatch({type: 'SET_CURRENT_SMART_WEEK', payload: prevSW})
 }
 
-export const focusShiftCell = (cell: ShiftCell) => (
-  { type: 'FOCUS_SHIFT_CELL', payload: cell })
+export const createShift = (shiftCell: ShiftCell) => {
+  const { user, day } = shiftCell
+  const id = generateGuid()
+  const focusedShiftRef: ShiftRef = { id, user, day, inCreation: true }
+  return { type: 'FOCUS_SHIFT', payload: focusedShiftRef }
+}
 
-export const unfocusShiftCell = () =>
-  ({ type: 'UNFOCUS_SHIFT_CELL' })
+export const focusShift = (shiftRef: ShiftRef) => (
+  { type: 'FOCUS_SHIFT', payload: shiftRef })
+
+export const unfocusShift = () =>
+  ({ type: 'UNFOCUS_SHIFT' })
 
 export const toggleOptions = () =>
   ({ type: 'TOGGLE_POPOVER_OPTIONS' })

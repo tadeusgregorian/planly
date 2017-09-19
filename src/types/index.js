@@ -47,6 +47,12 @@ export type Branches = Array<Branch>
 // roster-types
 export type Day = 'mo' | 'tu' | 'we' | 'th' | 'fr' | 'sa' | 'su'
 
+export type ShiftRef = {
+  id: string,
+  day: Day,
+  user: string,
+  inCreation?: boolean
+}
 
 export type MinimalShift = {
   s:  number,
@@ -62,6 +68,7 @@ export type Shift = {
   day: Day,
   isOpen?: ?boolean,
   position?: string,
+  id: string
 }
 
 export type Shifts = Array<Shift>
@@ -75,7 +82,8 @@ export type PreDBShift = {
   branch: string,
   position?: string,
   // $FlowFixMe
-  isOpen?: ?boolean
+  isOpen?: ?boolean,
+  id: string
 }
 
 export type DBShift = {
@@ -89,19 +97,13 @@ export type DBShift = {
   userDay: string,
   isOpen: true | null,
   position: string | null,
+  id: string
 }
 
 export type ShiftCell = {
   day: Day,
   user: string,
-  top: number,
-  left: number,
-  width: number,
-  height: number,
-  isOpen?: ?boolean,
-  blocked?: ?boolean,
   hasShift?: true,
-  hasEdit?: true
 }
 
 export type ShiftInput = {

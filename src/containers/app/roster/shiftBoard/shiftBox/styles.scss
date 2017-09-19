@@ -1,0 +1,63 @@
+.shiftBoxMain{
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  border-radius: 2px;
+  background-color: #f7f7f7;
+  border: 1px solid #d6d7dc;
+
+  &.focused{
+    border: 2px solid red;
+  }
+
+  .edited{
+    pointer-events: none;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    margin: 1px 0 0 1px;
+    background: #00a3ef;
+    color: white;
+    border-radius: 1px;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+    opacity: 0.6;
+  }
+
+  .posBox{
+    height: 14px;
+    width: 100%;
+    font-size: 10px;
+    text-transform: uppercase;
+    justify-content: center;
+    align-items: center;
+    font-weight: 500;
+    border-radius: 1px;
+  }
+
+  .shiftTimesWrapper{
+    padding-left: 4px;
+    padding-top: 2px;
+    align-items: flex-end;
+
+    .shiftTimes{
+      pointer-events: none;
+      color: #3c3c3c;
+    }
+
+    .breakTime{
+      height: 13px;
+      font-size: 9px;
+      font-weight: 500;
+      justify-content: flex-end;
+      pointer-events: none;
+      align-items: center;
+      color: #c1c1c1;
+      border-radius: 1px;
+      align-items: center;
+      margin-left: 3px;
+      margin-bottom: 1px;
+    }
+  }
+}
