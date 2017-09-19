@@ -25,8 +25,15 @@ export const targetToShiftRef = (target: HTMLElement): ShiftRef => {
   const day: any      = target.getAttribute('data-day')
   const user: any     = target.getAttribute('data-user')
   const id: any       = target.getAttribute('data-shift-id')
+  const hasEdit: any  = target.getAttribute('data-has-edit') === 'true'
 
-  return { day, user, id }
+  const top         = target.offsetTop
+  const left        = target.offsetLeft
+  const width       = target.offsetWidth
+  const height      = target.offsetHeight
+  const dimensions = { top, left, width, height }
+
+  return { day, user, id, hasEdit, dimensions }
 }
 
 export const targetToShiftCell = (target: HTMLElement): ShiftCell => {

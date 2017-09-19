@@ -47,11 +47,27 @@ export type Branches = Array<Branch>
 // roster-types
 export type Day = 'mo' | 'tu' | 'we' | 'th' | 'fr' | 'sa' | 'su'
 
+// export type Dimensions = {
+//   width: number,
+//   height: number,
+//   top: number,
+//   left: number
+// }
+
+type Dimensions = {
+  top: number,
+  left: number,
+  width: number,
+  height: number
+}
+
 export type ShiftRef = {
   id: string,
   day: Day,
   user: string,
-  inCreation?: boolean
+  hasEdit?: boolean,
+  inCreation?: boolean,
+  dimensions?: Dimensions
 }
 
 export type MinimalShift = {

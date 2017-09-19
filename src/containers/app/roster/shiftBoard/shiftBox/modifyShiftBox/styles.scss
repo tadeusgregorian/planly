@@ -1,4 +1,4 @@
-.shiftBoxMain{
+.editShiftBoxMain{
   width: 100%;
   height: 100%;
   position: relative;
@@ -6,10 +6,7 @@
   border-radius: 2px;
   background-color: #f7f7f7;
   border: 1px solid #d6d7dc;
-
-  &.focused{
-    border: 1px solid blue;
-  }
+  border: 1px solid blue;
 
   .edited{
     pointer-events: none;

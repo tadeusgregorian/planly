@@ -29,6 +29,8 @@ export default class ShiftCell extends PureComponent {
     const { shift, day, user, highlighted, note, shadowed, shiftType, style, cssClasses, position, blocked, shiftEdit, focusedShiftRef } = this.props
     const cssClassesObj = cssClasses ? cssClasses.reduce((acc, val) => ({ ...acc, [val]: true }), {}) : {} // turnes the classesArray to an obj for classnames
     const focused = !!(shift && focusedShiftRef && focusedShiftRef.id === shift.id)
+    const inCreation      = focusedShiftRef && focusedShiftRef.inCreation
+    const dummyShift:any  = inCreation && focusedShiftRef && { s: 0, e: 0, b: 0, user, day, id: focusedShiftRef.id }
 
     return(
       <fb className={cn({shiftCellMain: true, highlighted, shadowed, ...cssClassesObj })}
@@ -41,6 +43,7 @@ export default class ShiftCell extends PureComponent {
         style={{width: shiftCellWidth, height: shiftCellHeight, ...style}}
       >
         { shift && <ShiftBox shift={shift} note={note} shiftEdit={shiftEdit} focused={focused} /> }
+        { inCreation && <ShiftBox shift={dummyShift} note={note} focused inCreation/> }
       </fb>
     )
   }

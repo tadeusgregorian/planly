@@ -1,28 +1,29 @@
 //@flow
 
 import React from 'react'
-import type { Shift, ShiftDimensions } from 'types/index'
+import type { ShiftRef, Shift } from 'types/index'
 import { shiftToString } from 'helpers/index'
 import './styles.css'
 
 type Props = {
-  shift: Shift,
-  shift: ShiftDimensions,
+  shiftRef: ShiftRef,
+  shift: ?Shift,
   getRef: (HTMLElement)=>void
 }
 
-export default ({ cell, shift, getRef }: Props) => {
+export default ({ shiftRef, getRef, shift }: Props) => {
+  const { dimensions } = shiftRef
 
   const style = {
-    width:    cell.width,
-    height:   cell.height,
-    top:      cell.top,
-    left:     cell.left
+    width:    dimensions && dimensions.width,
+    height:   dimensions && dimensions.height,
+    top:      dimensions && dimensions.top,
+    left:     dimensions && dimensions.left
   }
 
   return(
     <fb className="pickedUpCellMain" style={style} ref={(ref) => getRef(ref)}>
-      <fb className='shiftTime'>{shiftToString(shift)}</fb>
+      <fb className='shiftTime'>{shift && shiftToString(shift)}</fb>
     </fb>
   )
 }

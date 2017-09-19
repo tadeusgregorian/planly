@@ -2,13 +2,12 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 
-import { openNotesModal } from 'actions/ui/modals'
-import { focusShift, createShift } from 'actions/ui/roster'
-import { saveShiftToDB } from 'actions/roster'
-import {
-  getParentShift,
-  getParentCell } from './localHelpers'
-import { getShiftOfCell, generateGuid } from 'helpers/index'
+import { openNotesModal }           from 'actions/ui/modals'
+import { focusShift, createShift }  from 'actions/ui/roster'
+import { saveShiftToDB }            from 'actions/roster'
+
+import { getParentShift, getParentCell } from './localHelpers'
+import { generateGuid } from 'helpers/index'
 import getCurrentUser from 'selectors/currentUser'
 
 import PickedUpShift from './pickedUpShift'
@@ -23,6 +22,7 @@ type MSProps = {
 type MAProps = {
   openNotesModal: (any)=>any,
   focusShift: (ShiftRef)=>any,
+  createShift: (ShiftCell)=>any,
   saveShiftToDB: (Shift)=>any
 }
 
@@ -33,7 +33,7 @@ type OwnProps = {
 type Props = OwnProps & MSProps & MAProps
 
 type State = {
-  pickedUpCell: ?ShiftCell,
+  pickedUpShift: ?ShiftRef,
   shadowedCell: ?ShiftCell
 }
 
@@ -46,7 +46,7 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
   isDragging: boolean
   mousePosStart: {x: number, y: number}
   mousePosDelta: {x: number, y: number}
-  PickedUpCellRef: ?HTMLElement
+  PickedUpElement: ?HTMLElement
 
   constructor(props: Props){
     super(props)
@@ -54,7 +54,7 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
     this.mouseIsDown = false
     this.isAdmin = !!(this.props.currentUser && this.props.currentUser.isAdmin)
     this.state = {
-      pickedUpCell: null,
+      pickedUpShift: null,
       shadowedCell: null
     }
   }
@@ -66,6 +66,7 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
       document.addEventListener('mousemove', this.onMouseMove)
       document.addEventListener('mouseover', this.onMouseOver)
       document.addEventListener('mousedown', this.onMouseDown)
+      document.addEventListener('mouseup',   this.onMouseUp)
     }
   }
 
@@ -75,6 +76,7 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
       document.removeEventListener('mouseover', this.onMouseOver)
       document.removeEventListener('mousemove', this.onMouseMove)
       document.removeEventListener('mousedown', this.onMouseDown)
+      document.removeEventListener('mouseup',   this.onMouseUp)
     }
   }
 
@@ -89,14 +91,19 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
   }
 
   onMouseDown = (e: any) => {
-    const pressedCell = getParentCell(e.target)
-    if (!pressedCell) return
-    if (!pressedCell.hasShift) return // dont allow draggint empty cells
-    if (pressedCell.hasEdit) return   // dont allow dragging cells with shiftEdit
+    const pressedShift = getParentShift(e.target)
+    if (!pressedShift) return
+    if (pressedShift.hasEdit) return   // dont allow dragging cells with shiftEdit
 
     this.mousePosStart = {x: e.pageX, y: e.pageY}
     this.mouseIsDown = true
-    setTimeout(()=> this.pickUpCell(pressedCell), 200)
+    setTimeout(()=> this.pickUpShift(pressedShift), 200)
+  }
+
+  onMouseUp = (target: any) => {
+    this.mouseIsDown = false
+    this.mousePosStart = {x: 0, y: 0}
+    this.state.pickedUpShift && this.dropShift()
   }
 
   onClick = ({target}: any) => {
@@ -110,63 +117,59 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
 
       // elementIsShiftCell(target) && this.props.focusShiftCell(shiftCell)
     }
-
-    this.mouseIsDown = false
-    this.mousePosStart = {x: 0, y: 0}
-    this.state.pickedUpCell && this.dropCell()
   }
 
   onMouseMove = (e: any) => {
-    if (!this.state.pickedUpCell || !this.PickedUpCellRef) return
-    this.mousePosDelta = {
-      x: e.pageX - this.mousePosStart.x,
-      y: e.pageY - this.mousePosStart.y
+    const { pickedUpShift } = this.state
+    const dimensions = pickedUpShift && pickedUpShift.dimensions
+
+    if (pickedUpShift && this.PickedUpElement && dimensions){
+      this.mousePosDelta = {
+        x: e.pageX - this.mousePosStart.x,
+        y: e.pageY - this.mousePosStart.y
+      }
+      this.PickedUpElement.style.left = (dimensions.left + this.mousePosDelta.x) + 'px'
+      this.PickedUpElement.style.top  = (dimensions.top + this.mousePosDelta.y) + 'px'
     }
-    this.PickedUpCellRef.style.left = (this.state.pickedUpCell.left + this.mousePosDelta.x) + 'px'
-    this.PickedUpCellRef.style.top =  (this.state.pickedUpCell.top + this.mousePosDelta.y) + 'px'
   }
 
-  pickUpCell = (cell: ShiftCell) => {
-    if(this.mouseIsDown){
+  pickUpShift = (shiftRef: ShiftRef) => {
+    if(this.mouseIsDown){ // if mouse is already up again ( 200ms window ) -> no dragging
       this.isDragging = true
-      this.setState({pickedUpCell: cell})
+      this.setState({pickedUpShift: shiftRef})
+
       const shiftBoard = document.getElementById("shiftBoardMain")
       shiftBoard && shiftBoard.classList.add('cursorMove')
     }
   }
 
-  dropCell = () => {
-    const { shadowedCell, pickedUpCell } = this.state
-    const { shifts } = this.props
-    if(pickedUpCell && shadowedCell){
-      const pickedUpShift =  getShiftOfCell(shifts, pickedUpCell)
-      if(shadowedCell && pickedUpShift){
-        const { s, e, b } = pickedUpShift
-        const id = generateGuid()
-        const newShift = { id, s, e, b, day: shadowedCell.day, user: shadowedCell.user }
-        this.props.saveShiftToDB(newShift)
-      }
+  dropShift = () => {
+    const { shadowedCell, pickedUpShift } = this.state
+    const shift = this.props.shifts.find(s => pickedUpShift && s.id === pickedUpShift.id)
+
+    if(shift && shadowedCell){
+      const { s, e, b } = shift
+      const { day, user } = shadowedCell
+      const id = generateGuid()
+      const newShift = { id, s, e, b, day, user }
+      this.props.saveShiftToDB(newShift)
     }
 
     this.isDragging = false
-    this.setState({pickedUpCell: null, shadowedCell: null})
+    this.setState({pickedUpShift: null, shadowedCell: null})
     const shiftBoard = document.getElementById("shiftBoardMain")
     shiftBoard && shiftBoard.classList.remove('cursorMove')
   }
 
   render = () => {
-    const { pickedUpCell, shadowedCell } = this.state
-    const { shifts } = this.props
+    const { pickedUpShift, shadowedCell } = this.state
+    const getRef = (el) => { this.PickedUpElement = el }
+    const shift = this.props.shifts.find(s => pickedUpShift && s.id === pickedUpShift.id)
 
     return (
       <fb style={{position: 'relative'}}>
         {React.cloneElement(this.props.children, { shadowedCell })}
-        { pickedUpCell &&
-          <PickedUpCell
-            getRef={(el) => {this.PickedUpCellRef = el}}
-            shift={getShiftOfCell(shifts, pickedUpCell)}
-            cell={pickedUpCell} />
-        }
+        { pickedUpShift && <PickedUpShift getRef={getRef} shiftRef={pickedUpShift} shift={shift}/> }
       </fb>
     )
   }
