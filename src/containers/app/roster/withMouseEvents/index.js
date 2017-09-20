@@ -2,9 +2,9 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 
-import { openNotesModal }           from 'actions/ui/modals'
-import { focusShift, createShift }  from 'actions/ui/roster'
-import { saveShiftToDB }            from 'actions/roster'
+import { openNotesModal }                               from 'actions/ui/modals'
+import { focusShift, createShift, setShiftUnderMouse }  from 'actions/ui/roster'
+import { saveShiftToDB }                                from 'actions/roster'
 
 import { getParentShift, getParentCell } from './localHelpers'
 import { generateGuid } from 'helpers/index'
@@ -17,13 +17,16 @@ import type { User, ShiftCell, ShiftRef, Shift, Shifts, Store } from 'types/inde
 type MSProps = {
   currentUser: User,
   shifts: Shifts,
+  focusedShiftRef: ?ShiftRef,
+  shiftUnderMouse: ?ShiftRef
 }
 
 type MAProps = {
   openNotesModal: (any)=>any,
   focusShift: (ShiftRef)=>any,
   createShift: (ShiftCell)=>any,
-  saveShiftToDB: (Shift)=>any
+  saveShiftToDB: (Shift)=>any,
+  setShiftUnderMouse: (ShiftRef | null)=>any,
 }
 
 type OwnProps = {
@@ -81,13 +84,24 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
   }
 
   onMouseOver = ({target}: any) => {
-    if(!this.mouseIsDown) return
-    const cellUnderMouse = getParentCell(target)
-    //dont allow to shadow Cells that already have a shift.
-    const isCellAndEmpty = cellUnderMouse && !cellUnderMouse.hasShift
-    const shadowedCell = isCellAndEmpty ? cellUnderMouse : null
+    if(this.mouseIsDown){
+      const cellUnderMouse = getParentCell(target)
+      //dont allow to shadow Cells that already have a shift.
+      const isCellAndEmpty = cellUnderMouse && !cellUnderMouse.hasShift
+      const shadowedCell = isCellAndEmpty ? cellUnderMouse : null
+      this.setState({shadowedCell: shadowedCell})
 
-    this.setState({shadowedCell: shadowedCell})
+    } else {
+      if(this.props.focusedShiftRef) return
+      const { shiftUnderMouse } = this.props
+      const newShiftUnderMouse = getParentShift(target)
+      const id = shiftUnderMouse && shiftUnderMouse.id
+      const newId = newShiftUnderMouse && newShiftUnderMouse.id
+      if(id !== newId) {
+        console.log('settingITTT');
+        this.props.setShiftUnderMouse(newShiftUnderMouse)
+      }
+    }
   }
 
   onMouseDown = (e: any) => {
@@ -107,13 +121,20 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
   }
 
   onClick = ({target}: any) => {
-    if(!this.isDragging){
+    if(!this.isDragging && !this.props.focusedShiftRef){
+
+      const extendCellClicked = target && target.getAttribute('data-target-type') === 'extend-cell-btn'
+      if(extendCellClicked){
+        const targetCell = getParentCell(target)
+        targetCell && this.props.createShift(targetCell)
+        return
+      }
 
       const targetShift = getParentShift(target)
-      const targetCell = getParentCell(target)
-
       if(targetShift) return this.props.focusShift(targetShift)
-      if(targetCell)  return this.props.createShift(targetCell)
+
+      const targetCell = getParentCell(target)
+      if(targetCell && !targetCell.hasShift) return this.props.createShift(targetCell)
 
       // elementIsShiftCell(target) && this.props.focusShiftCell(shiftCell)
     }
@@ -179,12 +200,15 @@ const actionsToProps: MAProps = {
   openNotesModal,
   focusShift,
   createShift,
-  saveShiftToDB
+  saveShiftToDB,
+  setShiftUnderMouse
 }
 
 const mapStateToProps = (state: Store, ow: OwnProps): MSProps => ({
   currentUser: getCurrentUser(state),
-  shifts: state.roster.shiftWeek
+  shifts: state.roster.shiftWeek,
+  focusedShiftRef: state.ui.roster.shiftBoard.focusedShiftRef,
+  shiftUnderMouse: state.ui.roster.shiftBoard.shiftUnderMouse
 })
 
 export default connect(mapStateToProps, actionsToProps)(WithMouseLogic)

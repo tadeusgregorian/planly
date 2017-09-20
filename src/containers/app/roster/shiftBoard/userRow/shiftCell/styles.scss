@@ -1,29 +1,31 @@
-// carefull! this class applies also to the note-icon in the popover-window! dirtyyyyy
-.hasNoteCellIcon{
-  position: absolute;
-  top: 1px;
-  right: 1px;
-  padding: 0px;
-  color: orange;
-  font-size: 16px;
 
-  &.inPopover{
-    top: 15px;
-    right: 2px;
-  }
-
-  &:hover{
-    color: red;
-  }
-}
+// .hasNoteCellIcon{
+//   position: absolute;
+//   top: 1px;
+//   right: 1px;
+//   padding: 0px;
+//   color: orange;
+//   font-size: 16px;
+//
+//   &.inPopover{
+//     top: 15px;
+//     right: 2px;
+//   }
+//
+//   &:hover{
+//     color: red;
+//   }
+// }
 
 .shiftCellMain{
   border-left: 1px solid #dfe0e4;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   flex: 0 0 auto;
-  padding: 1px;
-  border-bottom: 1px solid #dfe0e4;
+  padding: 0px 1px;
+  min-height: 38px;
+  //border-bottom: 1px solid #dfe0e4;
+  flex-direction: column;
 
   &.highlighted{
     background-color: #00a3ef;
@@ -34,5 +36,25 @@
     background-color: #c8eeff;
     box-shadow: inset 0px 1px 4px rgba(0, 0, 0, 0.32);
     color: grey;
+  }
+
+  &[data-has-shift='']{
+    &:hover{
+      &::before{
+        content: '+';
+        max-height: 42px;
+        flex: 1 1 auto;
+        align-self: stretch;
+        background-color: #e9ebee;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        //box-shadow: inset 0px 0px 0px 2px white;
+        margin: 2px 1px;
+        color: grey;
+        font-weight: 300;
+        font-size: 18px;
+      }
+    }
   }
 }

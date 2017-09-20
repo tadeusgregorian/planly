@@ -4,8 +4,8 @@ import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import _ from 'lodash'
 
-import { getShiftsOfUser, getNotesOfUser, getShadowedDay, getShiftEditsOfUser } from './localHelpers'
-import type { User, Shifts, Note, ShiftEdit, ShiftCell, Store, ShiftRef } from 'types/index'
+import { getShiftsOfUser, getShadowedDay, getShiftEditsOfUser } from './localHelpers'
+import type { User, Shifts, ShiftEdit, ShiftCell, Store, ShiftRef } from 'types/index'
 import getCurrentUser from 'selectors/currentUser'
 
 import ShiftBoardHead from './shiftBoardHead'
@@ -23,10 +23,10 @@ type ConProps = {
   users: Array<User>,
   shifts: Shifts,
   shiftEdits: Array<ShiftEdit>,
-  notes: Array<Note>,
   currentUser: User,
   shadowedCell: ?ShiftCell,
   focusedShiftRef: ?ShiftRef,
+  shiftUnderMouse: ?ShiftRef,
 }
 
 type Props = OwnProps & ConProps
@@ -35,7 +35,7 @@ class ShiftBoard extends PureComponent{
   props: Props
 
   render(){
-    const { shiftEdits, smartWeek, branch, shadowedCell, notes, shifts, users, currentUser, focusedShiftRef } = this.props
+    const { shiftEdits, smartWeek, branch, shadowedCell, shifts, users, currentUser, focusedShiftRef, shiftUnderMouse } = this.props
     const usersOfBranch = users.filter(u => _.keys(u.branches).includes(branch))
 
     return(
@@ -49,9 +49,9 @@ class ShiftBoard extends PureComponent{
                 currentUser={currentUser}
                 shiftEdits={getShiftEditsOfUser(shiftEdits, user.id, smartWeek, branch)}
                 shifts={getShiftsOfUser(shifts, user.id)}
-                notes={getNotesOfUser(notes, user.id)}
                 shadowedDay={getShadowedDay(shadowedCell, user.id)}
                 focusedShiftRef={focusedShiftRef && focusedShiftRef.user === user.id ? focusedShiftRef : null}
+                shiftUnderMouse={shiftUnderMouse && shiftUnderMouse.user === user.id ? shiftUnderMouse : null}
                 highlightedDay={false}
               />
             })}
@@ -65,10 +65,10 @@ const mapStateToProps = (state: Store) => ({
   branch: state.ui.roster.currentBranch,
   smartWeek: state.ui.roster.currentSmartWeek,
   users: state.core.users,
-  notes: state.roster.notes,
   shifts: state.roster.shiftWeek,
   shiftEdits: state.roster.shiftEdits,
   focusedShiftRef: state.ui.roster.shiftBoard.focusedShiftRef,
+  shiftUnderMouse: state.ui.roster.shiftBoard.shiftUnderMouse,
   currentUser: getCurrentUser(state)
 })
 

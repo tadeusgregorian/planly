@@ -38,6 +38,9 @@ export const createShift = (shiftCell: ShiftCell) => {
   return { type: 'FOCUS_SHIFT', payload: focusedShiftRef }
 }
 
+export const setShiftUnderMouse = (shiftRef: ShiftRef | null) => (
+  { type: 'SET_SHIFT_UNDER_MOUSE', payload: shiftRef })
+
 export const focusShift = (shiftRef: ShiftRef) => (
   { type: 'FOCUS_SHIFT', payload: shiftRef })
 

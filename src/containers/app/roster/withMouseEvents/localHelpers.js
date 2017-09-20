@@ -11,7 +11,7 @@ export const elementIsShiftCell = (el: HTMLElement): boolean =>
 export const elementIsNoteIcon = (el: HTMLElement): boolean =>
   !!(el.getAttribute && el.getAttribute('data-target-type') === 'noteicon')
 
-export const getParentShift = (el: HTMLElement): ?ShiftRef => {
+export const getParentShift = (el: HTMLElement): (ShiftRef | null) => {
   const shiftElement = closest(el, (element) => elementIsShift(element))
   return shiftElement ? targetToShiftRef(shiftElement) : null
 }

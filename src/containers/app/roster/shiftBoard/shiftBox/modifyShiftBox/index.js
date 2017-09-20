@@ -3,33 +3,36 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 
-import { shiftToString } from 'helpers/index'
+//import { shiftToString } from 'helpers/index'
 import { timeInpOK, withColon, from4To5, shiftDataValid, zipShift, shiftToShiftInput } from './localHelpers'
 import { toggleOptions, unfocusShift }        from 'actions/ui/roster'
 import { openNotesModal }                     from 'actions/ui/modals'
+import type { NoteModalProps }                from 'actions/ui/modals'
 import { saveShiftToDB, saveShiftEditToDB }   from 'actions/roster'
 
 import getCurrentUser from 'selectors/currentUser'
 
 import InputWindow from './inputWindow'
+import ShiftActionBar from './shiftActionBar'
 
-import type { ShiftCell, Shift, Position, User } from 'types/index'
+import type { ShiftEdit, Shift, Position, User, Store } from 'types/index'
 import './styles.css'
 
 type OwnProps = {
   shift: Shift,
-  note: Note,
+  shiftEdit: ?ShiftEdit,
+  inCreation?: boolean
 }
 
-type Props = {
+type ConProps = {
   optionsExpanded: boolean,
   positions: Array<Position>,
   currentUser: User,
-  openNotesModal: ({})=>{},
-  toggleOptions: ()=>void,
-  saveShiftToDB: (Shift)=>void,
-  saveShiftEditToDB: (Shift)=>void,
-  unfocusShift: ()=>void
+  toggleOptions: ()=>{},
+  saveShiftToDB: (Shift)=>any,
+  saveShiftEditToDB: (Shift)=>any,
+  openNotesModal: (NoteModalProps)=>void,
+  unfocusShift: ()=>{}
 }
 
 type Props = OwnProps & ConProps
@@ -52,7 +55,7 @@ class ModifyShiftBox extends PureComponent{
   inputRefs: InputRefs
   isAdmin: boolean
 
-  constructor(props: Props){
+  constructor(props){
     super(props)
 
     this.isAdmin = !!props.currentUser.isAdmin
@@ -70,11 +73,12 @@ class ModifyShiftBox extends PureComponent{
     }
   }
 
-  componentWillMount    = () => this.populateState(this.props.shift || { s: '', e: '', b: '' })
+  componentWillMount    = () => {if(!this.props.inCreation) this.populateState()}
   componentDidMount     = () => window.addEventListener('keydown', this.onKeyDown)
   componentWillUnmount  = () => window.removeEventListener('keydown', this.onKeyDown)
 
-  populateState = (shift: Shift) => {
+  populateState = () => {
+    const { shift } = this.props
     this.setState({ ...shiftToShiftInput(shift), position: shift.position })
   }
 
@@ -85,7 +89,7 @@ class ModifyShiftBox extends PureComponent{
 
   startTimeChanged = (inp: SyntheticInputEvent) => this.updateStateIfOK('startTime', inp.target.value)
   endTimeChanged = (inp: SyntheticInputEvent) => this.updateStateIfOK('endTime', inp.target.value)
-  updateBreak = (val: string) => this.setState({breakMinutes: val })
+  breakChanged = (inp: SyntheticInputEvent) => this.updateBreakIfOK(inp.target.value)
 
   focusStartTime  = () => {this.inputRefs.startTime && this.inputRefs.startTime.focus()}
   focusEndTime    = () => {this.inputRefs.endTime   && this.inputRefs.endTime.focus()}
@@ -96,11 +100,19 @@ class ModifyShiftBox extends PureComponent{
     if(timeInpOK(prevState, colonizedState)) this.setState({[target]: colonizedState})
   }
 
-  onKeyDown = (e: SyntheticKeyboardEvent) => e.key === 'Enter' && this.tryToSaveChanges()
+  updateBreakIfOK = (val) => {
+    const newCharIsInt = !val.length || parseInt(val.slice(-1), 10) || val.slice(-1) === '0'
+    if(newCharIsInt) this.setState({breakMinutes: val})
+  }
+
+  onKeyDown = (e: SyntheticKeyboardEvent) => {
+    e.key === 'Enter' && this.tryToSaveChanges()
+    e.key === 'Escape' && this.props.unfocusShift()
+  }
 
   tryToSaveChanges = () => {
-    const { startTime, endTime, breakMinutes, position } = this.state
-    const { saveShiftToDB, saveShiftEditToDB, unfocusShift } = this.props
+    const { startTime, endTime, breakMinutes } = this.state
+    const { saveShiftToDB, saveShiftEditToDB, unfocusShift, shift } = this.props
     const { day, user, id } = shift
     const shiftInput = { startTime, endTime, breakMinutes }
 
@@ -114,7 +126,7 @@ class ModifyShiftBox extends PureComponent{
   }
 
   render(){
-    const { shift, shiftEdit, note } = this.props
+    const { shift, shiftEdit } = this.props
     const { day, user } = shift
     // const posBoxStyle = position && {
     //   color: position.color,
@@ -122,15 +134,31 @@ class ModifyShiftBox extends PureComponent{
     // }
 
     return(
-      <fb className='editShiftBoxMain focused'>
+      <fb className='modifyShiftBoxMain focused'>
         {/* { position && <fb className='posBox' style={posBoxStyle}>{position.name}</fb> } */}
+        <ShiftActionBar
+          inCreation={!!this.props.inCreation}
+          closeClicked={this.props.unfocusShift}
+          toggleOptionsClicked={()=>{}}
+          deleteClicked={()=>{}}
+        />
         <fb className='shiftTimesWrapper'>
-          <fb className='shiftTimes'>{shiftToString(shift)}</fb>
-          { !!shift.b && <fb className='breakTime'>{'/ ' + shift.b}</fb> }
+          <InputWindow
+            startTime={this.state.startTime}
+            endTime={this.state.endTime}
+            breakMinutes={this.state.breakMinutes}
+            getStartTimeRef={ref => {this.inputRefs.startTime = ref}}
+            getEndTimeRef={ref => {this.inputRefs.endTime = ref}}
+            startTimeChanged={this.startTimeChanged}
+            endTimeChanged={this.endTimeChanged}
+            breakChanged={this.breakChanged}
+            focusStartTime={this.focusStartTime}
+            focusEndTime={this.focusEndTime}
+          />
         </fb>
         { shiftEdit && <fb className='edited icon icon-pen'>edited...</fb> }
         <fb className='footer'>
-          { note  && <icon className='icon icon-comment hasNoteCellIcon' data-day={day} data-user={user} data-target-type='noteicon' />}
+          { false  && <icon className='icon icon-comment hasNoteCellIcon' data-day={day} data-user={user} data-target-type='noteicon' />}
         </fb>
       </fb>
     )
@@ -139,13 +167,13 @@ class ModifyShiftBox extends PureComponent{
 
 const actionCreators = {
   toggleOptions,
-  openNotesModal,
   unfocusShift,
   saveShiftToDB,
-  saveShiftEditToDB
+  saveShiftEditToDB,
+  openNotesModal,
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: Store) => ({
   optionsExpanded: state.ui.roster.shiftBoard.optionsExpanded,
   positions: state.core.positions,
   shiftEdits: state.roster.shiftEdits,
@@ -153,46 +181,23 @@ const mapStateToProps = (state) => ({
 })
 
 const connector: Connector<OwnProps, Props> = connect(mapStateToProps, actionCreators)
-export default connector(ShiftBoard)
+export default connector(ModifyShiftBox)
 
 
 
-
-
-class CellPopover extends PureComponent {
-
-  render(){
-    return(<fb>underConstructions</fb>)
-
-    // const { toggleOptions, optionsExpanded, openNotesModal } = this.props
-    //
-    // return(
-    //   <fb className="cellPopoverMain">
-    //     { optionsExpanded && <ExpandedOptions cell={cell} openNotesModal={openNotesModal} /> }
-    //     <fb className='compact'>
-    //       <InputWindow
-    //         startTime={this.state.startTime}
-    //         endTime={this.state.endTime}
-    //         getStartTimeRef={ref => {this.inputRefs.startTime = ref}}
-    //         getEndTimeRef={ref => {this.inputRefs.endTime = ref}}
-    //         startTimeChanged={this.startTimeChanged}
-    //         endTimeChanged={this.endTimeChanged}
-    //         focusStartTime={this.focusStartTime}
-    //         focusEndTime={this.focusEndTime}
-    //       />
-    //       <InputTongue value={this.state.breakMinutes} updateBreak={this.updateBreak} toggleOptions={toggleOptions}/>
-    //       <CloseButton closePopover={this.props.unfocusShiftCell} />
-    //     </fb>
-    //     { isOpen && <PositionsBubble
-    //       positions={this.props.positions}
-    //       selectedPos={this.state.position}
-    //       selectPos={(posID) => this.setState({position: posID})} />
-    //     }
-    //   </fb>
-    // )
-  }
-}
-
-
-
-export default CellPopover
+// const { toggleOptions, optionsExpanded, openNotesModal } = this.props
+//
+// return(
+//   <fb className="cellPopoverMain">
+//     { optionsExpanded && <ExpandedOptions cell={cell} openNotesModal={openNotesModal} /> }
+//     <fb className='compact'>
+//       <InputTongue value={this.state.breakMinutes} updateBreak={this.updateBreak} toggleOptions={toggleOptions}/>
+//       <CloseButton closePopover={this.props.unfocusShiftCell} />
+//     </fb>
+//     { isOpen && <PositionsBubble
+//       positions={this.props.positions}
+//       selectedPos={this.state.position}
+//       selectPos={(posID) => this.setState({position: posID})} />
+//     }
+//   </fb>
+// )

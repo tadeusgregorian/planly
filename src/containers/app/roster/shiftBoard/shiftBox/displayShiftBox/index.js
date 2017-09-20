@@ -1,20 +1,20 @@
 //@flow
 import React, { PureComponent } from 'react'
 import { shiftToString } from 'helpers/index'
-import type { Shift, ShiftEdit, Note } from 'types/index'
+import type { Shift, ShiftEdit } from 'types/index'
 import './styles.css'
 
 type Props = {
   shift: Shift,
   shiftEdit?: ShiftEdit,
-  note: ?Note,
+  isHovered?: boolean
 }
 
 export default class DisplayShiftBox extends PureComponent{
   props: Props
 
   render(){
-    const { shift, shiftEdit, note } = this.props
+    const { shift, shiftEdit, isHovered } = this.props
     const { day, user, id } = shift
     const hasEdit = shiftEdit ? 'true' : ''
     // const posBoxStyle = position && {
@@ -31,8 +31,11 @@ export default class DisplayShiftBox extends PureComponent{
         </fb>
         { shiftEdit && <fb className='edited icon icon-pen'>edited...</fb> }
         <fb className='footer'>
-          { note  && <icon className='icon icon-comment hasNoteCellIcon' data-day={day} data-user={user} data-target-type='noteicon' />}
+          {/* { note  && <icon className='icon icon-comment hasNoteCellIcon' data-day={day} data-user={user} data-target-type='noteicon' />} */}
         </fb>
+        { isHovered &&
+          <fb className='extendCellBtn' data-target-type='extend-cell-btn'>+</fb>
+        }
       </fb>
     )
   }

@@ -1,8 +1,8 @@
 .userRowMain{
   flex-direction: row;
-  height: 40px;
   border-bottom: 1px solid #dfe0e4;
   width: 100%;
+  flex: 0 1 auto;
 
   &:last-child{
     border-bottom: none;

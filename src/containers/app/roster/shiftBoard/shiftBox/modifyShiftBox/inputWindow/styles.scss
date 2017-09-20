@@ -1,0 +1,78 @@
+.inputWindowMain{
+  border-bottom: 1px solid #00a3ef;
+  //padding-left: 2px;
+  background: #dbf4ff;
+  cursor: pointer;
+  justify-content: center;
+
+  .seperator{
+    align-items: center;
+    justify-content: center;
+    margin: 0 1px;
+    border-left: 1px solid #00a3ef;
+  }
+
+  .startEndTimeWrapper{
+    //margin-left: 2px;
+  }
+
+  .breakMinutesWrapper{
+    flex: 1 1 auto;
+  }
+
+  .inpWrapper{
+    flex: 0 0 auto;
+    justify-content: center;
+    padding: 1px 0px;
+
+    &.startEnd{
+      width: 48px;
+      padding: 0px 2px;
+    }
+
+    &.break{
+      flex: 1 1 auto;
+      border-left: 1px solid #00a3ef;
+      margin-left: 2px;
+      //width: 30px;
+    }
+
+    .timeInput{
+      border: none;
+      color: #2E2E2E !important;
+      font-size: 16px;
+      font-weight: 300;
+      width: 100%;
+      cursor: pointer;
+      font-weight: 400;
+      background: none;
+      padding-left: 2px;
+
+
+      &.start{
+        //margin-left: auto;
+      }
+
+      &.end{
+      }
+
+      &.break{
+        text-align: center;
+        &::placeholder{
+          //color: #57ccff;
+          font-size: 12px;
+        }
+      }
+
+      &:focus {
+        outline: none;
+      }
+
+      &::placeholder{
+        color: #9ae0ff;
+        font-size: 16px;
+        //font-weight: 400;
+      }
+    }
+  }
+}
