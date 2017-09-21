@@ -11,7 +11,6 @@ type Props = {
   user: string,
   focusedShiftRef: ?ShiftRef,
   shiftUnderMouse: ?ShiftRef,
-  highlighted?: boolean,
   shadowed?: boolean,
   shifts: Shifts,
   shiftEdit?: ShiftEdit,
@@ -26,13 +25,13 @@ export default class ShiftCell extends PureComponent {
   props: Props
 
   render(){
-    const { shifts, day, user, highlighted, shadowed, shiftType, style, cssClasses, blocked, shiftEdit, focusedShiftRef, shiftUnderMouse } = this.props
+    const { shifts, day, user, shadowed, shiftType, style, cssClasses, blocked, shiftEdit, focusedShiftRef, shiftUnderMouse } = this.props
     const cssClassesObj = cssClasses ? cssClasses.reduce((acc, val) => ({ ...acc, [val]: true }), {}) : {} // turnes the classesArray to an obj for classnames
     const inCreation      = focusedShiftRef && focusedShiftRef.inCreation
     const dummyShift:any  = inCreation && focusedShiftRef && { s: 0, e: 0, b: 0, user, day, id: focusedShiftRef.id }
 
     return(
-      <fb className={cn({shiftCellMain: true, highlighted, shadowed, ...cssClassesObj })}
+      <fb className={cn({shiftCellMain: true, shadowed, ...cssClassesObj })}
         data-target-type='shiftcell'
         data-day={day}
         data-user={user}
@@ -44,6 +43,7 @@ export default class ShiftCell extends PureComponent {
       >
         { shifts.map((shift, i) =>
             <ShiftBox
+              key={shift.id}
               shift={shift}
               shiftEdit={shiftEdit}
               focused={!!focusedShiftRef && focusedShiftRef.id === shift.id}

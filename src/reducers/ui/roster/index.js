@@ -1,7 +1,7 @@
 //@flow
 import { combineReducers } from 'redux'
 import { simpleReducer } from '../../reducerHelpers'
-import { getRealCurrentSmartWeek } from 'helpers/index'
+import { getRealCurrentWeekID } from 'helpers/index'
 import shiftBoard from './shiftBoard'
 import type { ShiftBoard } from './shiftBoard'
 
@@ -10,21 +10,15 @@ const currentBranch = simpleReducer({
   SET_CURRENT_BRANCH: 'PAYLOAD'
 })
 
-const currentSmartWeek = simpleReducer({
-  default: getRealCurrentSmartWeek(),
-  SET_CURRENT_SMART_WEEK: 'PAYLOAD',
+// sorry hacky: when entering TemplateMode we set currentWeekID to the branchID
+// ( because there is always the default template with a weekID equal to the branchID )
+const currentWeekID = simpleReducer({
+  default: getRealCurrentWeekID(),
+  SET_CURRENT_WEEK_ID: 'PAYLOAD',
   ENTER_TEMPLATE_MODE: 0,
-  LEAVE_TEMPLATE_MODE: getRealCurrentSmartWeek(),
+  LEAVE_TEMPLATE_MODE: getRealCurrentWeekID(),
 })
 
-// sorry hacky: when changing current branch -> we set the currentTemplate
-// to the branchID ( because there is always the default template with a
-// templateID equal to the branchID
-const currentTemplate = simpleReducer({
-  default: '0',
-  SET_CURRENT_TEMPLATE: 'PAYLOAD',
-  SET_CURRENT_BRANCH: 'PAYLOAD'
-})
 
 const templateMode = simpleReducer({
   default: false,
@@ -34,7 +28,7 @@ const templateMode = simpleReducer({
 
 export type Roster = {
   currentBranch: string,
-  currentSmartWeek: number,
+  currentWeekID: string,
   currentTemplate: string,
   templateMode: boolean,
   shiftBoard: ShiftBoard
@@ -42,8 +36,7 @@ export type Roster = {
 
 export default combineReducers({
   currentBranch,
-  currentSmartWeek,
-  currentTemplate,
+  currentWeekID,
   templateMode,
   shiftBoard
 })

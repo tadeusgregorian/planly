@@ -2,7 +2,6 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 
-import { openNotesModal }                               from 'actions/ui/modals'
 import { focusShift, createShift, setShiftUnderMouse }  from 'actions/ui/roster'
 import { saveShiftToDB }                                from 'actions/roster'
 
@@ -22,7 +21,6 @@ type MSProps = {
 }
 
 type MAProps = {
-  openNotesModal: (any)=>any,
   focusShift: (ShiftRef)=>any,
   createShift: (ShiftCell)=>any,
   saveShiftToDB: (Shift)=>any,
@@ -63,7 +61,6 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
   }
 
   componentDidMount = () => {
-    console.log(this.isAdmin);
     document.addEventListener('click',   this.onClick)
     if(this.isAdmin){ // only admin has drag and drop
       document.addEventListener('mousemove', this.onMouseMove)
@@ -98,7 +95,6 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
       const id = shiftUnderMouse && shiftUnderMouse.id
       const newId = newShiftUnderMouse && newShiftUnderMouse.id
       if(id !== newId) {
-        console.log('settingITTT');
         this.props.setShiftUnderMouse(newShiftUnderMouse)
       }
     }
@@ -197,7 +193,6 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
 }
 
 const actionsToProps: MAProps = {
-  openNotesModal,
   focusShift,
   createShift,
   saveShiftToDB,

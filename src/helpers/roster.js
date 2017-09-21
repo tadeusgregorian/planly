@@ -2,25 +2,25 @@
 import moment from 'moment'
 import type { Shift, Shifts, MinimalShift, ShiftCell, Notes } from 'types/index'
 
-export const getRealCurrentSmartWeek = () :number => {
+export const getRealCurrentWeekID = () :number => {
   const calendarWeek = moment().week()
   const year = moment().year()
   return parseInt( '' + year + calendarWeek, 10 )
 }
 
-// extracts and returns the year out of the smartWeek
-export const getYear = (smartWeek: number) =>
-  parseInt(smartWeek.toString().substr(0, 4), 10)
+// extracts and returns the year out of the weekID
+export const getYear = (weekID: number) =>
+  parseInt(weekID.toString().substr(0, 4), 10)
 
-  // extracts and returns the week out of the smartWeek
-export const getWeek = (smartWeek: number) =>
-  parseInt(smartWeek.toString().substr(4, 2), 10)
+  // extracts and returns the week out of the weekID
+export const getWeek = (weekID: number) =>
+  parseInt(weekID.toString().substr(4, 2), 10)
 
-export const smartWeekToMoment = (sw: number): moment => {
+export const weekIDToMoment = (sw: number): moment => {
   return moment().year(getYear(sw)).week(getWeek(sw)).startOf('week')
 }
 
-export const momentToSmartWeek = (mom: moment): number => {
+export const momentToWeekID = (mom: moment): number => {
   return parseInt(mom.year() + doubleD(mom.week()), 10)
 }
 
@@ -30,14 +30,14 @@ export const doubleD = (num: number) => {
   return num > 9 ? num.toString() : '0' + num
 }
 
-export const getNextSmartWeek = (sw: number) :number => {
-  const newMom = smartWeekToMoment(sw).add(1, 'week')
-  return momentToSmartWeek(newMom)
+export const getNextWeekID = (sw: number) :number => {
+  const newMom = weekIDToMoment(sw).add(1, 'week')
+  return momentToWeekID(newMom)
 }
 
-export const getPrevSmartWeek = (sw: number) :number => {
-  const newMom = smartWeekToMoment(sw).subtract(1, 'week')
-  return momentToSmartWeek(newMom)
+export const getPrevWeekID = (sw: number) :number => {
+  const newMom = weekIDToMoment(sw).subtract(1, 'week')
+  return momentToWeekID(newMom)
 }
 
 export const minToTime = (mins: number): {hours: number, minutes: number, str: string} => {

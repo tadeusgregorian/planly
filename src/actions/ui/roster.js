@@ -1,34 +1,30 @@
 //@flow
-import { getNextSmartWeek, getPrevSmartWeek, generateGuid } from 'helpers/index'
+import { getNextWeekID, getPrevWeekID, generateGuid } from 'helpers/index'
 import type { ThunkAction, GetState, ShiftRef, ShiftCell } from 'types/index'
 
 export const changeCurrentBranch = (branchID: string) =>
   ({ type: 'SET_CURRENT_BRANCH', payload: branchID })
 
-export const changeCurrentSmartWeek = (smartWeek: number) =>
-  ({ type: 'SET_CURRENT_SMART_WEEK', payload: smartWeek })
-
-export const changeCurrentTemplate = (templateID: string) =>
-  ({ type: 'SET_CURRENT_TEMPLATE', payload: templateID })
+export const changeCurrentWeekID = (weekID: string) =>
+  ({ type: 'SET_CURRENT_WEEK_ID', payload: weekID })
 
 export const enterTemplateMode: ThunkAction = () => (dispatch, getState: GetState) => {
-  // at the same time we set currentTemplate to the default one ( equal to the branchID )
+  // hacky!: at the same time this sets currentWeekID to the default one ( equal to the branchID )
   const branchID = getState().ui.roster.currentBranch
-  dispatch({ type: 'SET_CURRENT_TEMPLATE', payload: branchID })
-  dispatch({ type: 'ENTER_TEMPLATE_MODE' })
+  dispatch({ type: 'ENTER_TEMPLATE_MODE', payload: branchID })
 }
 
 export const leaveTemplateMode = () =>
   ({ type: 'LEAVE_TEMPLATE_MODE' })
 
 export const goToNextWeek: ThunkAction = () => (dispatch, getState) => {
-  const nextSW = getNextSmartWeek(getState().ui.roster.currentSmartWeek)
-  dispatch({type: 'SET_CURRENT_SMART_WEEK', payload: nextSW})
+  const nextSW = getNextWeekID(getState().ui.roster.currentWeekID)
+  dispatch({type: 'SET_CURRENT_WEEK_ID', payload: nextSW})
 }
 
 export const goToLastWeek: ThunkAction = () => (dispatch, getState) => {
-  const prevSW = getPrevSmartWeek(getState().ui.roster.currentSmartWeek)
-  dispatch({type: 'SET_CURRENT_SMART_WEEK', payload: prevSW})
+  const prevSW = getPrevWeekID(getState().ui.roster.currentWeekID)
+  dispatch({type: 'SET_CURRENT_WEEK_ID', payload: prevSW})
 }
 
 export const createShift = (shiftCell: ShiftCell) => {

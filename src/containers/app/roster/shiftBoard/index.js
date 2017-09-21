@@ -18,7 +18,7 @@ type OwnProps = {
 }
 
 type ConProps = {
-  smartWeek: number,
+  weekID: string,
   branch: string,
   users: Array<User>,
   shifts: Shifts,
@@ -35,7 +35,7 @@ class ShiftBoard extends PureComponent{
   props: Props
 
   render(){
-    const { shiftEdits, smartWeek, branch, shadowedCell, shifts, users, currentUser, focusedShiftRef, shiftUnderMouse } = this.props
+    const { shiftEdits, weekID, branch, shadowedCell, shifts, users, currentUser, focusedShiftRef, shiftUnderMouse } = this.props
     const usersOfBranch = users.filter(u => _.keys(u.branches).includes(branch))
 
     return(
@@ -47,7 +47,7 @@ class ShiftBoard extends PureComponent{
                 key={user.id}
                 user={user}
                 currentUser={currentUser}
-                shiftEdits={getShiftEditsOfUser(shiftEdits, user.id, smartWeek, branch)}
+                shiftEdits={getShiftEditsOfUser(shiftEdits, user.id, weekID, branch)}
                 shifts={getShiftsOfUser(shifts, user.id)}
                 shadowedDay={getShadowedDay(shadowedCell, user.id)}
                 focusedShiftRef={focusedShiftRef && focusedShiftRef.user === user.id ? focusedShiftRef : null}
@@ -63,7 +63,7 @@ class ShiftBoard extends PureComponent{
 
 const mapStateToProps = (state: Store) => ({
   branch: state.ui.roster.currentBranch,
-  smartWeek: state.ui.roster.currentSmartWeek,
+  weekID: state.ui.roster.currentWeekID,
   users: state.core.users,
   shifts: state.roster.shiftWeek,
   shiftEdits: state.roster.shiftEdits,

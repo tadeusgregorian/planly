@@ -5,9 +5,9 @@ import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import type { Store, Branches, ShiftEdits } from 'types/index'
 
-import { changeCurrentBranch , changeCurrentSmartWeek } from 'actions/ui/roster'
+import { changeCurrentBranch , changeCurrentWeekID } from 'actions/ui/roster'
 import { getWeek, getYear } from 'helpers/roster'
-import { isInsidePopover, isEditRow, getBranch, getSmartWeek } from './localHelpers'
+import { isInsidePopover, isEditRow, getBranch, getWeekID } from './localHelpers'
 import './styles.css'
 
 type OwnProps = {
@@ -17,9 +17,9 @@ type OwnProps = {
 type ConProps = {
   branches: Branches,
   currentBranch: string,
-  currentSmartWeek: number,
+  currentWeekID: string,
   changeCurrentBranch: (string)=>{},
-  changeCurrentSmartWeek: (number)=>{}
+  changeCurrentWeekID: (string)=>{}
 }
 type Props = OwnProps & ConProps
 
@@ -36,15 +36,15 @@ class EditsPopover extends PureComponent{
     }
     if (!isEditRow(t)) return
     const difBranch  = getBranch(t) !== this.props.currentBranch
-    const difSmartWeek  = getSmartWeek(t) !== this.props.currentSmartWeek
+    const difWeekID  = getWeekID(t) !== this.props.currentWeekID
     difBranch && this.props.changeCurrentBranch(getBranch(t))
-    difSmartWeek && this.props.changeCurrentSmartWeek(getSmartWeek(t))
+    difWeekID && this.props.changeCurrentWeekID(getWeekID(t))
   }
 
-  isNotClickable = (smartWeek, branch) =>{
-    const sameSmartWeek = smartWeek === this.props.currentSmartWeek
+  isNotClickable = (weekID, branch) =>{
+    const sameWeekID = weekID === this.props.currentWeekID
     const sameBranch = branch === this.props.currentBranch
-    return sameSmartWeek && sameBranch
+    return sameWeekID && sameBranch
   }
 
   getEdits = () => {
@@ -55,7 +55,7 @@ class EditsPopover extends PureComponent{
       const branch = branches.find(b => b.id === branchID)
       const branchName = branch && branch.name
       const editsInBranch = shiftEdits.filter(s => s.branch === branchID)
-      const weeksWithEdits: Array<number> = editsInBranch.reduce((acc, val) => acc.includes(val.smartWeek) ? acc : [ ...acc, val.smartWeek ] , [])
+      const weeksWithEdits: Array<number> = editsInBranch.reduce((acc, val) => acc.includes(val.weekID) ? acc : [ ...acc, val.weekID ] , [])
       return(
         <fb className='branchEditsWrapper' key={branchID}>
           <fb className='branchHead'>{ branchName }</fb>
@@ -67,7 +67,7 @@ class EditsPopover extends PureComponent{
                   <fb className='week'>{'KW ' + getWeek(week)}</fb>
                   <fb className='year'>{getYear(week)}</fb>
                 </fb>
-                <fb className='count'>{editsInBranch.filter(s => s.smartWeek === week).length}</fb>
+                <fb className='count'>{editsInBranch.filter(s => s.weekID === week).length}</fb>
                 <fb className='icon pencilIcon icon-pen'></fb>
               </fb>
             ))}
@@ -91,13 +91,13 @@ class EditsPopover extends PureComponent{
 
 const mapActions = ({
   changeCurrentBranch,
-  changeCurrentSmartWeek
+  changeCurrentWeekID
 })
 
 const mapStateToProps = (state: Store) => ({
   branches: state.core.branches,
   currentBranch: state.ui.roster.currentBranch,
-  currentSmartWeek: state.ui.roster.currentSmartWeek,
+  currentWeekID: state.ui.roster.currentWeekID,
 })
 
 const connector: Connector<OwnProps, Props> = connect(mapStateToProps, mapActions)

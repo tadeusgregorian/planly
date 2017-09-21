@@ -1,20 +1,20 @@
 
-import { getFirebasePath } from './actionHelpers'
+import { getFBPath } from './actionHelpers'
 import firebase from 'firebase'
 import { db } from './firebaseInit'
 import moment from 'moment'
 
 export function deleteUser(userID) {
 	const now = moment().toISOString()
-	db().ref(getFirebasePath('users')).child(userID).child('deleted').set(now)
+	db().ref(getFBPath('users')).child(userID).child('deleted').set(now)
 }
 
 export function reactivateUser(userID) {
-	db().ref(getFirebasePath('users')).child(userID).child('deleted').set(null)
+	db().ref(getFBPath('users')).child(userID).child('deleted').set(null)
 }
 
 export function saveUserToDB(user) {
-	db().ref(getFirebasePath('users')).child(user.id).set(user)
+	db().ref(getFBPath('users')).child(user.id).set(user)
 }
 
 export const sendEmailInvite = (userID, name, email, accountID) => {

@@ -5,23 +5,23 @@ import type { Connector } from 'react-redux'
 import type { Store, TemplatesFlat } from 'types/index'
 import TemplateSelect from './templateSelect'
 
-import { changeCurrentTemplate } from 'actions/ui/roster'
-import { createNewTempForBranch, saveTemplateName } from 'actions/roster'
+import { changeCurrentWeekID } from 'actions/ui/roster'
+import { createNewTempForBranch, saveTemplateName } from 'actions/roster/template'
 import './styles.css'
 
 type OwnProps = {}
 type ConnectedProps = {
   templatesFlat: TemplatesFlat,
   currentBranch: string,
-  currentTemplate: string,
-  changeCurrentTemplate: (string) => {},
+  currentWeekID: string,
+  changeCurrentWeekID: (string) => {},
 }
 type Props = OwnProps & ConnectedProps
 
 class TemplateActionBar extends PureComponent {
 
-  changeTemplate = (tempID) => {
-    this.props.changeCurrentTemplate(tempID)
+  changeTemplate = (weekID: string) => {
+    this.props.changeCurrentWeekID(weekID)
   }
 
   createTemplate = () => {
@@ -38,7 +38,7 @@ class TemplateActionBar extends PureComponent {
         <fb>Vorlage:</fb>
         <TemplateSelect
           templatesFlat={tempsFlatOfBranch}
-          currentTemplate={this.props.currentTemplate}
+          currentTemplate={this.props.currentWeekID}
           saveTemplateName={saveTemplateName}
           changeTemplate={this.changeTemplate}
         />
@@ -53,12 +53,12 @@ class TemplateActionBar extends PureComponent {
 }
 
 const actionsToProps = {
-  changeCurrentTemplate
+  changeCurrentWeekID
 }
 
 const mapStateToProps = (state: Store) => ({
   templatesFlat: state.roster.templatesFlat,
-  currentTemplate: state.ui.roster.currentTemplate,
+  currentWeekID: state.ui.roster.currentWeekID,
   currentBranch: state.ui.roster.currentBranch
 })
 

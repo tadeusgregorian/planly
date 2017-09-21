@@ -9,7 +9,7 @@ export const createFirebaseReducer_array = (target, extractor) => {
 		switch (a.type) {
 		case 'value_received_' + target : return _.values(a.payload).map(extract)
 		case 'child_added_'    + target : return [...state, extract(a.payload)]
-		case 'child_changed_'  + target : return state.map(el => isSame(a.payload, el) ? a.payload : el)
+		case 'child_changed_'  + target : return state.map(el => isSame(a.payload, el) ? extract(a.payload) : el)
 		case 'child_removed_'  + target : return state.filter(el => !isSame(el, a.payload))
 		case 'remove_'				 + target : return []
 		default: return state;

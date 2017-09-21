@@ -3,9 +3,8 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
-import type { Store, Shifts, TemplatesFlat } from 'types/index'
+import type { Store, Shifts } from 'types/index'
 import { setRosterListeners, setInitialRosterListeners } from 'actions/listeners'
-import { changeCurrentTemplate } from 'actions/ui/roster'
 
 import WithMouseEvents from '../withMouseEvents'
 import ShiftBoard from '../shiftBoard'
@@ -13,23 +12,16 @@ import ActionBar from './actionBar'
 import TemplateActionBar from './templateActionBar'
 import './styles.css'
 
-type OwnProps = {
-
-}
-
 type ConnectedProps = {
   shifts: Shifts,
   currentBranch: string,
-  currentSmartWeek: number,
-  currentTemplate: string,
+  currentWeekID: string,
   templateMode: boolean,
-  templatesFlat: TemplatesFlat,
-  changeCurrentTemplate: (string)=>{},
   setRosterListeners: ()=>void,
   setInitialRosterListeners: ()=>void
 }
 
-type Props = ConnectedProps & OwnProps
+type Props = ConnectedProps
 
 class WeekPlan extends PureComponent{
   props: Props
@@ -39,13 +31,11 @@ class WeekPlan extends PureComponent{
   }
 
   componentWillReceiveProps = (np: Props) => {
-    const { currentBranch, setRosterListeners, currentSmartWeek, templateMode, currentTemplate } = this.props
+    const { currentBranch, setRosterListeners, currentWeekID } = this.props
     const branchChanged   = np.currentBranch    !== currentBranch
-    const swChanged       = np.currentSmartWeek !== currentSmartWeek
-    const tempChanged     = np.currentTemplate  !== currentTemplate
-    const tempModeChanged = np.templateMode     !== templateMode
+    const swChanged       = np.currentWeekID    !== currentWeekID
 
-    if(branchChanged || swChanged || tempModeChanged || tempChanged) setRosterListeners()
+    if(branchChanged || swChanged) setRosterListeners()
   }
 
   render(){
@@ -64,19 +54,16 @@ class WeekPlan extends PureComponent{
 }
 
 const actionsToProps = {
-  changeCurrentTemplate,
   setRosterListeners,
   setInitialRosterListeners
 }
 
 const mapStateToProps = (state: Store) => ({
   currentBranch: state.ui.roster.currentBranch,
-  currentSmartWeek: state.ui.roster.currentSmartWeek,
-  currentTemplate: state.ui.roster.currentTemplate,
+  currentWeekID: state.ui.roster.currentWeekID,
   templateMode: state.ui.roster.templateMode,
-  templatesFlat: state.roster.templatesFlat,
   shifts: state.roster.shiftWeek,
 })
 
-const connector: Connector<OwnProps, Props> = connect(mapStateToProps, actionsToProps)
+const connector: Connector<{}, Props> = connect(mapStateToProps, actionsToProps)
 export default connector(WeekPlan)

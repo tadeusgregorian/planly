@@ -8,6 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1;
 }
 
 .sModalMain{
@@ -24,10 +25,10 @@
 }
 
 .sModalHead{
-  padding: 10px 0px;
+  padding: 4px 0px;
   background: rgba(28,28,28,0.02);
   border-bottom: 1px solid #e5e5e5;
-	height: 50px;
+	height: 44px;
   justify-content: space-between;
   font-size: 16px;
   color: #999;

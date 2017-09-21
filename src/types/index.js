@@ -73,48 +73,41 @@ export type ShiftRef = {
 export type MinimalShift = {
   s:  number,
   e:  number,
-  b: number,
+  b:  number,
 }
 
 export type Shift = {
+  id: string,
   s: number,
   e: number,
   b: number,
   user: string,
   day: Day,
-  isOpen?: ?boolean,
+  edit?: MinimalShift,
+  note?: string,
+  isOpen?: true,
   position?: string,
-  id: string
 }
-
 export type Shifts = Array<Shift>
 
 export type PreDBShift = {
+  id: string,
   s: number,
   e: number,
   b: number,
   day: Day,
   user: string,
+  edit?: MinimalShift,
   branch: string,
-  position?: string,
-  // $FlowFixMe
+  note?: ?string,
+  position?: ?string,
   isOpen?: ?boolean,
-  id: string
 }
 
 export type DBShift = {
-  s: number,
-  e: number,
-  b: number,
-  day: Day,
-  user: string,
-  branch: string,
   branchDay: string,
   userDay: string,
-  isOpen: true | null,
-  position: string | null,
-  id: string
-}
+} & PreDBShift
 
 export type ShiftCell = {
   day: Day,
@@ -140,7 +133,7 @@ export type Note = {
 }
 
 export type PreDBNote = {
-  smartWeek: string,
+  weekID: string,
   branch: string,
   author: string,
   text: string,
@@ -158,7 +151,7 @@ export type ShiftEdit = {
   b: number,
   user: string,
   day: Day,
-  smartWeek: number,
+  weekID: number,
   branch: string
 }
 

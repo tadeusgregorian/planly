@@ -2,15 +2,15 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
-import { changeCurrentSmartWeek, goToLastWeek, goToNextWeek } from 'actions/ui/roster'
+import { changeCurrentWeekID, goToLastWeek, goToNextWeek } from 'actions/ui/roster'
 import { getWeek } from 'helpers/index'
 import './styles.css'
 
-const WeekSelect = ({currentSmartWeek, goToNextWeek, goToLastWeek}) => {
+const WeekSelect = ({currentWeekID, goToNextWeek, goToLastWeek}) => {
 
   return(
     <fb className="weekSelectorMain">
-      <fb className='weekDisplay'>{'KW ' + getWeek(currentSmartWeek)}</fb>
+      <fb className='weekDisplay'>{'KW ' + getWeek(currentWeekID)}</fb>
       <fb className='switchButton lastWeekButton icon icon-navigate_before' onClick={goToLastWeek}></fb>
       <fb className='switchButton nextWeekButton icon icon-navigate_next' onClick={goToNextWeek}></fb>
     </fb>
@@ -18,13 +18,13 @@ const WeekSelect = ({currentSmartWeek, goToNextWeek, goToLastWeek}) => {
 }
 
 const actionsToProps = {
-  changeCurrentSmartWeek,
+  changeCurrentWeekID,
   goToLastWeek,
   goToNextWeek
 }
 
 const mapStateToProps = (state) => ({
-  currentSmartWeek: state.ui.roster.currentSmartWeek
+  currentWeekID: state.ui.roster.currentWeekID
 })
 
 export default connect(mapStateToProps, actionsToProps)(WeekSelect)

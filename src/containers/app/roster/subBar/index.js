@@ -7,7 +7,6 @@ import {
   changeCurrentBranch,
   leaveTemplateMode,
   enterTemplateMode,
-  changeCurrentTemplate
 } from 'actions/ui/roster'
 import Dropdown from 'react-dropdown'
 import './styles.css'
@@ -19,7 +18,7 @@ class SubBar extends PureComponent {
     this.props.leaveTemplateMode()
   }
 
-  templatesClicked = () => { 
+  templatesClicked = () => {
     this.props.enterTemplateMode()
   }
 
@@ -54,8 +53,7 @@ class SubBar extends PureComponent {
 const actionsToProps = {
   changeCurrentBranch,
   leaveTemplateMode,
-  enterTemplateMode,
-  changeCurrentTemplate
+  enterTemplateMode
 }
 
 const mapStateToProps = (state: Store) => ({

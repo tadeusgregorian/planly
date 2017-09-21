@@ -1,6 +1,6 @@
 
 import { createFirebaseListener } from './firebaseHelpers'
-import { getFirebasePath } from '../actionHelpers'
+import { getFBPath } from '../actionHelpers'
 
 export const registerInitialListeners = () => (disp, getS) => {
   setAccountDetailsListener(disp, getS)
@@ -10,13 +10,13 @@ export const registerInitialListeners = () => (disp, getS) => {
 }
 
 const setAccountDetailsListener = (disp, getS) =>
-	createFirebaseListener(disp, getS, 'accountDetails', getFirebasePath('accountDetails'), null, true)
+	createFirebaseListener(disp, getS, 'accountDetails', getFBPath('accountDetails'), null, true)
 
 const registerUsersListener = (disp, getS) =>
-	createFirebaseListener(disp, getS, 'users', getFirebasePath('users'))
+	createFirebaseListener(disp, getS, 'users', getFBPath('users'))
 
 const registerPositionsListener = (disp, getS) =>
-	createFirebaseListener(disp, getS, 'positions', getFirebasePath('positions'))
+	createFirebaseListener(disp, getS, 'positions', getFBPath('positions'))
 
 const registerBranchesListener = (disp, getS) =>
-	createFirebaseListener(disp, getS, 'branches', getFirebasePath('branches'))
+	createFirebaseListener(disp, getS, 'branches', getFBPath('branches'))

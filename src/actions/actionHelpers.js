@@ -11,25 +11,25 @@ type TargetKey =
 | 'notes'
 | 'shiftEdits'
 | 'templatesFlat'
-| 'templateWeeks'
 
 // This function holds the Information, where in the FirebaseDB each Node sits
-export const getFirebasePath	= (target: TargetKey): string => {
+export const getFBPath	= (target: TargetKey, childPaths?: Array<string>): string => {
+  const pathfinder = {
+    users: 					'/users/',
+    branches: 			'/branches/',
+    positions: 			'/positions/',
+    accountDetails: '/accountDetails/',
+    queues: 				'/queues/',
+    roster: 				'/roster/',
+    shiftWeeks: 		'/roster/shiftWeeks/',
+    notes: 					'/roster/notes/',
+    shiftEdits: 		'/roster/shiftEdits/',
+    templatesFlat: 	'/roster/templatesFlat/',
+  }
 
-	const accPath = 'accounts/' + window.accountID
+	const accPath  = 'accounts/' + window.accountID
+  const rootPath = pathfinder[target]
+  const tailPath = childPaths && childPaths.reduce((acc, val) => acc + val + '/', '')
 
-	switch(target){
-		case 'users': 					return accPath + '/users/'
-		case 'branches': 				return accPath + '/branches/'
-		case 'positions': 			return accPath + '/positions/'
-		case 'accountDetails': 	return accPath + '/accountDetails/'
-		case 'queues': 					return accPath + '/queues/'
-		case 'roster': 					return accPath + '/roster/'
-		case 'shiftWeeks': 			return accPath + '/roster/shiftWeeks/'
-		case 'notes': 					return accPath + '/roster/notes/'
-		case 'shiftEdits': 			return accPath + '/roster/shiftEdits/'
-		case 'templatesFlat': 	return accPath + '/roster/templatesFlat/'
-		case 'templateWeeks': 	return accPath + '/roster/templateWeeks/'
-		default : throw new Error('target is not existing tade ( getFirebasePath ), target: ' + target)
-	}
+  return accPath + rootPath + ( tailPath || '')
 }

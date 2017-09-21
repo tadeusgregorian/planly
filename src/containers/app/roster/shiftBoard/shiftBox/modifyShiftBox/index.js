@@ -3,24 +3,25 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 
-//import { shiftToString } from 'helpers/index'
 import { timeInpOK, withColon, from4To5, shiftDataValid, zipShift, shiftToShiftInput } from './localHelpers'
-import { toggleOptions, unfocusShift }        from 'actions/ui/roster'
-import { openNotesModal }                     from 'actions/ui/modals'
-import type { NoteModalProps }                from 'actions/ui/modals'
-import { saveShiftToDB, saveShiftEditToDB }   from 'actions/roster'
+import { toggleOptions, unfocusShift }     from 'actions/ui/roster'
+import { openNotesModal }                  from 'actions/ui/modals'
+import { saveShiftToDB, saveShiftEditToDB, updateNoteOfShift }   from 'actions/roster'
 
 import getCurrentUser from 'selectors/currentUser'
 
-import InputWindow from './inputWindow'
+
+import ResolveEditBox from './resolveEditBox'
+import InputWindow    from './inputWindow'
+import ShiftTimesBar  from '../shiftTimesBar'
+import ShiftEditBar   from '../shiftEditBar'
 import ShiftActionBar from './shiftActionBar'
 
-import type { ShiftEdit, Shift, Position, User, Store } from 'types/index'
+import type { Shift, Position, User, Store, MinimalShift } from 'types/index'
 import './styles.css'
 
 type OwnProps = {
   shift: Shift,
-  shiftEdit: ?ShiftEdit,
   inCreation?: boolean
 }
 
@@ -28,11 +29,13 @@ type ConProps = {
   optionsExpanded: boolean,
   positions: Array<Position>,
   currentUser: User,
+  aModalIsOpen: boolean,
   toggleOptions: ()=>{},
-  saveShiftToDB: (Shift)=>any,
-  saveShiftEditToDB: (Shift)=>any,
-  openNotesModal: (NoteModalProps)=>void,
-  unfocusShift: ()=>{}
+  saveShiftToDB: (Shift, ?boolean)=>any,
+  saveShiftEditToDB: (string, MinimalShift)=>any,
+  openNotesModal: (string, Function)=>any,
+  unfocusShift: ()=>{},
+  updateNoteOfShift: (string, string)=>any
 }
 
 type Props = OwnProps & ConProps
@@ -41,7 +44,8 @@ type State = {
   startTime: string,
   endTime: string,
   breakMinutes: string,
-  position: string
+  position: string,
+  note: string
 }
 
 type InputRefs = {
@@ -64,6 +68,7 @@ class ModifyShiftBox extends PureComponent{
       startTime: '',
       endTime: '',
       breakMinutes: '',
+      note: '',
       position: '' // positionID ( used for open shifts only )
     }
 
@@ -79,7 +84,11 @@ class ModifyShiftBox extends PureComponent{
 
   populateState = () => {
     const { shift } = this.props
-    this.setState({ ...shiftToShiftInput(shift), position: shift.position })
+    this.setState({
+      ...shiftToShiftInput(shift),
+      position: shift.position,
+      note: shift.note,
+    })
   }
 
   componentDidUpdate = (pp: Props, ps: State) => {
@@ -106,60 +115,66 @@ class ModifyShiftBox extends PureComponent{
   }
 
   onKeyDown = (e: SyntheticKeyboardEvent) => {
+    if(this.props.aModalIsOpen) return // neglect keysEvents if thers a modal
     e.key === 'Enter' && this.tryToSaveChanges()
     e.key === 'Escape' && this.props.unfocusShift()
   }
 
   tryToSaveChanges = () => {
-    const { startTime, endTime, breakMinutes } = this.state
+    const { startTime, endTime, breakMinutes, note } = this.state
     const { saveShiftToDB, saveShiftEditToDB, unfocusShift, shift } = this.props
     const { day, user, id } = shift
     const shiftInput = { startTime, endTime, breakMinutes }
 
     if(shiftDataValid(shiftInput)){
       const minimalShift = zipShift(shiftInput)
-      let shift = { ...minimalShift, day, user, id }
+      let shift = { ...minimalShift, day, user, id, note }
 
-      this.isAdmin ? saveShiftToDB(shift) : saveShiftEditToDB(shift)
+      this.isAdmin ? saveShiftToDB(shift) : saveShiftEditToDB(id, minimalShift)
       unfocusShift()
     }
   }
 
+  deleteShift = () => {
+    this.props.saveShiftToDB(this.props.shift, true)
+    this.props.unfocusShift()
+  }
+
+  showShiftNote = () => this.props.openNotesModal( this.state.note, this.noteEdited )
+  noteEdited = (noteTxt) => {
+    this.setState({note: noteTxt})
+    !this.props.inCreation && this.props.updateNoteOfShift(this.props.shift.id, noteTxt)
+  }
+
   render(){
-    const { shift, shiftEdit } = this.props
-    const { day, user } = shift
-    // const posBoxStyle = position && {
-    //   color: position.color,
-    //   backgroundColor: shadeColor(position.color, 0.8)
-    // }
+    const { shift } = this.props
+    const isPending = !!this.props.shift.edit
 
     return(
       <fb className='modifyShiftBoxMain focused'>
-        {/* { position && <fb className='posBox' style={posBoxStyle}>{position.name}</fb> } */}
-        <ShiftActionBar
+        { isPending && <ResolveEditBox shift={shift} />}
+        { !isPending && <ShiftActionBar
+          shift={shift}
           inCreation={!!this.props.inCreation}
-          closeClicked={this.props.unfocusShift}
-          toggleOptionsClicked={()=>{}}
-          deleteClicked={()=>{}}
-        />
-        <fb className='shiftTimesWrapper'>
-          <InputWindow
-            startTime={this.state.startTime}
-            endTime={this.state.endTime}
-            breakMinutes={this.state.breakMinutes}
-            getStartTimeRef={ref => {this.inputRefs.startTime = ref}}
-            getEndTimeRef={ref => {this.inputRefs.endTime = ref}}
-            startTimeChanged={this.startTimeChanged}
-            endTimeChanged={this.endTimeChanged}
-            breakChanged={this.breakChanged}
-            focusStartTime={this.focusStartTime}
-            focusEndTime={this.focusEndTime}
-          />
-        </fb>
-        { shiftEdit && <fb className='edited icon icon-pen'>edited...</fb> }
-        <fb className='footer'>
-          { false  && <icon className='icon icon-comment hasNoteCellIcon' data-day={day} data-user={user} data-target-type='noteicon' />}
-        </fb>
+          unfocusShift={this.props.unfocusShift}
+          toggleOptions={this.props.toggleOptions}
+          showShiftNote={this.showShiftNote}
+          deleteShift={this.deleteShift}
+        />}
+        { !isPending && <InputWindow
+          startTime={this.state.startTime}
+          endTime={this.state.endTime}
+          breakMinutes={this.state.breakMinutes}
+          getStartTimeRef={ref => {this.inputRefs.startTime = ref}}
+          getEndTimeRef={ref => {this.inputRefs.endTime = ref}}
+          startTimeChanged={this.startTimeChanged}
+          endTimeChanged={this.endTimeChanged}
+          breakChanged={this.breakChanged}
+          focusStartTime={this.focusStartTime}
+          focusEndTime={this.focusEndTime}
+        /> }
+        { isPending && <ShiftTimesBar shift={shift} /> }
+        { isPending && <ShiftEditBar shift={shift} /> }
       </fb>
     )
   }
@@ -171,33 +186,15 @@ const actionCreators = {
   saveShiftToDB,
   saveShiftEditToDB,
   openNotesModal,
+  updateNoteOfShift
 }
 
 const mapStateToProps = (state: Store) => ({
   optionsExpanded: state.ui.roster.shiftBoard.optionsExpanded,
   positions: state.core.positions,
-  shiftEdits: state.roster.shiftEdits,
   currentUser: getCurrentUser(state),
+  aModalIsOpen: !!state.ui.modals.length
 })
 
 const connector: Connector<OwnProps, Props> = connect(mapStateToProps, actionCreators)
 export default connector(ModifyShiftBox)
-
-
-
-// const { toggleOptions, optionsExpanded, openNotesModal } = this.props
-//
-// return(
-//   <fb className="cellPopoverMain">
-//     { optionsExpanded && <ExpandedOptions cell={cell} openNotesModal={openNotesModal} /> }
-//     <fb className='compact'>
-//       <InputTongue value={this.state.breakMinutes} updateBreak={this.updateBreak} toggleOptions={toggleOptions}/>
-//       <CloseButton closePopover={this.props.unfocusShiftCell} />
-//     </fb>
-//     { isOpen && <PositionsBubble
-//       positions={this.props.positions}
-//       selectedPos={this.state.position}
-//       selectPos={(posID) => this.setState({position: posID})} />
-//     }
-//   </fb>
-// )

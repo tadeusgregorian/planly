@@ -4,8 +4,6 @@ import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import type { Store } from 'types/index'
 
-import { copyTemplateToShiftWeek } from 'actions/roster/template'
-
 import SModal from 'components/sModal'
 import SButton from 'components/sButton'
 import './styles.css'
@@ -56,12 +54,12 @@ class ImportTemplateModal extends PureComponent {
 }
 
 const actionCreators = {
-  copyTemplateToShiftWeek
+
 }
 
 const mapStateToProps = (state: Store) => ({
   templatesFlat: state.roster.templatesFlat,
-  currentSmartWeek: state.ui.roster.currentSmartWeek,
+  currentWeekID: state.ui.roster.currentWeekID,
 })
 
 const connector: Connector<OwnProps, Props> = connect(mapStateToProps, actionCreators)

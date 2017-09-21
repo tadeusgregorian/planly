@@ -17,7 +17,6 @@
   font-size: 14px;
   border-radius: 2px;
   background: #00a3ef;
-  border: 1px solid #00a3ef;
   //border-bottom: 1px solid #008bcc;
   //box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.11);
   //pointer-events: auto;
@@ -30,6 +29,13 @@
     width: 20px;
     justify-content: center;
     padding: 0px 12px;
+
+    &.noteBtn.highlighted{
+      background-color: orange;
+      &:hover{
+        background-color: orange;
+      }
+    }
 
     &:hover{
       background-color: rgba(0, 0, 0, 0.1);

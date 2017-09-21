@@ -11,5 +11,5 @@ export const isEditRow = (target: HTMLElement) =>
 export const getBranch = (target: HTMLElement) =>
   target.getAttribute('data-branch')
 
-export const getSmartWeek = (target: HTMLElement) =>
+export const getWeekID = (target: HTMLElement) =>
   parseInt(target.getAttribute('data-week'), 10)
