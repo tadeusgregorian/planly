@@ -37,11 +37,19 @@ export type Position = {
 }
 export type Positions = Array<Position>
 
-export type Branch = {
+export type Location = {
   id: string,
   name: string,
   color: string
 }
+
+export type Branch = {
+  id: string,
+  name: string,
+  locations?: {[string]: ?Location}
+}
+
+
 export type Branches = Array<Branch>
 
 // roster-types

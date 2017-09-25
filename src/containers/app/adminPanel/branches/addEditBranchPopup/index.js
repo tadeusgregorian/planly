@@ -1,36 +1,78 @@
+//@flow
+
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
+import _ from 'lodash'
 import SModal from 'components/sModal'
 import SButton from 'components/sButton'
 import FlatInput from 'components/flatInput'
 import FlatFormRow from 'components/flatFormRow'
-import { saveBranchToDB } from 'actions'
-import { getNextID } from 'helpers'
+import { saveBranchToDB } from 'actions/index'
+import { getNextID } from 'helpers/index'
+
+import type { Branch } from 'types/index'
+
+import LocationsEditor from './locationsEditor'
 import './styles.css';
 
-class AddEditUserPopup extends PureComponent {
+type Props = {
+	closeModal: Function,
+	branches: Array<Branch>,
+	branch: Branch
+}
 
-	state = { branchName:  this.props.branch ? this.props.branch.name : '' }
+type State = {
+	id: string,
+	name: string,
+	locations: {}
+}
 
-	getRandomColor = () => 'red'
-	getNextAvailableID = () => getNextID('b', this.props.branches.length + 1)
+class AddEditBranchPopup extends PureComponent {
+	props: Props
+	state: State
+
+
+	constructor(props){
+		super(props)
+
+		const { branch, branches } = props
+
+		this.state = {
+			id: branch ? branch.id : getNextID('b', branches.length + 1),
+			name:  branch ? branch.name : '',
+			locations: branch ? branch.locations : {}
+		}
+	}
+
 
 	saveButtonClicked = () => {
-		const editMode = this.props.branch
-		if(editMode)  saveBranchToDB({ ...this.props.branch, name: this.state.branchName })
-		if(!editMode) saveBranchToDB({ id: this.getNextAvailableID(), color: this.getRandomColor(), name: this.state.branchName })
+		saveBranchToDB(this.state)
 		this.props.closeModal()
 	}
 
+	updateLocation = (loc) => {
+		const newLoc = {[loc.id]: loc}
+		this.setState({ locations: { ...this.state.locations, ...newLoc }})
+	}
+
+	deleteLocation = (locationID) => {
+		const cleanedLocs = _.omit(this.state.locations, locationID)
+		this.setState({ locations: cleanedLocs })
+	}
+
 	render() {
-		const { branchName } = this.state
+		console.log(this.state)
+		const { name, locations } = this.state
 
 		return (
 			<SModal.Main title={ this.props.branch ? 'Filiale bearbeiten' : 'Filiale erstellen' } onClose={this.props.closeModal}>
 				<SModal.Body>
 					<fb className="addEditBranchPopupMain">
 						<FlatFormRow label='Name der Filiale'>
-								<FlatInput value={branchName} onInputChange={(inp) => this.setState({branchName: inp})} autoFocus/>
+								<FlatInput value={name} onInputChange={(inp) => this.setState({name: inp})} autoFocus/>
+						</FlatFormRow>
+						<FlatFormRow label='Bereiche'>
+							<LocationsEditor locations={locations} updateLocation={this.updateLocation} deleteLocation={this.deleteLocation}/>
 						</FlatFormRow>
 					</fb>
 				</SModal.Body>
@@ -39,7 +81,7 @@ class AddEditUserPopup extends PureComponent {
 						right
 						label='speichern'
 						onClick={this.saveButtonClicked}
-						disabled={!branchName}
+						disabled={!name}
 						color={'#2ECC71'}
 					/>
 				</SModal.Footer>
@@ -52,4 +94,4 @@ const mapStateToProps = (state) => ({
 	branches: state.core.branches,
 })
 
-export default connect(mapStateToProps)(AddEditUserPopup)
+export default connect(mapStateToProps)(AddEditBranchPopup)

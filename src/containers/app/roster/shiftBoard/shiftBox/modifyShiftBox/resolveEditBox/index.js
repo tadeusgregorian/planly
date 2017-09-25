@@ -5,19 +5,27 @@ import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 
 import getCurrentUser from 'selectors/currentUser'
+import { shiftCellWidth } from 'constants/roster'
 
 import { unfocusShift } from 'actions/ui/roster'
 import { acceptEdit, rejectEdit } from 'actions/roster'
 
 import './styles.css'
 
-import type { Shift, User } from 'types/index'
+import type { Shift, User, Store } from 'types/index'
 
-type Props = {
-  shift: Shift,
-  currentUser: User,
-  unfocusShift: ()=>void
+type OwnProps = {
+  shift: Shift
 }
+
+type ConProps = {
+  currentUser: User,
+  acceptEdit: (Shift)=>any,
+  rejectEdit: (Shift)=>any,
+  unfocusShift: ()=>any,
+}
+
+type Props = OwnProps & ConProps
 
 class ResolveEditBox extends PureComponent{
   props: Props
@@ -25,29 +33,32 @@ class ResolveEditBox extends PureComponent{
   close = () => this.props.unfocusShift()
 
   acceptClicked = () => {
-    //acceptEdit(this.props.shiftEdit)
+    this.props.acceptEdit(this.props.shift)
     this.close()
   }
 
   rejectClicked = () => {
-    //rejectEdit(this.props.shiftEdit)
+    this.props.rejectEdit(this.props.shift)
     this.close()
   }
 
   render(){
     const { currentUser } = this.props
     const { isAdmin } = currentUser
-    console.log('HEREEE');
 
     return(
-      <fb className='resolveEditBoxMain'>
+      <fb className='resolveEditBoxMain arrow_box_pp' style={{width: shiftCellWidth - 3}}>
         <fb className='closeButton icon icon-close' onClick={this.close}></fb>
         <fb className='shiftWrapper' key='shiftWrapper'>
-          <fb className='headline'>editiert:</fb>
+          <fb className='headline'>editiert</fb>
         </fb>
         <fb className='buttonsWrapper' key='btn1'>
-          { isAdmin && <fb className='actionButton' onClick={this.acceptClicked}>übernehmen</fb> }
-          <fb className='actionButton' key='btn2' onClick={this.rejectClicked}>
+          { isAdmin && <fb className='actionButton' onClick={this.acceptClicked}>
+            <fb className='icon icon-checkmark doneIcon' />
+            übernehmen
+          </fb> }
+          <fb className='actionButton reject' key='btn2' onClick={this.rejectClicked}>
+            <fb className='icon icon-cross crossIcon' />
             { isAdmin ? 'ablehnen' : 'zurücknehmen'}
           </fb>
         </fb>
@@ -56,12 +67,15 @@ class ResolveEditBox extends PureComponent{
   }
 }
 
-const actionsToProps = {
-  unfocusShift
+const actionCreators= {
+  unfocusShift,
+  acceptEdit,
+  rejectEdit
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: Store) => ({
   currentUser: getCurrentUser(state)
 })
 
-export default connect(mapStateToProps, actionsToProps)(ResolveEditBox)
+const connector: Connector<OwnProps, Props> = connect(mapStateToProps, actionCreators)
+export default connector(ResolveEditBox)

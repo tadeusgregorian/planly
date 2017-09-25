@@ -1,0 +1,81 @@
+.locationCreationRowMain{
+  width: 100%;
+  margin-bottom: 4px;
+
+  &.creationMode{
+    margin-top: 2px;
+    border-top: 1px solid #e4e4e4;
+    padding-top: 6px;
+  }
+
+  .nameInput{
+    box-sizing: border-box;
+    height: 28px;
+    width: 160px;
+    padding: 2px 6px;
+    font-size: 14px;
+    border-radius: 2px;
+    border-style: none;
+    border: 1px solid #00a3ef;
+    color: #00a3ef;
+
+    &:focus{
+      outline: none;
+      background-color: #e2f6ff;
+
+    }
+    &::placeholder{
+      color: rgba(0, 0, 0, 0.36);
+    }
+
+  }
+  .colorBox{
+    width: 28px;
+    height: 28px;
+    border-radius: 2px;
+    background: red;
+    margin-left: 4px;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+  }
+
+  .actionButtons{
+    flex: 1 0 auto;
+    justify-content: flex-end;
+
+    .btn{
+      height: 28px;
+      padding: 2px 6px;
+      color: grey;
+      border-radius: 2px;
+      align-items: center;
+      font-size: 16px;
+      margin-left: 4px;
+      cursor: pointer;
+      box-shadow: 0px 1px 2px -1px rgba(0, 0, 0, 0.36);
+    }
+
+    .saveButton{
+      padding: 2px 10px;
+      background: #00a3ef;
+      color: white;
+      padding: 2px 10px;
+      font-size: 14px;
+
+      &:hover{
+        background: #09a9ff;
+        color: white;
+      }
+    }
+
+    .cancelButton{
+      border: 1px solid lightgrey;
+
+      &:hover{
+          background: #eaeaea;
+      }
+    }
+  }
+}

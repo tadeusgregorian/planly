@@ -1,27 +1,38 @@
+@keyframes fadeinRes {
+    from {
+      opacity: 0;
+      top: -68px;
+    }
+    to   {
+      opacity: 1;
+      top: -78px;
+    }
+}
+
 .resolveEditBoxMain{
   position: absolute;
-  top: -75px;
-  left: 0px;
-  width: 100px;
+  top: -78px;
+  left: -1px;
   height: 70px;
-  background-color: red;
+  background-color: white;
   z-index: 2;
   border-radius: 2px;
+  flex-direction: column;
+  box-shadow: 0px 1px 4px 3px rgba(0, 0, 0, 0.36);
+  animation: fadeinRes .15s ease;
+  //border: 1px solid #00a3ef;
 
-
-  // flex-direction: column;
-  // border: 1px solid #00a3ef;
-  // box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.22);
   // align-items: stretch;
 
   .shiftWrapper{
     flex-direction: column;
 
     .headline{
-      background: #e9ebee;
+      //background: #e9ebee;
+      padding-top: 4px;
       color: #7c7c8c;
-      padding-left: 3px;
-      height: 16px;
+      padding-left: 4px;
+      height: 18px;
       align-items: center;
       font-weight: 500;
       text-transform: uppercase;
@@ -57,7 +68,7 @@
   }
 
   .buttonsWrapper{
-    margin: 2px 2px;
+    margin: 3px 3px;
     flex-direction: column;
     flex: 0 1 auto;
 
@@ -65,14 +76,29 @@
       flex: 0 0 auto;
       justify-content: center;
       align-items: center;
-      height: 24px;
+      height: 22px;
       width: 100%;
 
-      background: #dcf4ff;
-      border-radius: 1px;
-      font-weight: 400;
-      color: #00a3ef;
-      font-size: 15px;
+      border-radius: 2px;
+      font-weight: 500;
+      background: #00a3ef;
+      color: white;
+      font-size: 12px;
+      text-transform: uppercase;
+
+      .crossIcon{
+        font-size: 10px;
+        margin-right: 6px;
+      }
+
+      .doneIcon{
+        font-size: 12px;
+        margin-right: 6px;
+      }
+
+      &.reject{
+        background: #ff5050;
+      }
 
       &:not(:last-child){
         margin-bottom: 2px;
@@ -83,23 +109,42 @@
 
   .closeButton{
     position: absolute;
-    width: 18px;
-    height: 16px;
+    width: 16px;
+    height: 14px;
     justify-content: center;
     align-items: center;
-    top: 0px;
-    right: 0px;
+    top: 4px;
+    right: 2px;
     color: #7c7c8c;
     cursor: pointer;
     font-size: 12px;
-    background: #e9ebee;
     padding: 0px;
     font-weight: 600;
     border-bottom-left-radius: 1px;
     padding-bottom: 1px;
+    border-radius: 1px;
 
     &:hover{
       background-color: lightgrey;
     }
   }
+}
+
+.arrow_box_pp {
+	background: #ffffff;
+}
+.arrow_box_pp:after {
+	top: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	border-color: rgba(255, 255, 255, 0);
+	border-top-color: #ffffff;
+	border-width: 6px;
+	margin-left: -6px;
+  //box-shadow: 0px 1px 4px 2px rgba(0, 0, 0, 0.36);
 }

@@ -11,10 +11,9 @@ export const toDBShift = (sh: PreDBShift): DBShift => ({
 })
 
 // returns a object that you can call as an argument for the firebase-update method for db-writes
-export const getShiftUpdate = (shift: Shift, targetID: number | string , branch: string, remove = false, template = false) => {
+export const getShiftUpdate = (shift: Shift, targetID: number | string , branch: string, remove = false) => {
   const preDBShift  = { ...shift, branch }
   const dbShift     = toDBShift(preDBShift)
   const data        = remove ? null : dbShift
-  const location    = template ? 'templateWeeks' : 'shiftWeeks'
-  return {[ getFBPath(location) + targetID + '/' + shift.id]: data}
+  return {[ getFBPath('shiftWeeks') + targetID + '/' + shift.id]: data}
 }

@@ -1,5 +1,6 @@
 .addEditBranchPopupMain{
   min-width: 600px;
+  flex-direction: column;
 
   .flatFormRowMain{
     &:last-child{

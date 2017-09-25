@@ -42,7 +42,7 @@ const getEmptyAccount = (adminEmail): DBAccount => ({
   branches: {
     b001: {
       id: 'b001',
-      name: 'Hauptfiliale', color: 'green'
+      name: 'Hauptfiliale'
     }
   },
   positions: {

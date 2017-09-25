@@ -1,0 +1,89 @@
+.locationsEditorMain{
+  align-items: center;
+  flex-direction: column;
+  padding: 2px;
+  padding: 10px;
+  width: 100%;
+  justify-content: center;
+
+  .locationDisplay{
+    width: 100%;
+    height: 28px;
+    padding: 0px 2px;
+    border: 1px solid #dedede;
+    align-items: center;
+    background: #f1f1f1;
+    border-radius: 2px;
+    margin-bottom: 4px;
+
+    .locationIcon{
+      width: 24px;
+      height: 24px;
+      justify-content: center;
+      align-items: center;
+      font-size: 14px;
+      color: grey;
+    }
+
+    .name{
+      font-size: 14px;
+      color: grey;
+      width: 138px;
+      padding-left: 2px;
+    }
+
+    .color{
+      width: 16px;
+      height: 16px;
+      border-radius: 10px;
+      margin-left: 4px;
+    }
+
+    &:hover{
+      .actionButtons{
+        display: flex;
+      }
+    }
+
+    .actionButtons{
+      flex: 1 1;
+      justify-content: flex-end;
+      display: none;
+
+      .btn{
+        width: 22px;
+        height: 22px;
+        border-radius: 2px;
+        color: #b1b1b1;
+        margin-left: 4px;
+        font-size: 16px;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+
+        &.deleteBtn{
+          font-size: 20px;
+          //padding-bottom: 2px;
+        }
+
+        &:hover{
+          color: grey;
+          background: lightgrey;
+        }
+      }
+    }
+  }
+
+  .createLocationBtn{
+    margin-left: auto;
+    background-color: #00a3ef;
+    border-color: 2px;
+    padding: 4px 12px;
+    height: 28px;
+    color: white;
+    font-size: 15px;
+    border-radius: 2px;
+    align-items: center;
+    cursor: pointer;
+  }
+}

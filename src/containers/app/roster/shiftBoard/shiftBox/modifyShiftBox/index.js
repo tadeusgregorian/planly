@@ -45,7 +45,8 @@ type State = {
   endTime: string,
   breakMinutes: string,
   position: string,
-  note: string
+  note: string,
+  locationBoxOpen: boolean,
 }
 
 type InputRefs = {
@@ -69,7 +70,8 @@ class ModifyShiftBox extends PureComponent{
       endTime: '',
       breakMinutes: '',
       note: '',
-      position: '' // positionID ( used for open shifts only )
+      position: '', // positionID ( used for open shifts only )
+      locationBoxOpen: false
     }
 
     this.inputRefs  = {
@@ -140,6 +142,7 @@ class ModifyShiftBox extends PureComponent{
     this.props.unfocusShift()
   }
 
+  toggleLocationBox = () => this.setState({locationBoxOpen: !this.state.locationBoxOpen})
   showShiftNote = () => this.props.openNotesModal( this.state.note, this.noteEdited )
   noteEdited = (noteTxt) => {
     this.setState({note: noteTxt})
@@ -147,17 +150,19 @@ class ModifyShiftBox extends PureComponent{
   }
 
   render(){
-    const { shift } = this.props
+    const { shift, currentUser } = this.props
     const isPending = !!this.props.shift.edit
 
     return(
       <fb className='modifyShiftBoxMain focused'>
-        { isPending && <ResolveEditBox shift={shift} />}
+        { isPending && <ResolveEditBox shift={shift} currentUser={currentUser} />}
         { !isPending && <ShiftActionBar
           shift={shift}
           inCreation={!!this.props.inCreation}
           unfocusShift={this.props.unfocusShift}
           toggleOptions={this.props.toggleOptions}
+          toggleLocationBox={this.toggleLocationBox}
+          locationBoxOpen={this.state.locationBoxOpen}
           showShiftNote={this.showShiftNote}
           deleteShift={this.deleteShift}
         />}
