@@ -2,6 +2,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
+import _ from 'lodash'
 
 import { timeInpOK, withColon, from4To5, shiftDataValid, zipShift, shiftToShiftInput } from './localHelpers'
 import { toggleOptions, unfocusShift }     from 'actions/ui/roster'
@@ -10,14 +11,14 @@ import { saveShiftToDB, saveShiftEditToDB, updateNoteOfShift }   from 'actions/r
 
 import getCurrentUser from 'selectors/currentUser'
 
+import PickLocationBox from './pickLocationBox'
+import ResolveEditBox  from './resolveEditBox'
+import InputWindow     from './inputWindow'
+import ShiftTimesBar   from '../shiftTimesBar'
+import ShiftEditBar    from '../shiftEditBar'
+import ShiftActionBar  from './shiftActionBar'
 
-import ResolveEditBox from './resolveEditBox'
-import InputWindow    from './inputWindow'
-import ShiftTimesBar  from '../shiftTimesBar'
-import ShiftEditBar   from '../shiftEditBar'
-import ShiftActionBar from './shiftActionBar'
-
-import type { Shift, Position, User, Store, MinimalShift } from 'types/index'
+import type { Shift, ShiftRef, Position, User, Store, MinimalShift, Branch } from 'types/index'
 import './styles.css'
 
 type OwnProps = {
@@ -30,6 +31,8 @@ type ConProps = {
   positions: Array<Position>,
   currentUser: User,
   aModalIsOpen: boolean,
+  focusedShiftRef: ?ShiftRef,
+  branch: ?Branch,
   toggleOptions: ()=>{},
   saveShiftToDB: (Shift, ?boolean)=>any,
   saveShiftEditToDB: (string, MinimalShift)=>any,
@@ -46,6 +49,7 @@ type State = {
   breakMinutes: string,
   position: string,
   note: string,
+  location: string,
   locationBoxOpen: boolean,
 }
 
@@ -70,6 +74,7 @@ class ModifyShiftBox extends PureComponent{
       endTime: '',
       breakMinutes: '',
       note: '',
+      location: '',
       position: '', // positionID ( used for open shifts only )
       locationBoxOpen: false
     }
@@ -89,6 +94,7 @@ class ModifyShiftBox extends PureComponent{
     this.setState({
       ...shiftToShiftInput(shift),
       position: shift.position,
+      location: shift.location,
       note: shift.note,
     })
   }
@@ -149,16 +155,28 @@ class ModifyShiftBox extends PureComponent{
     !this.props.inCreation && this.props.updateNoteOfShift(this.props.shift.id, noteTxt)
   }
 
+  locationPicked = (locactionID: string) => {
+    this.setState({location: locactionID})
+  }
+
   render(){
-    const { shift, currentUser } = this.props
+    const { shift, currentUser, branch } = this.props
+    const { locationBoxOpen, location } = this.state
+    const locations: ?Array<Location> = branch && branch.locations && _.values(branch.locations)
     const isPending = !!this.props.shift.edit
 
     return(
       <fb className='modifyShiftBoxMain focused'>
         { isPending && <ResolveEditBox shift={shift} currentUser={currentUser} />}
+        { locationBoxOpen && <PickLocationBox
+          shiftRef={this.props.focusedShiftRef}
+          locations={locations}
+          pickLoc={this.locationPicked}
+          pickedLoc={location} />}
         { !isPending && <ShiftActionBar
           shift={shift}
           inCreation={!!this.props.inCreation}
+          withLocations={!!(locations && locations.length)}
           unfocusShift={this.props.unfocusShift}
           toggleOptions={this.props.toggleOptions}
           toggleLocationBox={this.toggleLocationBox}
@@ -198,7 +216,9 @@ const mapStateToProps = (state: Store) => ({
   optionsExpanded: state.ui.roster.shiftBoard.optionsExpanded,
   positions: state.core.positions,
   currentUser: getCurrentUser(state),
-  aModalIsOpen: !!state.ui.modals.length
+  aModalIsOpen: !!state.ui.modals.length,
+  focusedShiftRef: state.ui.roster.shiftBoard.focusedShiftRef,
+  branch: state.core.branches.find(b => b.id === state.ui.roster.currentBranch)
 })
 
 const connector: Connector<OwnProps, Props> = connect(mapStateToProps, actionCreators)

@@ -40,7 +40,8 @@ export type Positions = Array<Position>
 export type Location = {
   id: string,
   name: string,
-  color: string
+  color: string,
+  deleted?: true
 }
 
 export type Branch = {
@@ -48,7 +49,6 @@ export type Branch = {
   name: string,
   locations?: {[string]: ?Location}
 }
-
 
 export type Branches = Array<Branch>
 
@@ -95,6 +95,7 @@ export type Shift = {
   note?: string,
   isOpen?: true,
   position?: string,
+  location?: string
 }
 export type Shifts = Array<Shift>
 
@@ -110,6 +111,7 @@ export type PreDBShift = {
   note?: ?string,
   position?: ?string,
   isOpen?: ?boolean,
+  location?: string
 }
 
 export type DBShift = {

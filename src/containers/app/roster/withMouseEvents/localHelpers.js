@@ -1,6 +1,7 @@
 //@flow
 
 import type { ShiftCell, ShiftRef } from 'types/index'
+import { closest } from 'helpers/general'
 
 export const elementIsShift = (el: HTMLElement): boolean =>
   !!(el.getAttribute && el.getAttribute('data-target-type') === 'shift')
@@ -43,12 +44,4 @@ export const targetToShiftCell = (target: HTMLElement): ShiftCell => {
 
   const shiftCell: ShiftCell = ({ day, user, hasShift } : any) // forcefully Typekasting
   return shiftCell
-}
-
-// checks if the function fn is true for a node or a parent node.
-export const closest = (el: any, fn: (any)=>boolean) => {
-  while (el) {
-    if (fn(el)) return el;
-    el = el.parentNode;
-  }
 }

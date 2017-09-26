@@ -10,7 +10,7 @@ import FlatFormRow from 'components/flatFormRow'
 import { saveBranchToDB } from 'actions/index'
 import { getNextID } from 'helpers/index'
 
-import type { Branch } from 'types/index'
+import type { Branch, Location } from 'types/index'
 
 import LocationsEditor from './locationsEditor'
 import './styles.css';
@@ -50,18 +50,17 @@ class AddEditBranchPopup extends PureComponent {
 		this.props.closeModal()
 	}
 
-	updateLocation = (loc) => {
+	updateLocation = (loc: Location) => {
 		const newLoc = {[loc.id]: loc}
 		this.setState({ locations: { ...this.state.locations, ...newLoc }})
 	}
 
-	deleteLocation = (locationID) => {
-		const cleanedLocs = _.omit(this.state.locations, locationID)
-		this.setState({ locations: cleanedLocs })
+	deleteLocation = (loc: Location) => {
+		const newLoc = {[loc.id]: { ...loc, deleted: true }}
+		this.setState({ locations: { ...this.state.locations, ...newLoc }})
 	}
 
 	render() {
-		console.log(this.state)
 		const { name, locations } = this.state
 
 		return (

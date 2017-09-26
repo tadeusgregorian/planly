@@ -9,7 +9,7 @@ import './styles.css'
 
 type Props = {
   updateLocation: (Location)=>void,
-  deleteLocation: (string)=>void,
+  deleteLocation: (Location)=>void,
   locations: {[string]: Location}
 }
 type State = {
@@ -58,12 +58,11 @@ export default class LocationEditor extends PureComponent {
 
   renderLocationDisplay = (loc: Location) => (
     <fb className='locationDisplay' key={loc.id}>
-      <fb className='icon icon-download locationIcon' />
-      <fb className='name'>{loc.name}</fb>
       <fb className='color' style={{background: loc.color}} />
+      <fb className='name'>{loc.name}</fb>
       <fb className='actionButtons'>
         <fb className='btn editBtn icon-pencil icon' onClick={() => this.editLocation(loc.id)} />
-        <fb className='btn deleteBtn icon-delete icon' onClick={() => this.props.deleteLocation(loc.id)}/>
+        <fb className='btn deleteBtn icon-delete icon' onClick={() => this.props.deleteLocation(loc)}/>
       </fb>
     </fb>
   )
@@ -81,7 +80,7 @@ export default class LocationEditor extends PureComponent {
 
     return(
       <fb className="locationsEditorMain">
-        { _.values(locations).map(loc => {
+        { _.values(locations).filter(loc => !loc.deleted).map(loc => {
           return loc.id === this.state.locBeingEdited
             ? this.renderCreateLocRow(loc)
             : this.renderLocationDisplay(loc)
