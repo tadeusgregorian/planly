@@ -12,6 +12,7 @@ type Props = {
   locations: ?Array<Location>,
   pickedLoc: ?string,
   pickLoc: Function,
+  closeLocationBox: Function,
 }
 
 export default (props: Props) => {
@@ -25,8 +26,17 @@ export default (props: Props) => {
 
   return(
     <fb className="pickLocationBoxMain" style={style}>
+      <fb className='head'>
+        <fb className='text'><fb className='icon icon-download dl'/>Bereich</fb>
+        <fb className='icon icon-close x' onClick={props.closeLocationBox}/>
+      </fb>
       {locations && locations.map(loc =>
-        <fb key={loc.id} className='locItem'>{loc.name}</fb>
+        <fb
+          key={loc.id}
+          className='locItem'
+          style={{background: loc.color}}
+          onClick={()=>props.pickLoc(loc.id)}
+          >{loc.name}</fb>
       )}
     </fb>
   )

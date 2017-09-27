@@ -19,7 +19,6 @@ export type DataStatus =
 export type User = {
   id: string,
   name: string,
-  color: string,
   position: string,
   branches: {},
   email: ?string,
@@ -92,10 +91,10 @@ export type Shift = {
   user: string,
   day: Day,
   edit?: MinimalShift,
-  note?: string,
-  isOpen?: true,
+  note?: ?string,
+  isOpen?: ?boolean,
   position?: string,
-  location?: string
+  location?: ?string
 }
 export type Shifts = Array<Shift>
 
@@ -111,7 +110,7 @@ export type PreDBShift = {
   note?: ?string,
   position?: ?string,
   isOpen?: ?boolean,
-  location?: string
+  location?: ?string
 }
 
 export type DBShift = {

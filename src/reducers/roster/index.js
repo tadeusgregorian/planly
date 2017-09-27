@@ -6,13 +6,8 @@ import type { Notes, ShiftEdits, Shifts, DataStatus, TemplatesFlat } from 'types
 
 // we extract this because there is userDay, and branchDay in DB ( just needed for mobile )
 const extractShift = (data) => {
-  const { id, s, e, b, user, day, isOpen, position, note, edit } = data
-  return { id, s, e, b, user, day, isOpen, position, note, edit }
-}
-
-const extractShiftEdit = (data) => {
-  const { id, s, e, b, user, day, branch, weekID } = data
-  return { id, s, e, b, user, day, branch, weekID }
+  const { id, s, e, b, user, day, isOpen, position, note, edit, location } = data
+  return { id, s, e, b, user, day, isOpen, position, note, edit, location }
 }
 
 export type Roster = {
@@ -26,7 +21,7 @@ export type Roster = {
 export default combineReducers({
   notes: createFirebaseReducer_array('notes'),
   templatesFlat: createFirebaseReducer_array('templatesFlat'),
-  shiftEdits: createFirebaseReducer_array('shiftEdits', extractShiftEdit),
+  shiftEdits: createFirebaseReducer_array('shiftEdits'),
   shiftWeek: createFirebaseReducer_array('shiftWeek', extractShift),
   shiftWeekDataStatus: createDataStatusReducer('shiftWeek')
 })

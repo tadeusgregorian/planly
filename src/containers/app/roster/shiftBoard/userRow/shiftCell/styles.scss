@@ -57,4 +57,11 @@
       }
     }
   }
+
+  .dropZone{
+    flex: 1 1 auto;
+    min-height: 14px;
+    background-color: #c8eeff;
+    box-shadow: inset 0px 1px 4px rgba(0, 0, 0, 0.32);
+  }
 }

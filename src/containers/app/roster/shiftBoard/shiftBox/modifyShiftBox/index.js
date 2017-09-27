@@ -12,18 +12,20 @@ import { saveShiftToDB, saveShiftEditToDB, updateNoteOfShift }   from 'actions/r
 import getCurrentUser from 'selectors/currentUser'
 
 import PickLocationBox from './pickLocationBox'
+import PickPositionBox from './pickPositionBox'
 import ResolveEditBox  from './resolveEditBox'
 import InputWindow     from './inputWindow'
-import ShiftTimesBar   from '../shiftTimesBar'
-import ShiftEditBar    from '../shiftEditBar'
+import ShiftTimesBar   from '../components/shiftTimesBar'
+import PositionBar    from '../components/positionBar'
+import LocationBar     from '../components/locationBar'
 import ShiftActionBar  from './shiftActionBar'
 
-import type { Shift, ShiftRef, Position, User, Store, MinimalShift, Branch } from 'types/index'
+import type { Shift, ShiftRef, Position, User, Store, MinimalShift, Branch, Location } from 'types/index'
 import './styles.css'
 
 type OwnProps = {
   shift: Shift,
-  inCreation?: boolean
+  inCreation?: boolean,
 }
 
 type ConProps = {
@@ -51,6 +53,7 @@ type State = {
   note: string,
   location: string,
   locationBoxOpen: boolean,
+  positionBoxOpen: boolean,
 }
 
 type InputRefs = {
@@ -73,10 +76,11 @@ class ModifyShiftBox extends PureComponent{
       startTime: '',
       endTime: '',
       breakMinutes: '',
-      note: '',
-      location: '',
-      position: '', // positionID ( used for open shifts only )
-      locationBoxOpen: false
+      note: props.shift.note || '',
+      location: props.shift.location || '',
+      position: (props.inCreation && props.shift.isOpen) ? 'all' : (props.shift.position || ''),
+      locationBoxOpen: false,
+      positionBoxOpen: false,
     }
 
     this.inputRefs  = {
@@ -90,13 +94,7 @@ class ModifyShiftBox extends PureComponent{
   componentWillUnmount  = () => window.removeEventListener('keydown', this.onKeyDown)
 
   populateState = () => {
-    const { shift } = this.props
-    this.setState({
-      ...shiftToShiftInput(shift),
-      position: shift.position,
-      location: shift.location,
-      note: shift.note,
-    })
+    this.setState({ ...shiftToShiftInput(this.props.shift)})
   }
 
   componentDidUpdate = (pp: Props, ps: State) => {
@@ -105,8 +103,8 @@ class ModifyShiftBox extends PureComponent{
   }
 
   startTimeChanged = (inp: SyntheticInputEvent) => this.updateStateIfOK('startTime', inp.target.value)
-  endTimeChanged = (inp: SyntheticInputEvent) => this.updateStateIfOK('endTime', inp.target.value)
-  breakChanged = (inp: SyntheticInputEvent) => this.updateBreakIfOK(inp.target.value)
+  endTimeChanged   = (inp: SyntheticInputEvent) => this.updateStateIfOK('endTime', inp.target.value)
+  breakChanged     = (inp: SyntheticInputEvent) => this.updateBreakIfOK(inp.target.value)
 
   focusStartTime  = () => {this.inputRefs.startTime && this.inputRefs.startTime.focus()}
   focusEndTime    = () => {this.inputRefs.endTime   && this.inputRefs.endTime.focus()}
@@ -129,14 +127,14 @@ class ModifyShiftBox extends PureComponent{
   }
 
   tryToSaveChanges = () => {
-    const { startTime, endTime, breakMinutes, note } = this.state
+    const { startTime, endTime, breakMinutes, note, location, position } = this.state
     const { saveShiftToDB, saveShiftEditToDB, unfocusShift, shift } = this.props
     const { day, user, id } = shift
     const shiftInput = { startTime, endTime, breakMinutes }
 
     if(shiftDataValid(shiftInput)){
       const minimalShift = zipShift(shiftInput)
-      let shift = { ...minimalShift, day, user, id, note }
+      let shift = { ...minimalShift, day, user, id, note, location, position }
 
       this.isAdmin ? saveShiftToDB(shift) : saveShiftEditToDB(id, minimalShift)
       unfocusShift()
@@ -148,21 +146,24 @@ class ModifyShiftBox extends PureComponent{
     this.props.unfocusShift()
   }
 
+  togglePositionBox = () => this.setState({positionBoxOpen: !this.state.positionBoxOpen})
   toggleLocationBox = () => this.setState({locationBoxOpen: !this.state.locationBoxOpen})
-  showShiftNote = () => this.props.openNotesModal( this.state.note, this.noteEdited )
+  showShiftNote     = () => this.props.openNotesModal( this.state.note, this.noteEdited )
+
   noteEdited = (noteTxt) => {
     this.setState({note: noteTxt})
     !this.props.inCreation && this.props.updateNoteOfShift(this.props.shift.id, noteTxt)
   }
 
-  locationPicked = (locactionID: string) => {
-    this.setState({location: locactionID})
-  }
+  locationPicked = (locID: string) => this.setState({location: locID, locationBoxOpen: false})
+  positionPicked = (posID: string) => this.setState({position: posID, positionBoxOpen: false})
+  closeLocationBox = ()            => this.setState({locationBoxOpen: false})
+  removeLocation = ()              => this.setState({location: ''})
 
   render(){
-    const { shift, currentUser, branch } = this.props
-    const { locationBoxOpen, location } = this.state
-    const locations: ?Array<Location> = branch && branch.locations && _.values(branch.locations)
+    const { shift, currentUser, branch, positions } = this.props
+    const { locationBoxOpen, positionBoxOpen, location, position } = this.state
+    const locations: Array<Location> = (branch && branch.locations && _.values(branch.locations)) || []
     const isPending = !!this.props.shift.edit
 
     return(
@@ -171,8 +172,15 @@ class ModifyShiftBox extends PureComponent{
         { locationBoxOpen && <PickLocationBox
           shiftRef={this.props.focusedShiftRef}
           locations={locations}
+          closeLocationBox={this.toggleLocationBox}
           pickLoc={this.locationPicked}
           pickedLoc={location} />}
+        { positionBoxOpen && <PickPositionBox
+          shiftRef={this.props.focusedShiftRef}
+          positions={positions}
+          closePositionBox={this.togglePositionBox}
+          pickPos={this.positionPicked}
+          pickedPos={position} />}
         { !isPending && <ShiftActionBar
           shift={shift}
           inCreation={!!this.props.inCreation}
@@ -197,7 +205,19 @@ class ModifyShiftBox extends PureComponent{
           focusEndTime={this.focusEndTime}
         /> }
         { isPending && <ShiftTimesBar shift={shift} /> }
-        { isPending && <ShiftEditBar shift={shift} /> }
+        { location && <LocationBar
+          location={location}
+          locations={locations}
+          editable={true}
+          removeLocation={this.removeLocation}
+          openLocationsBox={this.toggleLocationBox}
+        /> }
+        { position && <PositionBar
+          position={position}
+          positions={positions}
+          editable={true}
+          openPositionBox={this.togglePositionBox}
+        /> }
       </fb>
     )
   }

@@ -10,6 +10,7 @@ import { shiftCellWidth } from 'constants/roster'
 import { unfocusShift } from 'actions/ui/roster'
 import { acceptEdit, rejectEdit } from 'actions/roster'
 
+import ShiftEditBar from '../../components/shiftEditBar'
 import './styles.css'
 
 import type { Shift, User, Store } from 'types/index'
@@ -43,7 +44,7 @@ class ResolveEditBox extends PureComponent{
   }
 
   render(){
-    const { currentUser } = this.props
+    const { currentUser, shift } = this.props
     const { isAdmin } = currentUser
 
     return(
@@ -52,14 +53,13 @@ class ResolveEditBox extends PureComponent{
         <fb className='shiftWrapper' key='shiftWrapper'>
           <fb className='headline'>editiert</fb>
         </fb>
+        <ShiftEditBar shift={shift} />
         <fb className='buttonsWrapper' key='btn1'>
-          { isAdmin && <fb className='actionButton' onClick={this.acceptClicked}>
+          { isAdmin && <fb className='actionButton accept' onClick={this.acceptClicked}>
             <fb className='icon icon-checkmark doneIcon' />
-            übernehmen
           </fb> }
           <fb className='actionButton reject' key='btn2' onClick={this.rejectClicked}>
             <fb className='icon icon-cross crossIcon' />
-            { isAdmin ? 'ablehnen' : 'zurücknehmen'}
           </fb>
         </fb>
       </fb>

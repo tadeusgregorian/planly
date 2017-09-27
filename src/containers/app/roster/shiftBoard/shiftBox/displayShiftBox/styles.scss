@@ -7,7 +7,7 @@
   flex-direction: column;
   border-radius: 2px;
   background-color: #f7f7f7;
-  border: 1px solid #d6d7dc;
+  border: 1px solid #c3c4c7;
   margin: 1px 0px;
 
   .noteIcon{
@@ -38,6 +38,22 @@
       width: 14px;
       height: 14px;
     }
+  }
+
+  .bigRoundEdit{
+    position: absolute;
+    right: 2px;
+    //align-self: center;
+    margin-top: 3px;
+    background: white;
+    width: 34px;
+    height: 34px;
+    border-radius: 30px;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    color: #00a3ef;
+    box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.3);
   }
 }
 

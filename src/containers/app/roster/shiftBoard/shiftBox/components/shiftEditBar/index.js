@@ -25,7 +25,6 @@ export default ({shift}: Props) => {
         <fb className={cn({time: true, boldStyle: eEdited})}>{minToTime(edit.e).str}</fb>
       </fb>
       { (!!edit.b || bEdited) && <fb className={cn({breakMinutes: true, boldStyle: bEdited})}>{'/ ' + edit.b}</fb>}
-      <fb className='icon icon-pen pencilIcon' />
     </fb>
   )
 }

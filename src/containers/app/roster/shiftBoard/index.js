@@ -4,8 +4,8 @@ import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import _ from 'lodash'
 
-import { getShiftsOfUser, getShadowedDay, getShiftEditsOfUser } from './localHelpers'
-import type { User, Shifts, ShiftEdit, ShiftCell, Store, ShiftRef } from 'types/index'
+import { getShiftsOfUser, getShadowedDay } from './localHelpers'
+import type { User, Shifts, ShiftCell, Store, ShiftRef } from 'types/index'
 import getCurrentUser from 'selectors/currentUser'
 
 import ShiftBoardHead from './shiftBoardHead'
@@ -18,11 +18,9 @@ type OwnProps = {
 }
 
 type ConProps = {
-  weekID: string,
   branch: string,
   users: Array<User>,
   shifts: Shifts,
-  shiftEdits: Array<ShiftEdit>,
   currentUser: User,
   shadowedCell: ?ShiftCell,
   focusedShiftRef: ?ShiftRef,
@@ -34,27 +32,33 @@ type Props = OwnProps & ConProps
 class ShiftBoard extends PureComponent{
   props: Props
 
+  renderUserRow = (userID: string, isOpen:boolean, user?: User) => {
+    const { shadowedCell, shifts, currentUser, focusedShiftRef, shiftUnderMouse } = this.props
+
+    return <UserRow
+      key={userID}
+      isOpen={isOpen}
+      user={user}
+      userID={userID}
+      currentUser={currentUser}
+      shifts={getShiftsOfUser(shifts, userID)}
+      shadowedDay={getShadowedDay(shadowedCell, userID)}
+      focusedShiftRef={focusedShiftRef && focusedShiftRef.user === userID ? focusedShiftRef : null}
+      shiftUnderMouse={shiftUnderMouse && shiftUnderMouse.user === userID ? shiftUnderMouse : null}
+      highlightedDay={false}
+    />
+  }
+
   render(){
-    const { shiftEdits, weekID, branch, shadowedCell, shifts, users, currentUser, focusedShiftRef, shiftUnderMouse } = this.props
+    const { users, branch } = this.props
     const usersOfBranch = users.filter(u => _.keys(u.branches).includes(branch))
 
     return(
       <fb id="shiftBoardMain">
           <ShiftBoardHead />
           <fb className='assignedShifts'>
-            { usersOfBranch.map(user => {
-              return <UserRow
-                key={user.id}
-                user={user}
-                currentUser={currentUser}
-                shiftEdits={getShiftEditsOfUser(shiftEdits, user.id, weekID, branch)}
-                shifts={getShiftsOfUser(shifts, user.id)}
-                shadowedDay={getShadowedDay(shadowedCell, user.id)}
-                focusedShiftRef={focusedShiftRef && focusedShiftRef.user === user.id ? focusedShiftRef : null}
-                shiftUnderMouse={shiftUnderMouse && shiftUnderMouse.user === user.id ? shiftUnderMouse : null}
-                highlightedDay={false}
-              />
-            })}
+            { this.renderUserRow('open', true) }
+            { usersOfBranch.map(user => this.renderUserRow(user.id, false, user)) }
           </fb>
       </fb>
     )
@@ -63,10 +67,8 @@ class ShiftBoard extends PureComponent{
 
 const mapStateToProps = (state: Store) => ({
   branch: state.ui.roster.currentBranch,
-  weekID: state.ui.roster.currentWeekID,
   users: state.core.users,
   shifts: state.roster.shiftWeek,
-  shiftEdits: state.roster.shiftEdits,
   focusedShiftRef: state.ui.roster.shiftBoard.focusedShiftRef,
   shiftUnderMouse: state.ui.roster.shiftBoard.shiftUnderMouse,
   currentUser: getCurrentUser(state)

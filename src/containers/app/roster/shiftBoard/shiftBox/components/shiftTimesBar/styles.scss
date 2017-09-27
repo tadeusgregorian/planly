@@ -1,7 +1,9 @@
 .shiftTimesBarMain{
   padding-left: 4px;
   padding-top: 2px;
-  align-items: flex-end;
+  flex-grow: 1;
+  align-items: flex-start;
+  height: 24px;
 
   .shiftTimes{
     pointer-events: none;

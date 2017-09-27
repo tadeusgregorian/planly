@@ -45,6 +45,7 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
   isAdmin: boolean
   mouseIsDown: boolean
   isDragging: boolean
+  wasDraggingAround: boolean
   mousePosStart: {x: number, y: number}
   mousePosDelta: {x: number, y: number}
   PickedUpElement: ?HTMLElement
@@ -53,6 +54,7 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
     super(props)
 
     this.mouseIsDown = false
+    this.wasDraggingAround = false
     this.isAdmin = !!(this.props.currentUser && this.props.currentUser.isAdmin)
     this.state = {
       pickedUpShift: null,
@@ -81,11 +83,10 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
   }
 
   onMouseOver = ({target}: any) => {
-    if(this.mouseIsDown){
+    if(this.isDragging){
+      this.wasDraggingAround = true;
       const cellUnderMouse = getParentCell(target)
-      //dont allow to shadow Cells that already have a shift.
-      const isCellAndEmpty = cellUnderMouse && !cellUnderMouse.hasShift
-      const shadowedCell = isCellAndEmpty ? cellUnderMouse : null
+      const shadowedCell = cellUnderMouse || null
       this.setState({shadowedCell: shadowedCell})
 
     } else {
@@ -101,6 +102,7 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
   }
 
   onMouseDown = (e: any) => {
+    this.wasDraggingAround = false
     const pressedShift = getParentShift(e.target)
     if (!pressedShift) return
     if (pressedShift.hasEdit) return   // dont allow dragging cells with shiftEdit
@@ -117,7 +119,7 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
   }
 
   onClick = ({target}: any) => {
-    if(!this.isDragging && !this.props.focusedShiftRef){
+    if(!this.isDragging && !this.props.focusedShiftRef && !this.wasDraggingAround){
 
       const extendCellClicked = target && target.getAttribute('data-target-type') === 'extend-cell-btn'
       if(extendCellClicked){
