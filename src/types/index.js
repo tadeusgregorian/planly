@@ -33,7 +33,7 @@ export type Absence = {
   adminNote?: ?string,
   excludedDays?: ?ExcludedDays,
   dayRate?: ?number, // number of minutes that get counted to the week-sum for an absence-day
-  neglectingRate?: ?true
+  isHollow?: ?true
 }
 
 export type AbsenceDB = Absence & {

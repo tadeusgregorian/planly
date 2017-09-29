@@ -19,12 +19,12 @@ type State = {
   total: number,
   effective: number,
   year: number,
-  type: 'vac' | 'ill' | 'extra',
+  type: 'vac' | 'ill' | 'extra' | '',
   userNote: ?string,
   adminNote: ?string,
   excludedDays: ?ExcludedDays,
   dayRate: ?number, // number of minutes that get counted to the week-sum for an absence-day
-  neglectingRate: ?true
+  isHollow: ?true
 }
 
 type OwnProps = {
@@ -35,7 +35,9 @@ type OwnProps = {
 }
 
 type ConProps = {
-  user: User
+  user: User,
+  excludedDaysOfUser: ExcludedDays,
+  dayRateOfUser: number,
 }
 
 class AbsenceModal extends PureComponent{
@@ -44,20 +46,23 @@ class AbsenceModal extends PureComponent{
 
   constructor(props){
     super(props)
+    const { absence } = props
+
     this.state = {
-      id:        props.absence ? props.absence.id      : generateGuid(),
-      start:     props.absence ? props.absence.start   : getTodaySmart(),
-      end:       props.absence ? props.absence.end     : getTodaySmart(),
-      total:     props.absence ? props.absence.total   : 1,
-      effective: props.absence ? props.absence.total   : getEffectiveDays(getTodaySmart(), getTodaySmart()),
-      year:      props.absence ? props.absence.year    : (props.year || moment().year()),
-      
-      type: 'vac' | 'ill' | 'extra',
-      userNote: ?string,
-      adminNote: ?string,
-      excludedDays: ?ExcludedDays,
-      dayRate: ?number, // number of minutes that get counted to the week-sum for an absence-day
-      neglectingRate: ?true
+      id:           absence ? absence.id      : generateGuid(),
+      user:         absence ? absence.userID  : props.userID,
+      start:        absence ? absence.start   : getTodaySmart(),
+      end:          absence ? absence.end     : getTodaySmart(),
+      total:        absence ? absence.total   : 1,
+      effective:    absence ? absence.total   : getEffectiveDays(getTodaySmart(), getTodaySmart()),
+      year:         absence ? absence.year    : (props.year || moment().year()),
+
+      type:         absence ? absence.type          : '',
+      userNote:     absence ? absence.type          : '',
+      adminNote:    absence ? absence.type          : '',
+      excludedDays: absence ? absence.excludedDays  : props.excludedDaysOfUser,
+      dayRate:      absence ? absence.dayRate       : props.dayRateOfUser, // number of minutes that get counted to the week-sum for an absence-day
+      isHollow:     absence ? absence.isHollow      : null
     }
   }
 
@@ -79,7 +84,9 @@ class AbsenceModal extends PureComponent{
 }
 
 const mapStateToProps = (state: Store, ownProps: OwnProps) => ({
-  user: (state.core.users.find(u => u.id === ownProps.userID): any) // -> telling Flow to be silent
+  user: (state.core.users.find(u => u.id === ownProps.userID): any), // -> telling Flow to be silent
+  excludedDaysOfUser: {sa: true, su: true}, // TODO: write function: getExcludedDaysOfUser !!!
+  dayRateOfUser: 480 // TODO: wire Function: getDayRateOfuser !!!
 })
 
 const connector: Connector<OwnProps, OwnProps & ConProps > = connect(mapStateToProps)
