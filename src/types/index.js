@@ -10,6 +10,36 @@ export type ThunkAction = (any, any, any)=> (dispatch: Dispatch, getState: GetSt
 
 // core-types
 
+export type ExcludedDays = {
+  mo?: true | null,
+  tu?: true | null,
+  we?: true | null,
+  th?: true | null,
+  fr?: true | null,
+  sa?: true | null,
+  su?: true | null,
+}
+
+export type Absence = {
+  id: string,
+  user: string,
+  start: number,
+  end: number,
+  total: number,
+  effective: number,
+  year: number,
+  type: 'vac' | 'ill' | 'extra',
+  userNote?: ?string,
+  adminNote?: ?string,
+  excludedDays?: ?ExcludedDays,
+  dayRate?: ?number, // number of minutes that get counted to the week-sum for an absence-day
+  neglectingRate?: ?true
+}
+
+export type AbsenceDB = Absence & {
+  [smartWeek: number]: string // the value is the userID here -> needed for Firebasy Query
+}
+
 
 export type DataStatus =
   'REQUESTED' |
@@ -53,13 +83,6 @@ export type Branches = Array<Branch>
 
 // roster-types
 export type Day = 'mo' | 'tu' | 'we' | 'th' | 'fr' | 'sa' | 'su'
-
-// export type Dimensions = {
-//   width: number,
-//   height: number,
-//   top: number,
-//   left: number
-// }
 
 type Dimensions = {
   top: number,
@@ -152,7 +175,6 @@ export type PreDBNote = {
 }
 
 export type Notes = Array<Note>
-
 
 export type ShiftEdit = {
   s: number,

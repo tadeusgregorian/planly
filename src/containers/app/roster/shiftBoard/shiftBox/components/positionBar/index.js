@@ -24,6 +24,7 @@ export default (props: Props) => {
     <fb className='wrapper'>
       <fb className='icon icon-account_box posIcon' />
       <fb className='text'>{pos.name}</fb>
+      { props.editable && <fb className='icon triangleIcon icon-navigate_next'/>}
     </fb>
   )
 

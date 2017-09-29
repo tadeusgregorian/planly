@@ -3,6 +3,7 @@ import { Route, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Topbar from './topbar'
 import Roster from './roster'
+import Absence from './absence'
 import AdminPanel from './adminPanel'
 import appDataLoaded from 'selectors/appDataLoaded'
 import './styles.css'
@@ -18,6 +19,7 @@ class App extends PureComponent {
         <Topbar />
         <fb className="appMainContent">
           <Route path='/app/dienstplan' component={Roster} />
+          <Route path='/app/abwesenheit' component={Absence} />
           <Route path='/app/einstellungen' component={AdminPanel} />
         </fb>
       </fb>

@@ -22,9 +22,9 @@ type Props = {
     <fb className="topbarMain">
       <fb className='centered'>
         <fb className="side left">
-          <TopbarButton label='Dienstplan'    to='/app/dienstplan/wochenplan'/>
-          <TopbarButton label='Urlaub'        to='/app/urlaub' />
-          <TopbarButton label='Einstellungen' to='/app/einstellungen' />
+          <TopbarButton label='Dienstplan'      to='/app/dienstplan/wochenplan'/>
+          <TopbarButton label='Abwesenheit'     to='/app/abwesenheit' />
+          <TopbarButton label='Einstellungen'   to='/app/einstellungen' />
         </fb>
         <fb className="side right">
           <fb className='userName'>{props.currentUser && props.currentUser.name}</fb>

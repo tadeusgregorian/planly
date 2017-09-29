@@ -2,7 +2,6 @@
 
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import _ from 'lodash'
 import SModal from 'components/sModal'
 import SButton from 'components/sButton'
 import FlatInput from 'components/flatInput'
