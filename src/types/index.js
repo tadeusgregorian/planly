@@ -20,7 +20,7 @@ export type ExcludedDays = {
   su?: true | null,
 }
 
-export type Absence = {
+export type AbsenceBasis = {
   id: string,
   user: string,
   start: number,
@@ -28,18 +28,28 @@ export type Absence = {
   total: number,
   effective: number,
   year: number,
-  type: 'vac' | 'ill' | 'extra',
-  userNote?: ?string,
-  adminNote?: ?string,
-  excludedDays?: ?ExcludedDays,
-  dayRate?: ?number, // number of minutes that get counted to the week-sum for an absence-day
-  isHollow?: ?true
+  type: 'vac' | 'ill' | 'extra'
 }
 
-export type AbsenceDB = Absence & {
+export type Absence = AbsenceBasis & { // this is the absence Obj we get from the DB ( Firebase deleted keys where the value is null or empty obj )
+  userNote?: string,
+  adminNote?: string,
+  excludedDays?: ExcludedDays,
+  dayRate?: number, // number of minutes that get counted to the week-sum for an absence-day
+  hollow?: true
+}
+
+export type AbsencePreDB = AbsenceBasis & { // this is the absence Obj we want to write to the DB
+  userNote: ?string,
+  adminNote: ?string,
+  excludedDays: ?ExcludedDays,
+  dayRate: ?number, // number of minutes that get counted to the week-sum for an absence-day
+  hollow: ?true
+}
+
+export type AbsenceDB = AbsencePreDB & {
   [smartWeek: number]: string // the value is the userID here -> needed for Firebasy Query
 }
-
 
 export type DataStatus =
   'REQUESTED' |

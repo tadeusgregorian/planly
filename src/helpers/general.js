@@ -52,3 +52,10 @@ export const closest = (el: any, fn: (any)=>boolean) => {
     el = el.parentNode;
   }
 }
+
+export const closestWithAttribute = (el: any, attrName: string, attrValue: string) => {
+  const elementHasAttribute = (el: HTMLElement): boolean => {
+    return !!(el.getAttribute && el.getAttribute(attrName) === attrValue)
+  }
+  return closest(el, (element) => elementHasAttribute(element))
+}

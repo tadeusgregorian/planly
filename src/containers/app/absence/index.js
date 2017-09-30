@@ -3,6 +3,9 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import moment from 'moment'
+
+import { handleClicks } from './localHelpers'
+import { openAbsenceModal } from 'actions/ui/modals'
 import getCurrentUser from 'selectors/currentUser'
 
 import type { User, Store, Branch } from 'types/index'
@@ -22,7 +25,8 @@ type OwnProps = {}
 type ConProps = {
   rosterBranch: string,
   branches: Array<Branch>,
-  currentUser: User
+  currentUser: User,
+  openAbsenceModal: (string, number, string | void )=>{}
 }
 type Props = OwnProps & ConProps
 
@@ -36,8 +40,16 @@ class Absence extends PureComponent {
     currentYear: moment().year()
   }
 
-  changeBranch = (branchID: string) => this.setState({currentBranch: branchID})
-  changeYear = (year: number) => this.setState({currentYear: year})
+  componentDidMount     = () => handleClicks(this.openAbsenceModal)
+  componentWillUnmount  = () => handleClicks()
+
+  changeBranch  = (branchID: string)  => this.setState({currentBranch: branchID})
+  changeYear    = (year: number)      => this.setState({currentYear: year})
+
+  openAbsenceModal = (userID: string, absenceID?: string) => {
+    console.log(userID);
+    this.props.openAbsenceModal(userID, this.state.currentYear, absenceID)
+  }
 
   render() {
     const { currentBranch, currentYear, view } = this.state
@@ -55,10 +67,16 @@ class Absence extends PureComponent {
           changeView={(view) => this.setState({view})}
         />
         {/* <AbsenceListView  /> */}
-        <AbsenceCalendar currentBranch={currentBranch} />
+        <AbsenceCalendar
+          currentBranch={currentBranch}
+        />
       </fb>
     )
   }
+}
+
+const actionCreators = {
+  openAbsenceModal
 }
 
 const mapStateToProps = (state: Store) => ({
@@ -67,5 +85,5 @@ const mapStateToProps = (state: Store) => ({
   currentUser: getCurrentUser(state)
 })
 
-const connector: Connector<OwnProps, Props> = connect(mapStateToProps)
+const connector: Connector<OwnProps, Props> = connect(mapStateToProps, actionCreators)
 export default connector(Absence)
