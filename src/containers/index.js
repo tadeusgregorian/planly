@@ -8,6 +8,7 @@ import ModalsManager from 'components/unique/modalsManager'
 import moment from 'moment'
 import 'moment/locale/de'
 import 'react-select/dist/react-select.css'
+import 'react-dates/lib/css/_datepicker.css';
 import Login from './login'
 import Register from './register'
 import App from './app'

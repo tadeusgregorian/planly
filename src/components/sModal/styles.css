@@ -42,11 +42,13 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap; }
+    .sModalHead .sModalTitle .closeIcon {
+      padding: 22px; }
   .sModalHead .sModalX {
     flex: 0 1 auto;
     align-items: center;
-    padding: 6px;
-    padding-top: 8px;
+    padding: 8px;
+    padding-right: 10px;
     cursor: pointer; }
     .sModalHead .sModalX icon {
       border: none;

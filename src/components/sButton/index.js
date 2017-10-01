@@ -54,7 +54,7 @@ export default ({label, disabled, onClick, color, sStyle, right, left, tabInd, s
 			onClick={!disabled && onClick}
 			tabIndex={tabInd}
 		>
-			{icon && <icon style={getIconStyle()} className={icon + ' sButtonIcon'}/>}
+			{icon && <fb style={getIconStyle()} className={icon + ' icon sButtonIcon'}/>}
 			{label}
 		</fb>
 	)

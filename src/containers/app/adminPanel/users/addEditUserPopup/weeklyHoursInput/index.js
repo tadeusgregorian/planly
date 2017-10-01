@@ -45,13 +45,13 @@ export default class WeeklyHoursInput extends PureComponent {
 
   renderExtendButton = () => (
     <fb className="extendButton lightButton" onClick={this.addNewRow}>
-      <icon className='icon icon-arrow_drop_down' />
+      <fb className='icon icon-arrow_drop_down' />
       <fb className="text">erweitern</fb>
     </fb>
   )
 
   renderRemoveButton = () => (
-    <icon className='removeButton icon-delete lightButton' onClick={this.deleteLastEntry}/>
+    <fb className='icon removeButton icon-delete lightButton' onClick={this.deleteLastEntry}/>
   )
 
   renderSinglerow = () => {

@@ -26,7 +26,7 @@ type ConProps = {
   rosterBranch: string,
   branches: Array<Branch>,
   currentUser: User,
-  openAbsenceModal: (string, number, string | void )=>{}
+  openAbsenceModal: (string, string | void )=>{}
 }
 type Props = OwnProps & ConProps
 
@@ -47,8 +47,7 @@ class Absence extends PureComponent {
   changeYear    = (year: number)      => this.setState({currentYear: year})
 
   openAbsenceModal = (userID: string, absenceID?: string) => {
-    console.log(userID);
-    this.props.openAbsenceModal(userID, this.state.currentYear, absenceID)
+    this.props.openAbsenceModal(userID, absenceID)
   }
 
   render() {

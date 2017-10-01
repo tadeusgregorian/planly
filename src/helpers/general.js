@@ -59,3 +59,11 @@ export const closestWithAttribute = (el: any, attrName: string, attrValue: strin
   }
   return closest(el, (element) => elementHasAttribute(element))
 }
+
+export const momToSmart = (mom: moment): number => {
+  return parseInt(moment(mom).format('YYYYMMDD'), 10)
+}
+
+export const smartToMom = (smartDate: number): moment => {
+  return moment(smartDate, 'YYYYMMDD')
+}

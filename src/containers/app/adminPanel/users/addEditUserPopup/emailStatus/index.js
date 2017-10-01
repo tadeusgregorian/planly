@@ -17,7 +17,7 @@ export default ({status, hide}) => {
 
   return(
     <fb className={cn({emailStatusMain: true, [status]: true})} style={{display: hide ? 'none' : 'flex'}}>
-      <icon className={cn({icon: true, [getStatus().icon]: true})} />
+      <fb className={cn({icon: true, [getStatus().icon]: true})} />
       <fb>{getStatus().text}</fb>
     </fb>
   )

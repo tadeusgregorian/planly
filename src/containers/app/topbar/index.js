@@ -28,7 +28,7 @@ type Props = {
         </fb>
         <fb className="side right">
           <fb className='userName'>{props.currentUser && props.currentUser.name}</fb>
-          <icon className="logoutIcon icon-cancel" onClick={logoutPressed} />
+          <fb className="icon logoutIcon icon-cancel" onClick={logoutPressed} />
         </fb>
       </fb>
     </fb>

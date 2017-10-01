@@ -6,7 +6,7 @@ const SModalMain = ({title, children, onClose}) => (
 		<fb className='sModalMain'>
 			<fb className='sModalHead'>
 				<fb className='sModalTitle'><span className="titleSpan">{title}</span></fb>
-				<fb className='sModalX' onClick={onClose}><icon className='icon-close'/></fb>
+				<fb className='sModalX' onClick={onClose}><fb className='icon icon-close'/></fb>
 				</fb>
 			{children}
 		</fb>

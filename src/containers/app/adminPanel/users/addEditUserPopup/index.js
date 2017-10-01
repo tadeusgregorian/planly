@@ -103,7 +103,7 @@ class AddEditUserPopup extends PureComponent {
 					<fb className="addEditUserPopup">
 						{ this.state.errorText &&
 								<fb className="errorText">
-									<icon className='icon icon-error_outline' />
+									<fb className='icon icon-error_outline' />
 									<fb className='text'>{this.state.errorText}</fb>
 								</fb>
 						}

@@ -15,5 +15,5 @@ export const closeModal: CloseModal = (modalID) => ({ type: 'CLOSE_MODAL', paylo
 export const openNotesModal = (note: string, saveNote:(string)=>void) =>
   openModal('notes', ShiftNoteModal, {note, saveNote})
 
-export const openAbsenceModal = (userID: string, year: number, absenceID?: string) =>
-  openModal('absence', AbsenceModal, { userID, year, absenceID })
+export const openAbsenceModal = (userID: string, absenceID?: string) =>
+  openModal('absence', AbsenceModal, { userID, absenceID })

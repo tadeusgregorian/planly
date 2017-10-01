@@ -10,6 +10,8 @@ export type ThunkAction = (any, any, any)=> (dispatch: Dispatch, getState: GetSt
 
 // core-types
 
+export type AbsenceType = 'vac' | 'ill' | 'extra'
+
 export type ExcludedDays = {
   mo?: true | null,
   tu?: true | null,
@@ -23,12 +25,12 @@ export type ExcludedDays = {
 export type AbsenceBasis = {
   id: string,
   user: string,
-  start: number,
-  end: number,
+  startDate: number,
+  endDate: number,
   total: number,
   effective: number,
   year: number,
-  type: 'vac' | 'ill' | 'extra'
+  type: AbsenceType
 }
 
 export type Absence = AbsenceBasis & { // this is the absence Obj we get from the DB ( Firebase deleted keys where the value is null or empty obj )
@@ -210,3 +212,5 @@ export type TemplateFlat = {
 }
 
 export type TemplatesFlat = Array<TemplateFlat>
+
+export type BundeslandCode = 'BE'|'BB'|'HB'|'HH'|'HE'|'MV'|'NI'|'NW'|'RP'|'SL'|'SN'|'ST'|'SH'|'TH'
