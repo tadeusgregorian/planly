@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import moment from 'moment'
 
+import { saveAbsenceToDB } from 'actions/absence'
+
 import { handleClicks } from './localHelpers'
 import { openAbsenceModal } from 'actions/ui/modals'
 import getCurrentUser from 'selectors/currentUser'
@@ -26,7 +28,8 @@ type ConProps = {
   rosterBranch: string,
   branches: Array<Branch>,
   currentUser: User,
-  openAbsenceModal: (string, string | void )=>{}
+  openAbsenceModal: (string, string | void )=>{},
+  saveAbsenceToDB: (Absence)=>any,
 }
 type Props = OwnProps & ConProps
 
@@ -75,7 +78,8 @@ class Absence extends PureComponent {
 }
 
 const actionCreators = {
-  openAbsenceModal
+  openAbsenceModal,
+  saveAbsenceToDB
 }
 
 const mapStateToProps = (state: Store) => ({

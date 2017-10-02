@@ -1,36 +1,29 @@
 import moment from 'moment'
 import 'moment-feiertage'
 import { weekDays } from 'constants/roster'
-import { momToSmart, smartToMom } from 'helpers/index'
 import type { Day, ExcludedDays, BundeslandCode } from 'types/index'
 
 const numToWeekDay = (num: number): Day => {
   return weekDays[num]
 }
 
-export const getTotalDays = (start: number, end: number) => {
-  const momStart = smartToMom(start)
-  const momEnd = smartToMom(end)
-  return momEnd.diff(momStart, 'days') + 1
+export const getTotalDays = (start: ?moment, end: ?moment): number | null => {
+  if(!start || !end) return null
+  return moment(end).diff(start, 'days') + 1
 }
 
-export const getEffectiveDays = (start: number, end: number) => {
-  return 7
-}
-
-export const getEffectiveDays2 = (start: number, end: number, excludedDays: ExcludedDays, bundesland: BundeslandCode) => {
-  if(!start || !end) return
+export const getEffectiveDays = (start: ?moment, end: ?moment, excludedDays: ?ExcludedDays, bundesland: BundeslandCode): number | null => {
+  if(!start || !end) return null
   let excludedsCount = 0
-  const totalDays = getTotalDays(start, end)
-  const momStart = smartToMom(start)
+  const totalDays = moment(end).diff(start, 'days') + 1
 
   for(let i = 0; i < totalDays; i++){
-    const curDay = moment(momStart).add(i, 'days')
+    const curDay = moment(start).add(i, 'days')
     const curWeekDay = numToWeekDay(curDay.weekday())
     const isHoliday = curDay.isHoliday('HH')
 
-    if(excludedDays[curWeekDay] || isHoliday) ++excludedsCount
+    if((excludedDays && excludedDays[curWeekDay]) || isHoliday) ++excludedsCount
   }
-  
+
   return totalDays - excludedsCount
 }

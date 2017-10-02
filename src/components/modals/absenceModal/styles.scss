@@ -2,17 +2,14 @@
   width: 700px;
   padding: 12px 14px 14px 14px;
   flex-direction: column;
+  >*:not(:first-of-type){
+    margin-top: 12px;
+  }
 
-  .dateRangeSection{
-    .dateRangeLabel{
-      align-items: center;
-      margin-right: 20px;
-      padding-left: 4px;
-    }
-
+  .DateRangePicker{
     .DateRangePickerInput{
       .DateInput{
-        padding: 2px;
+        padding: 4px;
       }
     }
   }

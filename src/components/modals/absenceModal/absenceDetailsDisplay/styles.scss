@@ -1,0 +1,33 @@
+.absenceDetailsDisplayMain{
+  flex-direction: column;
+  width: 100%;
+
+  font-size: 14px;
+  color: #313131;
+  background: none;
+  border: 1px solid #00a1f0;
+  border-radius: 2px;
+
+  .row{
+    height: 28px;
+    align-items: center;
+    padding-left: 6px;
+
+    &:first-of-type{
+      border-bottom: 1px solid #e6e6e6;
+    }
+
+    .label{
+      width: 100px;
+      color: #00a1f0;
+
+      &.effective{
+        color: orange;
+      }
+    }
+
+    .count{
+      font-weight: 600;
+    }
+  }
+}

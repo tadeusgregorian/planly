@@ -11,8 +11,10 @@ type TargetKey =
 | 'notes'
 | 'shiftEdits'
 | 'templatesFlat'
+| 'absence'
 
 // This function holds the Information, where in the FirebaseDB each Node sits
+// If childPaths provided it concats the childPaths to a path-string.
 export const getFBPath	= (target: TargetKey, childPaths?: Array<string>): string => {
   const pathfinder = {
     users: 					'/users/',
@@ -25,6 +27,7 @@ export const getFBPath	= (target: TargetKey, childPaths?: Array<string>): string
     notes: 					'/roster/notes/',
     shiftEdits: 		'/roster/shiftEdits/',
     templatesFlat: 	'/roster/templatesFlat/',
+    absence:        '/absence/',
   }
 
 	const accPath  = 'accounts/' + window.accountID

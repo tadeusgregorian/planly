@@ -1,0 +1,29 @@
+.absenceNotesSectionMain{
+  flex-direction: column;
+  border-top: 1px solid lightgrey;
+  width: 100%;
+  min-height: 40px;
+
+  .sectionWrapper{
+    margin-top: 6px;
+    flex-direction: column;
+
+    .label{
+      font-size: 14px;
+      padding-left: 2px;
+      //color: grey;
+    }
+
+    .inp{
+      margin-top: 2px;
+      width: 400px;
+      height: 70px;
+
+      &:focus{
+        border-color: #00a2ef;
+        box-shadow: 0px 0px 2px 0px #00a2ef;
+        outline: none;
+      }
+    }
+  }
+}

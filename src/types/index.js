@@ -11,6 +11,7 @@ export type ThunkAction = (any, any, any)=> (dispatch: Dispatch, getState: GetSt
 // core-types
 
 export type AbsenceType = 'vac' | 'ill' | 'extra'
+export type AbsenceStatus = 'requested' | 'accepted'
 
 export type ExcludedDays = {
   mo?: true | null,
@@ -25,12 +26,13 @@ export type ExcludedDays = {
 export type AbsenceBasis = {
   id: string,
   user: string,
+  type: AbsenceType,
+  year: number,
+  status: AbsenceStatus,
   startDate: number,
   endDate: number,
   total: number,
   effective: number,
-  year: number,
-  type: AbsenceType
 }
 
 export type Absence = AbsenceBasis & { // this is the absence Obj we get from the DB ( Firebase deleted keys where the value is null or empty obj )
