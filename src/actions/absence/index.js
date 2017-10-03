@@ -2,9 +2,17 @@
 
 import { db } from '../firebaseInit'
 import { getFBPath } from './../actionHelpers'
-import type { ThunkAction, AbsencePreDB } from 'types/index'
+import { getTouchingWeeks } from './localHelpers'
+import type { ThunkAction, AbsenceDB } from 'types/index'
 
+export const saveAbsenceToDB:ThunkAction = (absence: AbsenceDB) => (disp) => {
+  const updates = {}
+  const touchingWeeks = getTouchingWeeks(absence)
 
-export const saveAbsenceToDB:ThunkAction = (absence: AbsencePreDB) => (disp) => {
-  db().ref(getFBPath('absence', [absence.id])).set(absence)
+  if(absence.status === 'accepted'){
+    //touchingWeeks.forEach(w => updates[ getFBPath('touchingWeeks', [w, absence.id]) ] = absence.user )
+  }
+
+  updates[ getFBPath('absences', [absence.id])] = absence
+  db().ref().update(updates)
 }

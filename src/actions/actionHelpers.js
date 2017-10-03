@@ -1,6 +1,6 @@
 //@flow
 
-type TargetKey =
+export type TargetKey =
   'users'
 | 'branches'
 | 'positions'
@@ -11,23 +11,25 @@ type TargetKey =
 | 'notes'
 | 'shiftEdits'
 | 'templatesFlat'
-| 'absence'
+| 'absences'
+| 'absencesByWeek'
 
 // This function holds the Information, where in the FirebaseDB each Node sits
 // If childPaths provided it concats the childPaths to a path-string.
 export const getFBPath	= (target: TargetKey, childPaths?: Array<string>): string => {
   const pathfinder = {
-    users: 					'/users/',
-    branches: 			'/branches/',
-    positions: 			'/positions/',
-    accountDetails: '/accountDetails/',
-    queues: 				'/queues/',
-    roster: 				'/roster/',
-    shiftWeeks: 		'/roster/shiftWeeks/',
-    notes: 					'/roster/notes/',
-    shiftEdits: 		'/roster/shiftEdits/',
-    templatesFlat: 	'/roster/templatesFlat/',
-    absence:        '/absence/',
+    users: 					  '/users/',
+    branches: 			  '/branches/',
+    positions: 			  '/positions/',
+    accountDetails:   '/accountDetails/',
+    queues: 				  '/queues/',
+    roster: 				  '/roster/',
+    shiftWeeks: 		  '/roster/shiftWeeks/',
+    notes: 					  '/roster/notes/',
+    shiftEdits: 		  '/roster/shiftEdits/',
+    templatesFlat: 	  '/roster/templatesFlat/',
+    absences:         '/absencePlaner/absences/',
+    absencesByWeek:   '/absencePlaner/absencesByWeek/',
   }
 
 	const accPath  = 'accounts/' + window.accountID

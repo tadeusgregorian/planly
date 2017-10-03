@@ -4,9 +4,11 @@ import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import { DateRangePicker } from 'react-dates'
 import moment from 'moment'
+import _ from 'lodash'
 
 import getCurrentUser from 'selectors/currentUser'
-import { generateGuid, getTodaySmart, momToSmart } from 'helpers/index'
+import { saveAbsenceToDB } from 'actions/absence'
+import { generateGuid, momToSmart } from 'helpers/index'
 import { getEffectiveDays, getTotalDays } from './localHelpers'
 import type { Store, User, Absence, ExcludedDays, AbsenceType, AbsenceStatus } from 'types/index'
 
@@ -25,8 +27,8 @@ type State = {
   status: AbsenceStatus,
   startDate: ?number,
   endDate: ?number,
-  total: ?number,
-  effective: ?number,
+  totalDays: ?number,
+  effectiveDays: ?number,
   userNote: ?string,
   adminNote: ?string,
   excludedDays: ?ExcludedDays,
@@ -46,6 +48,7 @@ type ConProps = {
   currentUser: User,
   excludedDaysOfUser: ExcludedDays,
   dayRateOfUser: number,
+  saveAbsenceToDB: (Absence)=>any,
 }
 
 class AbsenceModal extends PureComponent{
@@ -57,22 +60,20 @@ class AbsenceModal extends PureComponent{
     const { absence } = props
 
     this.state = {
-      id:           absence ? absence.id        : generateGuid(),
-      user:         absence ? absence.userID    : props.userID,
-      type:         absence ? absence.type      : 'ill', // just ill per default
-      year:         absence ? absence.year      : moment().year(),
-      status:       absence ? absence.status    : this.getDefaultStatus(),
-      startDate:    absence ? absence.start     : null,
-      endDate:      absence ? absence.end       : null,
-      total:        absence ? absence.total     : null,
-      effective:    absence ? absence.effective : null,
-
-      userNote:     absence ? absence.type          : null,
-      adminNote:    absence ? absence.type          : null,
-      excludedDays: absence ? absence.excludedDays  : props.excludedDaysOfUser,
-      dayRate:      absence ? absence.dayRate       : props.dayRateOfUser, // number of minutes that get added to the week-sum for an absent-day
-      hollow:       absence ? absence.isHollow      : props.absenceTypeIsHollow,
-
+      id:             absence ? absence.id            : generateGuid(),
+      user:           absence ? absence.userID        : props.userID,
+      type:           absence ? absence.type          : 'ill', // just ill per default
+      year:           absence ? absence.year          : moment().year(),
+      status:         absence ? absence.status        : this.getDefaultStatus(),
+      startDate:      absence ? absence.start         : null,
+      endDate:        absence ? absence.end           : null,
+      totalDays:      absence ? absence.totalDays     : null,
+      effectiveDays:  absence ? absence.effectiveDays : null,
+      userNote:       absence ? absence.type          : null,
+      adminNote:      absence ? absence.type          : null,
+      excludedDays:   absence ? absence.excludedDays  : props.excludedDaysOfUser,
+      dayRate:        absence ? absence.dayRate       : props.dayRateOfUser, // number of minutes that get added to the week-sum for an absent-day
+      hollow:         absence ? absence.isHollow      : props.absenceTypeIsHollow,
       focusedInput: null
     }
   }
@@ -90,8 +91,8 @@ class AbsenceModal extends PureComponent{
       startDate:  d.startDate ? momToSmart(d.startDate) : null,
       endDate:    d.endDate   ? momToSmart(d.endDate): null,
       year:       moment(d.startDate).year(),
-      total:      getTotalDays(d.startDate, d.endDate),
-      effective:  getEffectiveDays(d.startDate, d.endDate, this.props.excludedDaysOfUser, 'HH')
+      totalDays:      getTotalDays(d.startDate, d.endDate),
+      effectiveDays:  getEffectiveDays(d.startDate, d.endDate, this.props.excludedDaysOfUser, 'HH')
     })
   }
 
@@ -100,28 +101,31 @@ class AbsenceModal extends PureComponent{
 
   rejectRequest = () => console.log('Reject Req')
   acceptRequest = () => console.log('Accept Req')
-  saveAbsence = () => console.log('Save Absence')
+  saveAbsence   = () => this.props.saveAbsenceToDB(_.omit(this.state, 'focusedInput'))
 
   render(){
     const { closeModal, user, currentUser } = this.props
-    const { type, startDate, endDate, focusedInput, userNote, adminNote, total, effective, status } = this.state
+    const { type, startDate, endDate, focusedInput, userNote, adminNote, totalDays, effectiveDays, status } = this.state
     const adminMode = !!currentUser.isAdmin
+    const isComplete = startDate && endDate
 
     return(
       <SModal.Main onClose={closeModal} title={'Abwesenheit - ' + user.name} >
   			<SModal.Body>
   				<fb className="absenceModalMain">
-            <AbsenceTypeSelect selectedType={type} selectType={this.changeType} />
-            <DateRangePicker
-              startDate={startDate ? moment(startDate, 'YYYYMMDD') : null}
-              endDate={endDate ? moment(endDate, 'YYYYMMDD') : null}
-              onDatesChange={this.datesChanged} // PropTypes.func.isRequired,
-              focusedInput={focusedInput}
-              onFocusChange={focusedInput => this.setState({ focusedInput })}
-            />
+            <fb className='firstRow'>
+              <AbsenceTypeSelect selectedType={type} selectType={this.changeType} />
+              <DateRangePicker
+                startDate={startDate ? moment(startDate, 'YYYYMMDD') : null}
+                endDate={endDate ? moment(endDate, 'YYYYMMDD') : null}
+                onDatesChange={this.datesChanged} // PropTypes.func.isRequired,
+                focusedInput={focusedInput}
+                onFocusChange={focusedInput => this.setState({ focusedInput })}
+              />
+            </fb>
             { startDate && endDate && <AbsenceDetailsDisplay
-              total={total}
-              effective={effective}
+              totalDays={totalDays}
+              effectiveDays={effectiveDays}
             /> }
             <AbsenceNotesSection
               userNote={userNote}
@@ -134,13 +138,17 @@ class AbsenceModal extends PureComponent{
   			</SModal.Body>
         <SModal.Footer>
            {  adminMode && status === 'requested' && <SButton label='Ablehnen'  onClick={this.rejectRequest} right color='red'/>}
-           {  adminMode && status === 'requested' && <SButton label='Annehmen'  onClick={this.acceptRequest} right color='#00a2ef'/>}
-           {  adminMode && status === 'accepted'  && <SButton label='Speichern' onClick={this.saveAbsence} right color='#00a2ef'/>}
-           { !adminMode && <SButton right label='Urlaub Beantragen'  onClick={this.saveAbsence} right color='#00a2ef'/> }
+           {  adminMode && status === 'requested' && <SButton label='Annehmen'  onClick={this.acceptRequest} right color='#00a2ef' disabled={!isComplete} />}
+           {  adminMode && status === 'accepted'  && <SButton label='Speichern' onClick={this.saveAbsence} right color='#00a2ef' disabled={!isComplete}/>}
+           { !adminMode && <SButton label='Urlaub Beantragen'  onClick={this.saveAbsence} right color='#00a2ef' disabled={!isComplete}/> }
         </SModal.Footer>
   		</SModal.Main>
     )
   }
+}
+
+const actionCreators = {
+  saveAbsenceToDB
 }
 
 const mapStateToProps = (state: Store, ownProps: OwnProps) => ({
@@ -152,5 +160,5 @@ const mapStateToProps = (state: Store, ownProps: OwnProps) => ({
   bundeslandCode: 'HH'                      // TODO: get bundeslandCode from the DB somewhere
 })
 
-const connector: Connector<OwnProps, OwnProps & ConProps > = connect(mapStateToProps)
+const connector: Connector<OwnProps, OwnProps & ConProps > = connect(mapStateToProps, actionCreators)
 export default connector(AbsenceModal)

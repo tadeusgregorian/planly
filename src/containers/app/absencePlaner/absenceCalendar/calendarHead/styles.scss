@@ -1,0 +1,16 @@
+.absenceCalendarHeadMain{
+
+  .usersHead{
+    flex: 1 1 auto;
+  }
+
+  .monthHead{
+    flex: 0 0 auto;
+    height: 58px;
+
+    .day{
+      justify-content: center;
+      border-left: 1px solid grey;
+    }
+  }
+}

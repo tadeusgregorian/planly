@@ -1,0 +1,16 @@
+.absenceMain{
+
+  overflow: scroll;
+  flex-direction: column;
+  align-items: center;
+  width: 100vw;
+
+  .absenceContent{
+    margin: 0 auto;
+    flex: 0 0 auto;
+    padding: 4px 10px 0px 0px;
+    width: 1200px;
+    border-radius: 2px;
+    flex-direction: column;
+  }
+}

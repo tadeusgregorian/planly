@@ -8,7 +8,9 @@ import clientDate from './clientDate'
 import firebaseListeners from './firebaseListeners'
 import ui from './ui'
 import roster from './roster'
+import absencePlaner from './absencePlaner'
 import type { Roster } from './roster'
+import type { AbsencePlaner } from './absencePlaner'
 import type { Ui } from './ui'
 import type { Auth } from './auth'
 import type { ClientDate } from './clientDate'
@@ -22,7 +24,8 @@ export type RootReducer = {
 	clientDate: ClientDate,
 	firebaseListeners: FirebaseListeners,
 	ui: Ui,
-	roster: Roster
+	roster: Roster,
+	absencePlaner: AbsencePlaner
 }
 
 const rootReducer = combineReducers({
@@ -32,7 +35,8 @@ const rootReducer = combineReducers({
 	clientDate,
 	firebaseListeners,
 	ui,
-	roster
+	roster,
+	absencePlaner,
 });
 
 export default rootReducer

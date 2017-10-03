@@ -1,0 +1,27 @@
+.absenceRowMain{
+
+  height: 36px;
+  border-top: 1px solid #dfe0e4;
+  &:not(:last-of-type){
+    border-top: 1px solid #dfe0e4;
+  }
+
+  .userCell{
+    flex: 1 1 auto;
+    font-weight: 300;
+    align-items: center;
+    padding-left: 8px;
+    background: #f7f7f7;
+
+  }
+
+  .monthCell{
+    flex: 0 0 auto;
+  }
+
+  &:last-of-type{
+    .userCell{
+      border-bottom-left-radius: 2px;
+    }
+  }
+}

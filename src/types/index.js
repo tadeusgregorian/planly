@@ -31,7 +31,7 @@ export type AbsenceBasis = {
   status: AbsenceStatus,
   startDate: number,
   endDate: number,
-  total: number,
+  totalDays: number,
   effective: number,
 }
 
@@ -43,16 +43,12 @@ export type Absence = AbsenceBasis & { // this is the absence Obj we get from th
   hollow?: true
 }
 
-export type AbsencePreDB = AbsenceBasis & { // this is the absence Obj we want to write to the DB
+export type AbsenceDB = AbsenceBasis & { // this is the absence Obj we want to write to the DB
   userNote: ?string,
   adminNote: ?string,
   excludedDays: ?ExcludedDays,
   dayRate: ?number, // number of minutes that get counted to the week-sum for an absence-day
   hollow: ?true
-}
-
-export type AbsenceDB = AbsencePreDB & {
-  [smartWeek: number]: string // the value is the userID here -> needed for Firebasy Query
 }
 
 export type DataStatus =

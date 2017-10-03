@@ -4,7 +4,7 @@ import { combineReducers } from 'redux'
 import type { Notes, ShiftEdits, Shifts, DataStatus, TemplatesFlat } from 'types/index'
 
 
-// we extract this because there is userDay, and branchDay in DB ( just needed for mobile )
+// we extract this because there is userDay, and branchDay in DB ( just needed for mobile-Firebase-Querys)
 const extractShift = (data) => {
   const { id, s, e, b, user, day, isOpen, position, note, edit, location } = data
   return { id, s, e, b, user, day, isOpen, position, note, edit, location }

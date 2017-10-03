@@ -3,7 +3,7 @@
 import firebase from 'firebase'
 import type { Dispatch } from 'types/index'
 
-type cFbLType = (disp: Dispatch, getS: ()=>any, t:string, dbP: string, qR?: ?any, oV?: ?boolean ) => any
+type cFbLType = (disp: Dispatch, getS: ()=>any, t: string, dbP: string, qR?: ?any, oV?: ?boolean ) => any
 type trackFbLType = (disp: Dispatch, getS: ()=>any, lT:string, nP: string) => any
 
 const addFBListener = (ref, fbAction, target, dispatch, childrenCount = 0) => {
