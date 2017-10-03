@@ -110,7 +110,7 @@ class AbsenceModal extends PureComponent{
     const isComplete = startDate && endDate
 
     return(
-      <SModal.Main onClose={closeModal} title={'Abwesenheit - ' + user.name} >
+      <SModal.Main onClose={closeModal} title={user.name} >
   			<SModal.Body>
   				<fb className="absenceModalMain">
             <fb className='firstRow'>

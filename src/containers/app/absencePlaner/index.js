@@ -9,7 +9,7 @@ import { handleClicks, absencesOfMonth } from './localHelpers'
 import { openAbsenceModal } from 'actions/ui/modals'
 import getCurrentUser from 'selectors/currentUser'
 
-import type { User, Store, Branch, DataStatus, Absence } from 'types/index'
+import type { User, Store, Branch, DataStatus, Absence, AbsenceType } from 'types/index'
 
 import AbsenceActionBar from './absenceActionBar'
 //import AbsenceListView from './absenceListView'
@@ -17,10 +17,10 @@ import AbsenceCalendar from './absenceCalendar'
 import './styles.css'
 
 type State = {
-  view: 'calendar' | 'list',
   currentBranch: string,
   currentYear: number,
   currentMonth: number,
+  absenceType: ?AbsenceType,
 }
 
 type OwnProps = {}
@@ -39,11 +39,15 @@ class AbsencePlaner extends PureComponent {
   state: State
   props: Props
 
-  state = {
-    view: 'calendar',
-    currentBranch: this.props.rosterBranch, // per default its the branch that was selected in the roster
-    currentYear: moment().year(),
-    currentMonth: moment().month(),
+  constructor(props: Props){
+    super(props)
+
+    this.state = {
+      currentBranch: this.props.rosterBranch, // per default its the branch that was selected in the roster
+      currentYear: moment().year(),
+      currentMonth: moment().month(),
+      absenceType: 'vac',
+    }
   }
 
   componentDidMount = () => {
@@ -62,7 +66,7 @@ class AbsencePlaner extends PureComponent {
   }
 
   render() {
-    const { currentBranch, currentYear, currentMonth, view } = this.state
+    const { currentBranch, currentYear, currentMonth, absenceType } = this.state
     const { branches, absences, absencesDS } = this.props
 
     return(
@@ -76,8 +80,8 @@ class AbsencePlaner extends PureComponent {
             currentMonth={currentMonth}
             changeMonth={this.changeMonth}
             branches={branches}
-            view={view}
-            changeView={(view) => this.setState({view})}
+            absenceType={absenceType}
+            changeType={(absenceType) => this.setState({absenceType})}
           />
           {/* <AbsenceListView  /> */}
           <AbsenceCalendar

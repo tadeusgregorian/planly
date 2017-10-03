@@ -1,27 +1,20 @@
 // @flow
 import React, { PureComponent } from 'react'
-import { connect } from 'react-redux'
-import type { Connector } from 'react-redux'
 
 import AbsenceRow from './absenceRow'
-import type { User, Store, Absence } from 'types/index'
+import type { User, Absence } from 'types/index'
 
 import './styles.css'
 
-type OwnProps = {
+type Props = {
   branch: string,
   year: number,
   month: number,
   absences: Array<Absence>,
-}
-
-type ConProps = {
   users: Array<User>,
 }
 
-type Props = OwnProps & ConProps
-
-class CalendarBody extends PureComponent {
+export default class CalendarBody extends PureComponent {
   props: Props
 
   render() {
@@ -37,10 +30,3 @@ class CalendarBody extends PureComponent {
     )
   }
 }
-
-const mapStateToProps = (state: Store, ownProps: OwnProps) => ({
-  users: state.core.users.filter(u => u.branches[ownProps.branch])
-})
-
-const connector: Connector<OwnProps, Props> = connect(mapStateToProps)
-export default connector(CalendarBody)

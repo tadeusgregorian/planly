@@ -24,7 +24,5 @@ export const getPosLeft = (absence: Absence, month: number): number => {
 export const getPosWidth = (absence: Absence, year: number, month: number): number => {
   const firstDay = getFirstDay(absence, month)
   const lastDay = getLastDay(absence, year, month)
-  console.log(firstDay);
-  console.log(lastDay);
   return ( lastDay - firstDay + 1 ) * dayWidth
 }

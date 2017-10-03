@@ -27,7 +27,6 @@ class AbsenceCalendar extends PureComponent {
 
   render() {
     const { users, absences, year, month, branch } = this.props
-    console.log(absences)
 
     return(
       <fb className="absenceCalendarMain">
@@ -42,5 +41,5 @@ const mapStateToProps = (state: Store, ownProps: OwnProps) => ({
   users: state.core.users.filter(u => u.branches[ownProps.branch])
 })
 
-const connector: Connector<OwnProps, Props> = connect(mapStateToProps)
+const connector: Connector<OwnProps, Props> = connect(mapStateToProps, {})
 export default connector(AbsenceCalendar)
