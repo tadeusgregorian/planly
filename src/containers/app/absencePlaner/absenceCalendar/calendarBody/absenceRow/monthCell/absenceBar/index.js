@@ -1,5 +1,6 @@
 //@flow
 import React from 'react'
+import cn from 'classnames'
 
 import { colorCode } from 'constants/absence'
 import { smartToMom } from 'helpers/general'
@@ -18,20 +19,26 @@ export default (props: Props) => {
   const left = getPosLeft(absence, month)
   const width = getPosWidth(absence, year, month)
 
-  const background = colorCode['vac']
+  const backgroundColor = colorCode[absence.type]
   const extendsLeft = smartToMom(absence.startDate).month() < month
   const extendsRight = smartToMom(absence.endDate).month() > month
 
+  const getStartEndShort = () => {
+    const start = smartToMom(absence.startDate).format('DD.MMM')
+    const end = smartToMom(absence.endDate).format('DD.MMM')
+    return start + ' - ' + end
+  }
+
   return(
     <fb
-      className="absenceBarMain"
-      style={{ left, width, background }}
+      className={cn({absenceBarMain: true, requested: absence.status === 'requested'})}
+      style={{ left, width, backgroundColor }}
       data-type='absence-bar'
       data-user={absence.user}
       data-absence-id={absence.id}
     >
       { extendsLeft && <fb className='arrowIndicator icon icon-arrow_back' />}
-      <fb className='content'></fb>
+      <fb className='content'>{ width > 100 && getStartEndShort()}</fb>
       { extendsRight && <fb className='arrowIndicator icon icon-arrow_forward' />}
     </fb>
   )

@@ -2,6 +2,8 @@
 import React, { PureComponent } from 'react'
 import { dayWidth } from 'constants/absence'
 import moment from 'moment'
+
+import DayCell from './dayCell'
 import './styles.css'
 
 type Props = {
@@ -21,11 +23,17 @@ export default class CalendarHead extends PureComponent{
   }
 
   render(){
+    const { year, month } = this.props
     return(
       <fb className="absenceCalendarHeadMain">
         <fb className='usersHead'></fb>
         <fb className='monthHead'>
-          { this.getDaysArray().map(d => <fb className='day' key={d} style={{width: dayWidth}}>{d}</fb> )}
+          { this.getDaysArray().map(d =>
+            <DayCell
+              key={d}
+              width={dayWidth}
+              mom={moment().year(year).month(month).date(d)} />
+          )}
         </fb>
       </fb>
     )

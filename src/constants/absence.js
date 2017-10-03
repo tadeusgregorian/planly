@@ -2,7 +2,7 @@
 export const dayWidth = 30
 
 export const colorCode = {
-  ill: '#4a5c65',
+  ill: '#596c77',
   vac: '#16aaf1',
   extra: '#ea4e76'
 }

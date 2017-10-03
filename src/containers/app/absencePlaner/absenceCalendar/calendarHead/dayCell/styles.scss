@@ -1,0 +1,34 @@
+.absenceDayCellMain{
+  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  .weekDisplay{
+    flex: 1;
+    border-left: 1px solid #dfe0e4;
+    padding-top: 6px;
+    padding-left: 4px;
+    color: #2db3f3;
+    font-weight: 400;
+    font-size: 14px;
+    width: 50px;
+  }
+
+
+  .weekDay{
+    font-size: 10px;
+    color: grey;
+    padding-bottom: 3px;
+    border-left: 1px solid #dfe0e4;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .monthDay{
+    border-left: 1px solid #dfe0e4;
+    width: 100%;
+    justify-content: center;
+    padding-bottom: 2px;
+    color: #585858;
+  }
+}

@@ -26,6 +26,7 @@ export default (props: Props) => {
 
   return(
     <fb className='absenceTypeSwitchMain'>
+      <fb className='descript'>Typ:</fb>
       <div className='typeSelect'>
         <Select
           value={props.type}
