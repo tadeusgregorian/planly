@@ -1,5 +1,5 @@
 //@flow
-export const dayWidth = 30
+export const dayWidth = 31
 
 export const colorCode = {
   ill: '#596c77',

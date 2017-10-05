@@ -2,7 +2,7 @@
 import React, { PureComponent } from 'react'
 import Select from 'react-select';
 
-import type { Branch, AbsenceType } from 'types/index'
+import type { Branch, AbsenceTypeFilter } from 'types/index'
 import TypeSwitch from './typeSwitch'
 import { getYearsArray, getMonthsArray } from './localHelpers'
 import './styles.css'
@@ -11,12 +11,12 @@ type Props = {
   currentBranch: string,
   currentYear: number,
   currentMonth: number,
-  absenceType: ?AbsenceType,
+  absenceType: AbsenceTypeFilter,
   branches: Array<Branch>,
   changeBranch: (string)=>void,
   changeYear: (number)=>void,
   changeMonth: (number)=>void,
-  changeType: (?AbsenceType)=>any,
+  changeType: (AbsenceTypeFilter)=>any,
 }
 
 export default class AbsenceActionBar extends PureComponent {

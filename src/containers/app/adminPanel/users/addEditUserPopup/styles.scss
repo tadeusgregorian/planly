@@ -1,102 +1,112 @@
 .addEditUserPopup{
-	display: flex;
 	flex-direction: column;
 	overflow-y: auto;
 	min-width: 700px;
 	font-size: 16px;
 	overflow: visible;
 	color: grey;
+	margin: 4px;
 
-	.flatFormRowMain{
-		&:last-child{
-			border-bottom: none;
-		}
-	}
-
-	.errorText{
-		padding: 0px 17px;
-    align-items: center;
-    font-size: 16px;
-    font-weight: 400;
-    border-left: 1px solid #e5e5e5;
-    min-width: 100px;
-    color: #ff3325;
-    background-color: #ffe8e8;
-    height: 37px;
-    border-bottom: 1px solid #ff8f88;
-    border-top: 1px solid #ff8f88;
-
-		.icon{
-			padding: 0px;
-    	padding-right: 8px;
-    	color: #ff3325;
-	    padding-bottom: 1px;
-		}
-	}
+	.mainForm{
+		flex-direction: column;
+		//background-color: white;
+		border-radius: 2px;
+		margin: 4px;
+		border: 1px solid #c3c3c3;
+		overflow: hidden;
 
 
-	.emailFrozen{
-		width: 100%;
-    padding: 4px 10px;
-    box-sizing: border-box;
-    color: #a5a5a5;
-    background-color: #f1f1f1;
-    font-size: 16px;
-    height: 100%;
-    width: 100%;
-    font-weight: 300;
-    align-items: center;
-	}
-
-	.selectWrapper{
-		min-width: 200px;
-		padding: 4px;
-		//cursor: pointer;
-
-		&.branchesSelectWrapper{
-			font-size: 18px;
+		.flatFormRowMain{
+			&:last-child{
+				border-bottom: none;
+			}
 		}
 
-		 &> .Select > .Select-control {
-			border-radius: 1px;
+		.errorText{
+			padding: 0px 17px;
+	    align-items: center;
+	    font-size: 16px;
+	    font-weight: 400;
+	    border-left: 1px solid #e5e5e5;
+	    min-width: 100px;
+	    color: #ff3325;
+	    background-color: #ffe8e8;
+	    height: 37px;
+	    border-bottom: 1px solid #ff8f88;
+	    border-top: 1px solid #ff8f88;
+
+			.icon{
+				padding: 0px;
+	    	padding-right: 8px;
+	    	color: #ff3325;
+		    padding-bottom: 1px;
+			}
 		}
 
-		.Select--multi {
-			.Select-value {
-				font-size: 0.9em;
-				line-height: 1.4;
-				margin-left: 3px;
-				margin-top: 3px;
-				vertical-align: top;
-				margin-right: 2px;
 
-				.Select-value-icon{
-					padding-bottom: 0px;
+		.emailFrozen{
+			width: 100%;
+	    padding: 4px 10px;
+	    box-sizing: border-box;
+	    color: #a5a5a5;
+	    background-color: #f1f1f1;
+	    font-size: 16px;
+	    height: 100%;
+	    width: 100%;
+	    font-weight: 300;
+	    align-items: center;
+		}
+
+		.selectWrapper{
+			min-width: 200px;
+			padding: 4px;
+			//cursor: pointer;
+
+			&.branchesSelectWrapper{
+				font-size: 18px;
+			}
+
+			 &> .Select > .Select-control {
+				border-radius: 1px;
+			}
+
+			.Select--multi {
+				.Select-value {
+					font-size: 0.9em;
+					line-height: 1.4;
+					margin-left: 3px;
+					margin-top: 3px;
+					vertical-align: top;
+					margin-right: 2px;
+
+					.Select-value-icon{
+						padding-bottom: 0px;
+					}
 				}
 			}
 		}
+
+		.userinputMissingText{
+			background-color: #ff6b5c;
+	    height: 38px;
+	    border-radius: 2px;
+	    padding: 3px;
+	    padding-left: 8px;
+	    color: #ffffff;
+	    margin-bottom: 0px;
+	    justify-content: center;
+	    align-items: center;
+			font-size: 16px;
+	    margin-bottom: 22px;
+		}
 	}
 
-	.userinputMissingText{
-		background-color: #ff6b5c;
-    height: 38px;
-    border-radius: 2px;
-    padding: 3px;
-    padding-left: 8px;
-    color: #ffffff;
-    margin-bottom: 0px;
-    justify-content: center;
-    align-items: center;
-		font-size: 16px;
-    margin-bottom: 22px;
+	.footerInfoText{
+		font-size: 14px;
+		justify-content: center;
+		align-items: center;
+		color: #6d6d6d;
+		padding-left: 10px;
+		font-weight: 300;
 	}
-}
-
-.footerInfoText{
-	font-size: 14px;
-	justify-content: center;
-	align-items: center;
-	color: #6d6d6d;
-	padding-left: 10px;
-	font-weight: 300;
 }

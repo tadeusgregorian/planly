@@ -1,74 +1,79 @@
 .addEditUserPopup {
-  display: flex;
   flex-direction: column;
   overflow-y: auto;
   min-width: 700px;
   font-size: 16px;
   overflow: visible;
-  color: grey; }
-  .addEditUserPopup .flatFormRowMain:last-child {
-    border-bottom: none; }
-  .addEditUserPopup .errorText {
-    padding: 0px 17px;
-    align-items: center;
-    font-size: 16px;
-    font-weight: 400;
-    border-left: 1px solid #e5e5e5;
-    min-width: 100px;
-    color: #ff3325;
-    background-color: #ffe8e8;
-    height: 37px;
-    border-bottom: 1px solid #ff8f88;
-    border-top: 1px solid #ff8f88; }
-    .addEditUserPopup .errorText .icon {
-      padding: 0px;
-      padding-right: 8px;
-      color: #ff3325;
-      padding-bottom: 1px; }
-  .addEditUserPopup .emailFrozen {
-    width: 100%;
-    padding: 4px 10px;
-    box-sizing: border-box;
-    color: #a5a5a5;
-    background-color: #f1f1f1;
-    font-size: 16px;
-    height: 100%;
-    width: 100%;
-    font-weight: 300;
-    align-items: center; }
-  .addEditUserPopup .selectWrapper {
-    min-width: 200px;
-    padding: 4px; }
-    .addEditUserPopup .selectWrapper.branchesSelectWrapper {
-      font-size: 18px; }
-    .addEditUserPopup .selectWrapper > .Select > .Select-control {
-      border-radius: 1px; }
-    .addEditUserPopup .selectWrapper .Select--multi .Select-value {
-      font-size: 0.9em;
-      line-height: 1.4;
-      margin-left: 3px;
-      margin-top: 3px;
-      vertical-align: top;
-      margin-right: 2px; }
-      .addEditUserPopup .selectWrapper .Select--multi .Select-value .Select-value-icon {
-        padding-bottom: 0px; }
-  .addEditUserPopup .userinputMissingText {
-    background-color: #ff6b5c;
-    height: 38px;
+  color: grey;
+  margin: 4px; }
+  .addEditUserPopup .mainForm {
+    flex-direction: column;
     border-radius: 2px;
-    padding: 3px;
-    padding-left: 8px;
-    color: #ffffff;
-    margin-bottom: 0px;
+    margin: 4px;
+    border: 1px solid #c3c3c3;
+    overflow: hidden; }
+    .addEditUserPopup .mainForm .flatFormRowMain:last-child {
+      border-bottom: none; }
+    .addEditUserPopup .mainForm .errorText {
+      padding: 0px 17px;
+      align-items: center;
+      font-size: 16px;
+      font-weight: 400;
+      border-left: 1px solid #e5e5e5;
+      min-width: 100px;
+      color: #ff3325;
+      background-color: #ffe8e8;
+      height: 37px;
+      border-bottom: 1px solid #ff8f88;
+      border-top: 1px solid #ff8f88; }
+      .addEditUserPopup .mainForm .errorText .icon {
+        padding: 0px;
+        padding-right: 8px;
+        color: #ff3325;
+        padding-bottom: 1px; }
+    .addEditUserPopup .mainForm .emailFrozen {
+      width: 100%;
+      padding: 4px 10px;
+      box-sizing: border-box;
+      color: #a5a5a5;
+      background-color: #f1f1f1;
+      font-size: 16px;
+      height: 100%;
+      width: 100%;
+      font-weight: 300;
+      align-items: center; }
+    .addEditUserPopup .mainForm .selectWrapper {
+      min-width: 200px;
+      padding: 4px; }
+      .addEditUserPopup .mainForm .selectWrapper.branchesSelectWrapper {
+        font-size: 18px; }
+      .addEditUserPopup .mainForm .selectWrapper > .Select > .Select-control {
+        border-radius: 1px; }
+      .addEditUserPopup .mainForm .selectWrapper .Select--multi .Select-value {
+        font-size: 0.9em;
+        line-height: 1.4;
+        margin-left: 3px;
+        margin-top: 3px;
+        vertical-align: top;
+        margin-right: 2px; }
+        .addEditUserPopup .mainForm .selectWrapper .Select--multi .Select-value .Select-value-icon {
+          padding-bottom: 0px; }
+    .addEditUserPopup .mainForm .userinputMissingText {
+      background-color: #ff6b5c;
+      height: 38px;
+      border-radius: 2px;
+      padding: 3px;
+      padding-left: 8px;
+      color: #ffffff;
+      margin-bottom: 0px;
+      justify-content: center;
+      align-items: center;
+      font-size: 16px;
+      margin-bottom: 22px; }
+  .addEditUserPopup .footerInfoText {
+    font-size: 14px;
     justify-content: center;
     align-items: center;
-    font-size: 16px;
-    margin-bottom: 22px; }
-
-.footerInfoText {
-  font-size: 14px;
-  justify-content: center;
-  align-items: center;
-  color: #6d6d6d;
-  padding-left: 10px;
-  font-weight: 300; }
+    color: #6d6d6d;
+    padding-left: 10px;
+    font-weight: 300; }

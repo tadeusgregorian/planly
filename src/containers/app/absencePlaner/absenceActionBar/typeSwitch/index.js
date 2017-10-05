@@ -4,12 +4,12 @@ import Select from 'react-select';
 
 
 //import { colorCode } from 'constants/absence'
-import type { AbsenceType } from 'types/index'
+import type { AbsenceTypeFilter } from 'types/index'
 import './styles.css'
 
 type Props = {
-  type: ?AbsenceType,
-  changeType: (?AbsenceType)=>void
+  type: AbsenceTypeFilter,
+  changeType: (AbsenceTypeFilter)=>void
 }
 
 export default (props: Props) => {

@@ -5,11 +5,11 @@ import type { Connector } from 'react-redux'
 import moment from 'moment'
 
 import { setAbsencesListener } from 'actions/listeners/absencePlaner'
-import { handleClicks, absencesOfMonth } from './localHelpers'
+import { handleClicks, absencesFiltered } from './localHelpers'
 import { openAbsenceModal } from 'actions/ui/modals'
 import getCurrentUser from 'selectors/currentUser'
 
-import type { User, Store, Branch, DataStatus, Absence, AbsenceType } from 'types/index'
+import type { User, Store, Branch, DataStatus, Absence, AbsenceTypeFilter } from 'types/index'
 
 import AbsenceActionBar from './absenceActionBar'
 //import AbsenceListView from './absenceListView'
@@ -20,7 +20,7 @@ type State = {
   currentBranch: string,
   currentYear: number,
   currentMonth: number,
-  absenceType: ?AbsenceType,
+  absenceType: AbsenceTypeFilter,
 }
 
 type OwnProps = {}
@@ -88,7 +88,8 @@ class AbsencePlaner extends PureComponent {
             branch={currentBranch}
             year={currentYear}
             month={currentMonth}
-            absences={absencesOfMonth(absences, currentMonth)}
+            absenceType={absenceType}
+            absences={absencesFiltered(absences, currentMonth, absenceType)}
             loading={absencesDS !== 'LOADED'}
           />
         </fb>

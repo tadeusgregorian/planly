@@ -1,8 +1,9 @@
 //@flow
 
 import firebase from 'firebase'
-import { generateGuid, getThisMondaySmart } from 'helpers/index'
-import type { User, Position, Branch} from 'types/index'
+import moment from 'moment'
+import { generateGuid, getThisMondaySmart, momToSmartWeek } from 'helpers/index'
+import type { User, Position, Branch, InitialOvertime} from 'types/index'
 
 export const createAccount = (firebaseUserID: string, email: string) => {
   const accountID = generateGuid()
@@ -37,6 +38,7 @@ const getEmptyAccount = (adminEmail): DBAccount => ({
       status: 'active',
       isAdmin: true,
       isSuperAdmin: true, // SuperAdmin is only the creator of the account.
+      initialOvertime: { smartWeek: momToSmartWeek(moment().subtract(7, 'days')), hours: 0 }
     }
   },
   branches: {

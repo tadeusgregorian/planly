@@ -2,7 +2,7 @@
 /* eslint-disable no-use-before-define */
 
 import { closestWithAttribute, smartToMom } from 'helpers/general'
-import type { Absence } from 'types/index'
+import type { Absence, AbsenceTypeFilter } from 'types/index'
 
 //superdirty im sorry
 export const handleClicks = (openAbsenceModal?: Function) => {
@@ -16,8 +16,10 @@ export const handleClicks = (openAbsenceModal?: Function) => {
   !openAbsenceModal && document.removeEventListener('click', somethingGotClicked)
 }
 
-export const absencesOfMonth = (absences: Array<Absence>, month: number): Array<Absence> => {
+export const absencesFiltered = (absences: Array<Absence>, month: number, type: AbsenceTypeFilter): Array<Absence> => {
   return absences.filter(a => {
+    if(type !== 'all' && type !== a.type) return false
+
     const monthStart = smartToMom(a.startDate).month()
     const monthEnd = smartToMom(a.endDate).month()
     return (monthStart === month || monthEnd === month)

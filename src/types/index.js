@@ -11,6 +11,7 @@ export type ThunkAction = (any, any, any)=> (dispatch: Dispatch, getState: GetSt
 // core-types
 
 export type AbsenceType = 'vac' | 'ill' | 'extra'
+export type AbsenceTypeFilter = 'vac' | 'ill' | 'extra' | 'all'
 export type AbsenceStatus = 'requested' | 'accepted'
 
 export type ExcludedDays = {
@@ -43,7 +44,7 @@ export type Absence = AbsenceBasis & { // this is the absence Obj we get from th
   hollow?: true
 }
 
-export type AbsenceDB = AbsenceBasis & { // this is the absence Obj we want to write to the DB
+export type AbsencePreDB = AbsenceBasis & { // this is the absence Obj we want to write to the DB
   userNote: ?string,
   adminNote: ?string,
   excludedDays: ?ExcludedDays,
@@ -51,10 +52,19 @@ export type AbsenceDB = AbsenceBasis & { // this is the absence Obj we want to w
   hollow: ?true
 }
 
+export type AbsenceDB = AbsencePreDB & {
+  yearUser: string
+}
+
 export type DataStatus =
   'REQUESTED' |
   'NOT_REQUESTED' |
   'LOADED'
+
+export type InitialOvertime = {
+  smartWeek: number,
+  hours: 0
+}
 
 export type User = {
   id: string,
@@ -65,8 +75,10 @@ export type User = {
   weeklyHours: {},
   status: 'notInvited' | 'invited' | 'active',
   isAdmin?: true,
-  isSuperAdmin?: true
+  isSuperAdmin?: true,
+  initialOvertime: InitialOvertime,
 }
+
 export type Users = Array<User>
 
 export type Position = {

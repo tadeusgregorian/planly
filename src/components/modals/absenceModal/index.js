@@ -7,10 +7,10 @@ import moment from 'moment'
 import _ from 'lodash'
 
 import getCurrentUser from 'selectors/currentUser'
-import { saveAbsenceToDB } from 'actions/absence'
+import { saveAbsenceToDB, checkOverlappings } from 'actions/absence'
 import { generateGuid, momToSmart } from 'helpers/index'
 import { getEffectiveDays, getTotalDays } from './localHelpers'
-import type { Store, User, Absence, ExcludedDays, AbsenceType, AbsenceStatus } from 'types/index'
+import type { Store, User, Absence, AbsencePreDB, ExcludedDays, AbsenceType, AbsenceStatus } from 'types/index'
 
 import AbsenceDetailsDisplay from './absenceDetailsDisplay'
 import AbsenceTypeSelect from './absenceTypeSelect'
@@ -34,7 +34,8 @@ type State = {
   excludedDays: ?ExcludedDays,
   dayRate: number | null,
   hollow: true | null,
-  focusedInput: any
+  focusedInput: any,
+  isOverlapping: boolean | 'loading', // i know dirty...
 }
 
 type OwnProps = {
@@ -48,7 +49,7 @@ type ConProps = {
   currentUser: User,
   excludedDaysOfUser: ExcludedDays,
   dayRateOfUser: number,
-  saveAbsenceToDB: (Absence)=>any,
+  saveAbsenceToDB: (AbsencePreDB)=>any,
 }
 
 class AbsenceModal extends PureComponent{
@@ -74,7 +75,8 @@ class AbsenceModal extends PureComponent{
       excludedDays:   absence ? absence.excludedDays  : props.excludedDaysOfUser,
       dayRate:        absence ? absence.dayRate       : props.dayRateOfUser, // number of minutes that get added to the week-sum for an absent-day
       hollow:         absence ? absence.isHollow      : props.absenceTypeIsHollow,
-      focusedInput: null
+      focusedInput:   null, // we omit this before saving to db!
+      isOverlapping:  false, // we omit this before saving to db!
     }
   }
 
@@ -88,12 +90,18 @@ class AbsenceModal extends PureComponent{
 
   datesChanged = (d: {startDate: ?moment, endDate: ?moment}) => {
     this.setState({
-      startDate:  d.startDate ? momToSmart(d.startDate) : null,
-      endDate:    d.endDate   ? momToSmart(d.endDate): null,
-      year:       moment(d.startDate).year(),
+      startDate:      d.startDate ? momToSmart(d.startDate) : null,
+      endDate:        d.endDate   ? momToSmart(d.endDate): null,
+      year:           moment(d.startDate).year(),
       totalDays:      getTotalDays(d.startDate, d.endDate),
-      effectiveDays:  getEffectiveDays(d.startDate, d.endDate, this.props.excludedDaysOfUser, 'HH')
+      effectiveDays:  getEffectiveDays(d.startDate, d.endDate, this.props.excludedDaysOfUser, 'HH'),
+      isOverlapping:  !!(d.startDate && d.endDate) ? 'loading' : false
     })
+
+    if(d.startDate && d.endDate){
+      checkOverlappings(d.startDate, d.endDate, this.props.userID)
+        .then((res: boolean)=> this.setState({isOverlapping: res}))
+    }
   }
 
   changeAdminNote = (note) => this.setState({adminNote: note})
@@ -101,13 +109,13 @@ class AbsenceModal extends PureComponent{
 
   rejectRequest = () => console.log('Reject Req')
   acceptRequest = () => console.log('Accept Req')
-  saveAbsence   = () => this.props.saveAbsenceToDB(_.omit(this.state, 'focusedInput'))
+  saveAbsence   = () => this.props.saveAbsenceToDB(_.omit(this.state, ['focusedInput', 'isOverlapping']))
 
   render(){
     const { closeModal, user, currentUser } = this.props
-    const { type, startDate, endDate, focusedInput, userNote, adminNote, totalDays, effectiveDays, status } = this.state
+    const { type, startDate, endDate, focusedInput, userNote, adminNote, totalDays, effectiveDays, status, isOverlapping } = this.state
     const adminMode = !!currentUser.isAdmin
-    const isComplete = startDate && endDate
+    const isComplete = startDate && endDate && !isOverlapping
 
     return(
       <SModal.Main onClose={closeModal} title={user.name} >
@@ -123,16 +131,19 @@ class AbsenceModal extends PureComponent{
                 onFocusChange={focusedInput => this.setState({ focusedInput })}
               />
             </fb>
-            { startDate && endDate && <AbsenceDetailsDisplay
+            { startDate && endDate && !isOverlapping && <AbsenceDetailsDisplay
               totalDays={totalDays}
               effectiveDays={effectiveDays}
             /> }
+            { isOverlapping === 'loading' && <fb>loading</fb> }
+            { isOverlapping === true && <fb>Zeitraum überschneidet sich mit einem anderen Abwesenheits-Eintrag.</fb> }
             <AbsenceNotesSection
               userNote={userNote}
               adminNote={adminNote}
               changeAdminNote={this.changeAdminNote}
               changeUserNote={this.changeUserNote}
               adminMode={adminMode}
+              expanded={!!(userNote || adminNote)}
             />
   				</fb>
   			</SModal.Body>
