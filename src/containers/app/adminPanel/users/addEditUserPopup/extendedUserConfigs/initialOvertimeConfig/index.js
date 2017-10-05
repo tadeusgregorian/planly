@@ -58,7 +58,7 @@ export default (props: Props) => {
     </fb>
     <fb className='spacer icon icon-arrow_forward'/>
     <fb className='overtimeInputWrapper'>
-      <input type='text'  value={iO.hours} placeholder='' onChange={onInpChange} maxLength='4'/>
+      <input type='text'  value={iO.hours} placeholder='' onChange={onInpChange} maxLength='5'/>
     </fb>
     <fb className='unit'>Std</fb>
     </fb>

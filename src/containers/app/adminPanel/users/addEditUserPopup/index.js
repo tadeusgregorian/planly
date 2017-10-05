@@ -3,11 +3,11 @@
 import React, { PureComponent } from 'react'
 import _ from 'lodash'
 import moment from 'moment'
+import Select from 'react-select';
 import { connect } from 'react-redux'
 import SModal from 'components/sModal'
 import SButton from 'components/sButton'
 import FlatInput from 'components/flatInput'
-import Select from 'react-select';
 import EmailStatus from './emailStatus'
 import WithTooltip from 'components/withTooltip'
 import FlatFormRow from 'components/flatFormRow'
@@ -24,29 +24,31 @@ class AddEditUserPopup extends PureComponent {
 	constructor(props) {
 		super(props);
 
-		const { users, branches } = this.props
+		const { users, branches, user } = this.props
 
 		const pickRandomColor 	= () => 'orange' // TODO come back and fix this
 		const getDefaultBranch 	= () => branches.length === 1 ? {[branches[0].id]: true} : {}
 		const getFreshUserID		= () => getNextID('u', users.length + 1)
 
 		this.state = {
-			id: 							getFreshUserID(),
-			name: 						'',
-			email: 						'',
-			weeklyHours: 			{[getThisMondaySmart()]: ''},
-			color: 						pickRandomColor(),
-			branches: 				getDefaultBranch(),
-			position: 				'p001',
-			status: 					'notInvited',
-			initialOvertime: 	{smartWeek: momToSmartWeek(moment().subtract(7, 'days')), hours: 0 },
+			id: 							user ? user.id 					: getFreshUserID(),
+			name: 						user ? user.name 				: '',
+			email: 						user ? user.email 			: '',
+			weeklyHours: 			user ? user.weeklyHours : {[getThisMondaySmart()]: ''},
+			color: 						user ? user.color 			: pickRandomColor(),
+			branches: 				user ? user.branches 		: getDefaultBranch(),
+			position: 				user ? user.position 		: 'p001',
+			status: 					user ? user.status 			: 'notInvited',
+			initialOvertime: 	user ? user.initialOvertime : {smartWeek: momToSmartWeek(moment().subtract(7, 'days')), hours: 0 },
 			errorText: 				'',
 		}
 	}
 
+	validFloat = (num) => (!isNaN(parseFloat(replaceCommasWithDots(num.toString()))))
+
 	weeklyHoursValid = () => {
 		return _.values(this.state.weeklyHours).reduce(
-			(acc, val) => acc && !isNaN(parseFloat(replaceCommasWithDots(val))) , true
+			(acc, val) => acc && this.validFloat(val) , true
 		)
 	}
 
@@ -62,15 +64,17 @@ class AddEditUserPopup extends PureComponent {
 	}
 
 	onButtonClicked = () => {
-		const { id, name, email, branches, position } = this.state
+		const { id, name, email, branches, position, initialOvertime } = this.state
+		const initialHours = initialOvertime.hours
 		const { accountID } = this.props
 		let errorText = ''
 
-		if(!this.weeklyHoursValid())			errorText = 'Bitte geben Sie die Wochenstunden an.'
-		if(!_.keys(branches).length)			errorText = 'Bitte wählen Sie mindestens eine Filiale aus.'
-		if(!position)											errorText = 'Bitte wählen Sie eine Position aus.'
-		if(email && !isValidEmail(email)) errorText = 'Bitte geben Sie eine gültige Email-Adresse an'
-		if(name === '') 									errorText = 'Bitte geben Sie einen Benutzernamen ein.'
+		if(!this.weeklyHoursValid())  		 errorText = 'Bitte geben Sie die Wochenstunden an.'
+		if(!_.keys(branches).length)			 errorText = 'Bitte wählen Sie mindestens eine Filiale aus.'
+		if(!position)											 errorText = 'Bitte wählen Sie eine Position aus.'
+		if(email && !isValidEmail(email))  errorText = 'Bitte geben Sie eine gültige Email-Adresse an'
+		if(name === '') 									 errorText = 'Bitte geben Sie einen Benutzernamen ein.'
+		if(!this.validFloat(initialHours)) errorText = 'Überstunden Übertrag nicht zulässig'
 
 		if(errorText){
 			this.setState({errorText})
