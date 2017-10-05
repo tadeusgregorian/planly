@@ -10,8 +10,9 @@
     flex-direction: column;
     border-radius: 2px;
     margin: 4px;
-    border: 1px solid #c3c3c3;
-    overflow: hidden; }
+    border: 1px solid #d6d5d5;
+    overflow: hidden;
+    box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.1); }
     .addEditUserPopup .mainForm .flatFormRowMain:last-child {
       border-bottom: none; }
     .addEditUserPopup .mainForm .errorText {

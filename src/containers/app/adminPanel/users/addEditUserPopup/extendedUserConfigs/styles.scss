@@ -16,15 +16,13 @@
     background: #f1f1f1;
     align-items: center;
     cursor: pointer;
+    z-index: 1;
 
     &.expanded{
       border-bottom-left-radius: 0px;
       border-bottom-right-radius: 0px;
-      border-bottom: 1px solid #e6e6e6;
-    }
-
-    &:hover{
-      //background-color: lightgrey;
+      border-bottom: 1px solid #c3c3c3;
+      box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.08);
     }
 
     .expandIcon{
@@ -36,6 +34,12 @@
   }
 
   .content{
-    padding: 6px;
+    //padding: 6px;
+
+    .flatFormRowMain{
+      &:last-child{
+        border-bottom: none;
+      }
+    }
   }
 }
