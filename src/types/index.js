@@ -66,6 +66,16 @@ export type InitialOvertime = {
   hours: 0
 }
 
+export type WorkDays = {
+  mo?: number,
+  tu?: number,
+  we?: number,
+  th?: number,
+  fr?: number,
+  sa?: number,
+  su?: number,
+}
+
 export type User = {
   id: string,
   name: string,
@@ -77,6 +87,7 @@ export type User = {
   isAdmin?: true,
   isSuperAdmin?: true,
   initialOvertime: InitialOvertime,
+  workDays: WorkDays,
 }
 
 export type Users = Array<User>

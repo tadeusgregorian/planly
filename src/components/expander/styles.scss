@@ -1,4 +1,4 @@
-.extendedUserConfigsMain{
+.expanderComponentMain{
   flex-direction: column;
   align-self: stretch;
   background-color: white;
@@ -34,12 +34,6 @@
   }
 
   .content{
-    //padding: 6px;
 
-    .flatFormRowMain{
-      &:last-child{
-        border-bottom: none;
-      }
-    }
   }
 }

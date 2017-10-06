@@ -73,3 +73,9 @@ export const momToSmartWeek = (mom: moment): number => {
   const week = moment(mom).week()
   return parseInt((year + '' + week), 10)
 }
+
+export const smartWeekToMom = (smartWeek: number) => {
+  const year = parseInt(smartWeek.toString().substr(0, 4), 10)
+  const week = parseInt(smartWeek.toString().substr(4, 2), 10)
+  return moment().year(year).week(week).day(1)
+}

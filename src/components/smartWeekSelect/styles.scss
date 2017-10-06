@@ -1,0 +1,27 @@
+.smartWeekSelectMain{
+
+  .selelctWrapper{
+    margin-left: 4px;
+
+    &.yearSelect{
+      width: 80px;
+      align-items: center;
+    }
+
+    &.weekSelect{
+      width: 90px;
+      align-items: center;
+    }
+
+    .Dropdown-root{
+      width: 100%;
+      .Dropdown-control{
+        padding: 4px 8px;
+
+        .Dropdown-arrow {
+          top: 12px;
+        }
+      }
+    }
+  }
+}

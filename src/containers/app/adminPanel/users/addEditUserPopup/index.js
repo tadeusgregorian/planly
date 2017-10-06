@@ -6,16 +6,19 @@ import moment from 'moment'
 import Select from 'react-select';
 import { connect } from 'react-redux'
 import SModal from 'components/sModal'
+import Expander from 'components/expander'
 import SButton from 'components/sButton'
 import FlatInput from 'components/flatInput'
 import EmailStatus from './emailStatus'
 import WithTooltip from 'components/withTooltip'
 import FlatFormRow from 'components/flatFormRow'
 import WeeklyHoursInput from './weeklyHoursInput'
-import ExtendedUserConfigs from './extendedUserConfigs'
+import WorkDaysConfig from './workDaysConfig'
+import InitialOvertime from './initialOvertime'
 import type { User } from 'types/index'
 import { saveUserToDB, sendEmailInvite } from 'actions/index'
-import { getNextID, isValidEmail, replaceCommasWithDots, getThisMondaySmart, momToSmartWeek } from 'helpers/index'
+import { sumWorkHours, getAverageHours } from './localHelpers'
+import { getNextID, isValidEmail, replaceCommasWithDots, getThisSmartWeek, momToSmartWeek } from 'helpers/index'
 import './styles.css'
 
 class AddEditUserPopup extends PureComponent {
@@ -34,12 +37,13 @@ class AddEditUserPopup extends PureComponent {
 			id: 							user ? user.id 					: getFreshUserID(),
 			name: 						user ? user.name 				: '',
 			email: 						user ? user.email 			: '',
-			weeklyHours: 			user ? user.weeklyHours : {[getThisMondaySmart()]: ''},
+			weeklyHours: 			user ? user.weeklyHours : {[getThisSmartWeek()]: 0},
 			color: 						user ? user.color 			: pickRandomColor(),
 			branches: 				user ? user.branches 		: getDefaultBranch(),
 			position: 				user ? user.position 		: 'p001',
 			status: 					user ? user.status 			: 'notInvited',
-			initialOvertime: 	user ? user.initialOvertime : {smartWeek: momToSmartWeek(moment().subtract(7, 'days')), hours: 0 },
+			workDays: 				user ? user.workDays 		: { mo: 0, tu: 0, we: 0, th: 0, fr: 0, sa: 0, su: 0 },
+			initialOvertime: 	user ? user.initialOvertime : {smartWeek: momToSmartWeek(moment()), hours: 0 },
 			errorText: 				'',
 		}
 	}
@@ -89,15 +93,29 @@ class AddEditUserPopup extends PureComponent {
 
 	updateUser = (key, newValue) => this.setState({[key]: newValue })
 
-	onInitialOvertimeChanged 		= (val) => this.updateUser('initialOvertime', val)
-	onNameInputChanged 					= (val) => this.updateUser('name', val)
-	onEmailInputChanged 				= (val) => this.updateUser('email', val)
-	onWeeklyHoursChanged 				= (val) => this.updateUser('weeklyHours', val)
-	onPositionChanged 					= (val) => this.updateUser('position', val.value)
-	onBranchesChanged 					= (val) => this.updateUser('branches', val.reduce((acc, val) => ({ ...acc, [val.value]: true }) , {}))
+	initialOvertimeChanged 		= (val) => this.updateUser('initialOvertime', val)
+	nameInputChanged 					= (val) => this.updateUser('name', val)
+	emailInputChanged 				= (val) => this.updateUser('email', val)
+	positionChanged 					= (val) => this.updateUser('position', val.value)
+	branchesChanged 					= (val) => this.updateUser('branches', val.reduce((acc, val) => ({ ...acc, [val.value]: true }) , {}))
+
+	workDaysChanged = (workDays) => {
+		const hoursSum = sumWorkHours(_.values(workDays))
+		const latestSW = _.keys(this.state.weeklyHours).sort().reverse()[0]
+		const weeklyHours = { ...this.state.weeklyHours, [latestSW]: hoursSum}
+		this.setState({ workDays, weeklyHours})
+	}
+
+	weeklyHoursChanged = (weeklyHours) => {
+		const latestKW = _.keys(weeklyHours).sort().reverse()[0]
+		const h 			 = getAverageHours(weeklyHours[latestKW], _.keys(this.state.workDays).length)
+		let workDays = { ...this.state.workDays }
+		_.keys(this.state.workDays).forEach(w => workDays[w] = h)
+		this.setState({ weeklyHours, workDays })
+	}
 
 	render() {
-		const { name, email, weeklyHours, position, branches, status, initialOvertime } = this.state
+		const { name, email, weeklyHours, position, branches, status, initialOvertime, workDays } = this.state
 		const editMode = this.props.user
 
 		return (
@@ -112,12 +130,14 @@ class AddEditUserPopup extends PureComponent {
 									</fb>
 							}
 							<FlatFormRow label='Name'>
-									<FlatInput value={name} onInputChange={this.onNameInputChanged} defaultText='Max Mustermann'/>
+									<FlatInput value={name} onInputChange={this.nameInputChanged} defaultText='Max Mustermann'/>
 							</FlatFormRow>
 							<FlatFormRow label='Email'>
-									{ status === 'active' ?
-										<WithTooltip text='Aktivierte Email adressen können nur vom Mitarbeiter selbst geändert werden.'><fb className="emailFrozen">{email}</fb></WithTooltip> :
-										<FlatInput value={email} onInputChange={this.onEmailInputChanged} defaultText='max@gmail.de'/>
+									{ status === 'active'
+										?	<WithTooltip text='Aktivierte Email adressen können nur vom Mitarbeiter selbst geändert werden.'>
+												<fb className="emailFrozen">{email}</fb>
+											</WithTooltip>
+										: <FlatInput value={email} onInputChange={this.emailInputChanged} defaultText='max@gmail.de'/>
 									}
 								<EmailStatus status={status} hide={!editMode}/>
 							</FlatFormRow>
@@ -129,7 +149,7 @@ class AddEditUserPopup extends PureComponent {
 										options={this.getPositionsFormatted()}
 										optionRenderer={(opt) => (<fb style={{ color: opt.color }}>{opt.label}</fb>)}
 										valueRenderer={(opt) => (<fb style={{ }}>{opt.label}</fb>)}
-										onChange={this.onPositionChanged}
+										onChange={this.positionChanged}
 										searchable={false}
 									/>
 								</div>
@@ -141,7 +161,7 @@ class AddEditUserPopup extends PureComponent {
 											clearable={false}
 											value={_.keys(branches)}
 											options={this.props.branches.map(b => ({value: b.id, label: b.name}))}
-											onChange={(newVal) => this.onBranchesChanged(newVal)}
+											onChange={(newVal) => this.branchesChanged(newVal)}
 											searchable={false}
 											placeholder='Filiale wählen'
 										/>
@@ -149,13 +169,18 @@ class AddEditUserPopup extends PureComponent {
 								</FlatFormRow>
 							}
 							<FlatFormRow label='Wochenstunden'>
-								<WeeklyHoursInput weeklyHours={weeklyHours} setWeeklyHours={(this.onWeeklyHoursChanged)} extendable={editMode}/>
+								<WeeklyHoursInput weeklyHours={weeklyHours} setWeeklyHours={(this.weeklyHoursChanged)} extendable={editMode}/>
 							</FlatFormRow>
 						</fb>
-						<ExtendedUserConfigs
-							initialOvertime={initialOvertime}
-							changeInitialOvertime={this.onInitialOvertimeChanged}
-						/>
+						<Expander label='Überstunden'>
+							<InitialOvertime
+								initialOvertime={initialOvertime}
+								changeInitialOvertime={this.initialOvertimeChanged}
+							/>
+						</Expander>
+						<Expander label='Abwesenheit'>
+							<WorkDaysConfig workDays={workDays} onChange={this.workDaysChanged} />
+						</Expander>
 					</fb>
 				</SModal.Body>
 				<SModal.Footer>

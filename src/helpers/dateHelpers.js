@@ -1,12 +1,19 @@
+//@flow
 import moment from 'moment'
 
-export const getTodaySmart = () =>
+export const getTodaySmart = (): number =>
 	parseInt(moment().format('YYYYMMDD'), 10)
 
-export const getThisMondaySmart = () =>
-	moment().startOf('isoWeek').format('YYYYMMDD')
+export const getThisMondaySmart = (): number =>
+	parseInt(moment().startOf('isoWeek').format('YYYYMMDD'), 10)
 
-export const areEqualShallow = (a, b) => {
+export const getThisSmartWeek = (): number => {
+	const year = moment().year()
+	const week = moment().week()
+	return parseInt((year + '' + week), 10)
+}
+
+export const areEqualShallow = (a: {}, b: {}) => {
 	for(var key in a) {
 	  if(!(key in b) || a[key] !== b[key]) return false
 	}
