@@ -1195,3 +1195,15 @@ a {
   border-bottom-color: white;
   border-width: 9px;
   margin-left: -9px; }
+
+.soBtn {
+  border: 1px solid #07c;
+  justify-content: center;
+  align-items: center;
+  border-radius: 2px;
+  color: #FFF;
+  background-color: #0095ff;
+  border-color: #07c;
+  box-shadow: inset 0 1px 0 #66bfff;
+  padding: 0px 12px;
+  cursor: pointer; }

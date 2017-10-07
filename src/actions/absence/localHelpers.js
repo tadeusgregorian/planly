@@ -1,7 +1,7 @@
 //@flow
 import moment from 'moment'
 import type { AbsencePreDB, AbsenceDB } from 'types/index'
-import { smartToMom } from 'helpers/general'
+import { smartToMom } from 'helpers/index'
 
 export const getTouchingWeeks = (absence: AbsencePreDB ): {} => {
   const startDate = smartToMom(absence.startDate)
@@ -20,4 +20,8 @@ export const extendForDB = (absence: AbsencePreDB): AbsenceDB => {
   const yearUser = absence.year + absence.user
   const touchingWeeks = getTouchingWeeks(absence)
   return { ...absence, yearUser, touchingWeeks }
+}
+
+export const rangesOverlap = (xS: number, xE: number, yS:number, yE:number): boolean => {
+  return yS <= xE && yE >= xS
 }

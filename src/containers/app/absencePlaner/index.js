@@ -30,7 +30,7 @@ type ConProps = {
   currentUser: User,
   absences: Array<Absence>,
   absencesDS: DataStatus,
-  openAbsenceModal: (string, string | void )=>{},
+  openAbsenceModal: (string, (Absence | void))=>{},
   setAbsencesListener: (number)=>any,
 }
 type Props = OwnProps & ConProps
@@ -51,18 +51,19 @@ class AbsencePlaner extends PureComponent {
   }
 
   componentDidMount = () => {
-    handleClicks(this.openAbsenceModal)
+    handleClicks(true, this.openAbsenceModal)
     this.props.setAbsencesListener(moment().year())
   }
 
-  componentWillUnmount  = () => handleClicks()
+  componentWillUnmount  = () => handleClicks(false, ()=>{})
 
   changeBranch  = (branchID: string)  => this.setState({currentBranch: branchID})
   changeYear    = (year: number)      => this.setState({currentYear: year})
   changeMonth   = (month: number)     => this.setState({currentMonth: month})
 
   openAbsenceModal = (userID: string, absenceID?: string) => {
-    this.props.openAbsenceModal(userID, absenceID)
+    const absence = absenceID ? this.props.absences.find(a => a.id === absenceID) : undefined
+    this.props.openAbsenceModal(userID, absence)
   }
 
   render() {

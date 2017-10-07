@@ -35,9 +35,9 @@ export default class WeeklyHoursInput extends PureComponent {
   addNewRow = () => this.extendWeeklyHours({[this.nextAvailableDate()]: ''})
 
   deleteLastEntry = () => this.props.setWeeklyHours(withoutProp(this.props.weeklyHours, this.latestCreatedDate()))
-  replaceLastDate = (newDate: string, newValue: number | string) => {
+  replaceLastDate = (newDate: string | number, newValue: number | string) => {
     const withoutLast = withoutProp(this.props.weeklyHours, this.latestCreatedDate())
-    this.props.setWeeklyHours({ ...withoutLast, [newDate]: newValue })
+    this.props.setWeeklyHours({ ...withoutLast, [newDate.toString()]: newValue })
   }
 
   dateAllowed = (date: moment) => {

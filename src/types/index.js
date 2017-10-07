@@ -10,19 +10,19 @@ export type ThunkAction = (any, any, any)=> (dispatch: Dispatch, getState: GetSt
 
 // core-types
 
+export type WorkDays = {
+  mo?: number | null,
+  tu?: number | null,
+  we?: number | null,
+  th?: number | null,
+  fr?: number | null,
+  sa?: number | null,
+  su?: number | null,
+}
+
 export type AbsenceType = 'vac' | 'ill' | 'extra'
 export type AbsenceTypeFilter = 'vac' | 'ill' | 'extra' | 'all'
 export type AbsenceStatus = 'requested' | 'accepted'
-
-export type ExcludedDays = {
-  mo?: true | null,
-  tu?: true | null,
-  we?: true | null,
-  th?: true | null,
-  fr?: true | null,
-  sa?: true | null,
-  su?: true | null,
-}
 
 export type AbsenceBasis = {
   id: string,
@@ -39,7 +39,7 @@ export type AbsenceBasis = {
 export type Absence = AbsenceBasis & { // this is the absence Obj we get from the DB ( Firebase deleted keys where the value is null or empty obj )
   userNote?: string,
   adminNote?: string,
-  excludedDays?: ExcludedDays,
+  workDays?: WorkDays,
   dayRate?: number, // number of minutes that get counted to the week-sum for an absence-day
   hollow?: true
 }
@@ -47,7 +47,7 @@ export type Absence = AbsenceBasis & { // this is the absence Obj we get from th
 export type AbsencePreDB = AbsenceBasis & { // this is the absence Obj we want to write to the DB
   userNote: ?string,
   adminNote: ?string,
-  excludedDays: ?ExcludedDays,
+  workDays: ?WorkDays,
   dayRate: ?number, // number of minutes that get counted to the week-sum for an absence-day
   hollow: ?true
 }
@@ -64,16 +64,6 @@ export type DataStatus =
 export type InitialOvertime = {
   smartWeek: number,
   hours: 0
-}
-
-export type WorkDays = {
-  mo?: number,
-  tu?: number,
-  we?: number,
-  th?: number,
-  fr?: number,
-  sa?: number,
-  su?: number,
 }
 
 export type User = {
@@ -233,5 +223,19 @@ export type TemplateFlat = {
 }
 
 export type TemplatesFlat = Array<TemplateFlat>
+
+// AccountDetails
+
+export type AccountPreferences = {
+  workdaysPerWeek: number,
+  useAvgHoursForVac?: true,
+  useAvgHoursForIll?: true,
+}
+
+export type AccountDetails = {
+  preferences: AccountPreferences
+}
+
+// ExtraStuff
 
 export type BundeslandCode = 'BE'|'BB'|'HB'|'HH'|'HE'|'MV'|'NI'|'NW'|'RP'|'SL'|'SN'|'ST'|'SH'|'TH'

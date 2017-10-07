@@ -65,6 +65,7 @@
   max-height: 560px; }
 
 .sModalFooter {
+  justify-content: flex-end;
   padding: 10px;
   padding-right: 0px;
   background: rgba(28, 28, 28, 0.02);

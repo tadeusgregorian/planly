@@ -1,11 +1,17 @@
 import React from 'react'
 import './styles.css'
 
-export default ({label, disabled, onClick, color, sStyle, right, left, tabInd, slick, icon, iconStyle}) => {
+export default ({label, disabled, onClick, color, sStyle, right, left, tabInd, slick, grey, icon, iconStyle}) => {
 	const colorStyle = {
 		color: 'white',
 		backgroundColor: color,
 		border: 'none'
+	}
+
+	const greyStyle = {
+		color: '#848484',
+    background: '#fbfbfb',
+    border: '1px solid #bfbfbf',
 	}
 
 	const disabledStyle = {
@@ -32,6 +38,7 @@ export default ({label, disabled, onClick, color, sStyle, right, left, tabInd, s
 		// styleObj is modified in this order.
 		if(slick)  	 styleObj = { ...slickStyle }
 		if(color) 	 styleObj = { ...styleObj, ...colorStyle }
+		if(grey) 	   styleObj = { ...styleObj, ...greyStyle }
 		if(disabled) styleObj = { ...styleObj, ...disabledStyle }
 		if(sStyle)   styleObj = { ...styleObj, ...sStyle}
 		if(icon)		 styleObj = { ...styleObj, paddingLeft: 8}

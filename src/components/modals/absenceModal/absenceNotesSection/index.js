@@ -1,5 +1,6 @@
 //@flow
 import React, { PureComponent } from 'react'
+import Expander from 'components/expander'
 import './styles.css'
 
 type Props = {
@@ -13,27 +14,13 @@ type Props = {
 
 export default class AbsenceNotesSection extends PureComponent{
   props: Props
-  state: { expanded: boolean }
-
-  constructor(props: Props){
-    super(props)
-
-    this.state = {
-      expanded: props.expanded
-    }
-  }
 
   render(){
     const { userNote, adminNote, changeAdminNote, changeUserNote, adminMode } = this.props
-    const { expanded } = this.state
 
     return(
-      <fb className="absenceNotesSectionMain">
-        <fb className='head' onClick={()=>this.setState({expanded: !expanded})}>
-          <fb className={'expandIcon icon ' + (expanded ? 'icon-arrow_drop_up' : 'icon-arrow_drop_down')} />
-          <fb className='text'>Notizen</fb>
-        </fb>
-        <fb className='content' style={{display: expanded ? 'flex' : 'none'}}>
+      <Expander label='Notizen'>
+        <fb className="absenceNotesSectionMain">
           <fb className='sectionWrapper adminSection'>
             <fb className='label'>Admin-Notiz</fb>
             { adminMode
@@ -49,7 +36,7 @@ export default class AbsenceNotesSection extends PureComponent{
             }
           </fb>
         </fb>
-      </fb>
+      </Expander>
     )
   }
 }

@@ -1,5 +1,4 @@
 //@flow
-
 import React, { PureComponent } from 'react'
 import _ from 'lodash'
 import moment from 'moment'
@@ -13,7 +12,7 @@ import EmailStatus from './emailStatus'
 import WithTooltip from 'components/withTooltip'
 import FlatFormRow from 'components/flatFormRow'
 import WeeklyHoursInput from './weeklyHoursInput'
-import WorkDaysConfig from './workDaysConfig'
+import WorkDaysPicker from 'components/workDaysPicker'
 import InitialOvertime from './initialOvertime'
 import type { User } from 'types/index'
 import { saveUserToDB, sendEmailInvite } from 'actions/index'
@@ -179,7 +178,9 @@ class AddEditUserPopup extends PureComponent {
 							/>
 						</Expander>
 						<Expander label='Abwesenheit'>
-							<WorkDaysConfig workDays={workDays} onChange={this.workDaysChanged} />
+							<fb style={{padding: '10px 0px'}}>
+								<WorkDaysPicker workDays={workDays} onChange={this.workDaysChanged} />
+							</fb>
 						</Expander>
 					</fb>
 				</SModal.Body>

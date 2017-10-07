@@ -1,0 +1,52 @@
+
+.adminPanelConfigurationsMain{
+	width:100%;
+	flex-direction: column;
+	display: flex;
+
+  .headline{
+    font-size: 16px;
+    border-bottom: 1px solid rgba(211, 211, 211, 0.68);
+    padding: 12px;
+    padding-left: 28px;
+    justify-content: space-between;
+    color: #009be4;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+  }
+
+	.content{
+		flex-direction: column;
+
+	  .row{
+	    padding: 8px;
+	    padding-left: 14px;
+	    font-size: 14px;
+	    color: #3c3c3c;
+	    align-items: center;
+	    flex: 1 1 auto;
+	    border-bottom: 1px solid #e6e6e6;
+
+			.cb{
+				margin-right: 10px;
+			}
+
+	    .rowMain{
+	      padding-left: 12px;
+
+	      .weekDaysBtn{
+	        height: 28px;
+	        margin-left: 6px;
+
+					&.disabled{
+						color: grey;
+						border: 1px solid #d0d0d0;
+				    background: #f7f7f7;
+				    box-shadow: 0px 1px 1px -1px grey;
+					}
+	      }
+	    }
+	  }
+	}
+}

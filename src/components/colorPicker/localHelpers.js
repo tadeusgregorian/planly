@@ -1,5 +1,5 @@
 //@flow
-import { closest } from 'helpers/general'
+import { closest } from 'helpers/index'
 
 export const getPosOfElement = (el: HTMLElement) => {
   const top         = el.offsetTop

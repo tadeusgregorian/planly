@@ -1,7 +1,7 @@
 //@flow
 
 import type { ShiftCell, ShiftRef } from 'types/index'
-import { closest } from 'helpers/general'
+import { closest } from 'helpers/index'
 
 export const elementIsShift = (el: HTMLElement): boolean =>
   !!(el.getAttribute && el.getAttribute('data-target-type') === 'shift')

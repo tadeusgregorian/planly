@@ -3,7 +3,7 @@ import React from 'react'
 import cn from 'classnames'
 
 import { colorCode } from 'constants/absence'
-import { smartToMom } from 'helpers/general'
+import { smartToMom } from 'helpers/index'
 import { getPosLeft, getPosWidth } from './localHelpers'
 import type { Absence } from 'types/index'
 import './styles.css'

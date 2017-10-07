@@ -1,6 +1,6 @@
 import { db } from '../firebaseInit'
 import { getFBPath } from './../actionHelpers'
-import { generateGuid } from 'helpers/general'
+import { generateGuid } from 'helpers/index'
 
 export const createNewTempForBranch = (branch: string) => {
   const tempID  = generateGuid()

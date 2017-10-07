@@ -1,4 +1,4 @@
-import { closest } from 'helpers/general'
+import { closest } from 'helpers/index'
 
 export const isInsidePopover = (target: HTMLElement) =>
   !!closest(target, (t) => { return (

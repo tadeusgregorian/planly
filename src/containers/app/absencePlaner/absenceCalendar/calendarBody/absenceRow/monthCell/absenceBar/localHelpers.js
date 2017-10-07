@@ -2,7 +2,7 @@
 
 import moment from 'moment'
 import { dayWidth } from 'constants/absence'
-import { smartToMom } from 'helpers/general'
+import { smartToMom } from 'helpers/index'
 import type { Absence } from 'types/index'
 
 const getFirstDay = (absence: Absence, month: number): number => {

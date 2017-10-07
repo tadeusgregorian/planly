@@ -34,11 +34,11 @@ const getEmptyAccount = (adminEmail): DBAccount => ({
       position: 'p001',
       branches: { b001: true },
       color: '#0D47A1',
-      weeklyHours: {[getThisMondaySmart()]: 40},
+      weeklyHours: {[momToSmartWeek(moment())]: 40},
       status: 'active',
       isAdmin: true,
       isSuperAdmin: true, // SuperAdmin is only the creator of the account.
-      initialOvertime: { smartWeek: momToSmartWeek(moment().subtract(7, 'days')), hours: 0 },
+      initialOvertime: { smartWeek: momToSmartWeek(moment()), hours: 0 },
       workDays: { mo: 6.67, tu: 6.67, we: 6.67, th: 6.67, fr: 6.67, sa: 6.67, su: 6.67 }
     }
   },

@@ -9,19 +9,19 @@ export const getRealCurrentWeekID = () :number => {
 }
 
 // extracts and returns the year out of the weekID
-export const getYear = (weekID: number) =>
+export const getYear = (weekID: string | number) =>
   parseInt(weekID.toString().substr(0, 4), 10)
 
   // extracts and returns the week out of the weekID
-export const getWeek = (weekID: number) =>
+export const getWeek = (weekID: string | number) =>
   parseInt(weekID.toString().substr(4, 2), 10)
 
-export const weekIDToMoment = (sw: number): moment => {
+export const weekIDToMoment = (sw: string): moment => {
   return moment().year(getYear(sw)).week(getWeek(sw)).startOf('week')
 }
 
-export const momentToWeekID = (mom: moment): number => {
-  return parseInt(mom.year() + doubleD(mom.week()), 10)
+export const momentToWeekID = (mom: moment): string => {
+  return mom.year() + doubleD(mom.week())
 }
 
 // turns a num like 8 into '08' and 44 into '44'
@@ -30,12 +30,12 @@ export const doubleD = (num: number) => {
   return num > 9 ? num.toString() : '0' + num
 }
 
-export const getNextWeekID = (sw: number) :number => {
+export const getNextWeekID = (sw: string) :string => {
   const newMom = weekIDToMoment(sw).add(1, 'week')
   return momentToWeekID(newMom)
 }
 
-export const getPrevWeekID = (sw: number) :number => {
+export const getPrevWeekID = (sw: string) :string => {
   const newMom = weekIDToMoment(sw).subtract(1, 'week')
   return momentToWeekID(newMom)
 }

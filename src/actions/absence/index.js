@@ -4,20 +4,18 @@ import moment from 'moment'
 import _ from 'lodash'
 import { db } from '../firebaseInit'
 import { getFBPath } from './../actionHelpers'
-import { momToSmart } from 'helpers/general'
-import { getTouchingWeeks, extendForDB } from './localHelpers'
-import type { ThunkAction, AbsencePreDB, Absence } from 'types/index'
+import { momToSmart } from 'helpers/index'
+import { extendForDB, rangesOverlap } from './localHelpers'
+import type { AbsencePreDB, Absence } from 'types/index'
 
-const rangesOverlap = (xS: number, xE: number, yS:number, yE:number): boolean => {
-  return yS <= xE && yE >= xS
+export const saveAbsenceToDB = (absence: AbsencePreDB) => {
+  const absenceDB = extendForDB(absence)
+  console.log(absenceDB);
+  db().ref(getFBPath('absences', [absenceDB.id])).set(absenceDB)
 }
 
-export const saveAbsenceToDB:ThunkAction = (absence: AbsencePreDB) => (disp) => {
-  const updates = {}
-  const absenceDB = extendForDB(absence)
-
-  updates[ getFBPath('absences', [absenceDB.id])] = absenceDB
-  db().ref().update(updates)
+export const removeAbsenceFromDB = (absenceID: string) => {
+  db().ref(getFBPath('absences', [absenceID])).set(null)
 }
 
 export const checkOverlappings = (start: moment, end: moment, user: string): Promise<boolean> => {

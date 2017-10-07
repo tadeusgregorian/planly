@@ -1,0 +1,13 @@
+.displayVacationRangeMain{
+  flex: 1;
+  padding-left: 8px;
+
+  .dateWrapper{
+    color: #01a0f1;
+    font-weight: 500;
+
+    .vacDate{
+      margin: 0px 6px;
+    }
+  }
+}

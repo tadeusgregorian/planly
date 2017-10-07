@@ -1,19 +1,29 @@
 //@flow
 /* eslint-disable no-use-before-define */
 
-import { closestWithAttribute, smartToMom } from 'helpers/general'
+import { closestWithAttribute, smartToMom } from 'helpers/index'
 import type { Absence, AbsenceTypeFilter } from 'types/index'
 
 //superdirty im sorry
-export const handleClicks = (openAbsenceModal?: Function) => {
+export const handleClicks = (isMounting: boolean, openAbsenceModal: Function) => {
   const somethingGotClicked = (e: any) => {
-    const clickedUser = closestWithAttribute(e.target, 'data-type', 'absence-user')
-    const userID = clickedUser && clickedUser.getAttribute('data-user')
-    userID && openAbsenceModal && openAbsenceModal(userID)
+    const userNode = closestWithAttribute(e.target, 'data-type', 'absence-user')
+    const absenceBarNode = closestWithAttribute(e.target, 'data-type', 'absence-bar')
+
+    if(userNode){
+      const userID = userNode.getAttribute('data-user')
+      openAbsenceModal(userID)
+    }
+
+    if(absenceBarNode){
+      const userID    = absenceBarNode.getAttribute('data-user')
+      const absenceID = absenceBarNode.getAttribute('data-absence-id')
+      openAbsenceModal(userID, absenceID)
+    }
   }
 
-  openAbsenceModal && document.addEventListener('click', somethingGotClicked)
-  !openAbsenceModal && document.removeEventListener('click', somethingGotClicked)
+  isMounting && document.addEventListener('click', somethingGotClicked)
+  !isMounting && document.removeEventListener('click', somethingGotClicked)
 }
 
 export const absencesFiltered = (absences: Array<Absence>, month: number, type: AbsenceTypeFilter): Array<Absence> => {

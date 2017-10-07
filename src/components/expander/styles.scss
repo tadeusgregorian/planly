@@ -3,9 +3,7 @@
   align-self: stretch;
   background-color: white;
   border-radius: 2px;
-  margin: 4px;
-  border: 1px solid #c3c3c3;
-
+  border: 1px solid #dedede;
 
   .head{
     border-radius: 2px;
@@ -21,7 +19,7 @@
     &.expanded{
       border-bottom-left-radius: 0px;
       border-bottom-right-radius: 0px;
-      border-bottom: 1px solid #c3c3c3;
+      border-bottom: 1px solid #dedede;
       box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.08);
     }
 
@@ -31,9 +29,5 @@
       height: 29px;
       padding-right: 5px;
     }
-  }
-
-  .content{
-
   }
 }

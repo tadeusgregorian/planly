@@ -10,7 +10,7 @@ export const registerInitialListeners = () => (disp, getS) => {
 }
 
 const setAccountDetailsListener = (disp, getS) =>
-	createFirebaseListener(disp, getS, 'accountDetails', getFBPath('accountDetails'), null, true)
+	createFirebaseListener(disp, getS, 'accountDetails', getFBPath('accountDetails'))
 
 const registerUsersListener = (disp, getS) =>
 	createFirebaseListener(disp, getS, 'users', getFBPath('users'))
