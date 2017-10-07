@@ -4,8 +4,9 @@ import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import moment from 'moment'
 
+import { closestWithAttribute, smartToMom } from 'helpers/index'
 import { setAbsencesListener } from 'actions/listeners/absencePlaner'
-import { handleClicks, absencesFiltered } from './localHelpers'
+import { getClickedAbsenceID, getClickedUserID, absencesFiltered } from './localHelpers'
 import { openAbsenceModal } from 'actions/ui/modals'
 import getCurrentUser from 'selectors/currentUser'
 
@@ -51,18 +52,29 @@ class AbsencePlaner extends PureComponent {
   }
 
   componentDidMount = () => {
-    handleClicks(true, this.openAbsenceModal)
+    document.addEventListener('click', this.clickDetected)
     this.props.setAbsencesListener(moment().year())
   }
 
-  componentWillUnmount  = () => handleClicks(false, ()=>{})
+  componentWillUnmount  = () => {
+    document.removeEventListener('click', this.clickDetected)
+  }
+
+  clickDetected = (e: any) => {
+    const adminMode     = this.props.currentUser.isAdmin
+    const userID        = getClickedUserID(e) // when a userCell gets clicked
+    const absenceID     = getClickedAbsenceID(e) // when an absenceBar gets clicked
+    const absence       = absenceID && this.props.absences.find(a => a.id === absenceID)
+    const isOwnAbsence  = absence && absence.user === this.props.currentUser.id
+    userID  && (adminMode) && openAbsenceModal(userID) // only admin can open absenceModal like this
+    absence && (adminMode || isOwnAbsence) && openAbsenceModal(absence.user, absence) // nonAdmin can only open own Absence
+  }
 
   changeBranch  = (branchID: string)  => this.setState({currentBranch: branchID})
   changeYear    = (year: number)      => this.setState({currentYear: year})
   changeMonth   = (month: number)     => this.setState({currentMonth: month})
 
-  openAbsenceModal = (userID: string, absenceID?: string) => {
-    const absence = absenceID ? this.props.absences.find(a => a.id === absenceID) : undefined
+  openAbsenceModal = (userID: string, absence?: Absence) => {
     this.props.openAbsenceModal(userID, absence)
   }
 

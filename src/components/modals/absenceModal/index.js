@@ -171,18 +171,18 @@ class AbsenceModal extends PureComponent{
               adminMode={adminMode}
               expanded={!!(userNote || adminNote)}
             />
-            <AbsenceConfigs
+            { adminMode && <AbsenceConfigs
               unpaid={unpaid}
               workDays={workDays}
               useAvgHours={useAvgHours}
               toggleUnpaid={()=>this.setState({unpaid: unpaid ? null : true})}
               toggleUseAvgHours={()=>this.setState({useAvgHours: useAvgHours ? null : true})}
               updateWorkDays={this.workDaysChanged}
-            />
+            />}
   				</fb>
   			</SModal.Body>
         <SModal.Footer>
-           {  adminMode && status === 'accepted' && <SButton label='Löschen'    onClick={this.removeAbsence} color='#ff3f3f' grey left />}
+           {  adminMode && status === 'accepted'  && <SButton label='Löschen'   onClick={this.removeAbsence} color='#ff3f3f' grey left />}
            {  adminMode && status === 'requested' && <SButton label='Ablehnen'  onClick={this.removeAbsence} color='#ff3f3f'/>}
            {  adminMode && status === 'requested' && <SButton label='Annehmen'  onClick={this.acceptRequest} color='#00a2ef' disabled={!isComplete} />}
            {  adminMode && status === 'accepted'  && <SButton label='Speichern' onClick={()=>this.saveAbsence(this.state)}   disabled={!isComplete} color='#00a2ef' />}

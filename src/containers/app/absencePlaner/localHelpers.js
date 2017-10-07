@@ -4,26 +4,14 @@
 import { closestWithAttribute, smartToMom } from 'helpers/index'
 import type { Absence, AbsenceTypeFilter } from 'types/index'
 
-//superdirty im sorry
-export const handleClicks = (isMounting: boolean, openAbsenceModal: Function) => {
-  const somethingGotClicked = (e: any) => {
-    const userNode = closestWithAttribute(e.target, 'data-type', 'absence-user')
-    const absenceBarNode = closestWithAttribute(e.target, 'data-type', 'absence-bar')
+export const getClickedUserID = (e: any) => {
+  const userNode = closestWithAttribute(e.target, 'data-type', 'absence-user')
+  return userNode && userNode.getAttribute('data-user')
+}
 
-    if(userNode){
-      const userID = userNode.getAttribute('data-user')
-      openAbsenceModal(userID)
-    }
-
-    if(absenceBarNode){
-      const userID    = absenceBarNode.getAttribute('data-user')
-      const absenceID = absenceBarNode.getAttribute('data-absence-id')
-      openAbsenceModal(userID, absenceID)
-    }
-  }
-
-  isMounting && document.addEventListener('click', somethingGotClicked)
-  !isMounting && document.removeEventListener('click', somethingGotClicked)
+export const getClickedAbsenceID = (e: any) => {
+  const absenceBarNode = closestWithAttribute(e.target, 'data-type', 'absence-bar')
+  return absenceBarNode && absenceBarNode.getAttribute('data-absence-id')
 }
 
 export const absencesFiltered = (absences: Array<Absence>, month: number, type: AbsenceTypeFilter): Array<Absence> => {
