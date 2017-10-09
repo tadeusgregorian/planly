@@ -1,6 +1,6 @@
 .sCheckboxMain{
-  height: 24px;
   flex: 0 0 auto;
+  align-items: center;
 
 
   .theBox{
@@ -9,6 +9,24 @@
     position: relative;
     flex: 0 0 auto;
     margin: 2px;
+    align-items: center;
+    justify-content: center;
+
+    &.mini{
+      width: 12px;
+      height: 12px;
+
+      label{
+        width: 12px;
+        height: 12px;
+        &:after{
+          width: 7px;
+          height: 3px;
+          left: 1px;
+          top: 2px;
+        }
+      }
+    }
 
     label {
       width: 20px;
@@ -35,6 +53,7 @@
         opacity: 0;
         transform: rotate(-45deg);
       }
+
       &:hover::after {
         opacity: 0.1;
       }

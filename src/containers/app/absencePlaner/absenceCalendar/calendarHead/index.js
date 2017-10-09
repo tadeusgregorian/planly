@@ -8,7 +8,8 @@ import './styles.css'
 
 type Props = {
   month: number,
-  year: number
+  year: number,
+  adminMode: boolean,
 }
 
 export default class CalendarHead extends PureComponent{

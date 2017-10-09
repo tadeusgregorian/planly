@@ -12,20 +12,28 @@ type Props = {
   month: number,
   absences: Array<Absence>,
   users: Array<User>,
+  adminMode: boolean,
 }
 
 export default class CalendarBody extends PureComponent {
   props: Props
 
   render() {
-    const { users, absences, year, month } = this.props
+    const { users, absences, year, month, adminMode } = this.props
 
     return(
       <fb className="absenceCalendarBodyMain">
-        { users.map(u => {
-          const userAbsences = absences.filter(a => a.user === u.id)
-          return <AbsenceRow key={u.id} user={u} year={year} month={month} absences={userAbsences} />
-        })}
+        { users.map(u => (
+           <AbsenceRow
+              key={u.id}
+              user={u}
+              year={year}
+              month={month}
+              absences={absences.filter(a => a.user === u.id)}
+              adminMode={adminMode}
+            />
+          )
+        )}
       </fb>
     )
   }

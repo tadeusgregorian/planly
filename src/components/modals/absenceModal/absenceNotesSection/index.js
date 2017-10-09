@@ -19,24 +19,24 @@ export default class AbsenceNotesSection extends PureComponent{
     const { userNote, adminNote, changeAdminNote, changeUserNote, adminMode } = this.props
 
     return(
-      <Expander label='Notizen'>
+      <fb>
         <fb className="absenceNotesSectionMain">
           <fb className='sectionWrapper adminSection'>
-            <fb className='label'>Admin-Notiz</fb>
+            <fb className='label'>Notiz/Admin</fb>
             { adminMode
               ? <textarea className='inp' type='text' onChange={(e)=>changeAdminNote(e.target.value)} />
-              : adminNote && <fb className='noteDisplay'>{adminNote}</fb>
+              : <fb className='noteDisplay'>{adminNote}</fb>
             }
           </fb>
           <fb className='sectionWrapper userSection'>
-            <fb className='label'>Mitarbeiter-Notiz</fb>
+            <fb className='label'>Notiz/Mitarbeiter</fb>
             { !adminMode
               ? <textarea className='inp' type='text' onChange={(e)=>changeUserNote(e.target.value)} />
-              : userNote && <fb className='noteDisplay'>{userNote}</fb>
+              : <fb className='noteDisplay'>{userNote}</fb>
             }
           </fb>
         </fb>
-      </Expander>
+      </fb>
     )
   }
 }

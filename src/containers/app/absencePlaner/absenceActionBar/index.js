@@ -1,37 +1,50 @@
 //@flow
 import React, { PureComponent } from 'react'
+import { connect } from 'react-redux'
+import type { Connector } from 'react-redux'
 import Select from 'react-select';
 
-import type { Branch, AbsenceTypeFilter } from 'types/index'
-import TypeSwitch from './typeSwitch'
+import { openAbsenceModal } from 'actions/ui/modals'
+import { setCurrentBranch, setCurrentYear, setCurrentMonth, setCurrentType } from 'actions/ui/absence'
 import { getYearsArray, getMonthsArray } from './localHelpers'
+import TypeSwitch from './typeSwitch'
+import RequestVacBtn from './requestVacBtn'
+
+import type { Branch, AbsenceType, Store, Absence, User } from 'types/index'
 import './styles.css'
 
-type Props = {
+type OwnProps = {
+  adminMode: boolean,
+  currentUser: User,
+}
+
+type ConProps = {
+  branches: Array<Branch>,
   currentBranch: string,
   currentYear: number,
   currentMonth: number,
-  absenceType: AbsenceTypeFilter,
-  branches: Array<Branch>,
-  changeBranch: (string)=>void,
-  changeYear: (number)=>void,
-  changeMonth: (number)=>void,
-  changeType: (AbsenceTypeFilter)=>any,
+  currentType: AbsenceType | 'all',
+  openAbsenceModal: (string, Absence | void)=>any,
+  setCurrentBranch: (string)=>any,
+  setCurrentYear:   (number)=>any,
+  setCurrentMonth:  (number)=>any,
+  setCurrentType:   (AbsenceType | 'all')=>any,
 }
 
-export default class AbsenceActionBar extends PureComponent {
-  props: Props
+class AbsenceActionBar extends PureComponent {
+  props: ConProps & OwnProps
 
-  onChangeBranch = (opt: any) => this.props.changeBranch(opt.value)
-  onChangeYear = (opt: any) => this.props.changeYear(opt.value)
-  onChangeMonth = (opt: any) => this.props.changeMonth(opt.value)
+  onChangeBranch = (opt: any) => this.props.setCurrentBranch(opt.value)
+  onChangeYear   = (opt: any) => this.props.setCurrentYear(opt.value)
+  onChangeMonth  = (opt: any) => this.props.setCurrentMonth(opt.value)
+  requestVacClicked = () => this.props.openAbsenceModal(this.props.currentUser.id)
 
   render(){
-    const { currentBranch, currentYear, currentMonth, absenceType, changeType } = this.props
+    const { currentBranch, currentYear, currentMonth, currentType, branches, adminMode } = this.props
 
-    const branchOptions = this.props.branches.map(b => ({value: b.id, label: b.name}))
-    const yearOptions = getYearsArray().map(y => ({value: y, label: y}))
-    const monthOptions = getMonthsArray().map((y, i) => ({value: i, label: y}))
+    const branchOptions = branches.map(b => ({value: b.id, label: b.name})).concat({value: 'all', label: 'Alle Standorte'})
+    const yearOptions   = getYearsArray().map(y => ({value: y, label: y}))
+    const monthOptions  = getMonthsArray().map((y, i) => ({value: i, label: y}))
 
     return(
       <fb className="absenceActionBarMain">
@@ -64,11 +77,31 @@ export default class AbsenceActionBar extends PureComponent {
             />
           </div>
           <TypeSwitch
-            type={absenceType}
-            changeType={changeType}
+            type={currentType}
+            changeType={this.props.setCurrentType}
            />
+           {!adminMode && <RequestVacBtn onClick={this.requestVacClicked}/>}
         </fb>
       </fb>
     )
   }
 }
+
+const actionCreators = {
+  setCurrentBranch,
+  setCurrentYear,
+  setCurrentMonth,
+  setCurrentType,
+  openAbsenceModal,
+}
+
+const mapStateToProps = (state: Store) => ({
+  branches: state.core.branches,
+  currentBranch: state.ui.absence.currentBranch,
+  currentYear: state.ui.absence.currentYear,
+  currentMonth: state.ui.absence.currentMonth,
+  currentType: state.ui.absence.currentType,
+})
+
+const connector: Connector<OwnProps, ConProps & OwnProps> = connect(mapStateToProps, actionCreators)
+export default connector(AbsenceActionBar)

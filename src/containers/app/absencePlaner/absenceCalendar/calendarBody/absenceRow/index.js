@@ -2,6 +2,7 @@
 import React, { PureComponent } from 'react'
 
 import MonthCell from './monthCell'
+import UserCell from './userCell'
 import type { User, Absence } from 'types/index'
 
 import './styles.css'
@@ -11,17 +12,18 @@ type Props = {
   month: number,
   year: number,
   absences: Array<Absence>,
+  adminMode: boolean,
 }
 
 export default class AbsenceRow extends PureComponent {
   props: Props
 
   render() {
-    const { user, year, month, absences } = this.props
+    const { user, year, month, absences, adminMode } = this.props
 
     return(
       <fb className="absenceRowMain">
-        <fb className='userCell' data-type='absence-user' data-user={user.id} >{user.name}</fb>
+        <UserCell user={user} adminMode={adminMode}/>
         <MonthCell month={month} year={year} absences={absences} />
       </fb>
     )

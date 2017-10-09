@@ -9,15 +9,16 @@ import type { User, Store, Absence } from 'types/index'
 import './styles.css'
 
 type OwnProps = {
-  branch: string,
   absences: Array<Absence>,
   loading: boolean,
-  year: number,
-  month: number,
+  adminMode: boolean,
 }
 
 type ConProps = {
-  users: Array<User>
+  users: Array<User>,
+  branch: string,
+  year: number,
+  month: number
 }
 
 type Props = OwnProps & ConProps
@@ -26,20 +27,26 @@ class AbsenceCalendar extends PureComponent {
   props: Props
 
   render() {
-    const { users, absences, year, month, branch } = this.props
+    const { users, absences, year, month, branch, adminMode } = this.props
 
     return(
       <fb className="absenceCalendarMain">
-        <CalendarHead year={year} month={month}/>
-        <CalendarBody branch={branch} year={year} month={month} absences={absences} users={users}/>
+        <CalendarHead year={year} month={month} adminMode={adminMode}/>
+        <CalendarBody branch={branch} year={year} month={month} absences={absences} users={users} adminMode={adminMode}/>
       </fb>
     )
   }
 }
 
-const mapStateToProps = (state: Store, ownProps: OwnProps) => ({
-  users: state.core.users.filter(u => u.branches[ownProps.branch])
-})
+const mapStateToProps = (state: Store, ownProps: OwnProps) => {
+  const currentBranch = state.ui.absence.currentBranch
+  return {
+    users: state.core.users.filter(u => currentBranch === 'all' || u.branches[currentBranch]),
+    branch: currentBranch,
+    year: state.ui.absence.currentYear,
+    month: state.ui.absence.currentMonth
+  }
+}
 
 const connector: Connector<OwnProps, Props> = connect(mapStateToProps, {})
 export default connector(AbsenceCalendar)

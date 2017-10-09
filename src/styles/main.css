@@ -1207,3 +1207,8 @@ a {
   box-shadow: inset 0 1px 0 #66bfff;
   padding: 0px 12px;
   cursor: pointer; }
+  .soBtn:hover {
+    color: rgba(255, 255, 255, 0.92);
+    background-color: #07c;
+    border-color: #005998;
+    box-shadow: inset 0 1px 0 #3ae; }

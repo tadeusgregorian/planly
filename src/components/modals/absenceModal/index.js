@@ -12,10 +12,11 @@ import { generateGuid, momToSmart, smartToMom } from 'helpers/index'
 import { getEffectiveDays, getTotalDays } from './localHelpers'
 import type { Store, User, Absence, WorkDays, AbsenceType, AbsenceStatus, AccountPreferences } from 'types/index'
 
+import RangeValidationMessage from './rangeValidationMessage'
 import AbsenceDetailsDisplay from './absenceDetailsDisplay'
 import AbsenceTypeSelect from './absenceTypeSelect'
 import AbsenceNotesSection from './absenceNotesSection'
-import DisplayVacationRange from './displayVacationRange'
+import DisplayVacationRequest from './displayVacationRequest'
 import AbsenceConfigs from './absenceConfigs'
 import SModal from 'components/sModal'
 import SButton from 'components/sButton'
@@ -24,7 +25,7 @@ import './styles.css'
 type State = {
   id: string,
   user: string,
-  type: ?AbsenceType,
+  type: AbsenceType | '',
   year: number,
   status: AbsenceStatus,
   startDate: ?number,
@@ -37,7 +38,7 @@ type State = {
   useAvgHours: ?true,
   unpaid: ?true,
   focusedInput: any,
-  isOverlapping: boolean | 'loading', // i know dirty...
+  invalidRange: false | 'loading' | 'overlapping' | 'multiyear'
 }
 
 type OwnProps = {
@@ -59,11 +60,13 @@ class AbsenceModal extends PureComponent{
   constructor(props){
     super(props)
     const { absence } = props
+    const adminMode = !!this.props.currentUser.isAdmin
+
 
     this.state = {
       id:             absence ? absence.id            : generateGuid(),
       user:           absence ? absence.user          : props.userID,
-      type:           absence ? absence.type          : 'ill', // just ill per default // TODO: come back here ...
+      type:           absence ? absence.type          : adminMode ? '' : 'vac',
       year:           absence ? absence.year          : moment().year(),
       status:         absence ? absence.status        : this.getDefault_status(),
       startDate:      absence ? absence.startDate              : null,
@@ -76,7 +79,7 @@ class AbsenceModal extends PureComponent{
       useAvgHours:    absence ? (absence.useAvgHours || null)  : this.getDefaul_useAvgHours('ill'), // TODO: come back here ...
       unpaid:         absence ? (absence.unpaid      || null)  : null,
       focusedInput:   null, // we omit this before saving to db!
-      isOverlapping:  false, // we omit this before saving to db!
+      invalidRange:   false, // we omit this before saving to db!
     }
   }
 
@@ -104,12 +107,12 @@ class AbsenceModal extends PureComponent{
       year:           moment(d.startDate).year(),
       totalDays:      getTotalDays(d.startDate, d.endDate),
       effectiveDays:  getEffectiveDays(d.startDate, d.endDate, this.state.workDays, 'HH'),
-      isOverlapping:  !!(d.startDate && d.endDate) ? 'loading' : false
+      invalidRange:  !!(d.startDate && d.endDate) ? 'loading' : false
     })
 
     if(d.startDate && d.endDate){
       checkOverlappings(d.startDate, d.endDate, this.props.userID)
-        .then((res: boolean)=> this.setState({isOverlapping: res}))
+        .then((res: boolean)=> this.setState({invalidRange: res && 'overlapping'}))
     }
   }
 
@@ -140,29 +143,30 @@ class AbsenceModal extends PureComponent{
 
   render(){
     const { closeModal, user, currentUser } = this.props
-    const { type, startDate, endDate, focusedInput, userNote, adminNote, totalDays, workDays, status, isOverlapping, unpaid, useAvgHours, effectiveDays } = this.state
+    const { type, startDate, endDate, focusedInput, userNote, adminNote, totalDays, status, invalidRange, unpaid, effectiveDays } = this.state
     const adminMode = !!currentUser.isAdmin
-    const isComplete = startDate && endDate && !isOverlapping
+    const isComplete = startDate && endDate && type && !invalidRange
+    const accepted = status === 'accepted'
+    const requested = status === 'requested'
 
     return(
       <SModal.Main onClose={closeModal} title={user.name} >
   			<SModal.Body>
   				<fb className="absenceModalMain">
             <fb className='firstRow'>
-              { status === 'accepted' && <AbsenceTypeSelect selectedType={type} selectType={this.changeType} /> }
-              { status === 'accepted' &&
+              { adminMode && requested && <DisplayVacationRequest startDate={startDate} endDate={endDate} /> }
+              { accepted && adminMode && <AbsenceTypeSelect selectedType={type} selectType={this.changeType} /> }
+              { ((adminMode && accepted) || (!adminMode && requested)) &&
                 <DateRangePicker
                   startDate={startDate ? moment(startDate, 'YYYYMMDD') : null}
                   endDate={endDate ? moment(endDate, 'YYYYMMDD') : null}
                   onDatesChange={this.datesChanged}
                   focusedInput={focusedInput}
-                  onFocusChange={focusedInput => this.setState({ focusedInput })}
-              />}
-              { status === 'requested' && <DisplayVacationRange startDate={startDate} endDate={endDate} /> }
+                  onFocusChange={focusedInput => this.setState({ focusedInput })}/>
+              }
             </fb>
-            { startDate && endDate && !isOverlapping && <AbsenceDetailsDisplay totalDays={totalDays} effectiveDays={effectiveDays} /> }
-            { isOverlapping === 'loading' && <fb>loading</fb> }
-            { isOverlapping === true && <fb>Zeitraum überschneidet sich mit einem anderen Abwesenheits-Eintrag.</fb> }
+            { startDate && endDate && !invalidRange && <AbsenceDetailsDisplay totalDays={totalDays} effectiveDays={effectiveDays} /> }
+            { startDate && endDate &&  invalidRange && <RangeValidationMessage msg={invalidRange} /> }
             <AbsenceNotesSection
               userNote={userNote}
               adminNote={adminNote}
@@ -173,11 +177,7 @@ class AbsenceModal extends PureComponent{
             />
             { adminMode && <AbsenceConfigs
               unpaid={unpaid}
-              workDays={workDays}
-              useAvgHours={useAvgHours}
               toggleUnpaid={()=>this.setState({unpaid: unpaid ? null : true})}
-              toggleUseAvgHours={()=>this.setState({useAvgHours: useAvgHours ? null : true})}
-              updateWorkDays={this.workDaysChanged}
             />}
   				</fb>
   			</SModal.Body>
