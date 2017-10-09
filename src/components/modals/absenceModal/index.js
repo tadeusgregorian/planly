@@ -9,10 +9,10 @@ import _ from 'lodash'
 import getCurrentUser from 'selectors/currentUser'
 import { saveAbsenceToDB, checkOverlappings, removeAbsenceFromDB } from 'actions/absence'
 import { generateGuid, momToSmart, smartToMom } from 'helpers/index'
-import { getEffectiveDays, getTotalDays } from './localHelpers'
+import { getEffectiveDays, getTotalDays, getButtonsToShow } from './localHelpers'
 import type { Store, User, Absence, WorkDays, AbsenceType, AbsenceStatus, AccountPreferences } from 'types/index'
 
-import RangeValidationMessage from './rangeValidationMessage'
+import ErrorMessageDisplay from './errorMessageDisplay'
 import AbsenceDetailsDisplay from './absenceDetailsDisplay'
 import AbsenceTypeSelect from './absenceTypeSelect'
 import AbsenceNotesSection from './absenceNotesSection'
@@ -38,7 +38,7 @@ type State = {
   useAvgHours: ?true,
   unpaid: ?true,
   focusedInput: any,
-  invalidRange: false | 'loading' | 'overlapping' | 'multiyear'
+  errorMessage: false | 'loading' | 'overlapping' | 'multiyear'
 }
 
 type OwnProps = {
@@ -79,7 +79,7 @@ class AbsenceModal extends PureComponent{
       useAvgHours:    absence ? (absence.useAvgHours || null)  : this.getDefaul_useAvgHours('ill'), // TODO: come back here ...
       unpaid:         absence ? (absence.unpaid      || null)  : null,
       focusedInput:   null, // we omit this before saving to db!
-      invalidRange:   false, // we omit this before saving to db!
+      errorMessage:   false, // we omit this before saving to db!
     }
   }
 
@@ -101,28 +101,31 @@ class AbsenceModal extends PureComponent{
   }
 
   datesChanged = (d: {startDate: ?moment, endDate: ?moment}) => {
+    const {startDate, endDate} = d
     this.setState({
-      startDate:      d.startDate ? momToSmart(d.startDate) : null,
-      endDate:        d.endDate   ? momToSmart(d.endDate): null,
-      year:           moment(d.startDate).year(),
-      totalDays:      getTotalDays(d.startDate, d.endDate),
-      effectiveDays:  getEffectiveDays(d.startDate, d.endDate, this.state.workDays, 'HH'),
-      invalidRange:  !!(d.startDate && d.endDate) ? 'loading' : false
+      startDate:      startDate ? momToSmart(startDate) : null,
+      endDate:        endDate   ? momToSmart(endDate): null,
+      year:           moment(startDate).year(),
+      totalDays:      getTotalDays(startDate, endDate),
+      effectiveDays:  getEffectiveDays(startDate, endDate, this.state.workDays, 'HH'),
+      errorMessage:  !!(startDate && endDate) ? 'loading' : false
     })
 
-    if(d.startDate && d.endDate){
-      checkOverlappings(d.startDate, d.endDate, this.props.userID)
-        .then((res: boolean)=> this.setState({invalidRange: res && 'overlapping'}))
+    // checking if selected Range is Valid here
+    if(startDate && endDate){
+      if( endDate.year() !== startDate.year() ){
+        this.setState({errorMessage: 'multiyear'})
+      }else{
+        checkOverlappings(startDate, endDate, this.props.userID)
+          .then((res: boolean)=> this.setState({errorMessage: res && 'overlapping'}))
+      }
     }
   }
 
   workDaysChanged = (workDays: WorkDays) => {
     const startDate = this.state.startDate ? smartToMom(this.state.startDate) : null
     const endDate =   this.state.endDate   ? smartToMom(this.state.endDate) : null
-    this.setState({
-      workDays,
-      effectiveDays:  getEffectiveDays(startDate, endDate, workDays, 'HH'),
-    })
+    this.setState({ workDays, effectiveDays:  getEffectiveDays(startDate, endDate, workDays, 'HH') })
   }
 
   changeAdminNote = (note) => this.setState({adminNote: note})
@@ -143,11 +146,12 @@ class AbsenceModal extends PureComponent{
 
   render(){
     const { closeModal, user, currentUser } = this.props
-    const { type, startDate, endDate, focusedInput, userNote, adminNote, totalDays, status, invalidRange, unpaid, effectiveDays } = this.state
+    const { type, startDate, endDate, focusedInput, userNote, adminNote, totalDays, status, errorMessage, unpaid, effectiveDays } = this.state
     const adminMode = !!currentUser.isAdmin
-    const isComplete = startDate && endDate && type && !invalidRange
+    const isComplete = startDate && endDate && type && !errorMessage
     const accepted = status === 'accepted'
     const requested = status === 'requested'
+    const showBtn = getButtonsToShow(this.props, this.state)
 
     return(
       <SModal.Main onClose={closeModal} title={user.name} >
@@ -161,12 +165,13 @@ class AbsenceModal extends PureComponent{
                   startDate={startDate ? moment(startDate, 'YYYYMMDD') : null}
                   endDate={endDate ? moment(endDate, 'YYYYMMDD') : null}
                   onDatesChange={this.datesChanged}
+                  minimumNights={0}
                   focusedInput={focusedInput}
                   onFocusChange={focusedInput => this.setState({ focusedInput })}/>
               }
             </fb>
-            { startDate && endDate && !invalidRange && <AbsenceDetailsDisplay totalDays={totalDays} effectiveDays={effectiveDays} /> }
-            { startDate && endDate &&  invalidRange && <RangeValidationMessage msg={invalidRange} /> }
+            { startDate && endDate && !errorMessage && <AbsenceDetailsDisplay totalDays={totalDays} effectiveDays={effectiveDays} /> }
+            { startDate && endDate &&  errorMessage && <ErrorMessageDisplay msg={errorMessage} /> }
             <AbsenceNotesSection
               userNote={userNote}
               adminNote={adminNote}
@@ -182,11 +187,11 @@ class AbsenceModal extends PureComponent{
   				</fb>
   			</SModal.Body>
         <SModal.Footer>
-           {  adminMode && status === 'accepted'  && <SButton label='Löschen'   onClick={this.removeAbsence} color='#ff3f3f' grey left />}
-           {  adminMode && status === 'requested' && <SButton label='Ablehnen'  onClick={this.removeAbsence} color='#ff3f3f'/>}
-           {  adminMode && status === 'requested' && <SButton label='Annehmen'  onClick={this.acceptRequest} color='#00a2ef' disabled={!isComplete} />}
-           {  adminMode && status === 'accepted'  && <SButton label='Speichern' onClick={()=>this.saveAbsence(this.state)}   disabled={!isComplete} color='#00a2ef' />}
-           { !adminMode &&                   <SButton label='Urlaub Beantragen' onClick={()=>this.saveAbsence(this.state)}   disabled={!isComplete} color='#00a2ef' /> }
+           {  showBtn.Delete  && <SButton label='Löschen'   onClick={this.removeAbsence} color='#ff3f3f' grey left />}
+           {  showBtn.Reject  && <SButton label='Ablehnen'  onClick={this.removeAbsence} color='#ff3f3f'/>}
+           {  showBtn.Accept  && <SButton label='Annehmen'  onClick={this.acceptRequest} color='#00a2ef'         disabled={!isComplete} />}
+           {  showBtn.Save    && <SButton label='Speichern' onClick={()=>this.saveAbsence(this.state)}           disabled={!isComplete} color='#00a2ef' />}
+           {  showBtn.Request && <SButton label='Urlaub Beantragen' onClick={()=>this.saveAbsence(this.state)}   disabled={!isComplete} color='#00a2ef' /> }
         </SModal.Footer>
   		</SModal.Main>
     )

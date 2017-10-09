@@ -1,7 +1,8 @@
+//@flow
 import moment from 'moment'
 import 'moment-feiertage'
 import { weekDays } from 'constants/roster'
-import type { Day, WorkDays, BundeslandCode } from 'types/index'
+import type { Day, WorkDays, BundeslandCode, User, Absence, AbsenceStatus } from 'types/index'
 
 const numToWeekDay = (num: number): Day => {
   return weekDays[num]
@@ -20,13 +21,28 @@ export const getEffectiveDays = (start: ?moment, end: ?moment, workDays: ?WorkDa
   for(let i = 0; i < totalDays; i++){
     const curDay = moment(start).add(i, 'days')
     const curWeekDay = numToWeekDay(curDay.weekday())
+    // $FlowFixMe -> moment-feiertage hat moment extended -> moment doesnt get that.
     const isHoliday = curDay.isHoliday('HH')
-
-    console.log(!workDays || !workDays.hasOwnProperty(curWeekDay))
-    if(isHoliday) console.log('HOLIDAYYY');
 
     if((!workDays || !workDays.hasOwnProperty(curWeekDay)) || isHoliday) ++excludedsCount
   }
 
   return totalDays - excludedsCount
+}
+
+type Props = { currentUser: User, absence?: Absence }
+type State = { status: AbsenceStatus }
+type ButtonsToShow = { Save: boolean, Delete: boolean, Accept: boolean, Reject: boolean, Request: boolean }
+
+export const getButtonsToShow = (props: Props , state: State): ButtonsToShow => {
+  const adminMode    = !!props.currentUser.isAdmin
+  const accepted     = state.status === 'accepted'
+  const requested    = state.status === 'requested'
+  const creationMode = !props.absence
+  const Save    = (adminMode && accepted) || (!adminMode && requested && !creationMode)
+  const Delete  = (adminMode && accepted && !creationMode) || (!adminMode && requested && !creationMode)
+  const Accept  =  adminMode && requested
+  const Reject  =  adminMode && requested
+  const Request = !adminMode && requested && creationMode
+  return { Save, Delete, Accept, Reject, Request }
 }

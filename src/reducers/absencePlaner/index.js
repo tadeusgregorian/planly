@@ -5,10 +5,12 @@ import type { Absence, DataStatus } from 'types/index'
 
 export type AbsencePlaner = {
   absences: Array<Absence>,
-  absencesDataStatus: DataStatus
+  requestedAbsences: Array<Absence>,
+  absencesDataStatus: DataStatus,
 }
 
 export default combineReducers({
   absences: createFirebaseReducer_array('absences'),
+  requestedAbsences: createFirebaseReducer_array('requestedAbsences'),
   absencesDataStatus: createDataStatusReducer('absences')
 })

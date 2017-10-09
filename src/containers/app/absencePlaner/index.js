@@ -4,7 +4,8 @@ import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import moment from 'moment'
 
-import { setAbsencesListener } from 'actions/listeners/absencePlaner'
+import { setRequestedAbsencesListener } from 'actions/listeners/absencePlaner'
+import { setAbsencesListener          } from 'actions/listeners/absencePlaner'
 import { getClickedAbsenceID, getClickedUserID } from './localHelpers'
 import { openAbsenceModal } from 'actions/ui/modals'
 
@@ -21,8 +22,10 @@ type ConProps = {
   currentUser: User,
   absences: Array<Absence>,
   absencesDS: DataStatus,
+  currentYear: number,
   openAbsenceModal: (string, (Absence | void))=>{},
   setAbsencesListener: (number)=>any,
+  setRequestedAbsencesListener: ()=>any,
 }
 type Props = OwnProps & ConProps
 
@@ -31,11 +34,17 @@ class AbsencePlaner extends PureComponent {
 
   componentDidMount = () => {
     document.addEventListener('click', this.clickDetected)
+    this.props.setRequestedAbsencesListener()
     this.props.setAbsencesListener(moment().year())
   }
 
   componentWillUnmount  = () => {
     document.removeEventListener('click', this.clickDetected)
+  }
+
+  componentWillReceiveProps = (np: Props) => {
+    const yearChanged = np.currentYear !== this.props.currentYear
+    yearChanged && this.props.setAbsencesListener(np.currentYear)
   }
 
   clickDetected = (e: any) => {
@@ -71,10 +80,12 @@ class AbsencePlaner extends PureComponent {
 
 const actionCreators = {
   setAbsencesListener,
+  setRequestedAbsencesListener,
   openAbsenceModal,
 }
 
 const mapStateToProps = (state: Store) => ({
+  currentYear: state.ui.absence.currentYear,
   currentUser: getCurrentUser(state),
   absences: getAbsencesFiltered(state),
   absencesDS: state.absencePlaner.absencesDataStatus,

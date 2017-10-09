@@ -24,8 +24,8 @@ export default (props: Props) => {
   const extendsRight = smartToMom(absence.endDate).month() > month
 
   const getStartEndShort = () => {
-    const start = smartToMom(absence.startDate).format('DD.MMM')
-    const end = smartToMom(absence.endDate).format('DD.MMM')
+    const start = smartToMom(absence.startDate).format('DD MMM')
+    const end = smartToMom(absence.endDate).format('DD MMM')
     return start + ' - ' + end
   }
 
@@ -38,7 +38,7 @@ export default (props: Props) => {
       data-absence-id={absence.id}
     >
       { extendsLeft && <fb className='arrowIndicator icon icon-arrow_back' />}
-      <fb className='content'>{ width > 100 && getStartEndShort()}</fb>
+      <fb className='content'>{ width > 60 && getStartEndShort()}</fb>
       { extendsRight && <fb className='arrowIndicator icon icon-arrow_forward' />}
     </fb>
   )

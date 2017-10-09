@@ -6,6 +6,10 @@
   font-size: 14px;
   border-radius: 2px;
 
+  &.loading{
+    background: #00a3ef;
+  }
+
 
   .alertIcon{
     margin-right: 6px;

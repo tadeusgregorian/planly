@@ -11,13 +11,14 @@ export default ({msg}: Props) => {
   const getErrorText = () => {
     switch (msg) {
       case 'overlapping': return 'Zeitraum überschneidet sich mit einem anderen Abwesenheits-Eintrag.'
-      case 'multiyear': return 'Abwesenheit darf nicht zwischen zwei Jahren liegen.'
+      case 'multiyear':   return 'Abwesenheit darf nicht zwischen zwei Jahren liegen.'
+      case 'loading':     return 'loading...'
       default: return ''
     }
   }
 
   return(
-    <fb className="absenceErrorMessageMain">
+    <fb className={'absenceErrorMessageMain ' + msg}>
       <fb className='icon alertIcon icon-warning2' />
       <fb className='text'>{getErrorText()}</fb>
     </fb>
