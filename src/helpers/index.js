@@ -1,7 +1,6 @@
 //@flow
 import moment from 'moment'
 
-export * from './general'
 export * from './iziToast'
 export * from './dateHelpers'
 export * from './roster'

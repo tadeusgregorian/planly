@@ -10,13 +10,19 @@ import type { AbsencePreDB, Absence } from 'types/index'
 
 export const saveAbsenceToDB = (absence: AbsencePreDB) => {
   const absenceDB = extendForDB(absence)
-  console.log(absenceDB);
-  db().ref(getFBPath('absences', [absenceDB.id])).set(absenceDB)
+  const request = absence.status === 'requested' ? absenceDB : null // delete just in case...
+  const updates = { [getFBPath('absences', [absence.id])]: absenceDB }
+  updates[getFBPath('vacationRequests', [absence.id])] = request
+
+  db().ref().update(updates)
 }
 
 export const removeAbsenceFromDB = (absenceID: string) => {
-  db().ref(getFBPath('absences', [absenceID])).set(null)
+  const updates = {[getFBPath('absences', [absenceID])]: null }
+  updates[getFBPath('vacationRequests', [absenceID])] = null // cleaning it away, just in case
+  db().ref().update(updates)
 }
+
 
 export const checkOverlappings = (start: moment, end: moment, user: string): Promise<boolean> => {
   const year       = start.year()

@@ -6,7 +6,7 @@ import type { Connector } from 'react-redux'
 import type { Store } from 'types/index'
 
 import WeekSelector from './weekSelector'
-import DatePicker from 'react-datepicker';
+import DatePicker from 'react-datepicker'
 import DateDisplay from './dateDisplay'
 import EditsDisplay from './editsDisplay'
 import OptionsDropdown from './optionsDropdown'

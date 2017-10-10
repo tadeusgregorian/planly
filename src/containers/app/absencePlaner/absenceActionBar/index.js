@@ -7,7 +7,9 @@ import Select from 'react-select';
 import { openAbsenceModal } from 'actions/ui/modals'
 import { setCurrentBranch, setCurrentYear, setCurrentMonth, setCurrentType } from 'actions/ui/absence'
 import { getYearsArray, getMonthsArray } from './localHelpers'
+
 import TypeSwitch from './typeSwitch'
+import RequestManager from './requestManager'
 import RequestVacBtn from './requestVacBtn'
 
 import type { Branch, AbsenceType, Store, Absence, User } from 'types/index'
@@ -80,7 +82,9 @@ class AbsenceActionBar extends PureComponent {
             type={currentType}
             changeType={this.props.setCurrentType}
            />
-           {!adminMode && <RequestVacBtn onClick={this.requestVacClicked}/>}
+           { adminMode
+             ? <RequestManager />
+             : <RequestVacBtn onClick={this.requestVacClicked}/>}
         </fb>
       </fb>
     )

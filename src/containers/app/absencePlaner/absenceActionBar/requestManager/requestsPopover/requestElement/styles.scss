@@ -1,0 +1,54 @@
+.requestManagerPopoverElement{
+  height: 44px;
+  cursor: pointer;
+
+  .jumpToBox{
+    width: 40px;
+    flex: 0 0 auto;
+    justify-content: center;
+    align-items: center;
+    border-radius: 2px;
+    // border-top-left-radius: 2px;
+    // border-bottom-left-radius: 2px;
+    margin: 1px;
+
+    background: #d2d2d2;
+    color: #757575;
+
+    &:hover{
+      background: #6cceff;
+      color: #07c;
+    }
+  }
+
+  .contentBox{
+    flex-direction: column;
+    flex: 1 1 auto;
+    background: #e8e8e8;
+    margin: 1px;
+    // border-top-right-radius: 2px;
+    // border-bottom-right-radius: 2px;
+    border-radius: 2px;
+    padding: 3px;
+    padding-left: 6px;
+
+    &:hover{
+      background: #6cceff;
+      .vacData{
+        color: #07c;
+      }
+    }
+
+    .userName{
+      color: #07c;
+      font-size: 16px;
+      margin-bottom: 4px;
+      font-weight: 400;
+    }
+
+    .vacData{
+      font-size: 12px;
+      color: grey;
+    }
+  }
+}

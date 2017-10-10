@@ -38,7 +38,7 @@ export default (props: Props) => {
       data-absence-id={absence.id}
     >
       { extendsLeft && <fb className='arrowIndicator icon icon-arrow_back' />}
-      <fb className='content'>{ width > 60 && getStartEndShort()}</fb>
+      <fb className='content'>{ width > 90 && getStartEndShort()}</fb>
       { extendsRight && <fb className='arrowIndicator icon icon-arrow_forward' />}
     </fb>
   )
