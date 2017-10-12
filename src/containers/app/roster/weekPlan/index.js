@@ -1,10 +1,9 @@
 // @flow
-
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import type { Store, Shifts } from 'types/index'
-import { setRosterListeners, setInitialRosterListeners } from 'actions/listeners'
+import { setRosterListeners, setInitialRosterListeners } from 'actions/listeners/roster'
 
 import WithMouseEvents from '../withMouseEvents'
 import ShiftBoard from '../shiftBoard'
@@ -17,8 +16,8 @@ type ConnectedProps = {
   currentBranch: string,
   currentWeekID: string,
   templateMode: boolean,
-  setRosterListeners: ()=>void,
-  setInitialRosterListeners: ()=>void
+  setRosterListeners: ()=>any,
+  setInitialRosterListeners: ()=>any
 }
 
 type Props = ConnectedProps

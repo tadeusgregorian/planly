@@ -1,4 +1,5 @@
-export default
+//@flow
+export const colors =
 [
 	'#1abc9c',
 	'#2ecc71',
@@ -17,3 +18,8 @@ export default
 	'#c0392b',
 	'#7f8c8d'
 ];
+
+export const getRandomColor = () => {
+	const random = Math.floor(Math.random() * colors.length)
+	return colors[random]
+}

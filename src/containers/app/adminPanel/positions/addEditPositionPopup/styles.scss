@@ -1,5 +1,14 @@
 .addEditPositionPopupMain{
   min-width: 600px;
+  flex-direction: column;
+
+  .colorBox{
+    width: 30px;
+    height: 30px;
+    border-radius: 2px;
+    margin-left: 4px;
+    cursor: pointer;
+  }
 
   .flatFormRowMain{
     &:last-child{

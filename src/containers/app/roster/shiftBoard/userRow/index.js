@@ -1,12 +1,12 @@
 //@flow
 import React, { PureComponent } from 'react'
-import type { User, Shifts, ShiftRef } from 'types/index'
 
+import { weekDays } from 'constants/roster'
 import ShiftCell    from './shiftCell'
 import UserCell     from './userCell'
 import OpenUserCell from './openUserCell'
 
-import { weekDays } from 'constants/roster'
+import type { User, Shifts, ShiftRef, Position } from 'types/index'
 import './styles.css'
 
 type propsType = {
@@ -14,6 +14,8 @@ type propsType = {
   userID: string,
   isOpen: boolean,
   shifts: Shifts,
+  durationSum: number,
+  position: ?Position,
   shadowedDay: string | false,
   currentUser: User,
   focusedShiftRef: ?ShiftRef,
@@ -24,11 +26,11 @@ export default class UserRow extends PureComponent{
   props: propsType
 
   render(){
-    const { userID, user, shifts, shadowedDay, currentUser, focusedShiftRef, shiftUnderMouse, isOpen } = this.props
+    const { userID, user, shifts, shadowedDay, currentUser, focusedShiftRef, shiftUnderMouse, isOpen, position, durationSum } = this.props
 
     return(
       <fb className="userRowMain">
-        { (!isOpen && user) ? <UserCell user={user} /> : <OpenUserCell /> }
+        { (!isOpen && user) ? <UserCell user={user} position={position} durationSum={durationSum} /> : <OpenUserCell /> }
         <fb className='ShiftCellsWrapper'>
           { weekDays.map(day => {
             const dayShifts       = shifts.filter(s => s.day === day)

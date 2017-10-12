@@ -1,6 +1,6 @@
 //@flow
 export const userCellWidth = 200;
-export const shiftCellWidth = 143;
+export const shiftCellWidth = 136 //143;
 export const shiftCellHeight = 48;
 
 export const popOptionsWidth = 142;

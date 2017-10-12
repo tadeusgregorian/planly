@@ -11,6 +11,7 @@ import { openAbsenceModal } from 'actions/ui/modals'
 
 import getCurrentUser from 'selectors/currentUser'
 import getAbsencesFiltered from 'selectors/absencesFiltered'
+import getAbsenceSums from 'selectors/absenceSums'
 
 import AbsenceActionBar from './absenceActionBar'
 import AbsenceCalendar from './absenceCalendar'
@@ -21,6 +22,7 @@ type OwnProps = {}
 type ConProps = {
   currentUser: User,
   absences: Array<Absence>,
+  absenceSums: Array<{user: string, days: number}>,
   absencesDS: DataStatus,
   currentYear: number,
   openAbsenceModal: (string, (Absence | void))=>{},
@@ -34,8 +36,8 @@ class AbsencePlaner extends PureComponent {
 
   componentDidMount = () => {
     document.addEventListener('click', this.clickDetected)
-    this.props.setRequestedAbsencesListener()
     this.props.setAbsencesListener(moment().year())
+    this.props.setRequestedAbsencesListener()
   }
 
   componentWillUnmount  = () => {
@@ -43,8 +45,9 @@ class AbsencePlaner extends PureComponent {
   }
 
   componentWillReceiveProps = (np: Props) => {
-    const yearChanged = np.currentYear !== this.props.currentYear
-    yearChanged && this.props.setAbsencesListener(np.currentYear)
+    if(np.currentYear !== this.props.currentYear){
+      this.props.setAbsencesListener(np.currentYear)
+    }
   }
 
   clickDetected = (e: any) => {
@@ -58,7 +61,8 @@ class AbsencePlaner extends PureComponent {
   }
 
   render() {
-    const { absences, absencesDS, currentUser } = this.props
+    const { absences, absencesDS, currentUser, absenceSums } = this.props
+    console.log(absenceSums);
 
     return(
       <fb className="absenceMain">
@@ -70,6 +74,7 @@ class AbsencePlaner extends PureComponent {
           <AbsenceCalendar
             adminMode={!!currentUser.isAdmin}
             absences={absences}
+            absenceSums={absenceSums}
             loading={absencesDS !== 'LOADED'}
           />
         </fb>
@@ -88,6 +93,7 @@ const mapStateToProps = (state: Store) => ({
   currentYear: state.ui.absence.currentYear,
   currentUser: getCurrentUser(state),
   absences: getAbsencesFiltered(state),
+  absenceSums: getAbsenceSums(state),
   absencesDS: state.absencePlaner.absencesDataStatus,
 })
 

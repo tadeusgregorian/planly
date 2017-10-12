@@ -1,5 +1,19 @@
+//@flow
+
 import React from 'react'
 import './styles.css'
+
+type Props = {
+	name?: string,
+	defaultText?: string,
+	password?: any,
+	onInputChange: (string)=>any,
+	onEnter?: Function,
+	value: ?string,
+	iStyle?: {},
+	maxLength?: number | string,
+	autoFocus?: any,
+}
 
 
 export default ({
@@ -10,7 +24,8 @@ export default ({
 	onEnter,
 	value,
 	iStyle,
-	autoFocus }) => {
+	maxLength,
+	autoFocus }: Props) => {
 
 	return(
 		<fb className='flatInputMain'>
@@ -18,6 +33,7 @@ export default ({
 				value={value}
 				type={password ? "password" : "text"}
 				name={name}
+				maxLength={maxLength && maxLength.toString()}
 				style={iStyle && iStyle}
 				placeholder={defaultText}
 				onChange={(e)=> onInputChange(e.target.value)}

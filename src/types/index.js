@@ -33,7 +33,7 @@ export type AbsenceBasis = {
   startDate: number,
   endDate: number,
   totalDays: number,
-  effective: number,
+  effectiveDays: number,
 }
 
 export type Absence = AbsenceBasis & { // this is the absence Obj we get from the DB ( Firebase deleted keys where the value is null or empty obj )
@@ -73,6 +73,7 @@ export type User = {
   branches: {},
   email: ?string,
   weeklyHours: {},
+  currentWeeklyHours?: number, // just used in roster after extending with a selector
   status: 'notInvited' | 'invited' | 'active',
   isAdmin?: true,
   isSuperAdmin?: true,
@@ -85,7 +86,8 @@ export type Users = Array<User>
 export type Position = {
   id: string,
   name: string,
-  color: string
+  color: string,
+  shortcut: string,
 }
 export type Positions = Array<Position>
 
@@ -134,12 +136,12 @@ export type Shift = {
   s: number,
   e: number,
   b: number,
-  user: string,
   day: Day,
+  user: string,
   edit?: MinimalShift,
   note?: ?string,
+  position?: ?string,
   isOpen?: ?boolean,
-  position?: string,
   location?: ?string
 }
 export type Shifts = Array<Shift>
@@ -161,7 +163,7 @@ export type PreDBShift = {
 
 export type DBShift = {
   branchDay: string,
-  userDay: string,
+  userDay: string
 } & PreDBShift
 
 export type ShiftCell = {

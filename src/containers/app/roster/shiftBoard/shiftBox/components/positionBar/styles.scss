@@ -1,8 +1,8 @@
 .positionBarMain{
-  height: 18px;
+  height: 20px;
   border-radius: 1px;
   align-items: center;
-  padding-left: 2px;
+  padding-left: 4px;
   color: white;
   text-transform: uppercase;
   font-weight: 400;
@@ -29,8 +29,11 @@
     }
 
     .triangleIcon{
-      margin-left: 2px;
       transform: rotate(90deg);
+      margin-left: auto;
+      transform: rotate(90deg);
+      margin-right: 4px;
+      font-size: 14px;
     }
   }
 

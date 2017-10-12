@@ -69,7 +69,7 @@ class AddEditUserPopup extends PureComponent {
 	onButtonClicked = () => {
 		const { id, name, email, branches, position, initialOvertime } = this.state
 		const initialHours = initialOvertime.hours
-		const { accountID } = this.props
+		const { accountID, user } = this.props
 		let errorText = ''
 
 		if(!this.weeklyHoursValid())  		 errorText = 'Bitte geben Sie die Wochenstunden an.'
@@ -82,7 +82,7 @@ class AddEditUserPopup extends PureComponent {
 		if(errorText){
 			this.setState({errorText})
 		} else {
-			const cleanedUser  = _.omit(this.state, 'errorText')
+			const cleanedUser  = {  ...user,  ..._.omit(this.state, 'errorText')} // props like 'isAdmin' are not in state, thats why doing ...user ( from props )
 			cleanedUser.status = this.needToSendEmailInvite() ? 'invited' : cleanedUser.status
 			saveUserToDB(cleanedUser)
 			if(this.needToSendEmailInvite()) sendEmailInvite(id, name, email, accountID)

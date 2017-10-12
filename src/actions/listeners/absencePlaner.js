@@ -16,6 +16,5 @@ export const setAbsencesListener = (year: number) => (dispatch: Dispatch, getSta
 
 export const setRequestedAbsencesListener = () => (dispatch: Dispatch, getState: GetState) => {
   const path        = getFBPath('vacationRequests')
-
   createFirebaseListener(dispatch, getState, 'vacationRequests', path)
 }

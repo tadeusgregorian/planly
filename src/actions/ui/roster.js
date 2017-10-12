@@ -10,8 +10,8 @@ export const changeCurrentWeekID = (weekID: string) =>
 
 export const enterTemplateMode: ThunkAction = () => (dispatch, getState: GetState) => {
   // hacky!: at the same time this sets currentWeekID to the default one ( equal to the branchID )
-  const branchID = getState().ui.roster.currentBranch
-  dispatch({ type: 'ENTER_TEMPLATE_MODE', payload: branchID })
+  const defaultTempID = 'defaultTemplate_' + getState().ui.roster.currentBranch
+  dispatch({ type: 'ENTER_TEMPLATE_MODE', payload: defaultTempID })
 }
 
 export const leaveTemplateMode = () =>

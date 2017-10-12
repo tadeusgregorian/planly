@@ -37,7 +37,7 @@ type ConProps = {
   branch: ?Branch,
   toggleOptions: ()=>{},
   saveShiftToDB: (Shift, ?boolean)=>any,
-  saveShiftEditToDB: (string, MinimalShift)=>any,
+  saveShiftEditToDB: (Shift, MinimalShift)=>any,
   openNotesModal: (string, Function)=>any,
   unfocusShift: ()=>{},
   updateNoteOfShift: (string, string)=>any
@@ -136,7 +136,7 @@ class ModifyShiftBox extends PureComponent{
       const minimalShift = zipShift(shiftInput)
       let shift = { ...minimalShift, day, user, id, note, location, position }
 
-      this.isAdmin ? saveShiftToDB(shift) : saveShiftEditToDB(id, minimalShift)
+      this.isAdmin ? saveShiftToDB(shift) : saveShiftEditToDB(shift, minimalShift)
       unfocusShift()
     }
   }

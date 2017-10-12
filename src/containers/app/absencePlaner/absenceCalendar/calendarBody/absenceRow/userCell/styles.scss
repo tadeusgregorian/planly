@@ -3,31 +3,46 @@
   flex: 1 1 auto;
   font-weight: 300;
   align-items: center;
-  padding-left: 8px;
   background: #f7f7f7;
+  justify-content: space-between;
+  padding: 0px 10px;
+  cursor: pointer;
+
+  &:hover{
+    background-color: white;
+  }
+
+  .daysSum{
+    color: grey;
+    font-weight: 400;
+    font-size: 14px;
+    padding: 2px 4px;
+    background: #e2e2e2;
+    border-radius: 2px;
+  }
 
   .addAbsenceBtn{
     position: absolute;
-    right: 0px;
+    right: -10px;
+    top: 8px;
     background: grey;
     color: white;
     align-self: stretch;
-    width: 40px;
-    height: 100%;
+    width: 20px;
+    height: 20px;
     //display: hidden;
+    font-size: 10px;
     opacity: 0;
     transition: transform 0.2s ease-out, opacity 0.2s ease;
     justify-content: center;
     align-items: center;
+    border-radius: 10px;
   }
 
   &:hover{
     .addAbsenceBtn{
       &.adminMode{
 
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
         opacity: 1;
         transform: scale(0.8, 0.8);
       }

@@ -16,4 +16,5 @@
     border-right: 1px solid #d8d8d8;
     color: grey; }
   .flatFormRowMain .inputWrapper {
-    flex: 1 1 auto; }
+    flex: 1 1 auto;
+    align-items: center; }

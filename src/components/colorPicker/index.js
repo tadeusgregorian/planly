@@ -2,7 +2,7 @@
 import React, { PureComponent } from 'react'
 
 import { getPosOfElement, isInsideColorPicker } from './localHelpers'
-import colors from 'constants/colors'
+import { colors } from 'constants/colors'
 import './styles.css'
 
 type Props = {

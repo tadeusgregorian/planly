@@ -1,6 +1,45 @@
 .userCellMain{
+  position: relative;
   flex: 1 1 auto;
   background-color: #f7f7f7;
-  padding-left: 14px;
-  align-items: center;
+  padding-left: 8px;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+
+  .posBox{
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    padding: 0 2px;
+    //color: rgba(255, 255, 255, 0.95);
+    font-size: 8px;
+    font-weight: 500;
+    border-radius: 2px;
+    text-transform: uppercase;
+    height: 12px;
+    align-items: center;
+    border: 1px solid;
+  }
+
+  .userName{
+    margin-bottom: 4px;
+    font-weight: 400;
+    color: #525252;
+    font-size: 14px;
+  }
+
+  .times{
+    font-size: 12px;
+    margin-left: 1px;
+
+    .currentWeek{
+      color: #a7a7a7;
+    }
+
+    .overtime{
+      color: red;
+      margin-right: 4px;
+    }
+  }
 }

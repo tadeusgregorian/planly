@@ -1,18 +1,21 @@
 .shiftTimesBarMain{
   padding-left: 4px;
   padding-top: 2px;
-  align-items: flex-start;
-  height: 24px;
+  align-items: center;
+  height: 21px;
+  padding-bottom: 3px;
 
   .shiftTimes{
     pointer-events: none;
-    color: #3c3c3c;
+    color: #525460;
+    font-size: 14px;
+    font-weight: 400;
   }
 
   .breakTime{
-    height: 13px;
-    font-size: 9px;
-    font-weight: 500;
+    //height: 13px;
+    font-size: 12px;
+    font-weight: 300;
     justify-content: flex-end;
     pointer-events: none;
     align-items: center;

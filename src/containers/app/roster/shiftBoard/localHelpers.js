@@ -10,6 +10,10 @@ export const isSameCell = (c1: ShiftCell, c2: ShiftCell): boolean => {
   return true
 }
 
+export const getDurationSum = (shifts: Shifts): number => {
+  return shifts.reduce((acc, shift) => shift.e - shift.s + acc , 0)
+}
+
 export const getShiftsOfUser = (shifts: Shifts, userID: string): Shifts =>
  shifts.filter(s => s.user === userID)
 

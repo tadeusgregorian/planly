@@ -15,7 +15,7 @@ const currentBranch = simpleReducer({
 const currentWeekID = simpleReducer({
   default: getRealCurrentWeekID(),
   SET_CURRENT_WEEK_ID: 'PAYLOAD',
-  ENTER_TEMPLATE_MODE: 0,
+  ENTER_TEMPLATE_MODE: 'PAYLOAD',
   LEAVE_TEMPLATE_MODE: getRealCurrentWeekID(),
 })
 
