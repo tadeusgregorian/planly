@@ -1,5 +1,6 @@
 //@flow
 const functions = require('firebase-functions')
+const shiftSums = require('./shiftSums');
 
 // exports.sendEmailInvites = functions.database
 //   .ref('/emailInvites/{inviteID}')
@@ -12,8 +13,8 @@ const functions = require('firebase-functions')
 //   })
 
 const trimAbsence = (absence) => {
-  const { id, user, type, startDate, endDate, workDays, dayRate, hollow } = absence
-  return { id, user, type, startDate, endDate, workDays, dayRate, hollow }
+  const { id, user, type, startDate, endDate, workDays, useAvgHours } = absence
+  return { id, user, type, startDate, endDate, workDays, useAvgHours }
 }
 
 const getAbsFanOutPath = (accountID, smartWeek, absenceID) => {
@@ -39,13 +40,14 @@ exports.absenceFanOut = functions.database
     touchingWeeksNew.forEach(w => { updates[getAbsFanOutPath(accountID, w, absenceNew.id)] = trimAbsence(absenceNew) })
     removedWeeks.forEach(w     => { updates[getAbsFanOutPath(accountID, w, absencePrev.id)] = null })
 
-    const root = event.data.ref.root
-    return root.update(updates)
+    const rootRef = event.data.ref.root
+    return rootRef.update(updates)
   })
 
   exports.weekSumsUpdater = functions.database
     .ref('/accounts/{accountID}/roster/miniShiftWeeks/{weekID}/{userID}/{shiftID}')
     .onWrite(event => {
-      const { accountID, weekID, userID }   = event.params.accountID
-      return updateShiftSums
+      const { accountID, weekID, userID }   = event.params
+      const rootRef = event.data.adminRef.root
+      return shiftSums.updater(rootRef, { accountID, weekID, userID })
     })

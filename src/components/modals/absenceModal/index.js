@@ -139,7 +139,7 @@ class AbsenceModal extends PureComponent{
   }
 
   saveAbsence   = (absenceDirty) => {
-    const cleanAbsence = _.omit(absenceDirty, ['focusedInput', 'isOverlapping'])
+    const cleanAbsence = _.omit(absenceDirty, ['focusedInput', 'errorMessage'])
     saveAbsenceToDB(cleanAbsence)
     this.props.closeModal()
   }
