@@ -11,18 +11,16 @@ const functions = require('firebase-functions')
 //     return
 //   })
 
-const trimAbsence = (a) => {
+const trimAbsence = (a, firstWeekDay, lastWeekDay) => {
   return {
     id: a.id,
     user: a.user,
     type: a.type,
-    workDays: a.workDays,
-    useAvgHours: a.useAvgHours,
-    avgHours: a.avghours,
-    startWeekDay: a.startWeekDay,
-    endWeekDay: a.endWeekDay,
-    startWeek: a.startWeek,
-    endWeek: a.endWeek,
+    workDays: (a.workDays || null), // a.workDays can be undefined -> cant write undefined to DB
+    useAvgHours: (a.useAvgHours || null), // a.workDays can be undefined -> cant write undefined to DB
+    avgHours: a.avgHours,
+    firstWeekDay,
+    lastWeekDay
   }
 }
 
@@ -60,8 +58,14 @@ exports.absenceFanOut = functions.database
     touchingWeeksPrev.forEach(w => { if(!touchingWeeksNew.includes(w)) removedWeeks.push(w) })
 
     const updates = {}
-    touchingWeeksNew.forEach(w => { updates[getAbsFanOutPath(accountID, w, absenceNew.id)] = trimAbsence(absenceNew) })
-    removedWeeks.forEach(w     => { updates[getAbsFanOutPath(accountID, w, absencePrev.id)] = null })
+    removedWeeks.forEach(w => { updates[getAbsFanOutPath(accountID, w, absencePrev.id)] = null })
+
+    touchingWeeksNew.sort().forEach((w, i) => {
+      const firstWeekDay = i === 0 ? absenceNew.startWeekDay : 0
+      const lastWeekDay  = (i === touchingWeeksNew.length - 1) ? absenceNew.endWeekDay : 7
+      const trimmedAbsence = trimAbsence(absenceNew, firstWeekDay, lastWeekDay)
+      updates[getAbsFanOutPath(accountID, w, absenceNew.id)] = trimmedAbsence
+    })
 
     const rootRef = event.data.ref.root
     return rootRef.update(updates)
@@ -89,20 +93,16 @@ const updater = (rootRef, target) => {
     const miniShifts = results[0].val()
     const absences   = results[1].val()
 
-    const week = parseInt(weekID.substr(4), 10)
     const WEEK = ['mo','tu','we','th','fr','sa','su']
     let minsGrid = [0, 0, 0, 0, 0, 0, 0] // holds the sum of worked minutes per WeekDay ( every index represents the corresponding weekday )
 
     miniShifts && _values(miniShifts).forEach(ms => minsGrid[ms.weekDay] += ms.mins )
 
-    console.log(miniShifts);
-    console.log(minsGrid);
-
     const minsGridFinal = minsGrid.map((mins, weekDay) => {
       const vacToApply =  absences && _values(absences).find(a => {
         if(!a.useAvgHours) return false
-        if(a.startWeek === week && a.startWeekDay > weekDay) return false
-        if(a.endWeek   === week && a.endWeekDay   < weekDay) return false
+        if(a.firstWeekDay > weekDay) return false
+        if(a.lastWeekDay  < weekDay) return false
         return true
       })
       if(!vacToApply) return mins // no vacation to effect the minutes this day ( already over / didnt start yet / useAvgHours is false )
