@@ -1,0 +1,9 @@
+.positionSelectWrapper{
+  font-size: 18px;
+  min-width: 200px;
+  padding: 4px;
+
+  &> .Select > .Select-control {
+    border-radius: 1px;
+  }
+}

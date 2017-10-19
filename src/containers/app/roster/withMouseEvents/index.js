@@ -42,7 +42,8 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
   state: State
   props: Props
 
-  isAdmin: boolean
+  currentUser: string
+  adminMode: boolean
   mouseIsDown: boolean
   isDragging: boolean
   wasDraggingAround: boolean
@@ -55,7 +56,8 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
 
     this.mouseIsDown = false
     this.wasDraggingAround = false
-    this.isAdmin = !!(this.props.currentUser && this.props.currentUser.isAdmin)
+    this.currentUser = this.props.currentUser.id
+    this.adminMode = !!(this.props.currentUser && this.props.currentUser.isAdmin)
     this.state = {
       pickedUpShift: null,
       shadowedCell: null
@@ -64,7 +66,7 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
 
   componentDidMount = () => {
     document.addEventListener('click',   this.onClick)
-    if(this.isAdmin){ // only admin has drag and drop
+    if(this.adminMode){ // only admin has drag and drop
       document.addEventListener('mousemove', this.onMouseMove)
       document.addEventListener('mouseover', this.onMouseOver)
       document.addEventListener('mousedown', this.onMouseDown)
@@ -74,7 +76,7 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
 
   componentWillUnmount = () => {
     document.removeEventListener('click',   this.onClick)
-    if(this.isAdmin){ // only admin has drag and drop
+    if(this.adminMode){ // only admin has drag and drop
       document.removeEventListener('mouseover', this.onMouseOver)
       document.removeEventListener('mousemove', this.onMouseMove)
       document.removeEventListener('mousedown', this.onMouseDown)
@@ -101,10 +103,10 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
     }
   }
 
-  onMouseDown = (e: any) => {
+  onMouseDown = (e: any) => { // this is used to start a dragging action
     this.wasDraggingAround = false
     const pressedShift = getParentShift(e.target)
-    if (!pressedShift) return
+    if (!pressedShift) return // continue only if a shift was mouseDowned
     if (pressedShift.hasEdit) return   // dont allow dragging cells with shiftEdit
 
     this.mousePosStart = {x: e.pageX, y: e.pageY}
@@ -129,12 +131,16 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
       }
 
       const targetShift = getParentShift(target)
-      if(targetShift) return this.props.focusShift(targetShift)
+      if(targetShift){
+        if(targetShift.user === this.currentUser || this.adminMode){
+          return this.props.focusShift(targetShift)
+        }
+      }
 
       const targetCell = getParentCell(target)
-      if(targetCell && !targetCell.hasShift) return this.props.createShift(targetCell)
+      if(targetCell && this.adminMode && !targetCell.hasShift) return this.props.createShift(targetCell)
 
-      // elementIsShiftCell(target) && this.props.focusShiftCell(shiftCell)
+
     }
   }
 

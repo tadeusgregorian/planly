@@ -5,9 +5,9 @@ import type { Connector } from 'react-redux'
 import _ from 'lodash'
 
 import { getShiftsOfUser, getShadowedDay, getDurationSum } from './localHelpers'
-import type { User, Shifts, ShiftCell, Store, ShiftRef, Position } from 'types/index'
+import type { User, Shifts, ShiftCell, Store, ShiftRef, Position, WeekAbsence } from 'types/index'
 import getCurrentUser from 'selectors/currentUser'
-import getUsersAdjustedToWeek from 'selectors/usersAdjustedToWeek'
+//import getUsersAdjustedToWeek from 'selectors/usersAdjustedToWeek'
 
 import ShiftBoardHead from './shiftBoardHead'
 import UserRow from './userRow'
@@ -23,6 +23,7 @@ type ConProps = {
   users: Array<User>,
   positions: Array<Position>,
   shifts: Shifts,
+  absences: Array<WeekAbsence>,
   currentUser: User,
   shadowedCell: ?ShiftCell,
   focusedShiftRef: ?ShiftRef,
@@ -35,7 +36,7 @@ class ShiftBoard extends PureComponent{
   props: Props
 
   renderUserRow = (userID: string, isOpen:boolean, user?: User) => {
-    const { shadowedCell, shifts, currentUser, focusedShiftRef, shiftUnderMouse, positions } = this.props
+    const { shadowedCell, shifts, currentUser, focusedShiftRef, shiftUnderMouse, positions, absences } = this.props
     const shiftsOfUser = getShiftsOfUser(shifts, userID)
     const durationSum = getDurationSum(shiftsOfUser)
 
@@ -48,6 +49,7 @@ class ShiftBoard extends PureComponent{
       userID={userID}
       currentUser={currentUser}
       shifts={shiftsOfUser}
+      absences={absences.filter(a => a.user === userID)}
       shadowedDay={getShadowedDay(shadowedCell, userID)}
       focusedShiftRef={focusedShiftRef && focusedShiftRef.user === userID ? focusedShiftRef : null}
       shiftUnderMouse={shiftUnderMouse && shiftUnderMouse.user === userID ? shiftUnderMouse : null}
@@ -73,9 +75,10 @@ class ShiftBoard extends PureComponent{
 
 const mapStateToProps = (state: Store) => ({
   branch: state.ui.roster.currentBranch,
-  users: getUsersAdjustedToWeek(state),
+  users: state.core.users,
   positions: state.core.positions,
   shifts: state.roster.shiftWeek,
+  absences: state.roster.weekAbsences,
   focusedShiftRef: state.ui.roster.shiftBoard.focusedShiftRef,
   shiftUnderMouse: state.ui.roster.shiftBoard.shiftUnderMouse,
   currentUser: getCurrentUser(state)

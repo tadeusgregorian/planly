@@ -30,6 +30,10 @@ const _values = (obj) => { // cause Object.values doesnt work with this node ver
   return arr
 }
 
+const hoursToMins = (hours) => {
+  return Math.floor(parseFloat(hours) * 60)
+}
+
 const getAbsFanOutPath = (accountID, smartWeek, absenceID) =>
   `/accounts/${accountID}/absencePlaner/absencesWeekly/${smartWeek}/${absenceID}`
 
@@ -71,19 +75,27 @@ exports.absenceFanOut = functions.database
     return rootRef.update(updates)
   })
 
-exports.weekSumsUpdater = functions.database
+
+
+exports.miniShiftsChanged = functions.database
   .ref('/accounts/{accountID}/roster/miniShiftWeeks/{weekID}/{userID}/{shiftID}')
   .onWrite(event => {
-    const { accountID, weekID, userID }   = event.params
+    const { accountID, weekID, userID } = event.params
     const rootRef = event.data.adminRef.root
-    return updater(rootRef, { accountID, weekID, userID })
+    return updateWeekSums(rootRef, { accountID, weekID, userID })
   })
 
-
-
+exports.absencesWeeklyChanged = functions.database
+  .ref('/accounts/{accountID}/absencePlaner/absencesWeekly/{weekID}/{absenceID}')
+  .onWrite(event => {
+    const { accountID, weekID } = event.params
+    const { user } = event.data.val() || event.data.previous.val()
+    const rootRef = event.data.adminRef.root
+    return updateWeekSums(rootRef, { accountID, weekID, userID: user })
+  })
 
 // target should have: accountID, weekID, userID
-const updater = (rootRef, target) => {
+const updateWeekSums = (rootRef, target) => {
   const { accountID , weekID, userID } = target
   const shifts_pr =   rootRef.child(getPathToMiniShifts(accountID, weekID, userID)).once('value')
   const absences_pr = rootRef.child(getPathToAbsences(accountID, weekID, userID)).orderByChild('user').equalTo(userID).once('value')
@@ -93,27 +105,33 @@ const updater = (rootRef, target) => {
     const miniShifts = results[0].val()
     const absences   = results[1].val()
 
+    console.log(absences)
+    console.log(_values(absences))
+
     const WEEK = ['mo','tu','we','th','fr','sa','su']
     let minsGrid = [0, 0, 0, 0, 0, 0, 0] // holds the sum of worked minutes per WeekDay ( every index represents the corresponding weekday )
 
-    miniShifts && _values(miniShifts).forEach(ms => minsGrid[ms.weekDay] += ms.mins )
+    miniShifts && _values(miniShifts).forEach(ms => minsGrid[ms.weekDay] += ms.mins ) // adds worked mins to the empty minsGrid
 
-    const minsGridFinal = minsGrid.map((mins, weekDay) => {
+    const minsGridFinal = minsGrid.map((mins, weekDay) => { // corrects the minsGrid in case of absences ( if useAvgHours is true )
       const vacToApply =  absences && _values(absences).find(a => {
+
+        console.log(a.avgHours * 60)
+        console.log(hoursToMins(a.avgHours))
+
         if(!a.useAvgHours) return false
         if(a.firstWeekDay > weekDay) return false
         if(a.lastWeekDay  < weekDay) return false
         return true
       })
       if(!vacToApply) return mins // no vacation to effect the minutes this day ( already over / didnt start yet / useAvgHours is false )
-      return vacToApply.workDays[WEEK[weekDay]] ? vacToApply.avgHours * 60 : 0 // zero mins -> if its a day thats not marked as workday in prefs
+      return vacToApply.workDays[WEEK[weekDay]] ? hoursToMins(vacToApply.avgHours) : 0 // zero mins -> if its a day thats not marked as workday in prefs
     })
 
-    console.log(minsGridFinal);
 
     const minsSum = minsGridFinal.reduce((acc, val) => val + acc, 0)
-
-    console.log(minsSum);
+    console.log('minsGridFinal: ', minsGridFinal);
+    console.log('minsSums: ', minsSum);
 
     return rootRef.child(getPathToWeekSums(accountID, userID, weekID)).set(minsSum)
   })

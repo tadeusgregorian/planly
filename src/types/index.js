@@ -24,7 +24,18 @@ export type AbsenceType = 'vac' | 'ill' | 'extra'
 export type AbsenceTypeFilter = 'vac' | 'ill' | 'extra' | 'all'
 export type AbsenceStatus = 'requested' | 'accepted'
 
-export type AbsenceBasis = {
+export type WeekAbsence = { // these are all accepted absences ( no status='requested' )
+  id: string,
+  user: string,
+  type: AbsenceType,
+  workDays?: WorkDays,
+  useAvgHours?: true,
+  avgHours: number,
+  firstWeekDay: number,
+  lastWeekDay: number,
+}
+
+export type Absence = { // this is the absence Obj we get from the DB ( Firebase deleted keys where the value is null or empty obj )
   id: string,
   user: string,
   type: AbsenceType,
@@ -34,26 +45,56 @@ export type AbsenceBasis = {
   endDate: number,
   totalDays: number,
   effectiveDays: number,
-}
-
-export type Absence = AbsenceBasis & { // this is the absence Obj we get from the DB ( Firebase deleted keys where the value is null or empty obj )
+  avgHours: number,
   userNote?: string,
   adminNote?: string,
   workDays?: WorkDays,
-  dayRate?: number, // number of minutes that get counted to the week-sum for an absence-day
-  hollow?: true
+  useAvgHours?: true,
+  touchingWeeks: {[string]: number},
+  startWeekDay: number, //startWeekDay = weekday of the startDate
+  endWeekDay: number, // endWeekDay = weekday of the endDate
+  startWeek: number,
+  endWeek: number
 }
 
-export type AbsencePreDB = AbsenceBasis & { // this is the absence Obj we want to write to the DB
+export type AbsencePreDB = { // this is the absence Obj we want to write to the DB
+  id: string,
+  user: string,
+  type: AbsenceType,
+  year: number,
+  status: AbsenceStatus,
+  startDate: number,
+  endDate: number,
+  totalDays: number,
+  effectiveDays: number,
+  avgHours: number,
   userNote: ?string,
   adminNote: ?string,
   workDays: ?WorkDays,
-  dayRate: ?number, // number of minutes that get counted to the week-sum for an absence-day
-  hollow: ?true
+  useAvgHours: ?true
 }
 
-export type AbsenceDB = AbsencePreDB & {
-  yearUser: string
+export type AbsenceDB = { // this is how it gets extended before being written to DB
+  id: string,
+  user: string,
+  type: AbsenceType,
+  year: number,
+  status: AbsenceStatus,
+  startDate: number,
+  endDate: number,
+  totalDays: number,
+  effectiveDays: number,
+  avgHours: number,
+  yearUser: string,
+  userNote: ?string,
+  adminNote: ?string,
+  workDays: ?WorkDays,
+  useAvgHours: ?true,
+  touchingWeeks: {[string]: number},
+  startWeekDay: number,
+  endWeekDay: number,
+  startWeek: number,
+  endWeek: number
 }
 
 export type DataStatus =
@@ -63,7 +104,7 @@ export type DataStatus =
 
 export type InitialOvertime = {
   smartWeek: number,
-  hours: 0
+  hours: number
 }
 
 export type User = {
@@ -72,13 +113,13 @@ export type User = {
   position: string,
   branches: {},
   email: ?string,
-  weeklyHours: {},
-  currentWeeklyHours?: number, // just used in roster after extending with a selector
+  weeklyMins?: number,
+  //currentWeeklyHours?: number, // just used in roster after extending with a selector
   status: 'notInvited' | 'invited' | 'active',
   isAdmin?: true,
   isSuperAdmin?: true,
-  initialOvertime: InitialOvertime,
   workDays: WorkDays,
+  avgDailyMins: number,
 }
 
 export type Users = Array<User>

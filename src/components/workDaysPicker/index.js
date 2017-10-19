@@ -8,8 +8,6 @@ import './styles.css'
 type Props = {
   onChange: (WorkDays) => any,
   workDays: ?WorkDays,
-  disableInputs?: boolean,
-  inputsHidden?: boolean,
 }
 
 export default class WorkDaysPicker extends PureComponent{
@@ -18,19 +16,12 @@ export default class WorkDaysPicker extends PureComponent{
   dayClicked = (weekDay: string) => {
     const { workDays } = this.props
     const removing = _.has(workDays,weekDay)
-    const newWorkDays = removing ? _.omit(workDays, weekDay) : { ...workDays, [weekDay]: 0 }
-    this.props.onChange(newWorkDays)
-  }
-
-  hoursChanged = (weekDay: string, inp: string) => {
-    const { workDays } = this.props
-    const newWorkDays = { ...workDays, [weekDay]: inp }
+    const newWorkDays = removing ? _.omit(workDays, weekDay) : { ...workDays, [weekDay]: 1 }
     this.props.onChange(newWorkDays)
   }
 
   render(){
     const workDays = this.props.workDays || {}
-    const { inputsHidden, disableInputs } = this.props
 
     const weekDaysArray = [
       {label: 'Mo', value: 'mo'},
@@ -58,18 +49,6 @@ export default class WorkDaysPicker extends PureComponent{
             )}
           </fb>
         </fb>
-        { !inputsHidden &&
-        <fb className='row workHoursRow'>
-          <fb className='workDaysRowLabel'>Arbeitsstunden</fb>
-          <fb className='workDaysContent'>
-            { weekDaysArray.map(w =>
-              ((_.has(workDays, w.value)) && !disableInputs)
-              ? <input type='text' key={w.value} value={workDays[w.value]} className='hoursInput' onChange={({target})=>this.hoursChanged(w.value, target.value)}/>
-              : <fb key={w.value} className='disabledInput'></fb>
-            )}
-          </fb>
-        </fb>
-        }
       </fb>
     )
   }

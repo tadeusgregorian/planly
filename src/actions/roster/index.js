@@ -9,9 +9,10 @@ export const saveShiftToDB:ThunkAction = (shift: Shift, deleteIt = false) => (di
   const branch        = getState().ui.roster.currentBranch
   const weekID        = getState().ui.roster.currentWeekID
   const templateMode  = getState().ui.roster.templateMode
+  const isOpenShift   = shift.user === 'open'
 
   const update1       = getShiftUpdate(shift, weekID, branch, deleteIt)
-  const update2       = templateMode ? {} : getMiniShiftUpdate(shift, weekID, deleteIt)
+  const update2       = (templateMode || isOpenShift) ? {} : getMiniShiftUpdate(shift, weekID, deleteIt)
   db().ref().update({ ...update1, ...update2 })
 }
 

@@ -4,6 +4,15 @@
   width: 100%;
   flex: 0 1 auto;
 
+  .oTimeBox{
+    //align-items: flex-start;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 400;
+    padding: 8px 4px;
+    align-items: center;
+  }
+
   &:last-child{
     border-bottom: none;
     border-bottom-right-radius: 2px;

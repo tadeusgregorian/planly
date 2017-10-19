@@ -1,7 +1,7 @@
 //@flow
 import { createDataStatusReducer, createFirebaseReducer_array } from '../reducerHelpers'
 import { combineReducers } from 'redux'
-import type { Notes, ShiftEdits, Shifts, DataStatus, TemplatesFlat } from 'types/index'
+import type { Notes, ShiftEdits, Shifts, DataStatus, TemplatesFlat, WeekAbsence } from 'types/index'
 
 
 // we extract this because there is userDay, and branchDay in DB ( just needed for mobile-Firebase-Querys)
@@ -15,13 +15,15 @@ export type Roster = {
   shiftEdits: ShiftEdits,
   shiftWeek: Shifts,
   templatesFlat: TemplatesFlat,
-  shiftWeekDataStatus: DataStatus
+  weekAbsences: Array<WeekAbsence>,
+  shiftWeekDataStatus: DataStatus,
 }
 
 export default combineReducers({
   notes: createFirebaseReducer_array('notes'),
   templatesFlat: createFirebaseReducer_array('templatesFlat'),
   shiftEdits: createFirebaseReducer_array('shiftEdits'),
+  weekAbsences: createFirebaseReducer_array('weekAbsences'),
   shiftWeek: createFirebaseReducer_array('shiftWeek', extractShift),
   shiftWeekDataStatus: createDataStatusReducer('shiftWeek')
 })

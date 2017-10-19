@@ -1,6 +1,6 @@
 //@flow
 import React, { PureComponent } from 'react'
-import type { Shift, Shifts, Position, ShiftRef, Day } from 'types/index'
+import type { Shift, Shifts, Position, ShiftRef, Day, AbsenceType } from 'types/index'
 import { shiftCellWidth } from 'constants/roster'
 import ShiftBox from '../../shiftBox'
 import cn from 'classnames'
@@ -12,6 +12,7 @@ type Props = {
   isOpen: boolean,
   focusedShiftRef: ?ShiftRef,
   shiftUnderMouse: ?ShiftRef,
+  absence: AbsenceType | false,
   shadowed?: boolean,
   shifts: Shifts,
   position?: Position, // for open Shifts only
@@ -25,11 +26,12 @@ export default class ShiftCell extends PureComponent {
   props: Props
 
   render(){
-    const { shifts, day, user, shadowed, shiftType, style, cssClasses, blocked, focusedShiftRef, shiftUnderMouse, isOpen } = this.props
+    const { shifts, day, user, shadowed, shiftType, style, cssClasses, blocked, focusedShiftRef, shiftUnderMouse, isOpen, absence } = this.props
     const cssClassesObj = cssClasses ? cssClasses.reduce((acc, val) => ({ ...acc, [val]: true }), {}) : {} // turnes the classesArray to an obj for classnames
     const inCreation      = focusedShiftRef && focusedShiftRef.inCreation
-    const focusedShiftID = focusedShiftRef ? focusedShiftRef.id : 'neverToGetHereTadeNever'
+    const focusedShiftID = focusedShiftRef ? focusedShiftRef.id : 'aRondomStringTade...'
     const dummyShift:Shift  = { s: 0, e: 0, b: 0, user, day, id: focusedShiftID, isOpen: isOpen }
+    const absenceIconClass = absence && (absence === 'ill' ? 'icon icon-heart' : 'icon icon-rocket')
 
     return(
       <fb className={cn({shiftCellMain: true, shadowed, ...cssClassesObj })}
@@ -52,6 +54,7 @@ export default class ShiftCell extends PureComponent {
         }
         { inCreation && <ShiftBox shift={dummyShift} focused inCreation/> }
         { shadowed && <fb className='dropZone'></fb> }
+        { absence && !focusedShiftRef && <fb className='absenceLayer'><fb className={absenceIconClass} /></fb> }
       </fb>
     )
   }

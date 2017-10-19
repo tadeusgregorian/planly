@@ -34,6 +34,14 @@ fb{
 	box-sizing: border-box;
 }
 
+input{
+	border: 1px solid #bbbbbb;
+	&:focus{
+		border-color: #2ea8ff;
+		outline: none;
+	}
+}
+
 .Container_Main{
   flex-direction: column;
 

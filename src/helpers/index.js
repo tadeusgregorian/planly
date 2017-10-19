@@ -41,8 +41,8 @@ export const getNextID = (prefix: string, num: number) => {
   throw new Error('error_in_getNextID_tade')
 }
 
-export const replaceDotsWithCommas = (str: string) => str.replace(/\./g, ',')
-export const replaceCommasWithDots = (str: string) => str.replace(/,/g, '.')
+export const replaceDotsWithCommas = (str: string | number) => str.toString().replace(/\./g, ',')
+export const replaceCommasWithDots = (str: string | number) => str.toString().replace(/,/g, '.')
 
 export const withoutProp = (obj: {}, prop: string) => {
 	const obj_copy = { ...obj }

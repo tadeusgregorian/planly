@@ -19,7 +19,6 @@ export default class  extends PureComponent{
     const color     = position && position.color
     const shortcut  = position && position.shortcut
     const posStyle = { color: color, borderColor: color }
-    const currentWeeklyHours = user.currentWeeklyHours || ''
 
 
     return(
@@ -28,7 +27,7 @@ export default class  extends PureComponent{
         <fb className='userName'>{user.name}</fb>
         <fb className='times'>
           {/* <fb className='overtime'> - 24 h</fb> */}
-          <fb className='currentWeek'>{minToTimeString(durationSum) + ' / ' + currentWeeklyHours + ' h'}</fb>
+          <fb className='currentWeek'>{minToTimeString(durationSum) + ' / 99 h'}</fb>
         </fb>
       </fb>
     )

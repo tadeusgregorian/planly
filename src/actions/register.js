@@ -2,8 +2,8 @@
 
 import firebase from 'firebase'
 import moment from 'moment'
-import { generateGuid, getThisMondaySmart, momToSmartWeek } from 'helpers/index'
-import type { User, Position, Branch, InitialOvertime} from 'types/index'
+import { generateGuid, momToSmartWeek } from 'helpers/index'
+import type { User, Position, Branch } from 'types/index'
 
 export const createAccount = (firebaseUserID: string, email: string) => {
   const accountID = generateGuid()
@@ -34,12 +34,13 @@ const getEmptyAccount = (adminEmail): DBAccount => ({
       position: 'p001',
       branches: { b001: true },
       color: '#0D47A1',
-      weeklyHours: {[momToSmartWeek(moment())]: 40},
+      weeklyHours: 40,
       status: 'active',
       isAdmin: true,
       isSuperAdmin: true, // SuperAdmin is only the creator of the account.
       initialOvertime: { smartWeek: momToSmartWeek(moment()), hours: 0 },
-      workDays: { mo: 6.67, tu: 6.67, we: 6.67, th: 6.67, fr: 6.67, sa: 6.67, su: 6.67 }
+      workDays: { mo: 1, tu: 1, we: 1, th: 1, fr: 1, sa: 1 },
+      avgDailyMins: 520,
     }
   },
   branches: {

@@ -9,7 +9,7 @@ type Props = {
 	password?: any,
 	onInputChange: (string)=>any,
 	onEnter?: Function,
-	value: ?string,
+	value: ?string | number,
 	iStyle?: {},
 	maxLength?: number | string,
 	autoFocus?: any,

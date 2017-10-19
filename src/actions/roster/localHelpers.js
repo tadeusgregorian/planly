@@ -1,7 +1,6 @@
 //@flow
 import type { PreDBShift, DBShift, Shift } from 'types/index'
 import { weekDays } from 'constants/roster'
-import { smartWeekToMom } from 'helpers/index'
 import { getFBPath } from './../actionHelpers'
 
 export const toDBShift = (sh: PreDBShift): DBShift => ({
@@ -29,7 +28,6 @@ export const getMiniShiftUpdate = (shift: Shift, weekID: string, remove: boolean
 
 export const getMini = (shift: Shift, weekID: string): {} => {
   const mins = shift.e - shift.s - ( shift.b || 0)
-  const dayNum = weekDays.indexOf(shift.day)
-  const date = parseInt(smartWeekToMom(weekID).add( dayNum, 'days').format('YYYYMMDD'), 10)
-  return { mins, date }
+  const weekDay = weekDays.indexOf(shift.day) // as number ( 0 - 6 ) instead of type: ('mo' - 'su')
+  return { mins, weekDay }
 }

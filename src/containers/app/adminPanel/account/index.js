@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import type { Store, AccountPreferences } from 'types/index'
 import SCheckbox from 'components/sCheckbox'
-import { saveWorkdaysPerWeek, saveUseAvgHoursForVac, saveUseAvgHoursForIll } from 'actions/accountDetails'
+import { saveWorkdaysPerWeek, saveUseAvgHoursForVac } from 'actions/accountDetails'
 import './styles.css'
 
 type Props = {
@@ -14,7 +14,7 @@ type Props = {
 
 const Account = (props: Props) => {
 
-  const { workdaysPerWeek, useAvgHoursForVac, useAvgHoursForIll } = props.preferences
+  const { workdaysPerWeek, useAvgHoursForVac } = props.preferences
   const clicked5Days = () => workdaysPerWeekClicked(5)
   const clicked6Days = () => workdaysPerWeekClicked(6)
 
@@ -24,10 +24,6 @@ const Account = (props: Props) => {
 
   const changeUseAvgHoursForVac = () => {
     saveUseAvgHoursForVac(!useAvgHoursForVac)
-  }
-
-  const changeUseAvgHoursForIll = () => {
-    saveUseAvgHoursForIll(!useAvgHoursForIll)
   }
 
 
@@ -45,10 +41,6 @@ const Account = (props: Props) => {
         <fb className='row'>
           <fb className='cb'><SCheckbox isChecked={!!useAvgHoursForVac} onCheck={changeUseAvgHoursForVac} /></fb>
           <fb className='rowLabel' style={{ width: 448}}>Im Urlaub dem Mitarbeiter Durschnitts-Tagesstunden Gutschreiben.</fb>
-        </fb>
-        <fb className='row'>
-          <fb className='cb'><SCheckbox isChecked={!!useAvgHoursForIll} onCheck={changeUseAvgHoursForIll} /></fb>
-          <fb className='rowLabel' style={{ width: 448}}>Bei Krankheit dem Mitarbeiter Durschnitts-Tagesstunden Gutschreiben.</fb>
         </fb>
       </fb>
     </fb>

@@ -1163,6 +1163,12 @@ fb {
   display: flex;
   box-sizing: border-box; }
 
+input {
+  border: 1px solid #bbbbbb; }
+  input:focus {
+    border-color: #2ea8ff;
+    outline: none; }
+
 .Container_Main {
   flex-direction: column; }
   .Container_Main .Container_Main_Inside {

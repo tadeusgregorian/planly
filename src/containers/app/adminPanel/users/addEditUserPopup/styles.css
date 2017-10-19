@@ -5,72 +5,18 @@
   font-size: 16px;
   overflow: visible;
   color: grey;
-  margin: 4px; }
+  margin: 8px; }
+  .addEditUserPopup > *:not(:last-of-type) {
+    margin-bottom: 8px; }
   .addEditUserPopup .mainForm {
     flex-direction: column;
     border-radius: 2px;
-    margin: 4px;
     border: 1px solid #d6d5d5;
     overflow: visible;
     box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.1);
     z-index: 2; }
     .addEditUserPopup .mainForm .flatFormRowMain:last-child {
       border-bottom: none; }
-    .addEditUserPopup .mainForm .errorText {
-      padding: 0px 17px;
-      align-items: center;
-      font-size: 16px;
-      font-weight: 400;
-      border-left: 1px solid #e5e5e5;
-      min-width: 100px;
-      color: #ff3325;
-      background-color: #ffe8e8;
-      height: 37px;
-      border-bottom: 1px solid #ff8f88; }
-      .addEditUserPopup .mainForm .errorText .icon {
-        padding: 0px;
-        padding-right: 8px;
-        color: #ff3325;
-        padding-bottom: 1px; }
-    .addEditUserPopup .mainForm .emailFrozen {
-      width: 100%;
-      padding: 4px 10px;
-      box-sizing: border-box;
-      color: #a5a5a5;
-      background-color: #f1f1f1;
-      font-size: 16px;
-      height: 100%;
-      width: 100%;
-      font-weight: 300;
-      align-items: center; }
-    .addEditUserPopup .mainForm .selectWrapper {
-      min-width: 200px;
-      padding: 4px; }
-      .addEditUserPopup .mainForm .selectWrapper.branchesSelectWrapper {
-        font-size: 18px; }
-      .addEditUserPopup .mainForm .selectWrapper > .Select > .Select-control {
-        border-radius: 1px; }
-      .addEditUserPopup .mainForm .selectWrapper .Select--multi .Select-value {
-        font-size: 0.9em;
-        line-height: 1.4;
-        margin-left: 3px;
-        margin-top: 3px;
-        vertical-align: top;
-        margin-right: 2px; }
-        .addEditUserPopup .mainForm .selectWrapper .Select--multi .Select-value .Select-value-icon {
-          padding-bottom: 0px; }
-    .addEditUserPopup .mainForm .userinputMissingText {
-      background-color: #ff6b5c;
-      height: 38px;
-      border-radius: 2px;
-      padding: 3px;
-      padding-left: 8px;
-      color: #ffffff;
-      margin-bottom: 0px;
-      justify-content: center;
-      align-items: center;
-      font-size: 16px;
-      margin-bottom: 22px; }
   .addEditUserPopup .footerInfoText {
     font-size: 14px;
     justify-content: center;
