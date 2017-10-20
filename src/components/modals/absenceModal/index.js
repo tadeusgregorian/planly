@@ -37,7 +37,7 @@ type State = {
   workDays: ?WorkDays,
   useAvgHours: ?true,
   unpaid: ?true,
-  avgHours: number,
+  avgDailyMins: number,
   focusedInput: any,
   errorMessage: false | 'loading' | 'overlapping' | 'multiyear'
 }
@@ -79,7 +79,7 @@ class AbsenceModal extends PureComponent{
       workDays:       absence ? (absence.workDays    || null)  : props.user.workDays,
       useAvgHours:    absence ? (absence.useAvgHours || null)  : this.getDefaul_useAvgHours('ill'), // TODO: come back here ...
       unpaid:         absence ? (absence.unpaid      || null)  : null,
-      avgHours:       user.avgHours,
+      avgDailyMins:   user.avgDailyMins,
       focusedInput:   null, // we omit this before saving to db!
       errorMessage:   false, // we omit this before saving to db!
     }

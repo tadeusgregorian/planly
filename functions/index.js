@@ -1,24 +1,14 @@
 
 const functions = require('firebase-functions')
 
-// exports.sendEmailInvites = functions.database
-//   .ref('/emailInvites/{inviteID}')
-//   .onWrite(event => {
-//     if(!event.data.exists()) return
-//     const invite = event.data.val()
-//     if(invite.status !== 'pending') return
-//     console.log('Sending Email TO ' + invite.email + ' with name ' + invite.name)
-//     return
-//   })
-
 const trimAbsence = (a, firstWeekDay, lastWeekDay) => {
   return {
     id: a.id,
     user: a.user,
     type: a.type,
     workDays: (a.workDays || null), // a.workDays can be undefined -> cant write undefined to DB
-    useAvgHours: (a.useAvgHours || null), // a.workDays can be undefined -> cant write undefined to DB
-    avgHours: a.avgHours,
+    useAvgHours: (a.useAvgHours || null), // a.useAvgHours can be undefined -> cant write undefined to DB
+    avgDailyMins: a.avgDailyMins,
     firstWeekDay,
     lastWeekDay
   }
@@ -43,8 +33,8 @@ const getPathToMiniShifts = (accountID, weekID, userID) =>
 const getPathToAbsences = (accountID, weekID, userID) =>
   `/accounts/${accountID}/absencePlaner/absencesWeekly/${weekID}`
 
-const getPathToWeekSums = (accountID, userID, weekID) =>
-  `/accounts/${accountID}/roster/weekSums/${userID}/${weekID}`
+const getPathToWeekSums = (accountID) =>
+  `/accounts/${accountID}/roster/weekSums/`
 
 exports.absenceFanOut = functions.database
   .ref('/accounts/{accountID}/absencePlaner/absences/{absenceID}')
@@ -105,9 +95,6 @@ const updateWeekSums = (rootRef, target) => {
     const miniShifts = results[0].val()
     const absences   = results[1].val()
 
-    console.log(absences)
-    console.log(_values(absences))
-
     const WEEK = ['mo','tu','we','th','fr','sa','su']
     let minsGrid = [0, 0, 0, 0, 0, 0, 0] // holds the sum of worked minutes per WeekDay ( every index represents the corresponding weekday )
 
@@ -116,23 +103,18 @@ const updateWeekSums = (rootRef, target) => {
     const minsGridFinal = minsGrid.map((mins, weekDay) => { // corrects the minsGrid in case of absences ( if useAvgHours is true )
       const vacToApply =  absences && _values(absences).find(a => {
 
-        console.log(a.avgHours * 60)
-        console.log(hoursToMins(a.avgHours))
-
         if(!a.useAvgHours) return false
         if(a.firstWeekDay > weekDay) return false
         if(a.lastWeekDay  < weekDay) return false
         return true
       })
       if(!vacToApply) return mins // no vacation to effect the minutes this day ( already over / didnt start yet / useAvgHours is false )
-      return vacToApply.workDays[WEEK[weekDay]] ? hoursToMins(vacToApply.avgHours) : 0 // zero mins -> if its a day thats not marked as workday in prefs
+      return vacToApply.workDays[WEEK[weekDay]] ? vacToApply.avgDailyMins : 0 // zero mins -> if its a day thats not marked as workday in prefs
     })
 
-
     const minsSum = minsGridFinal.reduce((acc, val) => val + acc, 0)
-    console.log('minsGridFinal: ', minsGridFinal);
-    console.log('minsSums: ', minsSum);
+    const key = userID + '_' + weekID
 
-    return rootRef.child(getPathToWeekSums(accountID, userID, weekID)).set(minsSum)
+    return rootRef.child(getPathToWeekSums(accountID)).child(key).set(minsSum)
   })
 }

@@ -2,6 +2,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 
+import { openModal } from 'actions/ui/modals'
 import { focusShift, createShift, setShiftUnderMouse }  from 'actions/ui/roster'
 import { saveShiftToDB }                                from 'actions/roster'
 
@@ -9,6 +10,7 @@ import { getParentShift, getParentCell } from './localHelpers'
 import { generateGuid } from 'helpers/index'
 import getCurrentUser from 'selectors/currentUser'
 
+import OTimeCorrectionModal from 'components/modals/oTimeCorrectionModal'
 import PickedUpShift from './pickedUpShift'
 
 import type { User, ShiftCell, ShiftRef, Shift, Shifts, Store } from 'types/index'
@@ -25,6 +27,7 @@ type MAProps = {
   createShift: (ShiftCell)=>any,
   saveShiftToDB: (Shift)=>any,
   setShiftUnderMouse: (ShiftRef | null)=>any,
+  openModal: (string, ReactClass<*>, ?{}) => any
 }
 
 type OwnProps = {
@@ -120,27 +123,33 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
     this.state.pickedUpShift && this.dropShift()
   }
 
+  extendCellClicked = (target: any) => {
+    const targetCell = getParentCell(target)
+    targetCell && this.props.createShift(targetCell)
+  }
+
+  oTimeBoxClicked = (target: any) => {
+    const user = target.getAttribute('data-user')
+    const isInitial = target.getAttribute('data-status') === 'inactive'
+    this.props.openModal('oTimeCorrection', OTimeCorrectionModal, {user, isInitial})
+  }
+
   onClick = ({target}: any) => {
     if(!this.isDragging && !this.props.focusedShiftRef && !this.wasDraggingAround){
 
-      const extendCellClicked = target && target.getAttribute('data-target-type') === 'extend-cell-btn'
-      if(extendCellClicked){
-        const targetCell = getParentCell(target)
-        targetCell && this.props.createShift(targetCell)
-        return
-      }
+      if(target && target.getAttribute('data-type') === 'extend-cell-btn')
+        return this.extendCellClicked(target)
+
+      if(target && target.getAttribute('data-type') === 'otime-box')
+        return this.oTimeBoxClicked(target)
 
       const targetShift = getParentShift(target)
-      if(targetShift){
-        if(targetShift.user === this.currentUser || this.adminMode){
-          return this.props.focusShift(targetShift)
-        }
-      }
+      if(targetShift && (targetShift.user === this.currentUser || this.adminMode))
+        return this.props.focusShift(targetShift)
 
       const targetCell = getParentCell(target)
-      if(targetCell && this.adminMode && !targetCell.hasShift) return this.props.createShift(targetCell)
-
-
+      if(targetCell && this.adminMode && !targetCell.hasShift)
+        return this.props.createShift(targetCell)
     }
   }
 
@@ -186,6 +195,8 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
     shiftBoard && shiftBoard.classList.remove('cursorMove')
   }
 
+
+
   render = () => {
     const { pickedUpShift, shadowedCell } = this.state
     const getRef = (el) => { this.PickedUpElement = el }
@@ -201,6 +212,7 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
 }
 
 const actionsToProps: MAProps = {
+  openModal,
   focusShift,
   createShift,
   saveShiftToDB,

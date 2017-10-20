@@ -15,6 +15,8 @@ export const setInitialRosterListeners: ThunkAction = () => (dispatch, getState)
   setShiftEditsListener(dispatch, getState)
   setTemplatesFlatListener(dispatch, getState)
   setWeekAbsenceListener(dispatch, getState)
+  setWeekSumsListener(dispatch, getState)
+  setCorrectionsListener(dispatch, getState)
   dispatch({type: 'remove_shiftWeek'})
 }
 
@@ -36,6 +38,16 @@ const setShiftWeekListener = (dispatch, getState: any) => {
   const queryRef    = db().ref(path).orderByChild('branch').equalTo(branch)
 
   createFirebaseListener(dispatch, getState, 'shiftWeek', path, queryRef)
+}
+
+const setWeekSumsListener = (dispatch: Dispatch, getState: GetState) => {
+  const path        = getFBPath('weekSums')
+  createFirebaseListener(dispatch, getState, 'weekSums', path)
+}
+
+const setCorrectionsListener = (dispatch: Dispatch, getState: GetState) => {
+  const path        = getFBPath('corrections')
+  createFirebaseListener(dispatch, getState, 'corrections', path)
 }
 
 const setTemplatesFlatListener = (dispatch: Dispatch, getState: GetState) => {

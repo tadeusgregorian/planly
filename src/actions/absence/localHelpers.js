@@ -21,9 +21,7 @@ export const extendForDB = (absence: AbsencePreDB): AbsenceDB => {
   const touchingWeeks = getTouchingWeeks(absence)
   const startWeekDay = smartToMom(absence.startDate).weekday()
   const endWeekDay = smartToMom(absence.endDate).weekday()
-  const startWeek = smartToMom(absence.endDate).week()
-  const endWeek = smartToMom(absence.endDate).week()
-  return { ...absence, yearUser, touchingWeeks, startWeekDay, endWeekDay, startWeek, endWeek }
+  return { ...absence, yearUser, touchingWeeks, startWeekDay, endWeekDay }
 }
 
 export const rangesOverlap = (xS: number, xE: number, yS:number, yE:number): boolean => {

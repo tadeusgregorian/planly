@@ -1,5 +1,4 @@
 import _ from 'lodash'
-import {withoutProp} from 'helpers'
 
 export const createFirebaseReducer_array = (target, extractor) => {
   const isSame = (e1, e2)=> e1.id === e2.id // comparing id property by default
@@ -17,28 +16,13 @@ export const createFirebaseReducer_array = (target, extractor) => {
 	}
 }
 
-
-// export const createFirebaseReducer_array = (target) => {
-// 	return (state = [], action) => {
-// 		switch (action.type) {
-// 		case 'value_received_' + target : return [..._.values(action.payload)]
-// 		case 'child_added_'    + target : return [...state, action.payload]
-// 		case 'child_changed_'  + target : return state.map(d => d.id === action.payload.id ? action.payload : d)
-// 		case 'child_removed_'  + target : return state.filter(d => d.id !== action.payload.id)
-// 		case 'remove_'				 + target : return []
-// 		default: return state;
-// 		}
-// 	}
-// }
-
 export const createFirebaseReducer_object = (target) => {
 	return (state = {}, action) => {
 		switch (action.type) {
 		case 'value_received_' 	+ target : return action.payload
 		case 'child_added_' 		+ target : return { ...state, [action.key]: action.payload }
 		case 'child_changed_' 	+ target : return { ...state, [action.key]: action.payload }
-		case 'child_removed_' 	+ target : return withoutProp(state, action.key)
-		case 'remove_' 					+ target : return {} // to manually remove from redux-store
+		case 'child_removed_' 	+ target : return { ...state, [action.key]: null }
 		default: return state;
 		}
 	}

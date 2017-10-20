@@ -32,7 +32,7 @@ export default class UserRow extends PureComponent{
 
     return(
       <fb className="userRowMain">
-        <fb className='oTimeBox' style={{width: oTimeCellWidth}}>+ 20:10</fb>
+        <fb className='oTimeBox' style={{width: oTimeCellWidth}} data-type='otime-box' data-user={userID} data-status={'inactive'}>+ 20:10</fb>
         { (!isOpen && user) ? <UserCell user={user} position={position} durationSum={durationSum} /> : <OpenUserCell /> }
         <fb className='ShiftCellsWrapper'>
           { weekDays.map((day, dayNum) => {

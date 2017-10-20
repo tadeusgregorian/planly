@@ -2,8 +2,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
-import moment from 'moment'
-import { saveUserToDB, sendEmailInvite } from 'actions/index'
+import { saveUserToDB } from 'actions/index'
 import EmailStatus 			from './emailStatus'
 
 import SModal 					from 'components/sModal'
@@ -18,10 +17,9 @@ import AvgDailyMinsRow  from './avgDailyMinsRow'
 import ErrorMessageBar  from './errorMessageBar'
 import PositionSelect  	from './positionSelect'
 import BranchSelect 		from './branchSelect'
-import InitialOvertime 	from './initialOvertime'
 
-import { getNextID, isValidEmail, replaceCommasWithDots, momToSmartWeek } from 'helpers/index'
-import { inpToInt, isInt, extractHours, extractMins, floatToMins, minsToFloat } from './localHelpers'
+import { getNextID, isValidEmail, isIntStr } from 'helpers/index'
+import { inpToInt, extractHours, extractMins, floatToMins, minsToFloat, getAvgs } from './localHelpers'
 import type { WorkDays } from 'types/index'
 import './styles.css'
 
@@ -66,19 +64,8 @@ class AddEditUserPopup extends PureComponent {
 		}
 	}
 
-	validFloat = (num) => (!isNaN(parseFloat(replaceCommasWithDots(num.toString()))))
-
-	needToSendEmailInvite = () => {
-		const user = this.state
-		const emailPrev = this.props.user && this.props.user.email
-		if(!user.email) return false
-		if(emailPrev === user.email ) return false
-		return true
-	}
-
 	onButtonClicked = () => {
-		const { id, name, email, branches, position } = this.state
-		const { accountID } = this.props
+		const { name, email, branches, position } = this.state
 		let errorText = ''
 
 		if(!_.keys(branches).length)			 errorText = 'Bitte wählen Sie mindestens eine Filiale aus.'
@@ -90,8 +77,6 @@ class AddEditUserPopup extends PureComponent {
 			this.setState({errorText})
 		} else {
 			this.saveUser()
-
-			this.needToSendEmailInvite() && sendEmailInvite(id, name, email, accountID)
 			this.props.closeModal()
 		}
 	}
@@ -115,17 +100,15 @@ class AddEditUserPopup extends PureComponent {
 	emailInputChanged 				= (val) => this.updateUser('email', val)
 	positionChanged 					= (val) => this.updateUser('position', val.value)
 	branchesChanged 					= (val) => this.updateUser('branches', val.reduce((acc, val) => ({ ...acc, [val.value]: true }) , {}))
-	weeklyHoursChanged 				= (val) => this.updateUser('weeklyHours', val)
 
-	avgDailyMinsChanged = (target, inp) => isInt(inp) && this.setState({[target]: inpToInt(inp)})
+	weeklyHoursChanged = (weeklyHours) => {
+		this.setState({ weeklyHours, ...getAvgs(this.state.workDays, weeklyHours)})
+	}
+
+	avgDailyMinsChanged = (target, inp) => isIntStr(inp) && this.setState({[target]: inpToInt(inp)})
 
 	workDaysChanged = (workDays) => {
-		const { weeklyHours } = this.state
-		const workDaysCount = _.keys(workDays).length
-		const avgDailyMins = floatToMins(weeklyHours) / workDaysCount
-		const avgHours = extractHours(avgDailyMins)
-		const avgMins = extractMins(avgDailyMins)
-		this.setState({ workDays, avgHours, avgMins })
+		this.setState({ workDays, ...getAvgs(workDays, this.state.weeklyHours) })
 	}
 
 	render() {
@@ -164,12 +147,9 @@ class AddEditUserPopup extends PureComponent {
 					</fb>
 				</SModal.Body>
 				<SModal.Footer>
-					{ this.needToSendEmailInvite() &&
-						<fb className="footerInfoText">Dem Mitarbeiter wird eine Einladung per Mail zugesandt.</fb>
-					}
 					<SButton
 						right
-						label={this.needToSendEmailInvite() ? 'speichern & einladen' : 'speichern'}
+						label={'speichern & einladen'}
 						onClick={this.onButtonClicked}
 						disabled={false} //TODO: come and finish this here.
 						color={'#2ECC71'}

@@ -84,3 +84,12 @@ export const smartWeekToMom = (smartWeek: number | string) => {
   const week = parseInt(smartWeek.toString().substr(4, 2), 10)
   return moment().year(year).week(week).day(1)
 }
+
+// checks if the string is in the format of a Integer
+export const isIntStr = (inp: string) => {
+  const lastChar = inp.slice(-1)
+  if(inp === '0') return true
+  if(inp === '') return true
+  if(parseInt(inp, 10) && (parseInt(lastChar,10) || lastChar === '0')) return true
+  return false
+}

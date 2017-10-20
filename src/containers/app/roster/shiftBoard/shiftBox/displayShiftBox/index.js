@@ -45,7 +45,7 @@ class DisplayShiftBox extends PureComponent{
         { edit && <fb className='bigRoundEdit icon icon-pen'/> }
         { location && <LocationBar locations={locations} location={location} /> }
         { position && <PositionBar positions={positions} position={position} /> }
-        { isHovered && <fb className='extendCellBtn' data-target-type='extend-cell-btn'>+</fb> }
+        { isHovered && <fb className='extendCellBtn' data-type='extend-cell-btn'>+</fb> }
       </fb>
     )
   }

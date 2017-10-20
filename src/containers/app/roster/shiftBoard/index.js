@@ -7,6 +7,7 @@ import _ from 'lodash'
 import { getShiftsOfUser, getShadowedDay, getDurationSum } from './localHelpers'
 import type { User, Shifts, ShiftCell, Store, ShiftRef, Position, WeekAbsence } from 'types/index'
 import getCurrentUser from 'selectors/currentUser'
+import getCurrentWeekSums from 'selectors/weekSumsOfCurrentWeek'
 //import getUsersAdjustedToWeek from 'selectors/usersAdjustedToWeek'
 
 import ShiftBoardHead from './shiftBoardHead'
@@ -23,6 +24,7 @@ type ConProps = {
   users: Array<User>,
   positions: Array<Position>,
   shifts: Shifts,
+  currentWeekSums: {[userID: string]: number},
   absences: Array<WeekAbsence>,
   currentUser: User,
   shadowedCell: ?ShiftCell,
@@ -78,6 +80,7 @@ const mapStateToProps = (state: Store) => ({
   users: state.core.users,
   positions: state.core.positions,
   shifts: state.roster.shiftWeek,
+  currentWeekSums: getCurrentWeekSums(state),
   absences: state.roster.weekAbsences,
   focusedShiftRef: state.ui.roster.shiftBoard.focusedShiftRef,
   shiftUnderMouse: state.ui.roster.shiftBoard.shiftUnderMouse,
