@@ -1,0 +1,47 @@
+.overtimeCellMain{
+  //align-items: flex-start;
+  flex: 0 0 auto;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 400;
+  align-items: center;
+  flex-direction: column;
+
+  .overtimeWrapper{
+    height: 16px;
+    align-self: stretch;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    color: grey;
+  }
+
+  .correctionBox{
+    justify-content: center;
+    height: 14px;
+    align-items: center;
+    font-size: 12px;
+    background: #25bf5f;
+    color: white;
+    padding: 0px 2px;
+    align-self: stretch;
+    margin: 1px;
+    justify-content: flex-start;
+    border-radius: 1px;
+    height: 20px;
+
+    .timerIcon{
+      font-size: 14px;
+      margin: 0px 2px;
+    }
+
+    .text{
+
+    }
+  }
+
+  .questionMark{
+    font-size: 18px;
+    color: #cecece;
+  }
+}

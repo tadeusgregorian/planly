@@ -2,10 +2,10 @@
 import moment from 'moment'
 import type { Shift, Shifts, MinimalShift, ShiftCell, Notes } from 'types/index'
 
-export const getRealCurrentWeekID = () :number => {
+export const getRealCurrentWeekID = () :string => {
   const calendarWeek = moment().week()
   const year = moment().year()
-  return parseInt( '' + year + calendarWeek, 10 )
+  return year.toString() + calendarWeek.toString()
 }
 
 // extracts and returns the year out of the weekID

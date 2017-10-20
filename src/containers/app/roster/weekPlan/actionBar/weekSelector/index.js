@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
-import { changeCurrentWeekID, goToLastWeek, goToNextWeek } from 'actions/ui/roster'
+import { goToLastWeek, goToNextWeek } from 'actions/ui/roster'
 import { getWeek } from 'helpers/index'
 import './styles.css'
 
@@ -18,7 +18,6 @@ const WeekSelect = ({currentWeekID, goToNextWeek, goToLastWeek}) => {
 }
 
 const actionsToProps = {
-  changeCurrentWeekID,
   goToLastWeek,
   goToNextWeek
 }

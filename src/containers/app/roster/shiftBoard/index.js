@@ -5,9 +5,11 @@ import type { Connector } from 'react-redux'
 import _ from 'lodash'
 
 import { getShiftsOfUser, getShadowedDay, getDurationSum } from './localHelpers'
-import type { User, Shifts, ShiftCell, Store, ShiftRef, Position, WeekAbsence } from 'types/index'
+import type { User, Shifts, ShiftCell, Store, ShiftRef, Position, WeekAbsence, Correction } from 'types/index'
 import getCurrentUser from 'selectors/currentUser'
 import getCurrentWeekSums from 'selectors/weekSumsOfCurrentWeek'
+import getCurrentOvertimes from 'selectors/overtimesOfCurrentWeek'
+import getCurrentCorrections from 'selectors/correctionsOfCurrentWeek'
 //import getUsersAdjustedToWeek from 'selectors/usersAdjustedToWeek'
 
 import ShiftBoardHead from './shiftBoardHead'
@@ -25,6 +27,8 @@ type ConProps = {
   positions: Array<Position>,
   shifts: Shifts,
   currentWeekSums: {[userID: string]: number},
+  currentOvertimes: {[userID: string]: number},
+  currentCorrections: {[userID: string]: Correction},
   absences: Array<WeekAbsence>,
   currentUser: User,
   shadowedCell: ?ShiftCell,
@@ -38,16 +42,27 @@ class ShiftBoard extends PureComponent{
   props: Props
 
   renderUserRow = (userID: string, isOpen:boolean, user?: User) => {
-    const { shadowedCell, shifts, currentUser, focusedShiftRef, shiftUnderMouse, positions, absences } = this.props
+    const {
+      shadowedCell,
+      shifts,
+      currentUser,
+      focusedShiftRef,
+      shiftUnderMouse,
+      positions,
+      absences,
+      currentWeekSums,
+      currentOvertimes,
+      currentCorrections } = this.props
     const shiftsOfUser = getShiftsOfUser(shifts, userID)
-    const durationSum = getDurationSum(shiftsOfUser)
 
     return <UserRow
       key={userID}
       isOpen={isOpen}
       user={user}
       position={positions.find(p => user && p.id === user.position )}
-      durationSum={durationSum}
+      weekSum={currentWeekSums[userID]}
+      overtime={currentOvertimes[userID]}
+      correction={currentCorrections[userID]}
       userID={userID}
       currentUser={currentUser}
       shifts={shiftsOfUser}
@@ -81,6 +96,8 @@ const mapStateToProps = (state: Store) => ({
   positions: state.core.positions,
   shifts: state.roster.shiftWeek,
   currentWeekSums: getCurrentWeekSums(state),
+  currentOvertimes: getCurrentOvertimes(state),
+  currentCorrections: getCurrentCorrections(state),
   absences: state.roster.weekAbsences,
   focusedShiftRef: state.ui.roster.shiftBoard.focusedShiftRef,
   shiftUnderMouse: state.ui.roster.shiftBoard.shiftUnderMouse,

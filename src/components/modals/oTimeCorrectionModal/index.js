@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import cn from 'classnames'
-import { saveCorrectionToDB } from 'actions/roster/overtime'
+import { saveCorrectionToDB, removeCorrectionFromDB } from 'actions/roster/overtime'
 
 import SModal from 'components/sModal'
 import SButton from 'components/sButton'
@@ -58,6 +58,11 @@ class OTimeCorrectionModal extends PureComponent{
     this.props.closeModal()
   }
 
+  removeClicked = () => {
+    removeCorrectionFromDB(this.props.user, this.props.currentWeekID)
+    this.props.closeModal()
+  }
+
   hoursChanged = (e) => isIntStr(e.target.value) && this.setState({hours: e.target.value})
   minutesChanged = (e) => isIntStr(e.target.value) && this.setState({minutes: e.target.value})
 
@@ -92,7 +97,7 @@ class OTimeCorrectionModal extends PureComponent{
             </fb>
   				</fb>
           <SModal.Footer>
-            <SButton label='speichern'   onClick={this.saveClicked} color='#00a2ef' right />
+            <SButton label='entfernen'   onClick={this.removeClicked} grey left />
             <SButton label='speichern'   onClick={this.saveClicked} color='#00a2ef' right />
           </SModal.Footer>
   			</SModal.Body>

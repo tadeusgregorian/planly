@@ -109,7 +109,7 @@ export type User = {
   position: string,
   branches: {},
   email: ?string,
-  weeklyMins?: number,
+  weeklyMins: number,
   //currentWeeklyHours?: number, // just used in roster after extending with a selector
   status: 'notInvited' | 'invited' | 'active',
   isAdmin?: true,

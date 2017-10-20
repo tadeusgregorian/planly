@@ -8,14 +8,14 @@ import './styles.css'
 type Props =  {
   user: User,
   position: ?Position,
-  durationSum: number,
+  weekSum: number
 }
 
 export default class  extends PureComponent{
   props: Props
 
   render(){
-    const { position, user, durationSum } = this.props
+    const { position, user, weekSum } = this.props
     const color     = position && position.color
     const shortcut  = position && position.shortcut
     const posStyle = { color: color, borderColor: color }
@@ -27,7 +27,7 @@ export default class  extends PureComponent{
         <fb className='userName'>{user.name}</fb>
         <fb className='times'>
           {/* <fb className='overtime'> - 24 h</fb> */}
-          <fb className='currentWeek'>{minToTimeString(durationSum) + ' / 99 h'}</fb>
+          <fb className='currentWeek'>{minToTimeString(weekSum) + ' / 99 h'}</fb>
         </fb>
       </fb>
     )

@@ -34,7 +34,7 @@ const getEmptyAccount = (adminEmail): DBAccount => ({
       position: 'p001',
       branches: { b001: true },
       color: '#0D47A1',
-      weeklyHours: 40,
+      weeklyMins: 2400,
       status: 'active',
       isAdmin: true,
       isSuperAdmin: true, // SuperAdmin is only the creator of the account.
