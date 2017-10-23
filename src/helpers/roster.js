@@ -40,11 +40,11 @@ export const getPrevWeekID = (sw: string) :string => {
   return momentToWeekID(newMom)
 }
 
-export const minToTime = (mins: number): {hours: number, minutes: number, str: string} => {
-  const hours = Math.floor(mins / 60)
-  const minutes = mins % 60
-  const str = doubleD(hours) + ':' + doubleD(minutes)
-  return { hours, minutes, str }
+export const minToTime = (mins: number): {hours: number, minutes: number} => {
+  const minsAbs = Math.abs(mins)
+  const hours = Math.floor(minsAbs / 60)
+  const minutes = minsAbs % 60
+  return { hours, minutes }
 }
 
 export const minToTimeString = (mins: number): string => {
@@ -54,7 +54,7 @@ export const minToTimeString = (mins: number): string => {
 }
 
 export const shiftToString = (shift: MinimalShift): string =>
-  minToTime(shift.s).str + ' - ' + minToTime(shift.e).str
+  minToTimeString(shift.s) + ' - ' + minToTimeString(shift.e)
 
 export const 	timeStringToMin = (str: string): number => {
   if(str === '') return 0

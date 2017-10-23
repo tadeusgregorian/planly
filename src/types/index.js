@@ -283,6 +283,22 @@ export type Correction = {
   note?: string | null,
 }
 
+export type ExtraHours = {
+  id: string,
+  day: Day,
+  user: string,
+  note?: ?string,
+  mins: number,
+}
+
+export type ExtraHoursDB = ExtraHours & {
+  branch: string,
+  branchDay: string,
+  userDay: string
+}
+
+export type OvertimeStatus = 'NOT_SET' | 'START_WEEK' | 'STARTED' | 'BEFORE_START'
+
 // ExtraStuff
 
 export type BundeslandCode = 'BE'|'BB'|'HB'|'HH'|'HE'|'MV'|'NI'|'NW'|'RP'|'SL'|'SN'|'ST'|'SH'|'TH'

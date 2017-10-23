@@ -26,17 +26,25 @@ const templateMode = simpleReducer({
   LEAVE_TEMPLATE_MODE: false,
 })
 
+const extraHoursMode = simpleReducer({
+  default: false,
+  ENTER_EXTRA_HOURS_MODE: true,
+  LEAVE_EXTRA_HOURS_MODE: false,
+})
+
 export type Roster = {
   currentBranch: string,
   currentWeekID: string,
   currentTemplate: string,
   templateMode: boolean,
-  shiftBoard: ShiftBoard
+  shiftBoard: ShiftBoard,
+  extraHoursMode: boolean,
 }
 
 export default combineReducers({
   currentBranch,
   currentWeekID,
   templateMode,
-  shiftBoard
+  shiftBoard,
+  extraHoursMode,
 })

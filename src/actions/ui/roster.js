@@ -45,3 +45,9 @@ export const unfocusShift = () =>
 
 export const toggleOptions = () =>
   ({ type: 'TOGGLE_POPOVER_OPTIONS' })
+
+export const enterExtraHoursMode = () =>
+  ({ type: 'ENTER_EXTRA_HOURS_MODE' })
+
+export const leaveExtraHoursMode = () =>
+  ({ type: 'LEAVE_EXTRA_HOURS_MODE' })

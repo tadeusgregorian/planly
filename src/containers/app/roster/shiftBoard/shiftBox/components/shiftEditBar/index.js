@@ -1,7 +1,7 @@
 //@flow
 import React from 'react'
 import type { Shift, MinimalShift } from 'types/index'
-import { minToTime } from 'helpers/index'
+import { minToTimeString } from 'helpers/index'
 import cn from 'classnames'
 import './styles.css'
 
@@ -20,9 +20,9 @@ export default ({shift}: Props) => {
   return(
     <fb className="shiftEditBarMain">
       <fb className='startEndTime'>
-        <fb className={cn({time: true, boldStyle: sEdited})}>{minToTime(edit.s).str}</fb>
+        <fb className={cn({time: true, boldStyle: sEdited})}>{minToTimeString(edit.s)}</fb>
         <fb className='seperator'>-</fb>
-        <fb className={cn({time: true, boldStyle: eEdited})}>{minToTime(edit.e).str}</fb>
+        <fb className={cn({time: true, boldStyle: eEdited})}>{minToTimeString(edit.e)}</fb>
       </fb>
       { (!!edit.b || bEdited) && <fb className={cn({breakMinutes: true, boldStyle: bEdited})}>{'/ ' + edit.b}</fb>}
     </fb>

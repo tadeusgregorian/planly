@@ -33,20 +33,22 @@ const getCurrentOvertimes = (
 
       startWeek && // check if this user has an initial startWeek             -> if not we dont count his overtime
       startWeek <= week && // check if this startWeek is before users weekSum -> we start counting after users startWeek
-      week <= currentWeekID && // check if this weekSum is before currentWeek -> we are not interested in what comes after currentWeek
+      week < currentWeekID && // check if this weekSum is before currentWeek -> we are not interested in what comes after currentWeek
       (currentTotalMins[user] = mins + (currentTotalMins[user] || 0))
     }
 
     corrections.forEach(c => {  // here we add corrections the the totalMinutes of the users
       initialStartWeeks[c.user] && // checks if user has an initial startWeek
-      initialStartWeeks[c.user] < c.week && // checks if this correction is after the startWeek of the suer
+      initialStartWeeks[c.user] <= c.week && // checks if this correction is after the startWeek of the suer
       (currentTotalMins[c.user] = c.mins + (currentTotalMins[c.user] || 0)) // adds the correction to users total minutes sum
     })
 
     for(let user in currentTotalMins){ // here we remove the minutes the user had to work between startWeek and currentWeek
+      const initialStartWeek = initialStartWeeks[user]
+      if(currentWeekID < initialStartWeek) break;
       const currentWeekMom = smartWeekToMom(currentWeekID)
-      const startWeekMom = smartWeekToMom(initialStartWeeks[user])
-      const totalWeeks = currentWeekMom.diff(startWeekMom, 'week')
+      const startWeekMom = smartWeekToMom(initialStartWeek)
+      const totalWeeks = Math.round(currentWeekMom.diff(startWeekMom, 'days') / 7)
       const userObj: User = (users.find(u => u.id === user): any) // telling flow there is definitely a User comming out
       const plannedMinutes = userObj.weeklyMins * totalWeeks
       currentTotalMins[user] = currentTotalMins[user] - plannedMinutes

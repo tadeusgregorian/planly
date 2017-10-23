@@ -4,9 +4,10 @@ import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import _ from 'lodash'
 
-import { getShiftsOfUser, getShadowedDay, getDurationSum } from './localHelpers'
-import type { User, Shifts, ShiftCell, Store, ShiftRef, Position, WeekAbsence, Correction } from 'types/index'
+import { getDay, getOvertimeStatus } from './localHelpers'
+import type { User, Shifts, ShiftCell, Store, ShiftRef, Position, WeekAbsence, Correction, ExtraHours } from 'types/index'
 import getCurrentUser from 'selectors/currentUser'
+import getInitialStartWeeks from 'selectors/initialStartWeeks'
 import getCurrentWeekSums from 'selectors/weekSumsOfCurrentWeek'
 import getCurrentOvertimes from 'selectors/overtimesOfCurrentWeek'
 import getCurrentCorrections from 'selectors/correctionsOfCurrentWeek'
@@ -18,7 +19,8 @@ import './styles.css'
 
 type OwnProps = {
   shifts: Shifts,
-  shadowedCell?: ?ShiftCell, // comes from HOC // there is a ? before the colon -> because flow thows error cause of injection of props
+  shadowedCell?: ?ShiftCell,    // comes from HOC // there is a ? before the colon -> because flow thows error cause of injection of props
+  highlightedCell?: ?ShiftCell, // comes from HOC // there is a ? before the colon -> because flow thows error cause of injection of props
 }
 
 type ConProps = {
@@ -26,12 +28,14 @@ type ConProps = {
   users: Array<User>,
   positions: Array<Position>,
   shifts: Shifts,
+  extraHours: Array<ExtraHours>,
+  currentWeekID: string,
   currentWeekSums: {[userID: string]: number},
   currentOvertimes: {[userID: string]: number},
+  initialStartWeeks: {[userID: string]: string},
   currentCorrections: {[userID: string]: Correction},
   absences: Array<WeekAbsence>,
   currentUser: User,
-  shadowedCell: ?ShiftCell,
   focusedShiftRef: ?ShiftRef,
   shiftUnderMouse: ?ShiftRef,
 }
@@ -44,7 +48,11 @@ class ShiftBoard extends PureComponent{
   renderUserRow = (userID: string, isOpen:boolean, user?: User) => {
     const {
       shadowedCell,
+      highlightedCell,
       shifts,
+      extraHours,
+      currentWeekID,
+      initialStartWeeks,
       currentUser,
       focusedShiftRef,
       shiftUnderMouse,
@@ -53,7 +61,6 @@ class ShiftBoard extends PureComponent{
       currentWeekSums,
       currentOvertimes,
       currentCorrections } = this.props
-    const shiftsOfUser = getShiftsOfUser(shifts, userID)
 
     return <UserRow
       key={userID}
@@ -63,18 +70,21 @@ class ShiftBoard extends PureComponent{
       weekSum={currentWeekSums[userID]}
       overtime={currentOvertimes[userID]}
       correction={currentCorrections[userID]}
+      overtimeStatus={getOvertimeStatus(currentWeekID, initialStartWeeks[userID])}
       userID={userID}
       currentUser={currentUser}
-      shifts={shiftsOfUser}
+      shifts={shifts.filter(s => s.user === userID)}
+      extraHours={extraHours.filter(e => e.user === userID)}
       absences={absences.filter(a => a.user === userID)}
-      shadowedDay={getShadowedDay(shadowedCell, userID)}
+      shadowedDay={getDay(shadowedCell, userID)}
+      highlightedDay={getDay(highlightedCell, userID)}
       focusedShiftRef={focusedShiftRef && focusedShiftRef.user === userID ? focusedShiftRef : null}
       shiftUnderMouse={shiftUnderMouse && shiftUnderMouse.user === userID ? shiftUnderMouse : null}
-      highlightedDay={false}
     />
   }
 
   render(){
+    console.log(this.props.shiftUnderMouse)
     const { users, branch } = this.props
     const usersOfBranch = users.filter(u => _.keys(u.branches).includes(branch))
 
@@ -95,6 +105,9 @@ const mapStateToProps = (state: Store) => ({
   users: state.core.users,
   positions: state.core.positions,
   shifts: state.roster.shiftWeek,
+  extraHours: state.roster.extraHours,
+  currentWeekID: state.ui.roster.currentWeekID,
+  initialStartWeeks: getInitialStartWeeks(state),
   currentWeekSums: getCurrentWeekSums(state),
   currentOvertimes: getCurrentOvertimes(state),
   currentCorrections: getCurrentCorrections(state),

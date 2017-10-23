@@ -4,6 +4,10 @@
   width: 100%;
   flex: 0 1 auto;
 
+  .shiftCellsWrapper{
+    //border-right: 1px solid #dfe0e4;
+  }
+
   &:last-child{
     border-bottom: none;
     border-bottom-right-radius: 2px;

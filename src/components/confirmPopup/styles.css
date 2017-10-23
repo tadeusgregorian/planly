@@ -1,2 +1,6 @@
 .confirmPopupBodyContent {
-  padding: 12px 16px; }
+  padding: 22px 18px;
+  color: #636363;
+  font-size: 16px;
+  min-width: 600px;
+  justify-content: flex-start; }

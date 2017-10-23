@@ -3,23 +3,26 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 
 import { openModal } from 'actions/ui/modals'
-import { focusShift, createShift, setShiftUnderMouse }  from 'actions/ui/roster'
+import { focusShift, createShift, setShiftUnderMouse, leaveExtraHoursMode }  from 'actions/ui/roster'
 import { saveShiftToDB }                                from 'actions/roster'
 
 import { getParentShift, getParentCell } from './localHelpers'
 import { generateGuid } from 'helpers/index'
 import getCurrentUser from 'selectors/currentUser'
 
-import OTimeCorrectionModal from 'components/modals/oTimeCorrectionModal'
-import PickedUpShift from './pickedUpShift'
 
-import type { User, ShiftCell, ShiftRef, Shift, Shifts, Store } from 'types/index'
+import ExtraHoursModal      from 'components/modals/extraHoursModal'
+import InitialOvertimeModal from 'components/modals/initialOvertimeModal'
+import PickedUpShift        from './pickedUpShift'
+
+import type { User, ShiftCell, ShiftRef, Shift, Shifts, Store, OvertimeStatus } from 'types/index'
 
 type MSProps = {
   currentUser: User,
   shifts: Shifts,
   focusedShiftRef: ?ShiftRef,
-  shiftUnderMouse: ?ShiftRef
+  shiftUnderMouse: ?ShiftRef,
+  extraHoursMode: boolean,
 }
 
 type MAProps = {
@@ -27,7 +30,8 @@ type MAProps = {
   createShift: (ShiftCell)=>any,
   saveShiftToDB: (Shift)=>any,
   setShiftUnderMouse: (ShiftRef | null)=>any,
-  openModal: (string, ReactClass<*>, ?{}) => any
+  openModal: (string, ReactClass<*>, ?{}) => any,
+  leaveExtraHoursMode: ActionCreator,
 }
 
 type OwnProps = {
@@ -38,7 +42,8 @@ type Props = OwnProps & MSProps & MAProps
 
 type State = {
   pickedUpShift: ?ShiftRef,
-  shadowedCell: ?ShiftCell
+  shadowedCell: ?ShiftCell,
+  highlightedCell: ?ShiftCell,
 }
 
 class WithMouseLogic extends PureComponent<void, Props, State> {
@@ -63,7 +68,8 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
     this.adminMode = !!(this.props.currentUser && this.props.currentUser.isAdmin)
     this.state = {
       pickedUpShift: null,
-      shadowedCell: null
+      shadowedCell: null,
+      highlightedCell: null,
     }
   }
 
@@ -88,11 +94,16 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
   }
 
   onMouseOver = ({target}: any) => {
-    if(this.isDragging){
+    if(this.props.extraHoursMode){
+      const cellUnderMouse = getParentCell(target)
+      const highlightedCell = cellUnderMouse || null
+      this.setState({highlightedCell})
+
+    }else if(this.isDragging){
       this.wasDraggingAround = true;
       const cellUnderMouse = getParentCell(target)
       const shadowedCell = cellUnderMouse || null
-      this.setState({shadowedCell: shadowedCell})
+      this.setState({shadowedCell})
 
     } else {
       if(this.props.focusedShiftRef) return
@@ -128,26 +139,36 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
     targetCell && this.props.createShift(targetCell)
   }
 
-  oTimeBoxClicked = (target: any) => {
-    const user = target.getAttribute('data-user')
-    const isInitial = target.getAttribute('data-status') === 'inactive'
-    this.props.openModal('oTimeCorrection', OTimeCorrectionModal, {user, isInitial})
+  extraHoursSelected = (shiftCell: ShiftCell) => {
+    const { user, day } = shiftCell
+    this.props.openModal('extraHours', ExtraHoursModal, { user, day } )
+    this.props.leaveExtraHoursMode()
+  }
+
+  oTimeCellClicked = (target: any) => {
+    const user   = target.getAttribute('data-user')
+    const status: OvertimeStatus = (target.getAttribute('data-status'): any)
+    if(status === 'BEFORE_START' || status === 'STARTED') return // cant change initialOvertime in this cases
+    this.props.openModal('initialOvertime', InitialOvertimeModal, {user})
   }
 
   onClick = ({target}: any) => {
     if(!this.isDragging && !this.props.focusedShiftRef && !this.wasDraggingAround){
+      const targetShift = getParentShift(target)
+      const targetCell = getParentCell(target)
+
+      if(this.props.extraHoursMode && targetCell)
+        return this.extraHoursSelected(targetCell)
 
       if(target && target.getAttribute('data-type') === 'extend-cell-btn')
         return this.extendCellClicked(target)
 
-      if(target && target.getAttribute('data-type') === 'otime-box')
-        return this.oTimeBoxClicked(target)
+      if(target && target.getAttribute('data-type') === 'pre-otime-cell')
+        return this.oTimeCellClicked(target)
 
-      const targetShift = getParentShift(target)
       if(targetShift && (targetShift.user === this.currentUser || this.adminMode))
         return this.props.focusShift(targetShift)
 
-      const targetCell = getParentCell(target)
       if(targetCell && this.adminMode && !targetCell.hasShift)
         return this.props.createShift(targetCell)
     }
@@ -196,15 +217,14 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
   }
 
 
-
   render = () => {
-    const { pickedUpShift, shadowedCell } = this.state
+    const { pickedUpShift, shadowedCell, highlightedCell } = this.state
     const getRef = (el) => { this.PickedUpElement = el }
     const shift = this.props.shifts.find(s => pickedUpShift && s.id === pickedUpShift.id)
 
     return (
       <fb style={{position: 'relative'}}>
-        {React.cloneElement(this.props.children, { shadowedCell })}
+        {React.cloneElement(this.props.children, { shadowedCell, highlightedCell })}
         { pickedUpShift && <PickedUpShift getRef={getRef} shiftRef={pickedUpShift} shift={shift}/> }
       </fb>
     )
@@ -216,13 +236,15 @@ const actionsToProps: MAProps = {
   focusShift,
   createShift,
   saveShiftToDB,
-  setShiftUnderMouse
+  setShiftUnderMouse,
+  leaveExtraHoursMode
 }
 
 const mapStateToProps = (state: Store, ow: OwnProps): MSProps => ({
   currentUser: getCurrentUser(state),
   shifts: state.roster.shiftWeek,
   focusedShiftRef: state.ui.roster.shiftBoard.focusedShiftRef,
+  extraHoursMode: state.ui.roster.extraHoursMode,
   shiftUnderMouse: state.ui.roster.shiftBoard.shiftUnderMouse
 })
 

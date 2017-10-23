@@ -5,8 +5,6 @@ export type TargetKey =
 | 'branches'
 | 'positions'
 | 'accountDetails'
-| 'queues'
-| 'roster'
 | 'shiftWeeks'
 | 'shiftEdits'
 | 'templatesFlat'
@@ -16,6 +14,7 @@ export type TargetKey =
 | 'miniShiftWeeks'
 | 'weekSums'
 | 'corrections'
+| 'extraHours'
 
 // This function holds the Information, where in the FirebaseDB each Node sits
 // If childPaths provided it concats the childPaths to a path-string.
@@ -25,11 +24,10 @@ export const getFBPath	= (target: TargetKey, childPaths?: Array<string>): string
     branches: 			  '/branches/',
     positions: 			  '/positions/',
     accountDetails:   '/accountDetails/',
-    queues: 				  '/queues/',
-    roster: 				  '/roster/',
     weekSums:         '/roster/weekSums/',
     shiftWeeks: 		  '/roster/shiftWeeks/',
     shiftEdits: 		  '/roster/shiftEdits/',
+    extraHours:       '/roster/extraHours/',
     corrections:      '/roster/corrections/',
     miniShiftWeeks:   '/roster/miniShiftWeeks/',
     templatesFlat: 	  '/roster/templatesFlat/',

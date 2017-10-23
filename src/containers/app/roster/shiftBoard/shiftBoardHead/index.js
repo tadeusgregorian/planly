@@ -10,12 +10,15 @@ export default () => {
     <fb className="shiftBoardHeadMain">
       <fb className='oTime' style={{width: overtimeCellWidth}}>&sum;</fb>
       <fb className='bigLeft'>Mitarbeiter</fb>
+      <fb className='weekDays'>
       { weekDays.map(wd =>
           <fb key={wd} style={{width: shiftCellWidth}} className='weekDay'>
             {wd}
           </fb>
         )
       }
+    </fb>
+      <fb className='oTime' style={{width: overtimeCellWidth}}>&sum;</fb>
     </fb>
   )
 }

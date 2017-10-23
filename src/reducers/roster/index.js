@@ -1,18 +1,19 @@
 //@flow
+import _ from 'lodash'
 import { createDataStatusReducer, createFirebaseReducer_array, createFirebaseReducer_object } from '../reducerHelpers'
 import { combineReducers } from 'redux'
-import type { Notes, ShiftEdits, Shifts, DataStatus, TemplatesFlat, WeekAbsence, Correction } from 'types/index'
+import type { Notes, ShiftEdits, Shifts, DataStatus, TemplatesFlat, WeekAbsence, Correction, ExtraHours } from 'types/index'
 
 // we extract this because there is userDay, and branchDay in DB ( just needed for mobile-Firebase-Querys)
-const extractShift = (data) => {
-  const { id, s, e, b, user, day, isOpen, position, note, edit, location } = data
-  return { id, s, e, b, user, day, isOpen, position, note, edit, location }
-}
+const cleanUp = (data) => _.omit(data, ['userDay', 'branchDay', 'branch'])
+
+const correctionsSame = (c1, c2) => c1.user === c2.user && c1.week === c2.week
 
 export type Roster = {
   notes: Notes,
   shiftEdits: ShiftEdits,
   shiftWeek: Shifts,
+  extraHours: Array<ExtraHours>,
   weekSums: {[string]: number},
   corrections: Array<Correction>,
   templatesFlat: TemplatesFlat,
@@ -25,8 +26,9 @@ export default combineReducers({
   templatesFlat: createFirebaseReducer_array('templatesFlat'),
   shiftEdits: createFirebaseReducer_array('shiftEdits'),
   weekSums: createFirebaseReducer_object('weekSums'),
-  corrections: createFirebaseReducer_array('corrections'),
+  corrections: createFirebaseReducer_array('corrections', null, correctionsSame),
   weekAbsences: createFirebaseReducer_array('weekAbsences'),
-  shiftWeek: createFirebaseReducer_array('shiftWeek', extractShift),
+  shiftWeek: createFirebaseReducer_array('shiftWeek', cleanUp),
+  extraHours: createFirebaseReducer_array('extraHours', cleanUp),
   shiftWeekDataStatus: createDataStatusReducer('shiftWeek')
 })

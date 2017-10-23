@@ -36,6 +36,20 @@
 
     .currentWeek{
       color: #a7a7a7;
+
+      .istTime{
+        margin-right: 3px;
+
+        &.negative{
+          color: red;
+          font-weight: 400;
+        }
+
+        &.positive{
+          color: #00b700;
+          font-weight: 400;
+        }
+      }
     }
 
     .overtime{

@@ -1,5 +1,5 @@
 //@flow
-export const overtimeCellWidth = 72;
+export const overtimeCellWidth = 38;
 export const userCellWidth = 200;
 export const shiftCellWidth = 136 //143;
 export const shiftCellHeight = 48;

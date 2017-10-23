@@ -5,8 +5,10 @@ import type { Connector } from 'react-redux'
 import type { Store, Shifts } from 'types/index'
 
 import ImportTemplateModal from 'components/modals/importTemplateModal'
+import ConfirmPopup from 'components/confirmPopup'
 import SPopover from 'components/sPopover'
 import { openModal } from 'actions/ui/modals'
+import { enterExtraHoursMode } from 'actions/ui/roster'
 
 import './styles.css'
 
@@ -14,6 +16,7 @@ type OwnProps = {}
 type ConProps = {
   shifts: Shifts,
   openModal: ActionCreator,
+  enterExtraHoursMode: ActionCreator,
 }
 type Props = OwnProps & ConProps
 
@@ -34,8 +37,18 @@ class OptionsDropdown extends PureComponent {
     this.setState({ dropdownOpen: false })
   }
 
+  extraHoursClicked = () => {
+    // const popupProps = {
+    //   title: 'Extrastunden',
+    //   text: 'Wählen sie die Zelle aus in der Sie Extrastunden einfügen möchten.',
+    //   onAccept: this.props.enterExtraHoursMode
+    // }
+    this.props.enterExtraHoursMode()
+    this.togglePopover()
+  }
+
   onSelect = (value: string) => {
-    console.log(value);
+    if(value === 'EXTRA_HOURS') this.extraHoursClicked()
   }
 
   togglePopover = () => {
@@ -51,12 +64,13 @@ class OptionsDropdown extends PureComponent {
         <SPopover
           open={this.state.dropdownOpen}
           targetElement={this.ref}
-          width={200}
+          width={180}
           onSelect={this.onSelect}
           options={
             [
-              {lable: 'Vorlage Importieren', value: 'importTemplate' },
-              {lable: 'Als Vorlage speichern', value: 'exportAsTemplate' }
+              {label: 'Vorlage Importieren', value: 'importTemplate' },
+              {label: 'Als Vorlage speichern', value: 'exportAsTemplate' },
+              {label: 'Extrastunden', value: 'EXTRA_HOURS' }
             ]
           }
         />
@@ -67,7 +81,8 @@ class OptionsDropdown extends PureComponent {
 
 
 const actionCreators = {
-  openModal
+  openModal,
+  enterExtraHoursMode,
 }
 
 const mapStateToProps = (state: Store) => ({

@@ -1,7 +1,7 @@
 import React from 'react'
 import './styles.css'
 
-export default ({label, disabled, onClick, color, sStyle, right, left, tabInd, slick, grey, icon, iconStyle}) => {
+export default ({label, disabled, onClick, color, sStyle, right, left, tabInd, slick, grey, icon, iconStyle, mini}) => {
 	const colorStyle = {
 		color: 'white',
 		backgroundColor: color,
@@ -32,6 +32,14 @@ export default ({label, disabled, onClick, color, sStyle, right, left, tabInd, s
 		minWidth: 0
 	}
 
+	const miniStyle = {
+		fontSize: 12,
+		height: 28,
+		paddingLeft: 12,
+		paddingRight: 12,
+		minWidth: 90,
+	}
+
 	const getStyle = () => {
 		let styleObj = {}
 
@@ -40,6 +48,7 @@ export default ({label, disabled, onClick, color, sStyle, right, left, tabInd, s
 		if(color) 	 styleObj = { ...styleObj, ...colorStyle }
 		if(grey) 	   styleObj = { ...styleObj, ...greyStyle }
 		if(disabled) styleObj = { ...styleObj, ...disabledStyle }
+		if(mini)		 styleObj = { ...styleObj, ...miniStyle }
 		if(sStyle)   styleObj = { ...styleObj, ...sStyle}
 		if(icon)		 styleObj = { ...styleObj, paddingLeft: 8}
 		if(left) styleObj.marginRight = 'auto'

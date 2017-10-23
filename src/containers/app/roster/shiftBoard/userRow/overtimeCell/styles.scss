@@ -2,10 +2,15 @@
   //align-items: flex-start;
   flex: 0 0 auto;
   justify-content: center;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 400;
   align-items: center;
   flex-direction: column;
+  color: #525252;
+
+  &.post{
+    background-color: #f7f7f7;
+  }
 
   .overtimeWrapper{
     height: 16px;
@@ -13,35 +18,39 @@
     flex: 1;
     align-items: center;
     justify-content: center;
-    color: grey;
+    background-color: #f7f7f7;
+
+    &.startWeek{
+      color: #00a2ef;
+    }
   }
 
-  .correctionBox{
+  .timerIcon{
     justify-content: center;
-    height: 14px;
     align-items: center;
-    font-size: 12px;
-    background: #25bf5f;
-    color: white;
-    padding: 0px 2px;
+    flex: 1;
     align-self: stretch;
     margin: 1px;
-    justify-content: flex-start;
+    background: #00a2ef;
+    color: white;
     border-radius: 1px;
-    height: 20px;
+    font-size: 16px;
 
-    .timerIcon{
-      font-size: 14px;
-      margin: 0px 2px;
-    }
-
-    .text{
-
+    &:hover{
+      opacity: 0.8;
     }
   }
 
   .questionMark{
+
     font-size: 18px;
     color: #cecece;
+    align-self: stretch;
+    flex: 1;
+    justify-content: center;
+
+    &:hover{
+      color: #00a2ef;
+    }
   }
 }

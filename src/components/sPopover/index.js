@@ -3,7 +3,7 @@ import React from 'react'
 import './styles.css'
 
 type Props = {
-  options: Array<{lable: string, value: string}>,
+  options: Array<{label: string, value: string}>,
   onSelect: (string)=>void,
   open: boolean,
   width: number,
@@ -13,15 +13,15 @@ type Props = {
 
 export default (props: Props) => {
   //const display =  props.open ? 'initial' : 'none'
-  const { targetElement, width } = props
+  const { targetElement, width, onSelect } = props
   const top = (targetElement && targetElement.offsetHeight + 1 ) || 0
 
   return(
     <fb className="sPopoverMain">
       { props.open &&
-        <fb className='content' style={{top, width, left: -props.width}}>
+        <fb className='content arrow_box' style={{top, width, left: -props.width}}>
           {props.options.map((o, i) =>
-            <fb key={i} className='optionRow' data-value={o.value}>{o.lable}</fb>
+            <fb key={i} className='optionRow' data-value={o.value} onClick={()=> onSelect(o.value) }>{o.label}</fb>
           )}
         </fb>
       }

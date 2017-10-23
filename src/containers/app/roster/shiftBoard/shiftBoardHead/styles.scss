@@ -32,13 +32,21 @@
     align-items: center;
   }
 
-  .weekDay{
-    flex: 0 0 auto;
-        justify-content: center;
-        text-transform: uppercase;
-        height: 100%;
-        align-items: center;
-        border-left: 1px solid #ececec;
-        background: white;
+  .weekDays{
+    height: 100%;
+    
+    .weekDay{
+      flex: 0 0 auto;
+      justify-content: center;
+      text-transform: uppercase;
+      height: 100%;
+      align-items: center;
+      border-left: 1px solid #ececec;
+      background: white;
+
+      &:last-of-type{
+        border-right: 1px solid #ececec;
+      }
+    }
   }
 }
