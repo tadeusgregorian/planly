@@ -1,7 +1,7 @@
 //@flow
-import type { ShiftCell, Notes, ShiftEdits, OvertimeStatus } from 'types/index'
+import type { CellRef, Notes, ShiftEdits, OvertimeStatus } from 'types/index'
 
-export const isSameCell = (c1: ShiftCell, c2: ShiftCell): boolean => {
+export const isSameCell = (c1: CellRef, c2: CellRef): boolean => {
   for(const key in c1){
     if(c1.hasOwnProperty(key)){
       if(c1[key] !== c2[key]) return false
@@ -23,5 +23,5 @@ export const getShiftEditsOfUser = (shiftEdits: ShiftEdits, userID: string, week
 export const getNotesOfUser = (notes: Notes, userID: string): Notes =>
  notes.filter(n => n.user === userID)
 
- export const getDay = (shiftCell: ?ShiftCell, userID: string): string | false =>
+ export const getDay = (shiftCell: ?CellRef, userID: string): string | false =>
   !!shiftCell && shiftCell.user === userID && shiftCell.day

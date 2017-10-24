@@ -7,7 +7,9 @@ import OvertimeCell from './overtimeCell'
 import UserCell     from './userCell'
 import OpenUserCell from './openUserCell'
 
-import type { User, Shifts, ShiftRef, Position, WeekAbsence, OvertimeStatus, ExtraHours } from 'types/index'
+import { calculateWeekSum } from './localHelpers'
+
+import type { User, Shifts, ShiftRef, Position, WeekAbsence, OvertimeStatus, ExtraHours, CellRef } from 'types/index'
 import './styles.css'
 
 type Props = {
@@ -16,6 +18,7 @@ type Props = {
   isOpen: boolean,
   shifts: Shifts,
   extraHours: Array<ExtraHours>,
+  templateMode: boolean,
   weekSum: number,
   overtime: ?number,
   overtimeStatus: OvertimeStatus,
@@ -24,7 +27,7 @@ type Props = {
   highlightedDay: string | false,
   currentUser: User,
   focusedShiftRef: ?ShiftRef,
-  shiftUnderMouse: ?ShiftRef,
+  cellUnderMouse: ?CellRef,
   absences: Array<WeekAbsence>,
 }
 
@@ -38,7 +41,7 @@ export default class UserRow extends PureComponent{
       isOpen,
       shifts,
       extraHours,
-      weekSum,
+      templateMode,
       overtime,
       overtimeStatus,
       position,
@@ -46,19 +49,21 @@ export default class UserRow extends PureComponent{
       highlightedDay,
       currentUser,
       focusedShiftRef,
-      shiftUnderMouse,
+      cellUnderMouse,
       absences } = this.props
 
       const weeklyMins = user ? user.weeklyMins : 0
+      const weekSum = templateMode ? calculateWeekSum(shifts) : this.props.weekSum
 
     return(
       <fb className="userRowMain">
-        <OvertimeCell
+        { !templateMode && <OvertimeCell
           overtime={overtime}
           status={overtimeStatus}
           type='PRE'
           userID={userID}
         />
+        }
         { (!isOpen && user)
           ? <UserCell
               user={user}
@@ -89,17 +94,17 @@ export default class UserRow extends PureComponent{
               shiftType='usershift'
               shadowed={shadowed}
               highlighted={highlighted}
-              focusedShiftRef={focusedShiftRef && focusedShiftRef.day === day ? focusedShiftRef : null}
-              shiftUnderMouse={shiftUnderMouse && shiftUnderMouse.day === day ? shiftUnderMouse : null}
+              focusedShiftRef={focusedShiftRef}
+              hovered={!!(cellUnderMouse && cellUnderMouse.day === day)}
             />
           })}
         </fb>
-        <OvertimeCell
+        { !templateMode && <OvertimeCell
           overtime={overtime + weekSum - weeklyMins}
           status={overtimeStatus}
           type='POST'
           userID={userID}
-        />
+        /> }
       </fb>
     )
   }

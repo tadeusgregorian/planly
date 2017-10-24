@@ -3,7 +3,6 @@ import React from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import type { ExtraHours} from 'types/index'
-import ExtraHoursModal from 'components/modals/extraHoursModal'
 import { openModal } from 'actions/ui/modals'
 import { minToTime } from 'helpers/roster'
 import './styles.css'
@@ -20,7 +19,7 @@ type ConProps = {
 const extraHoursBox = ({extraHours, openModal}: ConProps & OwnProps) => {
 
   const onClick = () => {
-    openModal('extraHours', ExtraHoursModal,  extraHours)
+    openModal('EXTRA_HOURS',  extraHours)
   }
 
   const roundDown = (num) => Math.floor(Math.abs(num) / 60)

@@ -1164,7 +1164,10 @@ fb {
   box-sizing: border-box; }
 
 input {
-  border: 1px solid #bbbbbb; }
+  border: 1px solid #bbbbbb;
+  border-radius: 2px;
+  font-size: 16px;
+  color: #484848; }
   input:focus {
     border-color: #2ea8ff;
     outline: none; }

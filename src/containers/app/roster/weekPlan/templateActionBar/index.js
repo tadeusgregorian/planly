@@ -5,8 +5,9 @@ import type { Connector } from 'react-redux'
 import type { Store, TemplatesFlat } from 'types/index'
 import TemplateSelect from './templateSelect'
 
+import { openModal } from 'actions/ui/modals'
 import { changeCurrentWeekID } from 'actions/ui/roster'
-import { createNewTempForBranch, saveTemplateName } from 'actions/roster/template'
+import { createNewTemplate, saveTemplateName } from 'actions/roster/template'
 import './styles.css'
 
 type OwnProps = {}
@@ -15,6 +16,7 @@ type ConnectedProps = {
   currentBranch: string,
   currentWeekID: string,
   changeCurrentWeekID: (string) => {},
+  openModal: (string, ?{})=>any,
 }
 type Props = OwnProps & ConnectedProps
 
@@ -25,8 +27,7 @@ class TemplateActionBar extends PureComponent {
   }
 
   createTemplate = () => {
-    createNewTempForBranch(this.props.currentBranch)
-      .then((newTempID) => this.changeTemplate(newTempID))
+    this.props.openModal('CREATE_NEW_TEMPLATE')
   }
 
   render(){
@@ -44,7 +45,7 @@ class TemplateActionBar extends PureComponent {
         />
         <fb className='right'>
           <fb className='createTemplateBtn' onClick={this.createTemplate}>
-            Neues Template
+            + Neue Vorlage
           </fb>
         </fb>
       </fb>
@@ -53,6 +54,8 @@ class TemplateActionBar extends PureComponent {
 }
 
 const actionsToProps = {
+  openModal,
+  createNewTemplate,
   changeCurrentWeekID
 }
 

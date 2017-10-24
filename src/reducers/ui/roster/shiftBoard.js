@@ -11,11 +11,6 @@ const focusedShiftRef = simpleReducer({
   remove_shiftWeek     : null,
 })
 
-const shiftUnderMouse = simpleReducer({
-  default               : null,
-  SET_SHIFT_UNDER_MOUSE : 'PAYLOAD',
-})
-
 type OptionsExpanded = boolean
 const optionsExpanded = (state = false, a) => {
   if(a.type === 'TOGGLE_POPOVER_OPTIONS') return !state
@@ -24,13 +19,11 @@ const optionsExpanded = (state = false, a) => {
 }
 
 export type ShiftBoard = {
-  shiftUnderMouse: ?ShiftRef,
   focusedShiftRef: ?ShiftRef,
   optionsExpanded: OptionsExpanded
 }
 
 export default combineReducers({
-  shiftUnderMouse,
   focusedShiftRef,
   optionsExpanded
 })

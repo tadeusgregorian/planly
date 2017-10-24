@@ -1,17 +1,21 @@
 //@flow
 import { getNextWeekID, getPrevWeekID, generateGuid } from 'helpers/index'
-import type { ThunkAction, GetState, ShiftRef, ShiftCell } from 'types/index'
+import type { ThunkAction, GetState, ShiftRef, CellRef } from 'types/index'
+import { getLastTempIDOfBranch } from './localHelpers'
 
-export const changeCurrentBranch = (branchID: string) =>
-  ({ type: 'SET_CURRENT_BRANCH', payload: branchID })
+export const changeCurrentBranch: ThunkAction = (branchID: string) => (dispatch, getState: GetState) => {
+  if(getState().ui.roster.templateMode){
+    dispatch({ type: 'SET_CURRENT_WEEK_ID', payload: getLastTempIDOfBranch(getState, branchID) })
+  }
+  dispatch({ type: 'SET_CURRENT_BRANCH', payload: branchID })
+}
 
 export const changeCurrentWeekID = (weekID: string) =>
   ({ type: 'SET_CURRENT_WEEK_ID', payload: weekID })
 
 export const enterTemplateMode: ThunkAction = () => (dispatch, getState: GetState) => {
-  // hacky!: at the same time this sets currentWeekID to the default one ( equal to the branchID )
-  const defaultTempID = 'defaultTemplate_' + getState().ui.roster.currentBranch
-  dispatch({ type: 'ENTER_TEMPLATE_MODE', payload: defaultTempID })
+  const currentBranch = getState().ui.roster.currentBranch
+  dispatch({ type: 'ENTER_TEMPLATE_MODE', payload: getLastTempIDOfBranch(getState, currentBranch) })
 }
 
 export const leaveTemplateMode = () =>
@@ -27,7 +31,7 @@ export const goToLastWeek: ThunkAction = () => (dispatch, getState) => {
   dispatch({type: 'SET_CURRENT_WEEK_ID', payload: prevSW})
 }
 
-export const createShift = (shiftCell: ShiftCell) => {
+export const createShift = (shiftCell: CellRef) => {
   const { user, day } = shiftCell
   const id = generateGuid()
   const focusedShiftRef: ShiftRef = { id, user, day, inCreation: true }

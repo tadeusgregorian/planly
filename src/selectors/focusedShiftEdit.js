@@ -1,7 +1,7 @@
 //@flow
 
 import { createSelector } from 'reselect'
-import type { ShiftEdits, ShiftCell } from 'types/index'
+import type { ShiftEdits, CellRef } from 'types/index'
 
 
 const getShiftEdits = (state) => state.roster.shiftEdits
@@ -9,7 +9,7 @@ const getShiftCell	= (state) => state.ui.roster.shiftBoard.focusedCell
 const getWeekID	= (state) => state.ui.roster.currentWeekID
 const getBranch	    = (state) => state.ui.roster.currentBranch
 
-const getFocusedShiftEdit = (shiftEdits: ShiftEdits, focusedCell: ShiftCell, weekID, branch) => {
+const getFocusedShiftEdit = (shiftEdits: ShiftEdits, focusedCell: CellRef, weekID, branch) => {
   if(!focusedCell) return null
   if(!shiftEdits) return null
 

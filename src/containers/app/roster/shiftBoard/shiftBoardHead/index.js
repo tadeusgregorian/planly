@@ -4,11 +4,13 @@ import React from 'react'
 import { weekDays, shiftCellWidth, overtimeCellWidth } from 'constants/roster'
 import './styles.css'
 
-export default () => {
+type Props = { templateMode: boolean }
+
+export default ({ templateMode }: Props) => {
 
   return(
     <fb className="shiftBoardHeadMain">
-      <fb className='oTime' style={{width: overtimeCellWidth}}>&sum;</fb>
+      { !templateMode && <fb className='oTime' style={{width: overtimeCellWidth}}>&sum;</fb> }
       <fb className='bigLeft'>Mitarbeiter</fb>
       <fb className='weekDays'>
       { weekDays.map(wd =>
@@ -17,8 +19,8 @@ export default () => {
           </fb>
         )
       }
-    </fb>
-      <fb className='oTime' style={{width: overtimeCellWidth}}>&sum;</fb>
+      </fb>
+      { !templateMode && <fb className='oTime' style={{width: overtimeCellWidth}}>&sum;</fb> }
     </fb>
   )
 }

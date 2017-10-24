@@ -1,9 +1,9 @@
 //@flow
 
-import type { Shift, ShiftCell, ShiftInput, MinimalShift } from 'types/index'
+import type { Shift, CellRef, ShiftInput, MinimalShift } from 'types/index'
 import { timeStringToMin, minToTimeString } from 'helpers/index'
 
-export const cellChanged = (prevCell: ShiftCell, nextCell: ShiftCell) => {
+export const cellChanged = (prevCell: CellRef, nextCell: CellRef) => {
   return (prevCell.day !== nextCell.day || prevCell.user !== nextCell.user)
 }
 

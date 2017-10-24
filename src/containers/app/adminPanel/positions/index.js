@@ -2,14 +2,13 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PositionElement from './position';
 import { openModal } from 'actions/ui'
-import AddEditPositionPopup from './addEditPositionPopup'
 import SButton from 'components/sButton'
 import './styles.css';
 
 class AdminpanelPositions extends React.Component {
 
 	openAddEditPositionPopup = (position = null) => {
-		this.props.openModal('addEditPosition', AddEditPositionPopup, { position })
+		this.props.openModal('ADD_EDIT_POSITION', { position })
 	}
 
 	render() {

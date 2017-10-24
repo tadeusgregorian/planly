@@ -18,7 +18,6 @@ type ConProps = {
 
 type OwnProps = {
   shift: Shift,
-  isHovered?: boolean,
 }
 
 type Props = OwnProps & ConProps
@@ -27,7 +26,7 @@ class DisplayShiftBox extends PureComponent{
   props: Props
 
   render(){
-    const { shift, isHovered, branch, positions } = this.props
+    const { shift, branch, positions } = this.props
     const { day, user, id, note, edit, location, position } = shift
 
     const locations: Array<Location> = (branch && branch.locations && _.values(branch.locations)) || []
@@ -45,7 +44,6 @@ class DisplayShiftBox extends PureComponent{
         { edit && <fb className='bigRoundEdit icon icon-pen'/> }
         { location && <LocationBar locations={locations} location={location} /> }
         { position && <PositionBar positions={positions} position={position} /> }
-        { isHovered && <fb className='extendCellBtn' data-type='extend-cell-btn'>+</fb> }
       </fb>
     )
   }

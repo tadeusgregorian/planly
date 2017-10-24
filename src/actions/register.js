@@ -59,10 +59,10 @@ const getEmptyAccount = (adminEmail): DBAccount => ({
   },
   roster: {
     templatesFlat: {
-      defaultTemplate_b001: {
+      '111random': { // only important that it starts with 111 -> sorted lexically ( needs to be lowest )
         branch: 'b001',
-        name: 'unbenannt',
-        id: 'defaultTemplate_b001',
+        name: 'Musterwoche 1',
+        id: '111random',
       }
     }
   }

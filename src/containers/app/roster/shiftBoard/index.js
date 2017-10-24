@@ -5,7 +5,7 @@ import type { Connector } from 'react-redux'
 import _ from 'lodash'
 
 import { getDay, getOvertimeStatus } from './localHelpers'
-import type { User, Shifts, ShiftCell, Store, ShiftRef, Position, WeekAbsence, Correction, ExtraHours } from 'types/index'
+import type { User, Shifts, CellRef, Store, ShiftRef, Position, WeekAbsence, Correction, ExtraHours } from 'types/index'
 import getCurrentUser from 'selectors/currentUser'
 import getInitialStartWeeks from 'selectors/initialStartWeeks'
 import getCurrentWeekSums from 'selectors/weekSumsOfCurrentWeek'
@@ -19,8 +19,9 @@ import './styles.css'
 
 type OwnProps = {
   shifts: Shifts,
-  shadowedCell?: ?ShiftCell,    // comes from HOC // there is a ? before the colon -> because flow thows error cause of injection of props
-  highlightedCell?: ?ShiftCell, // comes from HOC // there is a ? before the colon -> because flow thows error cause of injection of props
+  templateMode: boolean,
+  isDragging?: ?boolean,    // comes from HOC // there is a ? before the colon -> because flow thows error cause of injection of props
+  cellUnderMouse?: ?CellRef,  // comes from HOC // there is a ? before the colon -> because flow thows error cause of injection of props
 }
 
 type ConProps = {
@@ -29,6 +30,7 @@ type ConProps = {
   positions: Array<Position>,
   shifts: Shifts,
   extraHours: Array<ExtraHours>,
+  extraHoursMose: boolean,
   currentWeekID: string,
   currentWeekSums: {[userID: string]: number},
   currentOvertimes: {[userID: string]: number},
@@ -37,7 +39,6 @@ type ConProps = {
   absences: Array<WeekAbsence>,
   currentUser: User,
   focusedShiftRef: ?ShiftRef,
-  shiftUnderMouse: ?ShiftRef,
 }
 
 type Props = OwnProps & ConProps
@@ -47,15 +48,16 @@ class ShiftBoard extends PureComponent{
 
   renderUserRow = (userID: string, isOpen:boolean, user?: User) => {
     const {
-      shadowedCell,
-      highlightedCell,
+      isDragging,
       shifts,
       extraHours,
+      extraHoursMose,
+      templateMode,
       currentWeekID,
       initialStartWeeks,
       currentUser,
       focusedShiftRef,
-      shiftUnderMouse,
+      cellUnderMouse,
       positions,
       absences,
       currentWeekSums,
@@ -71,26 +73,26 @@ class ShiftBoard extends PureComponent{
       overtime={currentOvertimes[userID]}
       correction={currentCorrections[userID]}
       overtimeStatus={getOvertimeStatus(currentWeekID, initialStartWeeks[userID])}
+      templateMode={templateMode}
       userID={userID}
       currentUser={currentUser}
       shifts={shifts.filter(s => s.user === userID)}
       extraHours={extraHours.filter(e => e.user === userID)}
       absences={absences.filter(a => a.user === userID)}
-      shadowedDay={getDay(shadowedCell, userID)}
-      highlightedDay={getDay(highlightedCell, userID)}
-      focusedShiftRef={focusedShiftRef && focusedShiftRef.user === userID ? focusedShiftRef : null}
-      shiftUnderMouse={shiftUnderMouse && shiftUnderMouse.user === userID ? shiftUnderMouse : null}
+      shadowedDay={isDragging ? getDay(cellUnderMouse, userID) : false} // could do && cause of random Flow issue
+      highlightedDay={extraHoursMose ? getDay(cellUnderMouse, userID) : false} // could do && cause of random Flow issue
+      focusedShiftRef={focusedShiftRef}
+      cellUnderMouse={cellUnderMouse && cellUnderMouse.user === userID ? cellUnderMouse : null}
     />
   }
 
   render(){
-    console.log(this.props.shiftUnderMouse)
-    const { users, branch } = this.props
+    const { users, branch, templateMode } = this.props
     const usersOfBranch = users.filter(u => _.keys(u.branches).includes(branch))
 
     return(
       <fb id="shiftBoardMain">
-        <ShiftBoardHead />
+        <ShiftBoardHead templateMode={templateMode}/>
         <fb className='assignedShifts'>
           { this.renderUserRow('open', true) }
           { usersOfBranch.map(user => this.renderUserRow(user.id, false, user)) }
@@ -106,6 +108,7 @@ const mapStateToProps = (state: Store) => ({
   positions: state.core.positions,
   shifts: state.roster.shiftWeek,
   extraHours: state.roster.extraHours,
+  extraHoursMose: state.ui.roster.extraHoursMode,
   currentWeekID: state.ui.roster.currentWeekID,
   initialStartWeeks: getInitialStartWeeks(state),
   currentWeekSums: getCurrentWeekSums(state),
@@ -113,7 +116,6 @@ const mapStateToProps = (state: Store) => ({
   currentCorrections: getCurrentCorrections(state),
   absences: state.roster.weekAbsences,
   focusedShiftRef: state.ui.roster.shiftBoard.focusedShiftRef,
-  shiftUnderMouse: state.ui.roster.shiftBoard.shiftUnderMouse,
   currentUser: getCurrentUser(state)
 })
 

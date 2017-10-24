@@ -11,7 +11,6 @@ type Props = {
   shift: Shift,
   focused: boolean,
   inCreation?: boolean,
-  isHovered?: boolean,
 }
 
 export default class ShiftBox extends PureComponent{

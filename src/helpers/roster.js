@@ -1,6 +1,6 @@
 //@flow
 import moment from 'moment'
-import type { Shift, Shifts, MinimalShift, ShiftCell, Notes } from 'types/index'
+import type { Shift, Shifts, MinimalShift, CellRef, Notes } from 'types/index'
 
 export const getRealCurrentWeekID = () :string => {
   const calendarWeek = moment().week()
@@ -73,8 +73,8 @@ export const shiftToMinimalShift = (shift: Shift): MinimalShift => ({
   s: shift.s, e: shift.e, b: shift.b
 })
 
-export const getNoteOfCell = (notes: Notes, cell: ShiftCell) =>
+export const getNoteOfCell = (notes: Notes, cell: CellRef) =>
   notes.find(n => n.user === cell.user && n.day === cell.day)
 
-export const getShiftOfCell = (shifts: Shifts, cell: ShiftCell): ?Shift =>
+export const getShiftOfCell = (shifts: Shifts, cell: CellRef): ?Shift =>
   cell && shifts.find(s => s.user === cell.user && s.day === cell.day )

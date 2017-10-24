@@ -190,7 +190,7 @@ export type PreDBShift = {
   b: number,
   day: Day,
   user: string,
-  edit?: MinimalShift,
+  edit?: ?MinimalShift,
   branch: string,
   note?: ?string,
   position?: ?string,
@@ -203,7 +203,7 @@ export type DBShift = {
   userDay: string
 } & PreDBShift
 
-export type ShiftCell = {
+export type CellRef = {
   day: Day,
   user: string,
   hasShift?: true,

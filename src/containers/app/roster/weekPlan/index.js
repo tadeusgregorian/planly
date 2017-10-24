@@ -30,11 +30,12 @@ class WeekPlan extends PureComponent{
   }
 
   componentWillReceiveProps = (np: Props) => {
-    const { currentBranch, setRosterListeners, currentWeekID } = this.props
+    const { currentBranch, setRosterListeners, currentWeekID, templateMode } = this.props
     const branchChanged   = np.currentBranch    !== currentBranch
     const swChanged       = np.currentWeekID    !== currentWeekID
+    const modeChanged     = np.templateMode     !== templateMode
 
-    if(branchChanged || swChanged) setRosterListeners()
+    if(branchChanged || swChanged || modeChanged) setRosterListeners()
   }
 
   render(){

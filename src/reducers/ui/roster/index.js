@@ -10,8 +10,6 @@ const currentBranch = simpleReducer({
   SET_CURRENT_BRANCH: 'PAYLOAD'
 })
 
-// sorry hacky: when entering TemplateMode we set currentWeekID to the branchID
-// ( because there is always the default template with a weekID equal to the branchID )
 const currentWeekID = simpleReducer({
   default: getRealCurrentWeekID(),
   SET_CURRENT_WEEK_ID: 'PAYLOAD',

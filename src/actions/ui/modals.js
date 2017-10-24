@@ -1,14 +1,12 @@
 //@flow
-import ShiftNoteModal from 'components/modals/shiftNoteModal'
-import AbsenceModal from 'components/modals/absenceModal'
 import type { Absence } from 'types/index'
 
-export type OpenModal  = (string, ReactClass<*>, ?{})=>{}
+export type OpenModal  = (string, ?{})=>{}
 export type CloseModal = (string)=>{}
 
-export const openModal: OpenModal = (modalID, component, props) => ({
+export const openModal: OpenModal = (modalID, props) => ({
   type: 'OPEN_MODAL',
-  payload: { modalID, component, props }
+  payload: { modalID, props }
 })
 
 export const closeModal: CloseModal = (modalID) => ({
@@ -17,7 +15,7 @@ export const closeModal: CloseModal = (modalID) => ({
 })
 
 export const openNotesModal = (note: string, saveNote:(string)=>void) =>
-  openModal('notes', ShiftNoteModal, {note, saveNote})
+  openModal('SHIFT_NOTE', {note, saveNote})
 
 export const openAbsenceModal = (userID: string, absence?: Absence) =>
-  openModal('absence', AbsenceModal, { userID, absence })
+  openModal('ABSENCE', { userID, absence })

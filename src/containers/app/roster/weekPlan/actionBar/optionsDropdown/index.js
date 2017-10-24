@@ -4,8 +4,6 @@ import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import type { Store, Shifts } from 'types/index'
 
-import ImportTemplateModal from 'components/modals/importTemplateModal'
-import ConfirmPopup from 'components/confirmPopup'
 import SPopover from 'components/sPopover'
 import { openModal } from 'actions/ui/modals'
 import { enterExtraHoursMode } from 'actions/ui/roster'
@@ -32,23 +30,16 @@ class OptionsDropdown extends PureComponent {
   state: State
   ref: HTMLElement
 
-  importTempClicked = () => {
-    this.props.openModal('importTemplate', ImportTemplateModal)
-    this.setState({ dropdownOpen: false })
-  }
+  importTempClicked = () => this.props.openModal('IMPORT_TEMPLATE')
+  saveAsTempClicked = () => this.props.openModal('SAVE_AS_TEMPLATE')
+  extraHoursClicked = () => this.props.enterExtraHoursMode()
 
-  extraHoursClicked = () => {
-    // const popupProps = {
-    //   title: 'Extrastunden',
-    //   text: 'Wählen sie die Zelle aus in der Sie Extrastunden einfügen möchten.',
-    //   onAccept: this.props.enterExtraHoursMode
-    // }
-    this.props.enterExtraHoursMode()
-    this.togglePopover()
-  }
 
   onSelect = (value: string) => {
-    if(value === 'EXTRA_HOURS') this.extraHoursClicked()
+    if(value === 'EXTRA_HOURS')  this.extraHoursClicked()
+    if(value === 'SAVE_AS_TEMP') this.saveAsTempClicked()
+    if(value === 'IMPORT_TEMP')  this.importTempClicked()
+    this.togglePopover()
   }
 
   togglePopover = () => {
@@ -61,19 +52,19 @@ class OptionsDropdown extends PureComponent {
         <fb className='optionsButton' onClick={this.togglePopover} ref={(ref)=>this.ref = ref}>
           aktionen
         </fb>
-        <SPopover
-          open={this.state.dropdownOpen}
+        { this.state.dropdownOpen && <SPopover
           targetElement={this.ref}
           width={180}
           onSelect={this.onSelect}
+          closePopover={()=>this.setState({dropdownOpen: false})}
           options={
             [
-              {label: 'Vorlage Importieren', value: 'importTemplate' },
-              {label: 'Als Vorlage speichern', value: 'exportAsTemplate' },
+              {label: 'Vorlage Importieren', value: 'IMPORT_TEMP' },
+              {label: 'Als Vorlage speichern', value: 'SAVE_AS_TEMP' },
               {label: 'Extrastunden', value: 'EXTRA_HOURS' }
             ]
           }
-        />
+        />}
       </fb>
     )
   }

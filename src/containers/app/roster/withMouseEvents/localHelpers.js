@@ -1,6 +1,6 @@
 //@flow
 
-import type { ShiftCell, ShiftRef } from 'types/index'
+import type { CellRef, ShiftRef } from 'types/index'
 import { closest } from 'helpers/index'
 
 export const elementIsShift = (el: HTMLElement): boolean =>
@@ -17,7 +17,7 @@ export const getParentShift = (el: HTMLElement): (ShiftRef | null) => {
   return shiftElement ? targetToShiftRef(shiftElement) : null
 }
 
-export const getParentCell = (el: HTMLElement): ?ShiftCell => {
+export const getParentCell = (el: HTMLElement): ?CellRef => {
   const shiftCellElement = closest(el, (element) => elementIsShiftCell(element))
   return shiftCellElement ? targetToShiftCell(shiftCellElement) : null
 }
@@ -37,11 +37,20 @@ export const targetToShiftRef = (target: HTMLElement): ShiftRef => {
   return { day, user, id, hasEdit, dimensions }
 }
 
-export const targetToShiftCell = (target: HTMLElement): ShiftCell => {
+export const targetToShiftCell = (target: HTMLElement): CellRef => {
   const day       = target.getAttribute('data-day')
   const user      = target.getAttribute('data-user')
   const hasShift  = target.getAttribute('data-has-shift') === 'true'
 
-  const shiftCell: ShiftCell = ({ day, user, hasShift } : any) // forcefully Typekasting
+  const shiftCell: CellRef = ({ day, user, hasShift } : any) // forcefully Typekasting
   return shiftCell
+}
+
+export const sameShiftCells = (cell1: ?CellRef, cell2: ?CellRef): boolean => {
+  if(!cell1 && !cell2) return true
+  if(!cell1 &&  cell2) return false
+  if( cell1 && !cell2) return false
+  const pattern1 = cell1 && cell1.day + cell1.user
+  const pattern2 = cell2 && cell2.day + cell2.user
+  return pattern1 === pattern2
 }

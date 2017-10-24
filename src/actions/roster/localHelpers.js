@@ -5,11 +5,13 @@ import { getFBPath } from './../actionHelpers'
 
 export const toDBShift = (sh: PreDBShift): DBShift => ({
   ...sh,
-  b: sh.b || 0,
-  isOpen:  sh.isOpen ? true : false, // firebase needs null to delete a node ( undefined throws an error )
-  position: sh.position ? sh.position : null,
-  branchDay: (sh.branch + sh.day),
-  userDay: (sh.user + sh.day),
+  b:         sh.b         || 0,
+  isOpen:    sh.isOpen    || null, // firebase needs null to delete a node ( undefined throws an error )
+  position:  sh.position  || null,
+  location:  sh.location  || null,
+  note:      sh.note      || null,
+  branchDay: sh.branch + sh.day,
+  userDay:   sh.user + sh.day,
 })
 
 // returns a object that you can call as an argument for the firebase-update method for db-writes

@@ -4,7 +4,6 @@ import React from 'react';
 import {connect} from 'react-redux';
 import UserElement from './user';
 import { openModal } from 'actions/ui'
-import AddEditUserPopup from './addEditUserPopup'
 import SButton from 'components/sButton'
 import './styles.css';
 
@@ -14,7 +13,7 @@ class AdminpanelUsers extends React.Component {
 	openReactivateUserPopup = () => { console.log('openReactivateUserPopup')}
 
 	openAddEditUserPopup = (user = null) => {
-		this.props.openModal('addEditUser', AddEditUserPopup, { user })
+		this.props.openModal('ADD_EDIT_USER', { user })
 	}
 
 	render() {

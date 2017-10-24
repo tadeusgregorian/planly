@@ -2,14 +2,13 @@ import React from 'react';
 import {connect} from 'react-redux';
 import BranchElement from './branch';
 import { openModal } from 'actions/ui'
-import AddEditBranchPopup from './addEditBranchPopup'
 import SButton from 'components/sButton'
 import './styles.css';
 
 class AdminpanelBranchs extends React.Component {
 
 	openAddEditBranchPopup = (branch = null) => {
-		this.props.openModal('addEditBranch', AddEditBranchPopup, { branch })
+		this.props.openModal('ADD_EDIT_BRANCH', { branch })
 	}
 
 	render() {

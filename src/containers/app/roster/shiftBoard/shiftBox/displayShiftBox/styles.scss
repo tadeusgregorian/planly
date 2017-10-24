@@ -17,29 +17,6 @@
     color: orange;
   }
 
-  .extendCellBtn{
-    width: 12px;
-    height: 12px;
-    background-color: lightgrey;
-    color: grey;
-    font-size: 12px;
-    align-items: center;
-    justify-content: center;
-    margin-left: 1px;
-    position: absolute;
-    bottom: -1px;
-    right: -1px;
-    border-top-left-radius: 2px;
-    //animation: scaleIn 0.15s ease;
-
-    &:hover{
-      background-color: #00a3ef;
-      color: white;
-      width: 14px;
-      height: 14px;
-    }
-  }
-
   .bigRoundEdit{
     position: absolute;
     right: 2px;
@@ -56,16 +33,3 @@
     box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.3);
   }
 }
-
-// @keyframes scaleIn {
-//     0% {
-//       opacity: 0;
-//       width: 0px;
-//       height: 0px;
-//     }
-//     100%  {
-//       opacity: 1;
-//       width: 12px;
-//       height: 12px;
-//     }
-// }

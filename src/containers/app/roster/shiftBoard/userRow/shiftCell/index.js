@@ -12,7 +12,6 @@ type Props = {
   user: string,
   isOpen: boolean,
   focusedShiftRef: ?ShiftRef,
-  shiftUnderMouse: ?ShiftRef,
   absence: AbsenceType | false,
   shadowed?: boolean,
   highlighted?: boolean,
@@ -23,6 +22,7 @@ type Props = {
   style?: {},
   cssClasses?: Array<string>,
   blocked?: ?boolean, // indicates if the currentUser has permission to focus this cell.
+  hovered: boolean,
 }
 
 export default class ShiftCell extends PureComponent {
@@ -39,41 +39,46 @@ export default class ShiftCell extends PureComponent {
       style,
       cssClasses,
       blocked,
-      focusedShiftRef,
-      shiftUnderMouse,
       isOpen,
       absence,
+      hovered,
       highlighted } = this.props
+    const fsr = this.props.focusedShiftRef
 
-    const inCreation       = focusedShiftRef && focusedShiftRef.inCreation
-    const focusedShiftID   = focusedShiftRef ? focusedShiftRef.id : 'aRondomStringTade...'
+    const focusedShift     = fsr && fsr.day === day && fsr.user === user ? fsr : null
+    const inCreation       = focusedShift && focusedShift.inCreation
+    const focusedShiftID   = focusedShift ? focusedShift.id : 'aRondomStringTade...'
     const dummyShift:Shift = { s: 0, e: 0, b: 0, user, day, id: focusedShiftID, isOpen: isOpen }
     const cssClassesObj    = cssClasses ? cssClasses.reduce((acc, val) => ({ ...acc, [val]: true }), {}) : {} // turnes the classesArray to an obj for classnames
     const absenceIconClass = absence && (absence === 'ill' ? 'icon icon-heart' : 'icon icon-rocket')
+    const isEmpty          = !shifts.length && !inCreation && !extraHours
+    const showExtendBtn    = hovered && !highlighted && !shadowed && !fsr && !isEmpty
+    const showCreateBox    = hovered && !highlighted && !shadowed && !fsr &&  isEmpty
 
     return(
-      <fb className={cn({shiftCellMain: true, shadowed, highlighted, ...cssClassesObj })}
+      <fb className={cn({shiftCellMain: true, shadowed, highlighted, ...cssClassesObj, hovered })}
         data-target-type='shiftcell'
         data-day={day}
         data-user={user}
         data-shift-type={shiftType}
-        data-clickable={blocked ? 'blocked' : 'true'}
-        data-has-shift={(shifts.length || inCreation || extraHours) ? 'true' : ''}
-        data-has-focus={focusedShiftRef ? 'true' : ''}
+        data-clickable={blocked ?         'blocked' : 'true'}
+        data-has-shift={isEmpty ?         ''        : 'true'}
+        data-has-focus={focusedShift ? 'true'    : ''}
         style={{width: shiftCellWidth, ...style}}
       >
         { shifts.map((shift, i) =>
           <ShiftBox
             key={shift.id}
             shift={shift}
-            focused={   !!focusedShiftRef && focusedShiftRef.id === shift.id}
-            isHovered={ !!shiftUnderMouse && shiftUnderMouse.id === shift.id && !focusedShiftRef && i === shifts.length - 1}  />
+            focused={   !!focusedShift && focusedShift.id === shift.id} />
         )}
-        { inCreation  && <ShiftBox shift={dummyShift} focused inCreation/> }
-        { extraHours  && <ExtraHoursBox extraHours={extraHours} /> }
-        { shadowed    && <fb className='dropZone'></fb> }
-        { absence     && !focusedShiftRef && <fb className='absenceLayer'><fb className={absenceIconClass} /></fb> }
-        { highlighted && <fb className='highlighted' />}
+        { inCreation    && <ShiftBox shift={dummyShift} focused inCreation/> }
+        { extraHours    && <ExtraHoursBox extraHours={extraHours} /> }
+        { showCreateBox && <fb className='createShiftBox'>+</fb> }
+        { shadowed      && <fb className='dropZone'></fb> }
+        { absence       && !focusedShift && <fb className='absenceLayer'><fb className={absenceIconClass} /></fb> }
+        { highlighted   && <fb className='highlighted' />}
+        { showExtendBtn && <fb className='extendCellBtn' data-type='extend-cell-btn'>+</fb> }
       </fb>
     )
   }
