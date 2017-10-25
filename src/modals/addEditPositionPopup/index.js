@@ -11,13 +11,25 @@ import { savePositionToDB } from 'actions/positions'
 import { getNextID } from 'helpers/index'
 import './styles.css';
 
-class AddEditPositionPopup extends PureComponent {
+type State = {
+	id: string,
+	name: string,
+	shortcut: string,
+	color: string,
+}
 
-	state = {
-		id: 			this.props.position ? this.props.position.id 			 : this.getNextAvailableID(),
-		name:  		this.props.position ? this.props.position.name     : '',
-		shortcut: this.props.position ? this.props.position.shortcut : '',
-		color: 		this.props.position ? this.props.position.color 	 : getRandomColor(),
+class AddEditPositionPopup extends PureComponent {
+	state: State;
+
+	constructor(props){
+		super(props)
+
+		this.state = {
+			id: 			this.props.position ? this.props.position.id 			 : this.getNextAvailableID(),
+			name:  		this.props.position ? this.props.position.name     : '',
+			shortcut: this.props.position ? this.props.position.shortcut : '',
+			color: 		this.props.position ? this.props.position.color 	 : getRandomColor(),
+		}
 	}
 
 	getNextAvailableID = () => getNextID( 'p', this.props.positions.length + 1)

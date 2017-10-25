@@ -1,8 +1,42 @@
 .importTemplateModalMain{
     min-width: 500px;
     flex-direction: column;
+    align-items: center;
+    padding: 12px 0px;
+
+    .infoText{
+      margin-bottom: 20px;
+    }
 
     .tempItem{
+      width: 200px;
+      height: 30px;
+      border-radius: 2px;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 4px;
+      cursor: pointer;
 
+      background: #f5f6f7;
+      color: #63676d;
+      border: 1px solid #dedfe0;
+      border-bottom: 1px solid #d2d5d8;
+
+      &.selected{
+        border: 1px solid #07c;
+      	color: #FFF;
+      	background-color: #0095ff;
+      	border-color: #07c;
+      	box-shadow: inset 0 1px 0 #66bfff;
+      	padding: 0px 12px;
+
+        &:hover{
+          background: #0095ff;
+        }
+      }
+
+      &:hover{
+        background: #dedfe0;
+      }
     }
 }

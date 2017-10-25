@@ -98,6 +98,8 @@ export type DataStatus =
   'NOT_REQUESTED' |
   'LOADED'
 
+export type UserStatus = 'NOT_INVITED' | 'INVITED' | 'ACTIVE'
+
 export type InitialOvertime = {
   smartWeek: number,
   hours: number
@@ -110,8 +112,7 @@ export type User = {
   branches: {},
   email: ?string,
   weeklyMins: number,
-  //currentWeeklyHours?: number, // just used in roster after extending with a selector
-  status: 'notInvited' | 'invited' | 'active',
+  status: UserStatus,
   isAdmin?: true,
   isSuperAdmin?: true,
   workDays: WorkDays,
@@ -295,6 +296,14 @@ export type ExtraHoursDB = ExtraHours & {
   branch: string,
   branchDay: string,
   userDay: string
+}
+
+export type DayNote = {
+  id: string,
+  day: Day,
+  color: string,
+  note: string,
+  branch?: string, // its branch? because this prop gets appended before saving to DB
 }
 
 export type OvertimeStatus = 'NOT_SET' | 'START_WEEK' | 'STARTED' | 'BEFORE_START'

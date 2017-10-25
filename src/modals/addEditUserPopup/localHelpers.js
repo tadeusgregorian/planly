@@ -29,8 +29,6 @@ export const floatToMins = (inp: string | number): number => {
 }
 
 export const minsToFloat = (mins: number): string => {
-  console.log(mins)
-  console.log(Math.round((mins / 60) * 100) / 100)
   return replaceDotsWithCommas(Math.round((mins / 60) * 100) / 100)
 }
 

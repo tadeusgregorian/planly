@@ -2,7 +2,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
-import { saveUserToDB } from 'actions/index'
+import { saveUserToDB } from 'actions/users'
 import EmailStatus 			from './emailStatus'
 
 import SModal 					from 'components/sModal'
@@ -20,7 +20,7 @@ import BranchSelect 		from './branchSelect'
 
 import { getNextID, isValidEmail, isIntStr } from 'helpers/index'
 import { inpToInt, extractHours, extractMins, floatToMins, minsToFloat, getAvgs } from './localHelpers'
-import type { WorkDays } from 'types/index'
+import type { WorkDays, UserStatus } from 'types/index'
 import './styles.css'
 
 class AddEditUserPopup extends PureComponent {
@@ -28,10 +28,9 @@ class AddEditUserPopup extends PureComponent {
 		id: 							string,
 		name: 						string,
 		email: 						string,
-		color: 						string,
 		branches: 				{},
 		position: 				string,
-		status: 					'notInvited' | 'invited' | 'active',
+		status: 					UserStatus,
 		workDays: 				WorkDays,
 		weeklyHours: 			string,
 		avgHours:					number,
@@ -44,7 +43,6 @@ class AddEditUserPopup extends PureComponent {
 
 		const { users, branches, user } = this.props
 
-		const pickRandomColor 	= () => 'orange' // TODO come back and fix this
 		const getDefaultBranch 	= () => branches.length === 1 ? {[branches[0].id]: true} : {}
 		const getFreshUserID		= () => getNextID('u', users.length + 1)
 
@@ -52,10 +50,9 @@ class AddEditUserPopup extends PureComponent {
 			id: 							user ? user.id 					: getFreshUserID(),
 			name: 						user ? user.name 				: '',
 			email: 						user ? user.email 			: '',
-			color: 						user ? user.color 			: pickRandomColor(),
 			branches: 				user ? user.branches 		: getDefaultBranch(),
 			position: 				user ? user.position 		: 'p001',
-			status: 					user ? user.status 			: 'notInvited',
+			status: 					user ? user.status 			: 'NOT_INVITED',
 			workDays: 				user ? user.workDays 		: { mo: 1, tu: 1, we: 1, th: 1, fr: 1, sa: 1 },
 			weeklyHours: 			user ? minsToFloat(user.weeklyMins) 		: '0', // gets stripped away before saving to DB
 			avgHours:					user ? extractHours(user.avgDailyMins)  : 0,   // gets stripped away before saving to DB
@@ -64,7 +61,7 @@ class AddEditUserPopup extends PureComponent {
 		}
 	}
 
-	onButtonClicked = () => {
+	onSaveClicked = (invite: boolean) => {
 		const { name, email, branches, position } = this.state
 		let errorText = ''
 
@@ -76,18 +73,19 @@ class AddEditUserPopup extends PureComponent {
 		if(errorText){
 			this.setState({errorText})
 		} else {
-			this.saveUser()
+			this.saveUser(invite)
 			this.props.closeModal()
 		}
 	}
 
-	saveUser = () => {
-		const { avgHours , avgMins, weeklyHours } = this.state
+	saveUser = (sendInvite: boolean) => {
+		const { avgHours , avgMins, weeklyHours, status } = this.state
 		let dbUser  = {
 			...this.props.user,   // props like 'isAdmin' are not in state, thats why doing ...user ( from props )
 			..._.omit(this.state, ['errorText', 'avgHours', 'avgMins', 'weeklyHours']),
 			avgDailyMins: avgMins + (avgHours * 60 || 0),
-			weeklyMins: floatToMins(weeklyHours)
+			weeklyMins: 	floatToMins(weeklyHours),
+			status: 			sendInvite ? 'INVITED' : status
 		}
 
 		saveUserToDB(dbUser)
@@ -97,9 +95,16 @@ class AddEditUserPopup extends PureComponent {
 
 	initialOvertimeChanged 		= (val) => this.updateUser('initialOvertime', val)
 	nameInputChanged 					= (val) => this.updateUser('name', val)
-	emailInputChanged 				= (val) => this.updateUser('email', val)
 	positionChanged 					= (val) => this.updateUser('position', val.value)
 	branchesChanged 					= (val) => this.updateUser('branches', val.reduce((acc, val) => ({ ...acc, [val.value]: true }) , {}))
+
+	emailInputChanged = (email) => {
+		this.setState({ email })
+		if( this.props.user ){
+			const emailChanged = email !== this.props.user.email
+			this.setState({ status: emailChanged ? 'NOT_INVITED' : this.props.user.status })
+		}
+	}
 
 	weeklyHoursChanged = (weeklyHours) => {
 		this.setState({ weeklyHours, ...getAvgs(this.state.workDays, weeklyHours)})
@@ -115,6 +120,8 @@ class AddEditUserPopup extends PureComponent {
 		const { name, email, weeklyHours, position, branches, status, workDays, avgHours, avgMins } = this.state
 		const allBranches = this.props.branches
 		const allPositions = this.props.positions
+		const emailDisabled = status === 'ACTIVE'
+		const notInvited = status === 'NOT_INVITED'
 		const editMode = !!this.props.user
 
 		return (
@@ -127,7 +134,7 @@ class AddEditUserPopup extends PureComponent {
 								<FlatInput value={name} onInputChange={this.nameInputChanged} defaultText='Max Mustermann'/>
 							</FlatFormRow>
 							<FlatFormRow label='Email'>
-								<FlatInput value={email} onInputChange={this.emailInputChanged} defaultText='max@gmail.de'/>
+								<FlatInput value={email} onInputChange={this.emailInputChanged} defaultText='max@gmail.de' disabled={emailDisabled}/>
 								<EmailStatus status={status} hide={!editMode}/>
 							</FlatFormRow>
 							<FlatFormRow label='Position'>
@@ -147,13 +154,8 @@ class AddEditUserPopup extends PureComponent {
 					</fb>
 				</SModal.Body>
 				<SModal.Footer>
-					<SButton
-						right
-						label={'speichern & einladen'}
-						onClick={this.onButtonClicked}
-						disabled={false} //TODO: come and finish this here.
-						color={'#2ECC71'}
-					/>
+					<SButton right label='speichern' onClick={()=>this.onSaveClicked(false)} color={!notInvited && '#2ECC71' } />
+					<SButton label='speichern & einladen' onClick={()=>this.onSaveClicked(true)} disabled={status === 'ACTIVE'} color={notInvited && '#2ECC71'} />
 				</SModal.Footer>
 			</SModal.Main>
 		)

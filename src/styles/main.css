@@ -1171,6 +1171,8 @@ input {
   input:focus {
     border-color: #2ea8ff;
     outline: none; }
+  input::placeholder {
+    color: #bfbfbf; }
 
 .Container_Main {
   flex-direction: column; }

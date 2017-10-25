@@ -28,7 +28,7 @@ export const saveShiftEditToDB:ThunkAction = (shift: Shift, shiftEdit: MinimalSh
 export const acceptEdit: ThunkAction = (shift: Shift) => (disp, getState) => {
   const weekID  = getState().ui.roster.currentWeekID
   const newShift: MinimalShift = ( shift.edit: any)
-  const mini = getMini({ ...shift, ...newShift }, weekID)
+  const mini = getMini({ ...shift, ...newShift })
   const updates = {}
   updates[ getFBPath('shiftWeeks',     [weekID, shift.id, 's']) ] = newShift.s
   updates[ getFBPath('shiftWeeks',     [weekID, shift.id, 'e']) ] = newShift.e

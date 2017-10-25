@@ -55,3 +55,6 @@ export const enterExtraHoursMode = () =>
 
 export const leaveExtraHoursMode = () =>
   ({ type: 'LEAVE_EXTRA_HOURS_MODE' })
+
+export const hideNonWorkers = (hide: boolean) =>
+  ({ type: 'HIDE_NON_WORKES', payload: hide })

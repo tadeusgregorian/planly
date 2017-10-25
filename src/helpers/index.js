@@ -82,7 +82,7 @@ export const momToSmartWeek = (mom: moment): number => {
 export const smartWeekToMom = (smartWeek: number | string) => {
   const year = parseInt(smartWeek.toString().substr(0, 4), 10)
   const week = parseInt(smartWeek.toString().substr(4, 2), 10)
-  return moment().year(year).week(week).day(1)
+  return moment().year(year).week(week).day(1) // .day() is not localeAware. .day(1) gets always the Monday.
 }
 
 // checks if the string is in the format of a Integer

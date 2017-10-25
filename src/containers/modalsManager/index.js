@@ -14,6 +14,7 @@ import ImportTemplateModal  from 'modals/importTemplateModal'
 import InitialOvertimeModal from 'modals/initialOvertimeModal'
 import SaveAsTemplateModal  from 'modals/saveAsTemplateModal'
 import CreateTemplateModal  from 'modals/createTemplateModal'
+import DayNoteModal         from 'modals/dayNoteModal'
 
 import './styles.css'
 
@@ -47,6 +48,7 @@ class ModalsManager extends PureComponent {
             case 'INITIAL_OVERTIME'     : return <InitialOvertimeModal { ...props } />
             case 'SAVE_AS_TEMPLATE'     : return <SaveAsTemplateModal { ...props } />
             case 'CREATE_NEW_TEMPLATE'  : return <CreateTemplateModal { ...props } />
+            case 'DAY_NOTE'             : return <DayNoteModal { ...props } />
             default: return null
           }
         })}

@@ -11,6 +11,7 @@ import getInitialStartWeeks from 'selectors/initialStartWeeks'
 import getCurrentWeekSums from 'selectors/weekSumsOfCurrentWeek'
 import getCurrentOvertimes from 'selectors/overtimesOfCurrentWeek'
 import getCurrentCorrections from 'selectors/correctionsOfCurrentWeek'
+import getVisibleUsers from 'selectors/visibleUsersOfShiftBoard'
 //import getUsersAdjustedToWeek from 'selectors/usersAdjustedToWeek'
 
 import ShiftBoardHead from './shiftBoardHead'
@@ -36,6 +37,7 @@ type ConProps = {
   currentOvertimes: {[userID: string]: number},
   initialStartWeeks: {[userID: string]: string},
   currentCorrections: {[userID: string]: Correction},
+  visibleUsers: Array<User>,
   absences: Array<WeekAbsence>,
   currentUser: User,
   focusedShiftRef: ?ShiftRef,
@@ -87,15 +89,15 @@ class ShiftBoard extends PureComponent{
   }
 
   render(){
-    const { users, branch, templateMode } = this.props
-    const usersOfBranch = users.filter(u => _.keys(u.branches).includes(branch))
+    const { templateMode, currentWeekID, currentUser, visibleUsers } = this.props
+    const adminMode = !!currentUser.isAdmin
 
     return(
       <fb id="shiftBoardMain">
-        <ShiftBoardHead templateMode={templateMode}/>
+        <ShiftBoardHead templateMode={templateMode} weekID={currentWeekID} adminMode={adminMode} />
         <fb className='assignedShifts'>
           { this.renderUserRow('open', true) }
-          { usersOfBranch.map(user => this.renderUserRow(user.id, false, user)) }
+          { visibleUsers.map(user => this.renderUserRow(user.id, false, user)) }
         </fb>
       </fb>
     )
@@ -114,6 +116,7 @@ const mapStateToProps = (state: Store) => ({
   currentWeekSums: getCurrentWeekSums(state),
   currentOvertimes: getCurrentOvertimes(state),
   currentCorrections: getCurrentCorrections(state),
+  visibleUsers: getVisibleUsers(state),
   absences: state.roster.weekAbsences,
   focusedShiftRef: state.ui.roster.shiftBoard.focusedShiftRef,
   currentUser: getCurrentUser(state)

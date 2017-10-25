@@ -24,6 +24,7 @@ export const setRosterListeners: ThunkAction = () => (dispatch, getState: GetSta
   setExtraHoursListener(dispatch, getState)
   setShiftWeekListener(dispatch, getState)
   setWeekAbsenceListener(dispatch, getState)
+  setDayNotesListener(dispatch, getState)
 }
 
 const setWeekAbsenceListener = (dispatch: Dispatch, getState: GetState) => {
@@ -66,4 +67,12 @@ const setTemplatesFlatListener = (dispatch: Dispatch, getState: GetState) => {
 const setShiftEditsListener = (dispatch, getState: any) => {
   const path = getFBPath('shiftEdits')
   createFirebaseListener(dispatch, getState, 'shiftEdits', path)
+}
+
+const setDayNotesListener = (dispatch: Dispatch, getState: GetState) => {
+  const { weekID, branch }  = getWeekAndBranch(getState)
+  const path                = getFBPath('dayNotes', [weekID])
+  const queryRef            = db().ref(path).orderByChild('branch').equalTo(branch)
+
+  createFirebaseListener(dispatch, getState, 'dayNotes', path, queryRef)
 }

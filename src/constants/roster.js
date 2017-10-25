@@ -9,3 +9,4 @@ export const popOptionsWidth = 142;
 export const popOptionsHeight = 81;
 
 export const weekDays = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
+export const weekDaysGerman = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']

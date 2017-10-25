@@ -1,4 +1,6 @@
 //@flow
+import { db } from '../firebaseInit'
+import _ from 'lodash'
 import type { PreDBShift, DBShift, Shift } from 'types/index'
 import { weekDays } from 'constants/roster'
 import { getFBPath } from './../actionHelpers'
@@ -19,17 +21,23 @@ export const getShiftUpdate = (shift: Shift, weekID: string , branch: string, re
   const preDBShift  = { ...shift, branch }
   const dbShift     = toDBShift(preDBShift)
   const data        = remove ? null : dbShift
-  return {[ getFBPath('shiftWeeks') + weekID + '/' + shift.id]: data}
+  return {[ getFBPath('shiftWeeks', [weekID, shift.id])]: data}
 }
 
 export const getMiniShiftUpdate = (shift: Shift, weekID: string, remove: boolean = false) => {
-  const miniShift   = getMini(shift, weekID)
+  const miniShift   = getMini(shift)
   const data        = remove ? null : miniShift
   return {[ getFBPath('miniShiftWeeks', [weekID, shift.user, shift.id]) ]: data}
 }
 
-export const getMini = (shift: Shift, weekID: string): {} => {
+export const getMini = (shift: Shift): {mins: number, weekDay: number} => {
   const mins = shift.e - shift.s - ( shift.b || 0)
   const weekDay = weekDays.indexOf(shift.day) // as number ( 0 - 6 ) instead of type: ('mo' - 'su')
   return { mins, weekDay }
 }
+
+export const fetchTemplateWeek = (tempID: string): Promise<Array<Shift>> => (
+  db().ref(getFBPath('shiftWeeks', [tempID])).once('value').then(snap => {
+    return snap.val() ? _.values(snap.val()) : []
+  })
+)

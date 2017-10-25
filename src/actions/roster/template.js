@@ -2,7 +2,7 @@
 import { db } from '../firebaseInit'
 import { getFBPath } from './../actionHelpers'
 import { generateGuid } from 'helpers/index'
-import { toDBShift } from './localHelpers'
+import { toDBShift, getMini, fetchTemplateWeek } from './localHelpers'
 import type { GetState, ThunkAction, Shift } from 'types/index'
 
   export const savelWeekAsTemplate: ThunkAction = (name: string) => (dispatch, getState: GetState) => {
@@ -31,6 +31,17 @@ export const createNewTemplate: ThunkAction = (name: string) => (dispatch, getSt
   const flatTemp  = { id: tempID, name, branch }
   db().ref(getFBPath('templatesFlat')).child(tempID).set(flatTemp)
   dispatch({ type: 'SET_CURRENT_WEEK_ID', payload: tempID })
+}
+
+export const importTemplateWeek: ThunkAction = (tempID: string) => (dispatch, getState: GetState) => {
+  const weekID  = getState().ui.roster.currentWeekID
+
+  return fetchTemplateWeek(tempID).then(shifts => {
+    const updates = {}
+    shifts.forEach(s => updates[getFBPath('miniShiftWeeks', [weekID, s.user, s.id])] = getMini(s))
+    shifts.forEach(s => updates[getFBPath('shiftWeeks',     [weekID, s.id])]         = s)
+    return db().ref().update(updates)
+  })
 }
 
 const createTemplateWeek = (shifts: Array<Shift>, branch: string): {[id: string]: Shift} => {

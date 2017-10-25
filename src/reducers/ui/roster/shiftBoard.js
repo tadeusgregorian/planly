@@ -11,6 +11,13 @@ const focusedShiftRef = simpleReducer({
   remove_shiftWeek     : null,
 })
 
+const nonWorkersHidden = simpleReducer({
+  default              : false,
+  HIDE_NON_WORKES      : 'PAYLOAD',
+  SET_TEMPLATE_MODE    : false,
+  remove_shiftWeek     : false,
+})
+
 type OptionsExpanded = boolean
 const optionsExpanded = (state = false, a) => {
   if(a.type === 'TOGGLE_POPOVER_OPTIONS') return !state
@@ -20,10 +27,12 @@ const optionsExpanded = (state = false, a) => {
 
 export type ShiftBoard = {
   focusedShiftRef: ?ShiftRef,
-  optionsExpanded: OptionsExpanded
+  optionsExpanded: OptionsExpanded,
+  nonWorkersHidden: boolean,
 }
 
 export default combineReducers({
   focusedShiftRef,
-  optionsExpanded
+  optionsExpanded,
+  nonWorkersHidden
 })

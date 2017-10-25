@@ -6,9 +6,9 @@ export default ({status, hide}) => {
 
   const getStatus = () => {
     switch( status ){
-      case 'notInvited' : return {text: 'nicht eingeladen', icon: 'icon-error'}
-      case 'invited' :    return {text: 'Einladung gesendet', icon: 'icon-markunread'}
-      case 'active':      return {text: 'aktiv', icon: 'icon-checkmark2'}
+      case 'NOT_INVITED' : return {text: 'nicht eingeladen', icon: 'icon-error'}
+      case 'INVITED' :     return {text: 'Einladung gesendet', icon: 'icon-markunread'}
+      case 'ACTIVE':       return {text: 'aktiv', icon: 'icon-checkmark2'}
       default : throw new Error ('User doesnt have a status tade...')
     }
   }

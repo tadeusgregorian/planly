@@ -15,6 +15,7 @@ export type TargetKey =
 | 'weekSums'
 | 'corrections'
 | 'extraHours'
+| 'dayNotes'
 
 // This function holds the Information, where in the FirebaseDB each Node sits
 // If childPaths provided it concats the childPaths to a path-string.
@@ -34,6 +35,7 @@ export const getFBPath	= (target: TargetKey, childPaths?: Array<string>): string
     absences:         '/absencePlaner/absences/',
     absencesWeekly:   '/absencePlaner/absencesWeekly/',
     vacationRequests: '/absencePlaner/vacationRequests/',
+    dayNotes:         '/roster/dayNotes/',
   }
 
 	const accPath  = 'accounts/' + window.accountID

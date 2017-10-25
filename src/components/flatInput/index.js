@@ -13,6 +13,7 @@ type Props = {
 	iStyle?: {},
 	maxLength?: number | string,
 	autoFocus?: any,
+	disabled?: boolean,
 }
 
 
@@ -25,7 +26,15 @@ export default ({
 	value,
 	iStyle,
 	maxLength,
+	disabled,
 	autoFocus }: Props) => {
+
+	const getStyle = () => {
+		let style = {}
+		iStyle   && (style = { ...style, iStyle})
+		disabled && (style = { ...style, background: '#f1f1f1' })
+		return style
+	}
 
 	return(
 		<fb className='flatInputMain'>
@@ -34,9 +43,10 @@ export default ({
 				type={password ? "password" : "text"}
 				name={name}
 				maxLength={maxLength && maxLength.toString()}
-				style={iStyle && iStyle}
+				style={getStyle()}
+				disabled={disabled}
 				placeholder={defaultText}
-				onChange={(e)=> onInputChange(e.target.value)}
+				onChange={(e)=> !disabled && onInputChange(e.target.value)}
 				onKeyDown={(e)=> { if(e.key === 'Enter') onEnter && onEnter() }}
 				autoFocus={autoFocus}
 			/>
