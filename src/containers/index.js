@@ -9,9 +9,11 @@ import moment from 'moment'
 import 'moment/locale/de'
 import 'react-select/dist/react-select.css'
 import 'react-dates/lib/css/_datepicker.css';
-import Login from './login'
+
+import Login    from './login'
 import Register from './register'
-import App from './app'
+import Invite   from './register'
+import App      from './app'
 
 initIziToast()
 moment.locale('de')
@@ -39,6 +41,7 @@ class Container extends PureComponent {
           <fb className='Container_Main_Inside'>
             <Route path='/' exact   render={() => loggedIn ?  <Redirect to="/app/einstellungen/" /> : <Redirect to="/login" /> } />
             <Route path='/login' 	  render={() => loggedIn ?  <Redirect to="/app/einstellungen/" /> : <Login /> } />
+            <Route path='/invite' 	render={() => loggedIn ?  <Redirect to="/app/einstellungen/" /> : <Invite /> } />
             <Route path='/app'      render={() => loggedIn ?  <App /> : <Redirect to="/login" /> } />
             <Route path='/register' component={Register} />
           </fb>

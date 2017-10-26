@@ -8,6 +8,10 @@
     ],
     "rewrites": [
       {
+        "source": "/api/get-invite-status",
+        "function": "getInviteStatus"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
