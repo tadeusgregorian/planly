@@ -2,7 +2,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
-import { saveUserToDB } from 'actions/users'
+import { saveUserToDB, addInvitationJob } from 'actions/users'
 import EmailStatus 			from './emailStatus'
 
 import SModal 					from 'components/sModal'
@@ -20,7 +20,7 @@ import BranchSelect 		from './branchSelect'
 
 import { getNextID, isValidEmail, isIntStr } from 'helpers/index'
 import { inpToInt, extractHours, extractMins, floatToMins, minsToFloat, getAvgs } from './localHelpers'
-import type { WorkDays, UserStatus } from 'types/index'
+import type { WorkDays, UserStatus, Store } from 'types/index'
 import './styles.css'
 
 class AddEditUserPopup extends PureComponent {
@@ -79,7 +79,7 @@ class AddEditUserPopup extends PureComponent {
 	}
 
 	saveUser = (sendInvite: boolean) => {
-		const { avgHours , avgMins, weeklyHours, status } = this.state
+		const { avgHours , avgMins, weeklyHours, status, name, id,  } = this.state
 		let dbUser  = {
 			...this.props.user,   // props like 'isAdmin' are not in state, thats why doing ...user ( from props )
 			..._.omit(this.state, ['errorText', 'avgHours', 'avgMins', 'weeklyHours']),
@@ -88,7 +88,15 @@ class AddEditUserPopup extends PureComponent {
 			status: 			sendInvite ? 'INVITED' : status
 		}
 
+		sendInvite && this.sendInvitation()
 		saveUserToDB(dbUser)
+	}
+
+	sendInvitation = () => {
+		const url = 'https://plandy-91a56.firebaseapp.com' // TODO: use different URL depending on DEV / PROD environment
+		const { name, id, email } = this.state
+		const { accountID } = this.props
+		addInvitationJob({ url, name, userID: id, email, accountID })
 	}
 
 	updateUser = (key, newValue) => this.setState({[key]: newValue })
@@ -162,7 +170,7 @@ class AddEditUserPopup extends PureComponent {
 	}
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: Store) => ({
 	users: state.core.users,
 	positions: state.core.positions,
 	branches: state.core.branches,

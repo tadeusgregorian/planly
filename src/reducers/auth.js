@@ -3,7 +3,7 @@ import { combineReducers } from 'redux'
 
 type AuthState = 'loggedOut' | 'loggedOut' | 'isAuthenticating'
 const authState = simpleReducer({
-	default: 								'loggedOut',
+	default: 								'isAuthenticating',
 	USER_LOGGED_IN: 				'loggedIn',
 	USER_LOGGED_OUT: 				'loggedOut',
 	USER_IS_AUTHENTICATING: 'isAuthenticating'

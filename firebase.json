@@ -8,7 +8,7 @@
     ],
     "rewrites": [
       {
-        "source": "/api/get-invite-status",
+        "source": "/api/get-invite-status/**",
         "function": "getInviteStatus"
       },
       {

@@ -12,14 +12,14 @@ import 'react-dates/lib/css/_datepicker.css';
 
 import Login    from './login'
 import Register from './register'
-import Invite   from './register'
+import Invite   from './invite'
 import App      from './app'
 
 initIziToast()
 moment.locale('de')
 
 class Container extends PureComponent {
-  componentWillMount = () => {
+  componentDidMount = () => {
     if(!this.props.firebaseInitialized) this.props.initFirebase() // check before is a workaround for hot-reloading
     if(!this.props.firebaseAuthListener){
       // giving registerInitialListeners as a callback cause i want it to be called on every login by firebase
@@ -29,7 +29,7 @@ class Container extends PureComponent {
   }
 
   render() {
-    const { authState } = this.props
+    const { authState }     = this.props
     const loggedIn 					=  authState === 'loggedIn'
     const isAuthenticating 	=  authState === 'isAuthenticating'
 
@@ -39,10 +39,10 @@ class Container extends PureComponent {
       <Router>
         <fb className="Container_Main">
           <fb className='Container_Main_Inside'>
-            <Route path='/' exact   render={() => loggedIn ?  <Redirect to="/app/einstellungen/" /> : <Redirect to="/login" /> } />
-            <Route path='/login' 	  render={() => loggedIn ?  <Redirect to="/app/einstellungen/" /> : <Login /> } />
-            <Route path='/invite' 	render={() => loggedIn ?  <Redirect to="/app/einstellungen/" /> : <Invite /> } />
-            <Route path='/app'      render={() => loggedIn ?  <App /> : <Redirect to="/login" /> } />
+            <Route path='/invite/:aID/:uID' render={(props) =>  <Invite { ...props } /> } />
+            <Route path='/'   exact render={() => loggedIn ? <Redirect to="/app/einstellungen/" /> : <Redirect to="/login" /> } />
+            <Route path='/login'    render={() => loggedIn ? <Redirect to="/app/einstellungen/" /> : <Login /> } />
+            <Route path='/app'      render={() => loggedIn ? <App /> : <Redirect to="/login" /> } />
             <Route path='/register' component={Register} />
           </fb>
           <ModalsManager />

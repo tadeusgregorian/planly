@@ -1,7 +1,11 @@
 const functions       = require('firebase-functions')
-const sumsUpdater     = require('./sumsUpdater')
-const absenceHandler  = require('./absenceHandler')
-const invites         = require('./invites')
+
+const sumsUpdater         = require('./sumsUpdater')
+const absenceHandler      = require('./absenceHandler')
+const reqInviteStatus     = require('./invites')
+const sendInvitationMail  = require('./mailSender')
+const admin               = require('firebase-admin')
+admin.initializeApp(functions.config().firebase)
 
 exports.absenceFanOut = functions.database
   .ref('/accounts/{accountID}/absencePlaner/absences/{absenceID}')
@@ -30,4 +34,13 @@ exports.absencesWeeklyChanged = functions.database
     return sumsUpdater.updateWeekSums(rootRef, { accountID, weekID, userID: user })
   })
 
-exports.getInviteStatus = functions.https.onRequest(invites.getInviteStatus)
+exports.onEmailInviteAdded = functions.database
+  .ref('/emailInvites/{inviteID}')
+  .onWrite(event => {
+    const rootRef = event.data.adminRef.root
+    const { status, accountID, userID, name, url, email } = event.data.val()
+    if(status !== 'PENDING') return
+    return sendInvitationMail({ rootRef, accountID, userID, name, url, email })
+  })
+
+exports.getInviteStatus = functions.https.onRequest(reqInviteStatus(admin))

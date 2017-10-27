@@ -18,15 +18,15 @@ export function saveUserToDB(user: User) {
 	db().ref(getFBPath('users')).child(user.id).set(user)
 }
 
-export const sendEmailInvite = (userID: string, name: string, email: string, accountID: string) => {
-	const inviteID = db().ref('emailInvites').push().key
-	db().ref('emailInvites').child(inviteID).set({
-		inviteID,
+type JobData = {userID: string, email: string, name: string, accountID:string, url: string}
+export const addInvitationJob = ({ userID, email, name, accountID, url }: JobData) => {
+	const key = db().ref('emailInvites').push().key
+	db().ref('emailInvites').child(key).set({
 		userID,
-		name,
 		email,
+		name,
 		accountID,
-		timestamp: firebase.database.ServerValue.TIMESTAMP,
-		status: 'pending'
-	})
+		url,
+		status: 'PENDING',
+		timestamp: firebase.database.ServerValue.TIMESTAMP })
 }
