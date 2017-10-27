@@ -1,30 +1,31 @@
-.adminpanel-body .userListItem {
+#adminPanelUserItem {
   font-size: 16px;
-  border-bottom: 1px solid rgba(211, 211, 211, 0.68);
-  padding: 2px 20px 2px 30px;
+  align-items: center;
   color: grey;
   justify-content: flex-start;
-  cursor: pointer; }
-  .adminpanel-body .userListItem:hover {
+  cursor: pointer;
+  flex: 1; }
+  #adminPanelUserItem:hover {
     background-color: #f4fcff; }
-  .adminpanel-body .userListItem .color-box {
+  #adminPanelUserItem .color-box {
     height: 20px;
     width: 20px;
     flex: 0 0 auto;
     border-radius: 3px;
     margin: 9px; }
-  .adminpanel-body .userListItem .item {
+  #adminPanelUserItem .item {
     font-size: 14px;
-    flex: 1 0 auto;
+    flex: 1;
     padding: 6px;
-    align-items: center;
-    max-width: 180px; }
-  .adminpanel-body .userListItem .name {
-    font-size: 16px; }
+    align-items: center; }
+  #adminPanelUserItem .name {
+    font-size: 16px;
+    width: 180px;
+    flex: 1 1 auto; }
 
-.adminpanel-body .deleted {
+.deleted {
   color: lightgrey; }
-  .adminpanel-body .deleted .reactivateUserButton {
+  .deleted .reactivateUserButton {
     flex: 0 0 auto;
     margin-right: 70px;
     font-weight: 600;
@@ -35,12 +36,12 @@
     align-items: center;
     cursor: pointer; }
 
-.adminpanel-body .icon {
+.icon {
   justify-content: center;
   align-items: center;
   font-size: 14px;
   margin-right: 6px; }
 
-.adminpanel-body .emailIcon {
+.emailIcon {
   font-size: 20px;
   margin-right: 10px; }

@@ -5,20 +5,18 @@ export default class UserElement extends PureComponent {
 
 	render() {
 		const {userClicked, user, position } = this.props
-		const {deleted, color, name} = user
+		const {deleted, name} = user
 
 		if(deleted) {
 			return (
-				<fb className='userListItem deleted'>
-					<fb className="color-box" style={{backgroundColor: 'lightgrey' }}></fb>
+				<fb className='adminPanelUserItem deleted'>
 					<fb className="userName">{name}</fb>
 				</fb>
 			)
 		}
 
 		return(
-  		<fb className='userListItem' onClick={() => userClicked(user)}>
-    		<fb className="color-box" style={{background: color || 'lightgrey' }}></fb>
+  		<fb id='adminPanelUserItem' onClick={() => userClicked(user)}>
 				<fb className="item name">{name}</fb>
 				<fb className="item position" style={{color: position.color}}>
 					<fb className="icon positinIcon icon-bookmark"></fb>

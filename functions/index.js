@@ -38,9 +38,10 @@ exports.onEmailInviteAdded = functions.database
   .ref('/emailInvites/{inviteID}')
   .onWrite(event => {
     const rootRef = event.data.adminRef.root
+    const { inviteID } = event.params
     const { status, accountID, userID, name, url, email } = event.data.val()
     if(status !== 'PENDING') return
-    return sendInvitationMail({ rootRef, accountID, userID, name, url, email })
+    return sendInvitationMail({ rootRef, inviteID, accountID, userID, name, url, email })
   })
 
 exports.getInviteStatus = functions.https.onRequest(reqInviteStatus(admin))

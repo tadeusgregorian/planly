@@ -5,7 +5,7 @@ let Mailjet = require('node-mailjet').connect(
 
 module.exports = (inviteData) => {
 
-  const { rootRef, accountID, userID, name, email, url } = inviteData
+  const { rootRef, inviteID, accountID, userID, name, email, url } = inviteData
 
   //TODO: check if mail is correct Mail format!
   console.log(`user ${name} on account: ${accountID} gets mail a to ${email}`);
@@ -29,7 +29,9 @@ module.exports = (inviteData) => {
   }
 
   return sendEmail.request(emailData)
-    .then(result => console.log(result.body))
-    .catch(error => console.log(error))
-
+    .then((res) => rootRef.child(`emailInvites/${inviteID}/status`).set('SENT'))
+    .catch((err) => {
+      console.log('Mail sending failed: ' + err)
+      return rootRef.child(`emailInvites/${inviteID}/status`).set('FAILED')
+    })
 }
