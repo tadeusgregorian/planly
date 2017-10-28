@@ -50,10 +50,10 @@ const getEmptyAccount = (adminEmail): DBAccount => ({
   },
   positions: {
     p001: {
-      id: 'p001', name: 'Manager', color: 'orange', shortcut: 'MAN'
+      id: 'p001', name: 'Manager', color: 'orange', shortcut: 'MAN', nr: 1
     },
     p002: {
-      id: 'p002', name: 'Mitarbeiter', color: 'blue', shortcut: 'MIT'
+      id: 'p002', name: 'Mitarbeiter', color: 'blue', shortcut: 'MIT', nr: 2
     }
   },
   roster: {

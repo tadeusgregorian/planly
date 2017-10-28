@@ -1,6 +1,6 @@
 //@flow
 import React, { PureComponent } from 'react'
-import type { Shift, Shifts, Position, ShiftRef, Day, AbsenceType, ExtraHours } from 'types/index'
+import type { PreShift, Shifts, Position, ShiftRef, Day, AbsenceType, ExtraHours } from 'types/index'
 import { shiftCellWidth } from 'constants/roster'
 import ExtraHoursBox from './extraHoursBox'
 import ShiftBox from '../../shiftBox'
@@ -45,15 +45,15 @@ export default class ShiftCell extends PureComponent {
       highlighted } = this.props
     const fsr = this.props.focusedShiftRef
 
-    const focusedShift     = fsr && fsr.day === day && fsr.user === user ? fsr : null
-    const inCreation       = focusedShift && focusedShift.inCreation
-    const focusedShiftID   = focusedShift ? focusedShift.id : 'aRondomStringTade...'
-    const dummyShift:Shift = { s: 0, e: 0, b: 0, user, day, id: focusedShiftID, isOpen: isOpen }
-    const cssClassesObj    = cssClasses ? cssClasses.reduce((acc, val) => ({ ...acc, [val]: true }), {}) : {} // turnes the classesArray to an obj for classnames
-    const absenceIconClass = absence && (absence === 'ill' ? 'icon icon-heart' : 'icon icon-rocket')
-    const isEmpty          = !shifts.length && !inCreation && !extraHours
-    const showExtendBtn    = hovered && !highlighted && !shadowed && !fsr && !isEmpty
-    const showCreateBox    = hovered && !highlighted && !shadowed && !fsr &&  isEmpty
+    const focusedShift        = fsr && fsr.day === day && fsr.user === user ? fsr : null
+    const inCreation          = focusedShift && focusedShift.inCreation
+    const focusedShiftID      = focusedShift ? focusedShift.id : 'aRondomStringTade...'
+    const dummyShift:PreShift = { s: 0, e: 0, b: 0, user, day, id: focusedShiftID, isOpen: isOpen }
+    const cssClassesObj       = cssClasses ? cssClasses.reduce((acc, val) => ({ ...acc, [val]: true }), {}) : {} // turnes the classesArray to an obj for classnames
+    const absenceIconClass    = absence && (absence === 'ill' ? 'icon icon-heart' : 'icon icon-rocket')
+    const isEmpty             = !shifts.length && !inCreation && !extraHours
+    const showExtendBtn       = hovered && !highlighted && !shadowed && !fsr && !isEmpty
+    const showCreateBox       = hovered && !highlighted && !shadowed && !fsr &&  isEmpty
 
     return(
       <fb className={cn({shiftCellMain: true, shadowed, highlighted, ...cssClassesObj, hovered })}
@@ -77,7 +77,7 @@ export default class ShiftCell extends PureComponent {
         { showCreateBox && <fb className='createShiftBox'>+</fb> }
         { shadowed      && <fb className='dropZone'></fb> }
         { absence       && !focusedShift && <fb className='absenceLayer'><fb className={absenceIconClass} /></fb> }
-        { highlighted   && <fb className='highlighted' />}
+        { highlighted   && <fb className='highlightedCell' />}
         { showExtendBtn && <fb className='extendCellBtn' data-type='extend-cell-btn'>+</fb> }
       </fb>
     )

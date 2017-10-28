@@ -20,11 +20,11 @@ import PositionBar    from '../components/positionBar'
 import LocationBar     from '../components/locationBar'
 import ShiftActionBar  from './shiftActionBar'
 
-import type { Shift, ShiftRef, Position, User, Store, MinimalShift, Branch, Location } from 'types/index'
+import type { PreShift, ShiftRef, Position, User, Store, MinimalShift, Branch, Location } from 'types/index'
 import './styles.css'
 
 type OwnProps = {
-  shift: Shift,
+  shift: PreShift,
   inCreation?: boolean,
 }
 
@@ -36,8 +36,8 @@ type ConProps = {
   focusedShiftRef: ?ShiftRef,
   branch: ?Branch,
   toggleOptions: ()=>{},
-  saveShiftToDB: (Shift, ?boolean)=>any,
-  saveShiftEditToDB: (Shift, MinimalShift)=>any,
+  saveShiftToDB: (PreShift, ?boolean)=>any,
+  saveShiftEditToDB: (PreShift, MinimalShift)=>any,
   openNotesModal: (string, Function)=>any,
   unfocusShift: ()=>{},
   updateNoteOfShift: (string, string)=>any
@@ -152,7 +152,7 @@ class ModifyShiftBox extends PureComponent{
 
   noteEdited = (noteTxt) => {
     this.setState({note: noteTxt})
-    !this.props.inCreation && this.props.updateNoteOfShift(this.props.shift.id, noteTxt)
+    !this.props.inCreation && this.props.updateNoteOfShift(this.props.shift.id, noteTxt) // we update shit.note -> so the user doesnt need to save that shift in order to save the note
   }
 
   locationPicked = (locID: string) => this.setState({location: locID, locationBoxOpen: false})
@@ -162,7 +162,7 @@ class ModifyShiftBox extends PureComponent{
 
   render(){
     const { shift, currentUser, branch, positions } = this.props
-    const { locationBoxOpen, positionBoxOpen, location, position } = this.state
+    const { locationBoxOpen, positionBoxOpen, location, position, note } = this.state
     const locations: Array<Location> = (branch && branch.locations && _.values(branch.locations)) || []
     const isPending = !!this.props.shift.edit
 
@@ -182,9 +182,9 @@ class ModifyShiftBox extends PureComponent{
           pickPos={this.positionPicked}
           pickedPos={position} />}
         { !isPending && <ShiftActionBar
-          shift={shift}
+          hasNote={!!note}
           inCreation={!!this.props.inCreation}
-          withLocations={!!(locations && locations.length)}
+          withLocations={!!(locations && locations.filter(l => !l.deleted).length)}
           unfocusShift={this.props.unfocusShift}
           toggleOptions={this.props.toggleOptions}
           toggleLocationBox={this.toggleLocationBox}

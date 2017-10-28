@@ -16,6 +16,7 @@ type State = {
 	name: string,
 	shortcut: string,
 	color: string,
+	nr: number,
 }
 
 class AddEditPositionPopup extends PureComponent {
@@ -26,13 +27,15 @@ class AddEditPositionPopup extends PureComponent {
 
 		this.state = {
 			id: 			this.props.position ? this.props.position.id 			 : this.getNextAvailableID(),
+			nr: 			this.props.position ? this.props.position.nr 			 : this.getNextNr(),
 			name:  		this.props.position ? this.props.position.name     : '',
 			shortcut: this.props.position ? this.props.position.shortcut : '',
 			color: 		this.props.position ? this.props.position.color 	 : getRandomColor(),
 		}
 	}
 
-	getNextAvailableID = () => getNextID( 'p', this.props.positions.length + 1)
+	getNextNr          = () => this.props.positions.length + 1
+	getNextAvailableID = () => getNextID( 'p', this.getNextNr())
 
 	saveButtonClicked = () => {
 		savePositionToDB(this.state)

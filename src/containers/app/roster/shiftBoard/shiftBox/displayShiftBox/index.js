@@ -8,7 +8,7 @@ import ShiftTimesBar from '../components/shiftTimesBar'
 import LocationBar   from '../components/locationBar'
 import PositionBar   from '../components/positionBar'
 
-import type { Branch, Shift, Location, Store, Position } from 'types/index'
+import type { Branch, PreShift, Location, Store, Position } from 'types/index'
 import './styles.css'
 
 type ConProps = {
@@ -17,7 +17,7 @@ type ConProps = {
 }
 
 type OwnProps = {
-  shift: Shift,
+  shift: PreShift,
 }
 
 type Props = OwnProps & ConProps

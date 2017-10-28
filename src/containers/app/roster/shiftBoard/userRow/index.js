@@ -52,8 +52,9 @@ export default class UserRow extends PureComponent{
       cellUnderMouse,
       absences } = this.props
 
-      const weeklyMins = user ? user.weeklyMins : 0
-      const weekSum = templateMode ? calculateWeekSum(shifts) : this.props.weekSum
+      const isAdmin     = currentUser.isAdmin
+      const weeklyMins  = user ? user.weeklyMins : 0
+      const weekSum     = templateMode ? calculateWeekSum(shifts) : this.props.weekSum
 
     return(
       <fb className="userRowMain">
@@ -77,10 +78,10 @@ export default class UserRow extends PureComponent{
         <fb className='shiftCellsWrapper'>
           { weekDays.map((day, dayNum) => {
             const dayShifts       = shifts.filter(s => s.day === day)
-            const extraHoursOfDay = extraHours.find(s => s.day === day) // we do find / not filter -> not more than one per day possible !
+            const extraHoursOfDay = (isAdmin || userID === currentUser.id) ? extraHours.find(s => s.day === day) : null // we do find / not filter -> not more than one per day possible !
             const shadowed        = shadowedDay === day
             const highlighted     = highlightedDay === day
-            const blocked         = !currentUser.isAdmin && currentUser.id !== userID
+            const blocked         = !isAdmin && currentUser.id !== userID
             const absence         = absences.reduce((acc, abs) => dayNum >= abs.firstWeekDay && dayNum <= abs.lastWeekDay && abs.type , false) // holds the absenceType if is absent
             return <ShiftCell
               day={day}

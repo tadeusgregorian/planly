@@ -16,7 +16,7 @@ export default class UserElement extends PureComponent {
 		}
 
 		return(
-  		<fb id='adminPanelUserItem' onClick={() => userClicked(user)}>
+  		<fb className='adminPanelUserItem' onClick={() => userClicked(user)}>
 				<fb className="item name">{name}</fb>
 				<fb className="item position" style={{color: position.color}}>
 					<fb className="icon positinIcon icon-bookmark"></fb>

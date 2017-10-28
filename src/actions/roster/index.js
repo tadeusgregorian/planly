@@ -3,9 +3,9 @@
 import { db } from '../firebaseInit'
 import { getFBPath } from './../actionHelpers'
 import { getShiftUpdate, getMiniShiftUpdate, getMini } from './localHelpers'
-import type { Shift, ThunkAction, GetState, MinimalShift } from 'types/index'
+import type { PreShift, Shift, ThunkAction, GetState, MinimalShift } from 'types/index'
 
-export const saveShiftToDB:ThunkAction = (shift: Shift, deleteIt = false) => (disp, getState: GetState) => {
+export const saveShiftToDB:ThunkAction = (shift: PreShift, deleteIt = false) => (disp, getState: GetState) => {
   const branch        = getState().ui.roster.currentBranch
   const weekID        = getState().ui.roster.currentWeekID
   const templateMode  = getState().ui.roster.templateMode
@@ -16,7 +16,7 @@ export const saveShiftToDB:ThunkAction = (shift: Shift, deleteIt = false) => (di
   db().ref().update({ ...update1, ...update2 })
 }
 
-export const saveShiftEditToDB:ThunkAction = (shift: Shift, shiftEdit: MinimalShift ) => (disp, getState) => {
+export const saveShiftEditToDB:ThunkAction = (shift: PreShift, shiftEdit: MinimalShift ) => (disp, getState) => {
   const weekID  = getState().ui.roster.currentWeekID
   const branch  = getState().ui.roster.currentBranch
   const update1 = {[ getFBPath('shiftEdits',     [shift.id]) ]: { shiftID: shift.id, branch, weekID }}
@@ -25,7 +25,7 @@ export const saveShiftEditToDB:ThunkAction = (shift: Shift, shiftEdit: MinimalSh
   db().ref().update({ ...update1, ...update2, ...update3 })
 }
 
-export const acceptEdit: ThunkAction = (shift: Shift) => (disp, getState) => {
+export const acceptEdit: ThunkAction = (shift: PreShift) => (disp, getState) => {
   const weekID  = getState().ui.roster.currentWeekID
   const newShift: MinimalShift = ( shift.edit: any)
   const mini = getMini({ ...shift, ...newShift })
@@ -46,12 +46,12 @@ export const rejectEdit: ThunkAction = (shift: Shift) => (disp, getState) => {
   db().ref().update({ ...update1, ...update2})
 }
 
-export const assignOpenShift:ThunkAction = (openShift: Shift, user: string) => (disp, getState: GetState) => {
+export const assignOpenShift:ThunkAction = (openShift: PreShift, user: string) => (disp, getState: GetState) => {
   const weekID        = getState().ui.roster.currentWeekID
   const branch        = getState().ui.roster.currentBranch
   const templateMode  = getState().ui.roster.templateMode
   const { s, e, b, day, id } = openShift
-  const shift: Shift = { s, e, b, day, user, id }
+  const shift: PreShift = { s, e, b, day, user, id }
   const update1 = getShiftUpdate(openShift, weekID, branch, true) // deleting openShift
   const update2 = getShiftUpdate(shift, weekID, branch)           // creating new userShift
   const update3 = templateMode ? {} : getMiniShiftUpdate(shift, weekID)

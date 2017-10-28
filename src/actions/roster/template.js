@@ -46,9 +46,6 @@ export const importTemplateWeek: ThunkAction = (tempID: string) => (dispatch, ge
 
 const createTemplateWeek = (shifts: Array<Shift>, branch: string): {[id: string]: Shift} => {
   const tempWeek = {}
-  shifts.forEach(s => {
-    const dbShift = toDBShift({ ...s, branch, edit: null }) // we dont want edits in the templateWeek.
-    tempWeek[s.id] = dbShift
-  })
+  shifts.forEach(s => tempWeek[s.id] = { ...s, edit: null }) // dont want no edits in the template
   return tempWeek
 }

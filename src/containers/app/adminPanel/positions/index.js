@@ -1,14 +1,61 @@
+//@flow
 import React from 'react';
 import {connect} from 'react-redux';
+import _ from 'lodash'
 import PositionElement from './position';
+import { rearrangePositions } from 'actions/positions'
 import { openModal } from 'actions/ui'
 import SButton from 'components/sButton'
+import type { Position, Store } from 'types/index'
+import {SortableContainer, SortableElement, SortableHandle, arrayMove} from 'react-sortable-hoc';
+
 import './styles.css';
 
+const DragHandle = SortableHandle(() => <fb className='dragHandle'>|||</fb>)
+
+const SortableItem = SortableElement(({position, onClick}) =>
+  <li className='positionItemWrapper'>
+		<DragHandle />
+		<PositionElement
+			position={position}
+			onClick={onClick}
+			key={position.id}
+		/>
+	</li>
+);
+
+const SortableList = SortableContainer(({items, onClick}) => {
+	return (
+		<ul>
+			{_.sortBy(items, 'nr').map((position, i) => (
+				<SortableItem
+					key={position.id}
+					index={position.nr}
+					position={position}
+					onClick={onClick}
+				/>
+			))}
+		</ul>
+	);
+});
+
+type Props = { positions: Array<Position>, openModal: Function }
+
 class AdminpanelPositions extends React.Component {
+  props: Props
 
 	openAddEditPositionPopup = (position = null) => {
 		this.props.openModal('ADD_EDIT_POSITION', { position })
+	}
+
+	onSortEnd = ({oldIndex, newIndex}) => {
+    const { positions } = this.props
+    const sequence = []
+    positions.forEach(p => sequence[p.nr] = p.id )
+    const item = sequence.splice(oldIndex, 1)[0]
+    sequence.splice(newIndex, 0, item)
+    const newWorldOrder = positions.map(p => ({ id: p.id, nr: sequence.indexOf(p.id) }))
+    rearrangePositions(newWorldOrder);
 	}
 
 	render() {
@@ -18,15 +65,14 @@ class AdminpanelPositions extends React.Component {
 					<fb className="headlineText">Filialen verwalten</fb>
 					<SButton slick icon='icon-add' label='Position hinzufügen' onClick={() => this.openAddEditPositionPopup()} />
 				</fb>
-				{this.props.positions.map(position => (
-					<PositionElement
-						position={position}
-						positionClicked={this.openAddEditPositionPopup}
-						key={position.id}
-					/>))
-				}
+				<SortableList
+					useDragHandle={true}
+					onSortEnd={this.onSortEnd}
+					items={this.props.positions}
+					onClick={this.openAddEditPositionPopup}
+				/>
 			</div>
-		);
+		)
 	}
 }
 
@@ -34,7 +80,7 @@ const mapDispatchToProps = {
 	openModal
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: Store) => ({
 	positions: 	state.core.positions,
 })
 

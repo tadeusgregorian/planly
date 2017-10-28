@@ -4,9 +4,11 @@ import type { ThunkAction, GetState, ShiftRef, CellRef } from 'types/index'
 import { getLastTempIDOfBranch } from './localHelpers'
 
 export const changeCurrentBranch: ThunkAction = (branchID: string) => (dispatch, getState: GetState) => {
-  if(getState().ui.roster.templateMode){
-    dispatch({ type: 'SET_CURRENT_WEEK_ID', payload: getLastTempIDOfBranch(getState, branchID) })
-  }
+  const tempMode = !!getState().ui.roster.templateMode
+  const tempID   = getLastTempIDOfBranch(getState, branchID)
+
+   tempMode && dispatch({ type: 'SET_CURRENT_WEEK_ID', payload: tempID })
+  !tempMode && localStorage.setItem('currentBranch', branchID )
   dispatch({ type: 'SET_CURRENT_BRANCH', payload: branchID })
 }
 

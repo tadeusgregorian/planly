@@ -1,31 +1,11 @@
 
-.userItemWrapper{
-	height: 42px;
-	display: flex;
-	flex: 1 1 auto;
-	border-bottom: 1px solid rgba(211, 211, 211, 0.68);
-	padding: 2px 2px 2px 10px;
-
-	.dragHandle{
-		align-items: center;
-		padding-bottom: 2px;
-		color: lightgrey;
-    margin-right: 4px;
-		cursor: move;
-	}
-}
-
 .adminpanelUsers{
 		width:100%;
 		flex-direction: column;
 		display: flex;
 
-		ul{
-			margin: 0px;
-			padding: 0px;
-		}
-
 	.headline{
+
 		font-size: 16px;
 		border-bottom: 1px solid rgba(211, 211, 211, 0.68);
 		padding: 12px;

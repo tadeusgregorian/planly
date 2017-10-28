@@ -6,7 +6,7 @@ import shiftBoard from './shiftBoard'
 import type { ShiftBoard } from './shiftBoard'
 
 const currentBranch = simpleReducer({
-  default: 'b001',
+  default: localStorage.currentBranch || 'b001',
   SET_CURRENT_BRANCH: 'PAYLOAD'
 })
 

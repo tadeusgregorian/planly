@@ -18,10 +18,6 @@ type ConProps = {
 
 const extraHoursBox = ({extraHours, openModal}: ConProps & OwnProps) => {
 
-  const onClick = () => {
-    openModal('EXTRA_HOURS',  extraHours)
-  }
-
   const roundDown = (num) => Math.floor(Math.abs(num) / 60)
   const withSign  = (num) => num < 0 ? '- ' + num.toString().substring(1) : '+ ' + num
 
@@ -29,7 +25,7 @@ const extraHoursBox = ({extraHours, openModal}: ConProps & OwnProps) => {
   const overtimeComplete = overtimeShort + ' h | ' + minToTime(extraHours.mins).minutes + '  min'
 
   return(
-    <fb className='extraHoursBoxMain' onClick={onClick}>
+    <fb className='extraHoursBoxMain' data-type='extra-hours-box' data-id={extraHours.id}>
       {overtimeComplete}
     </fb>
   )

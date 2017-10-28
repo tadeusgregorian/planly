@@ -1160,6 +1160,10 @@ body {
   margin: 0px;
   background-color: #E9EBEE; }
 
+ul {
+  margin: 0px;
+  padding: 0px; }
+
 fb {
   display: flex;
   box-sizing: border-box; }

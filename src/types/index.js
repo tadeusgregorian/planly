@@ -113,10 +113,11 @@ export type User = {
   email: ?string,
   weeklyMins: number,
   status: UserStatus,
-  isAdmin?: true,
+  isAdmin?: true | null, // can be set to null -> so it gets removed on DB
   isSuperAdmin?: true,
   workDays: WorkDays,
   avgDailyMins: number,
+  deleted?: true | null, // can be set to null -> so it gets removed on DB
 }
 
 export type Users = Array<User>
@@ -125,6 +126,7 @@ export type Position = {
   id: string,
   name: string,
   color: string,
+  nr: number, // a Intiger used for sorting
   shortcut: string,
 }
 export type Positions = Array<Position>
@@ -169,22 +171,23 @@ export type MinimalShift = {
   b:  number,
 }
 
-export type Shift = {
+
+
+export type PreShift = {
   id: string,
   s: number,
   e: number,
   b: number,
   day: Day,
   user: string,
-  edit?: MinimalShift,
+  edit?: ?MinimalShift,
   note?: ?string,
   position?: ?string,
   isOpen?: ?boolean,
   location?: ?string
 }
-export type Shifts = Array<Shift>
 
-export type PreDBShift = {
+export type Shift = {
   id: string,
   s: number,
   e: number,
@@ -196,13 +199,16 @@ export type PreDBShift = {
   note?: ?string,
   position?: ?string,
   isOpen?: ?boolean,
-  location?: ?string
+  location?: ?string,
+  branchDay: string,
+  userDay: string,
 }
 
-export type DBShift = {
-  branchDay: string,
-  userDay: string
-} & PreDBShift
+export type Shifts = Array<Shift>
+// export type DBShift = {
+//   branchDay: string,
+//   userDay: string
+// } & PreDBShift
 
 export type CellRef = {
   day: Day,

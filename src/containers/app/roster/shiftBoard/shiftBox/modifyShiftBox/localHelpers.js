@@ -1,6 +1,6 @@
 //@flow
 
-import type { Shift, CellRef, ShiftInput, MinimalShift } from 'types/index'
+import type { PreShift, CellRef, ShiftInput, MinimalShift } from 'types/index'
 import { timeStringToMin, minToTimeString } from 'helpers/index'
 
 export const cellChanged = (prevCell: CellRef, nextCell: CellRef) => {
@@ -65,7 +65,7 @@ export const zipShift = (shiftObj: ShiftInput): MinimalShift => ({
   b: cleanBreak(shiftObj.breakMinutes)
 })
 
-export const shiftToShiftInput = (shift: Shift): ShiftInput => {
+export const shiftToShiftInput = (shift: PreShift): ShiftInput => {
   const startTime     = Number.isInteger(shift.s) ? minToTimeString(shift.s) : ''
   const endTime       = Number.isInteger(shift.e) ? minToTimeString(shift.e) : ''
   const breakMinutes  = shift.b && Number.isInteger(shift.b) ? shift.b.toString()  : ''

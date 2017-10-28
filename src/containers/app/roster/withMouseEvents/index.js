@@ -12,7 +12,7 @@ import getCurrentUser from 'selectors/currentUser'
 
 import PickedUpShift        from './pickedUpShift'
 
-import type { User, CellRef, ShiftRef, Shift, Shifts, Store, OvertimeStatus } from 'types/index'
+import type { User, CellRef, ShiftRef, PreShift, Shifts, Store, OvertimeStatus } from 'types/index'
 
 type MSProps = {
   currentUser: User,
@@ -24,7 +24,7 @@ type MSProps = {
 type MAProps = {
   focusShift: (ShiftRef)=>any,
   createShift: (CellRef)=>any,
-  saveShiftToDB: (Shift)=>any,
+  saveShiftToDB: (PreShift)=>any,
   openModal: (string, ?{}) => any,
   leaveExtraHoursMode: ActionCreator,
 }
@@ -124,6 +124,11 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
     this.props.leaveExtraHoursMode()
   }
 
+  extraHoursClicked = (target: any) =>{
+    const id   = target.getAttribute('data-id')
+    this.props.openModal('EXTRA_HOURS', { id })
+  }
+
   oTimeCellClicked = (target: any) => {
     const user   = target.getAttribute('data-user')
     const status: OvertimeStatus = (target.getAttribute('data-status'): any)
@@ -136,14 +141,18 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
       const targetShift = getParentShift(target)
       const targetCell = getParentCell(target)
 
-      if(this.props.extraHoursMode && targetCell)
-        return this.extraHoursSelected(targetCell)
+      if(this.props.extraHoursMode && targetCell) // to create new ExtraHours
+        return this.adminMode && this.extraHoursSelected(targetCell)
 
-      if(target && target.getAttribute('data-type') === 'extend-cell-btn')
-        return this.extendCellClicked(target)
+      if(target && target.getAttribute('data-type') === 'extra-hours-box') // to open existing ExtraHours
+        return this.adminMode && this.extraHoursClicked(target)
 
-      if(target && target.getAttribute('data-type') === 'pre-otime-cell')
-        return this.oTimeCellClicked(target)
+      if(target && target.getAttribute('data-type') === 'extend-cell-btn') // to add another Shift to a shiftCell
+        return this.adminMode && this.extendCellClicked(target)
+
+      if(target && target.getAttribute('data-type') === 'pre-otime-cell') // overtimeCell Left or Right 
+        return this.adminMode && this.oTimeCellClicked(target)
+
 
       if(targetShift && (targetShift.user === this.currentUser || this.adminMode))
         return this.props.focusShift(targetShift)

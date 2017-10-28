@@ -1,7 +1,7 @@
 //@flow
 
 import React from 'react'
-import type { Shift } from 'types/index'
+//import type { PreShift } from 'types/index'
 //import { shiftCellWidth } from 'constants/roster'
 import './styles.css'
 
@@ -13,11 +13,13 @@ type Props = {
   toggleLocationBox: Function,
   showShiftNote: Function,
   deleteShift: Function,
-  shift: Shift,
+  //shift: PreShift,
+  hasNote: boolean,
 }
 
 export default (props: Props) => {
-  const hasNote = !!props.shift.note ? ' highlighted' : ''
+  const hasNote = !!props.hasNote ? ' highlighted' : ''
+
 
   return(
     <fb className="shiftActionBarMain">
@@ -25,9 +27,9 @@ export default (props: Props) => {
       { props.withLocations &&
         <fb className='btn locationBtn icon icon-download' onClick={props.toggleLocationBox} />
       }
-      <fb className='btn optionsBtn icon icon-dehaze' onClick={props.toggleOptions}></fb>
       <fb className={'btn noteBtn icon icon-comment' + hasNote} onClick={props.showShiftNote} />
-      <fb className='btn closeBtn icon icon-close' onClick={props.unfocusShift}></fb>
+      <fb className='btn optionsBtn icon icon-done'   onClick={props.toggleOptions}></fb>
+      <fb className='btn closeBtn icon icon-close'    onClick={props.unfocusShift}></fb>
     </fb>
   )
 }

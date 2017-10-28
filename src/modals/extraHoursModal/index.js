@@ -16,9 +16,9 @@ import type { Store, User, ExtraHours, Day } from 'types/index'
 import './styles.css'
 
 type OwnProps = {
-  user: string,
-  day: Day,
-  id: string,
+  user: ?string, // user and day are non-null if currently new extraHours are being created!
+  day:  ?Day,
+  id:   ?string, // id is non-null -> if an existing extraHoursBox was clicked -> Connects finds us the current extraHours Obj
   closeModal: ()=>{},
 }
 
@@ -42,6 +42,8 @@ class ExtraHoursModal extends PureComponent{
   constructor(props: OwnProps & ConProps){
     super(props)
 
+    console.log(props);
+
     const eH = this.props.extraHours
 
     this.state = {
@@ -52,9 +54,20 @@ class ExtraHoursModal extends PureComponent{
     }
   }
 
+  //$FlowFixMe
+  getDay = ():Day => this.props.day || this.props.extraHours.day
+
+  //$FlowFixMe
+  getUser = ():string => this.props.user || this.props.extraHours.user
+
+
+
+
   saveClicked = () => {
     const { hours, minutes, negative, note } = this.state
-    const { user, day, extraHours } = this.props
+    const { extraHours } = this.props
+    const day = this.getDay()
+    const user = this.getUser()
 
     const mins = ((parseInt((hours || 0)) * 60) + parseInt(minutes || 0)) * ( negative ? -1 : 1)
     const id = extraHours ? extraHours.id : generateGuid()
@@ -71,7 +84,8 @@ class ExtraHoursModal extends PureComponent{
   }
 
   render(){
-    const { users, user, extraHours } = this.props
+    const { users, extraHours } = this.props
+    const user = this.getUser()
     const { negative, hours, minutes } = this.state
     const userObj = users.find(u => u.id === user )
     const userName = userObj ? userObj.name : '...'

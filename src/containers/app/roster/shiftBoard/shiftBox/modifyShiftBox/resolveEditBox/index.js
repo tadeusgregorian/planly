@@ -13,16 +13,16 @@ import { acceptEdit, rejectEdit } from 'actions/roster'
 import ShiftEditBar from '../../components/shiftEditBar'
 import './styles.css'
 
-import type { Shift, User, Store } from 'types/index'
+import type { PreShift, User, Store } from 'types/index'
 
 type OwnProps = {
-  shift: Shift
+  shift: PreShift
 }
 
 type ConProps = {
   currentUser: User,
-  acceptEdit: (Shift)=>any,
-  rejectEdit: (Shift)=>any,
+  acceptEdit: (PreShift)=>any,
+  rejectEdit: (PreShift)=>any,
   unfocusShift: ()=>any,
 }
 

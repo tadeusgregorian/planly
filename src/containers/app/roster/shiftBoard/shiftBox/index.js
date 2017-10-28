@@ -1,6 +1,6 @@
 //@flow
 import React, { PureComponent } from 'react'
-import type { Shift } from 'types/index'
+import type { PreShift } from 'types/index'
 
 import DisplayShiftBox from './displayShiftBox'
 import ModifyShiftBox from './modifyShiftBox'
@@ -8,7 +8,7 @@ import ModifyShiftBox from './modifyShiftBox'
 import './styles.css'
 
 type Props = {
-  shift: Shift,
+  shift: PreShift,
   focused: boolean,
   inCreation?: boolean,
 }

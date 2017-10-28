@@ -1,10 +1,9 @@
 .adminpanel_positionListItem {
   font-size: 16px;
-  border-bottom: 1px solid rgba(211, 211, 211, 0.68);
-  padding: 2px 20px 2px 30px;
   color: grey;
   justify-content: flex-start;
-  cursor: pointer; }
+  cursor: pointer;
+  flex: 1; }
   .adminpanel_positionListItem:hover {
     background-color: #f4fcff; }
   .adminpanel_positionListItem .color-box {

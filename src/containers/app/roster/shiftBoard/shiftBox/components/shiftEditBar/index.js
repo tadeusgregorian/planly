@@ -1,12 +1,12 @@
 //@flow
 import React from 'react'
-import type { Shift, MinimalShift } from 'types/index'
+import type { PreShift, MinimalShift } from 'types/index'
 import { minToTimeString } from 'helpers/index'
 import cn from 'classnames'
 import './styles.css'
 
 type Props = {
-  shift: Shift
+  shift: PreShift
 }
 
 export default ({shift}: Props) => {
