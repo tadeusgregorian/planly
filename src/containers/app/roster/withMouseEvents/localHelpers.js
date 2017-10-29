@@ -17,6 +17,14 @@ export const getParentShift = (el: HTMLElement): (ShiftRef | null) => {
   return shiftElement ? targetToShiftRef(shiftElement) : null
 }
 
+export const getParentShiftEl = (el: HTMLElement): ?HTMLElement => {
+  return closest(el, (element) => elementIsShift(element))
+}
+
+export const getParentCellEl = (el: HTMLElement): ?HTMLElement => {
+  return closest(el, (element) => elementIsShiftCell(element))
+}
+
 export const getParentCell = (el: HTMLElement): ?CellRef => {
   const shiftCellElement = closest(el, (element) => elementIsShiftCell(element))
   return shiftCellElement ? targetToShiftCell(shiftCellElement) : null

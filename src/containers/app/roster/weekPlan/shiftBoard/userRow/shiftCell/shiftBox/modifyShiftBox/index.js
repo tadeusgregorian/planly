@@ -183,6 +183,7 @@ class ModifyShiftBox extends PureComponent{
           pickedPos={position} />}
         { !isPending && <ShiftActionBar
           hasNote={!!note}
+          saveIt={this.tryToSaveChanges}
           inCreation={!!this.props.inCreation}
           withLocations={!!(locations && locations.filter(l => !l.deleted).length)}
           unfocusShift={this.props.unfocusShift}

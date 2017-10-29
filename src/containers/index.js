@@ -5,8 +5,6 @@ import { initFirebase } from 'actions'
 import { setAuthStateListener, registerInitialListeners } from 'actions/listeners'
 import { initIziToast } from 'helpers'
 import ModalsManager from './modalsManager'
-import moment from 'moment'
-import 'moment/locale/de'
 import 'react-select/dist/react-select.css'
 import 'react-dates/lib/css/_datepicker.css';
 
@@ -16,7 +14,6 @@ import Invite   from './invite'
 import App      from './app'
 
 initIziToast()
-moment.locale('de')
 
 class Container extends PureComponent {
   componentDidMount = () => {

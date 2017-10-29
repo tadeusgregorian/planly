@@ -6,11 +6,9 @@ import { openModal } from 'actions/ui/modals'
 import { focusShift, createShift, leaveExtraHoursMode }  from 'actions/ui/roster'
 import { saveShiftToDB }                                from 'actions/roster'
 
-import { getParentShift, getParentCell, sameShiftCells } from './localHelpers'
+import { getParentShift, getParentShiftEl, getParentCellEl, getParentCell, sameShiftCells } from './localHelpers'
 import { generateGuid } from 'helpers/index'
 import getCurrentUser from 'selectors/currentUser'
-
-import PickedUpShift        from './pickedUpShift'
 
 import type { User, CellRef, ShiftRef, PreShift, Shifts, Store, OvertimeStatus } from 'types/index'
 
@@ -99,18 +97,23 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
   onMouseDown = (e: any) => { // this is used to start a dragging action
     this.wasDraggingAround = false
     const pressedShift = getParentShift(e.target)
-    if (!pressedShift) return // continue only if a shift was mouseDowned
+    const shiftElement = getParentShiftEl(e.target)
+    const cellElement  = getParentCellEl(e.target)
+    //const shiftElement = getParentShiftEl(e.target)
+    if (!pressedShift) return          // continue only if a shift was mouseDowned
+    if (!shiftElement) return          // is redundant check ( to satisfy Flow )
+    if (!cellElement)  return          // is redundant check ( to satisfy Flow )
     if (pressedShift.hasEdit) return   // dont allow dragging cells with shiftEdit
 
     this.mousePosStart = {x: e.pageX, y: e.pageY}
     this.mouseIsDown = true
-    setTimeout(()=> this.pickUpShift(pressedShift), 200)
+    setTimeout(()=> this.pickUpShift(pressedShift, shiftElement, cellElement), 200)
   }
 
   onMouseUp = (target: any) => {
     this.mouseIsDown = false
     this.mousePosStart = {x: 0, y: 0}
-    this.state.pickedUpShift && this.dropShift()
+    this.state.isDragging && this.dropShift()
   }
 
   extendCellClicked = (target: any) => {
@@ -150,7 +153,7 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
       if(target && target.getAttribute('data-type') === 'extend-cell-btn') // to add another Shift to a shiftCell
         return this.adminMode && this.extendCellClicked(target)
 
-      if(target && target.getAttribute('data-type') === 'pre-otime-cell') // overtimeCell Left or Right 
+      if(target && target.getAttribute('data-type') === 'pre-otime-cell') // overtimeCell Left or Right
         return this.adminMode && this.oTimeCellClicked(target)
 
 
@@ -163,22 +166,28 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
   }
 
   onMouseMove = (e: any) => {
-    const { pickedUpShift } = this.state
-    const dimensions = pickedUpShift && pickedUpShift.dimensions
 
-    if (pickedUpShift && this.PickedUpElement && dimensions){
+    if(this.PickedUpElement){
       this.mousePosDelta = {
         x: e.pageX - this.mousePosStart.x,
         y: e.pageY - this.mousePosStart.y
       }
-      this.PickedUpElement.style.left = (dimensions.left + this.mousePosDelta.x) + 'px'
-      this.PickedUpElement.style.top  = (dimensions.top + this.mousePosDelta.y) + 'px'
+
+      this.PickedUpElement.style.left = (this.mousePosDelta.x) + 'px'
+      this.PickedUpElement.style.top  = (this.mousePosDelta.y) + 'px'
     }
   }
 
-  pickUpShift = (shiftRef: ShiftRef) => {
+  pickUpShift = (shiftRef: ShiftRef, shiftEl: HTMLElement, cellEl: HTMLElement ) => {
     if(this.mouseIsDown){ // if mouse is already up again ( 200ms window ) -> no dragging
       this.setState({pickedUpShift: shiftRef, isDragging: true})
+
+      const shiftClone = shiftEl.cloneNode(true)
+      this.PickedUpElement    = shiftClone
+
+      shiftClone.className    += ' dragged'
+      shiftClone.style.width  = shiftEl.offsetWidth + 'px'
+      cellEl.appendChild(shiftClone)
 
       const shiftBoard = document.getElementById("shiftBoardMain")
       shiftBoard && shiftBoard.classList.add('cursorMove') // to display a dragging cursor,  hacky I know...
@@ -198,21 +207,18 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
     }
 
     this.setState({pickedUpShift: null, isDragging: false})
+    //$FlowFixMe
+    this.PickedUpElement.parentNode.removeChild(this.PickedUpElement)
     const shiftBoard = document.getElementById("shiftBoardMain")
     shiftBoard && shiftBoard.classList.remove('cursorMove')
   }
 
 
   render = () => {
-    const { pickedUpShift, isDragging, cellUnderMouse } = this.state
-    const getRef = (el) => { this.PickedUpElement = el }
-    const shift = this.props.shifts.find(s => pickedUpShift && s.id === pickedUpShift.id)
+    const { isDragging, cellUnderMouse } = this.state
 
     return (
-      <fb style={{position: 'relative'}}>
-        {React.cloneElement(this.props.children, { isDragging, cellUnderMouse })}
-        { pickedUpShift && <PickedUpShift getRef={getRef} shiftRef={pickedUpShift} shift={shift}/> }
-      </fb>
+        React.cloneElement(this.props.children, { isDragging, cellUnderMouse })
     )
   }
 }

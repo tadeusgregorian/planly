@@ -32,14 +32,14 @@ const getCurrentOvertimes = (
       const startWeek = initialStartWeeks[user]
 
       startWeek && // check if this user has an initial startWeek             -> if not we dont count his overtime
-      startWeek <= week && // check if this startWeek is before users weekSum -> we start counting after users startWeek
-      week < currentWeekID && // check if this weekSum is before currentWeek -> we are not interested in what comes after currentWeek
+      startWeek <= week && // check if the startWeek is before users weekSum  -> we start counting after users startWeek
+      week < currentWeekID && // check if this weekSum is before currentWeek  -> we are not interested in what comes after currentWeek
       (currentTotalMins[user] = mins + (currentTotalMins[user] || 0))
     }
 
     corrections.forEach(c => {  // here we add corrections the the totalMinutes of the users
       initialStartWeeks[c.user] && // checks if user has an initial startWeek
-      initialStartWeeks[c.user] <= c.week && // checks if this correction is after the startWeek of the suer
+      initialStartWeeks[c.user] <= c.week && // checks if this correction is after the startWeek of the user
       (currentTotalMins[c.user] = c.mins + (currentTotalMins[c.user] || 0)) // adds the correction to users total minutes sum
     })
 

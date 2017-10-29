@@ -51,15 +51,19 @@ class ResolveEditBox extends PureComponent{
       <fb className='resolveEditBoxMain arrow_box_pp' style={{width: shiftCellWidth - 3}}>
         <fb className='closeButton icon icon-close' onClick={this.close}></fb>
         <fb className='shiftWrapper' key='shiftWrapper'>
-          <fb className='headline'>editiert</fb>
+          <fb className='headline'>Editiert</fb>
         </fb>
         <ShiftEditBar shift={shift} />
         <fb className='buttonsWrapper' key='btn1'>
           { isAdmin && <fb className='actionButton accept' onClick={this.acceptClicked}>
-            <fb className='icon icon-checkmark doneIcon' />
+            {/* <fb className='icon icon-checkmark doneIcon' /> */}
+            <fb className='text'>annehmen</fb>
           </fb> }
           <fb className='actionButton reject' key='btn2' onClick={this.rejectClicked}>
-            <fb className='icon icon-cross crossIcon' />
+            { isAdmin
+              ? <fb className='icon icon-do_not_disturb_alt crossIcon' />
+              : <fb className='text'>rückgängig</fb>
+            }
           </fb>
         </fb>
       </fb>

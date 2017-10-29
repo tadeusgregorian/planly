@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
+import 'moment/locale/de' // this has to be loaded here ! before configure STORE !!!
 import configureStore from './configs/configureStore'
 import 'styles/main.css';
 import App from 'containers';

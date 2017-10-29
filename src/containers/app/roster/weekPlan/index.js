@@ -6,7 +6,7 @@ import type { Store, Shifts } from 'types/index'
 import { setRosterListeners, setInitialRosterListeners } from 'actions/listeners/roster'
 
 import WithMouseEvents from '../withMouseEvents'
-import ShiftBoard from '../shiftBoard'
+import ShiftBoard from './shiftBoard'
 import ActionBar from './actionBar'
 import TemplateActionBar from './templateActionBar'
 import './styles.css'

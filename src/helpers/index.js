@@ -93,3 +93,12 @@ export const isIntStr = (inp: string) => {
   if(parseInt(inp, 10) && (parseInt(lastChar,10) || lastChar === '0')) return true
   return false
 }
+
+export const getPagePosOfElement = (elem: HTMLElement) => {
+  let box = elem.getBoundingClientRect();
+
+  return {
+    top: box.top + window.scrollY,
+    left: box.left + window.scrollX
+  };
+}

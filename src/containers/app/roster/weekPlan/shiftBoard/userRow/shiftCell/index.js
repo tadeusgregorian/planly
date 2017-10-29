@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react'
 import type { PreShift, Shifts, Position, ShiftRef, Day, AbsenceType, ExtraHours } from 'types/index'
 import { shiftCellWidth } from 'constants/roster'
 import ExtraHoursBox from './extraHoursBox'
-import ShiftBox from '../../shiftBox'
+import ShiftBox from './shiftBox'
 import cn from 'classnames'
 import './styles.css'
 

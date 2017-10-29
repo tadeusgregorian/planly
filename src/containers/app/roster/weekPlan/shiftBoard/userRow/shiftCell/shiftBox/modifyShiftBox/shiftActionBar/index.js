@@ -13,7 +13,7 @@ type Props = {
   toggleLocationBox: Function,
   showShiftNote: Function,
   deleteShift: Function,
-  //shift: PreShift,
+  saveIt: Function,
   hasNote: boolean,
 }
 
@@ -28,7 +28,7 @@ export default (props: Props) => {
         <fb className='btn locationBtn icon icon-download' onClick={props.toggleLocationBox} />
       }
       <fb className={'btn noteBtn icon icon-comment' + hasNote} onClick={props.showShiftNote} />
-      <fb className='btn optionsBtn icon icon-done'   onClick={props.toggleOptions}></fb>
+      <fb className='btn optionsBtn icon icon-done'   onClick={props.saveIt}></fb>
       <fb className='btn closeBtn icon icon-close'    onClick={props.unfocusShift}></fb>
     </fb>
   )

@@ -4,12 +4,18 @@
     background: red;
     height: 100%;
     border-radius: 2px;
-    background: #00a3ef;
-    color: white;
+    background: lightgrey;
+    color: grey;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     padding: 0px 8px;
+
+    &.active{
+      background: #00a3ef;
+      color: white;
+
+    }
 
     .count{
       flex: 1;

@@ -26,8 +26,9 @@ export const momentToWeekID = (mom: moment): string => {
 
 // turns a num like 8 into '08' and 44 into '44'
 export const doubleD = (num: number) => {
-  if(!Number.isInteger(num) || num > 99 || num < 0) throw new Error('Tade - doublD expects Integer ( 0 - 99 ) but got' + num)
-  return num > 9 ? num.toString() : '0' + num
+  if(!Number.isInteger(num)) throw new Error('Tade - doublD expects Integer number, but got' + num)
+  if(num < -9) return num.toString()
+  return num > 9 ?    num.toString() : '0' + num
 }
 
 export const getNextWeekID = (sw: string) :string => {
@@ -49,7 +50,7 @@ export const minToTime = (mins: number): {hours: number, minutes: number} => {
 
 export const minToTimeString = (mins: number): string => {
   const hours = Math.floor(mins / 60)
-  const minutes = mins % 60
+  const minutes = Math.abs(mins) % 60
   return doubleD(hours) + ':' + doubleD(minutes)
 }
 

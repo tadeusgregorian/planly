@@ -1,7 +1,7 @@
 //@flow
 import { combineReducers } from 'redux'
 import { simpleReducer } from '../../reducerHelpers'
-import { getRealCurrentWeekID } from 'helpers/index'
+import { getRealCurrentWeekID } from 'helpers/roster'
 import shiftBoard from './shiftBoard'
 import type { ShiftBoard } from './shiftBoard'
 

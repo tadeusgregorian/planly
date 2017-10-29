@@ -27,7 +27,7 @@ class DisplayShiftBox extends PureComponent{
 
   render(){
     const { shift, branch, positions } = this.props
-    const { day, user, id, note, edit, location, position } = shift
+    const { day, user, id, note, edit, location, position, isOpen } = shift
 
     const locations: Array<Location> = (branch && branch.locations && _.values(branch.locations)) || []
 
@@ -37,7 +37,9 @@ class DisplayShiftBox extends PureComponent{
         data-day={day}
         data-user={user}
         data-shift-id={id}
-        data-has-edit={!!edit}
+        data-has-edit={!!edit || null} // when an attr is null -> it gets omitted by react
+        data-open-shift={isOpen || null}
+        data-position={position || null}
       >
         { note && <fb className='noteIcon icon icon-comment' /> }
         <ShiftTimesBar shift={shift} />

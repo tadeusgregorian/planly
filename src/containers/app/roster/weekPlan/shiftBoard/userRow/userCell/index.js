@@ -30,7 +30,6 @@ export default class  extends PureComponent{
         <fb className='posBox' style={posStyle}>{shortcut}</fb>
         <fb className='userName'>{user.name}</fb>
         <fb className='times'>
-          {/* <fb className='overtime'> - 24 h</fb> */}
           <fb className='currentWeek'>
             <fb className={cn({ istTime: 1, negative, positive })}  >{minToTimeString(weekSum)}</fb>
             <fb className='sollTime'>{' / ' + sollTime + ' h'}</fb>

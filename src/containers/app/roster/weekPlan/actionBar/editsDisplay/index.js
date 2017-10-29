@@ -1,5 +1,7 @@
 //@flow
 import React, { PureComponent } from 'react'
+import cn from 'classnames'
+import moment from 'moment'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import type { Store, ShiftEdits } from 'types/index'
@@ -20,7 +22,11 @@ class EditsDisplay extends PureComponent{
     this.state = { popOpen: false }
   }
 
-  togglePopover = () => this.setState({ popOpen: !this.state.popOpen})
+  togglePopover = () => {
+    console.log(moment().week());
+    const editsCount = this.props.shiftEdits.length
+    editsCount && this.setState({ popOpen: !this.state.popOpen})
+  }
   closePopover = () => this.setState({ popOpen: false })
 
   render(){
@@ -30,7 +36,7 @@ class EditsDisplay extends PureComponent{
 
     return(
       <fb className="actionBar_editsDisplayMain">
-        <fb className='content' onClick={this.togglePopover}>
+        <fb className={cn({content: 1, active: editsCount})} onClick={this.togglePopover}>
           <fb className='count'>{editsCount}</fb>
           <fb className='icon icon-pen penIcon'></fb>
         </fb>

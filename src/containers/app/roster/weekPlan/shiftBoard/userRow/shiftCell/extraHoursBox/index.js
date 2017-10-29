@@ -18,7 +18,7 @@ type ConProps = {
 
 const extraHoursBox = ({extraHours, openModal}: ConProps & OwnProps) => {
 
-  const roundDown = (num) => Math.floor(Math.abs(num) / 60)
+  const roundDown = (num) => Math.floor(Math.abs(num) / 60) * (num < 0 ? -1 : 1 )
   const withSign  = (num) => num < 0 ? '- ' + num.toString().substring(1) : '+ ' + num
 
   const overtimeShort = withSign(roundDown(extraHours.mins))

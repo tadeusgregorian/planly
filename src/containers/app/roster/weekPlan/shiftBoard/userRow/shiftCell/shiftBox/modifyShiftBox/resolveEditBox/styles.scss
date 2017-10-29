@@ -13,7 +13,7 @@
   position: absolute;
   top: -81px;
   left: -1px;
-  height: 74px;
+  height: 72px;
   background-color: white;
   z-index: 2;
   border-radius: 2px;
@@ -29,16 +29,16 @@
 
     .headline{
       //background: #e9ebee;
-      padding-top: 4px;
-      color: #7c7c8c;
+      padding-top: 2px;
+      color: #a2a2a2;
       padding-left: 4px;
       height: 20px;
       align-items: center;
       font-weight: 500;
-      text-transform: uppercase;
       font-size: 11px;
       border-top-left-radius: 2px;
       border-top-right-radius: 2px;
+      letter-spacing: 0.2px;
     }
 
     .editedVersion{
@@ -69,9 +69,8 @@
 
   .buttonsWrapper{
     margin: 2px;
-    flex-direction: column;
-    flex: 0 1 auto;
     flex-direction: row;
+    flex: 0 1 auto;
 
     .actionButton{
       flex: 1 0 auto;
@@ -89,8 +88,15 @@
 
       &.accept{
         color: #00a3ef;
-        background: white;
+        background: #d1f0ff;
         border: 1px solid #00a3ef;
+        margin-right: 2px;
+
+        &:hover{
+          background: #00a3ef;
+          color: white;
+        }
+
         .icon{
           font-size: 12px;
         }
@@ -98,10 +104,17 @@
 
       &.reject{
         color: #ff5050;
-        background: white;
+        background: #ffe0e0;
         border: 1px solid #ff5050;
+
+        &:hover{
+          color: white;
+          background: #ff5050;
+        }
+
         .icon{
-          font-size: 10px;
+          font-size: 14px;
+          font-weight: 700;
         }
       }
 
@@ -120,7 +133,7 @@
     align-items: center;
     top: 4px;
     right: 2px;
-    color: #7c7c8c;
+    color: #a2a2a2;
     cursor: pointer;
     font-size: 12px;
     padding: 0px;
