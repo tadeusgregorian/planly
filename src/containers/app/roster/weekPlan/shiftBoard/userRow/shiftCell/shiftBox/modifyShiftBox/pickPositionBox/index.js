@@ -1,7 +1,7 @@
 //flow
 
 import React from 'react'
-
+import _ from 'lodash'
 import { shiftCellWidth } from 'constants/roster'
 
 import type { ShiftRef, Position } from 'types/index'
@@ -22,15 +22,12 @@ export default (props: Props) => {
     right: -1,
   }
 
-  const { positions } = props
+  const positions = [ ...props.positions, {id: 'all', name: 'alle', color: 'grey'}] // appending a dummy position
+
 
   return(
     <fb className="pickPositionBoxMain" style={style}>
-      {/* <fb className='head'>
-        <fb className='text'><fb className='icon icon-download dl'/>Bereich</fb>
-        <fb className='icon icon-close x' onClick={props.closePositionBox}/>
-      </fb> */}
-      {positions && positions.map(pos =>
+      {positions && _.sortBy(positions, 'nr').map(pos =>
         <fb
           key={pos.id}
           className='posItem'

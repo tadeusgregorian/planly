@@ -78,7 +78,7 @@ class ModifyShiftBox extends PureComponent{
       breakMinutes: '',
       note: props.shift.note || '',
       location: props.shift.location || '',
-      position: (props.inCreation && props.shift.isOpen) ? 'all' : (props.shift.position || ''),
+      position: (props.inCreation && props.shift.user === 'open') ? 'all' : (props.shift.position || ''),
       locationBoxOpen: false,
       positionBoxOpen: false,
     }

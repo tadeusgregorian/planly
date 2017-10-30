@@ -10,7 +10,6 @@ import './styles.css'
 type Props = {
   day: Day,
   user: string,
-  isOpen: boolean,
   focusedShiftRef: ?ShiftRef,
   absence: AbsenceType | false,
   shadowed?: boolean,
@@ -39,7 +38,6 @@ export default class ShiftCell extends PureComponent {
       style,
       cssClasses,
       blocked,
-      isOpen,
       absence,
       hovered,
       highlighted } = this.props
@@ -48,7 +46,7 @@ export default class ShiftCell extends PureComponent {
     const focusedShift        = fsr && fsr.day === day && fsr.user === user ? fsr : null
     const inCreation          = focusedShift && focusedShift.inCreation
     const focusedShiftID      = focusedShift ? focusedShift.id : 'aRondomStringTade...'
-    const dummyShift:PreShift = { s: 0, e: 0, b: 0, user, day, id: focusedShiftID, isOpen: isOpen }
+    const dummyShift:PreShift = { s: 0, e: 0, b: 0, user, day, id: focusedShiftID }
     const cssClassesObj       = cssClasses ? cssClasses.reduce((acc, val) => ({ ...acc, [val]: true }), {}) : {} // turnes the classesArray to an obj for classnames
     const absenceIconClass    = absence && (absence === 'ill' ? 'icon icon-heart' : 'icon icon-rocket')
     const isEmpty             = !shifts.length && !inCreation && !extraHours

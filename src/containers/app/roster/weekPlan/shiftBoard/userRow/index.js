@@ -88,7 +88,6 @@ export default class UserRow extends PureComponent{
               user={userID}
               key={day}
               absence={absence}
-              isOpen={isOpen}
               blocked={blocked}
               shifts={dayShifts}
               extraHours={extraHoursOfDay}

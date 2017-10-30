@@ -183,7 +183,6 @@ export type PreShift = {
   edit?: ?MinimalShift,
   note?: ?string,
   position?: ?string,
-  isOpen?: ?boolean,
   location?: ?string
 }
 
@@ -198,7 +197,6 @@ export type Shift = {
   branch: string,
   note?: ?string,
   position?: ?string,
-  isOpen?: ?boolean,
   location?: ?string,
   branchDay: string,
   userDay: string,

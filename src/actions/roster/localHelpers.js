@@ -1,15 +1,14 @@
 //@flow
 import { db } from '../firebaseInit'
 import _ from 'lodash'
-import type { PreShift, Shift } from 'types/index'
+import type { PreShift, Shift, User } from 'types/index'
 import { weekDays } from 'constants/roster'
 import { getFBPath } from './../actionHelpers'
 
 export const toDBShift = (sh: PreShift, branch: string): Shift => ({
   ...sh,
   b:         sh.b         || 0,
-  isOpen:    sh.isOpen    || null, // firebase needs null to delete a node ( undefined throws an error )
-  position:  sh.position  || null,
+  position:  sh.position  || null, // firebase needs null to delete a node ( undefined throws an error )
   location:  sh.location  || null,
   note:      sh.note      || null,
   branch:    branch,
@@ -41,3 +40,8 @@ export const fetchTemplateWeek = (tempID: string): Promise<Array<Shift>> => (
     return snap.val() ? _.values(snap.val()) : []
   })
 )
+
+export const getUserPos = (users: Array<User>, userID: string): string => {
+  const user: User = (users.find(u => u.id === userID):any)
+  return user.position
+}

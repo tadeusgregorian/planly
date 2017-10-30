@@ -4,17 +4,15 @@ import { connect } from 'react-redux'
 
 import { openModal } from 'actions/ui/modals'
 import { focusShift, createShift, leaveExtraHoursMode }  from 'actions/ui/roster'
-import { saveShiftToDB }                                from 'actions/roster'
+import { copyShiftTo, moveShiftTo }                      from 'actions/roster'
 
 import { getParentShift, getParentShiftEl, getParentCellEl, getParentCell, sameShiftCells } from './localHelpers'
-import { generateGuid } from 'helpers/index'
 import getCurrentUser from 'selectors/currentUser'
 
-import type { User, CellRef, ShiftRef, PreShift, Shifts, Store, OvertimeStatus } from 'types/index'
+import type { User, Day, CellRef, ShiftRef, Store, OvertimeStatus } from 'types/index'
 
 type MSProps = {
   currentUser: User,
-  shifts: Shifts,
   focusedShiftRef: ?ShiftRef,
   extraHoursMode: boolean,
 }
@@ -22,7 +20,8 @@ type MSProps = {
 type MAProps = {
   focusShift: (ShiftRef)=>any,
   createShift: (CellRef)=>any,
-  saveShiftToDB: (PreShift)=>any,
+  copyShiftTo: (string, string, Day )=>any,
+  moveShiftTo: (string, string, Day )=>any,
   openModal: (string, ?{}) => any,
   leaveExtraHoursMode: ActionCreator,
 }
@@ -196,14 +195,17 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
 
   dropShift = () => {
     const { cellUnderMouse, pickedUpShift } = this.state
-    const shift = this.props.shifts.find(s => pickedUpShift && s.id === pickedUpShift.id)
+    const { copyShiftTo, moveShiftTo }      = this.props
 
-    if(shift && cellUnderMouse){
-      const { s, e, b } = shift
+    if(pickedUpShift && cellUnderMouse){
       const { day, user } = cellUnderMouse
-      const id = generateGuid()
-      const newShift = { id, s, e, b, day, user }
-      this.props.saveShiftToDB(newShift)
+      const fromOpenToUser = pickedUpShift.user === 'open' && user !== 'open'
+      const fromUserToOpen = pickedUpShift.user !== 'open' && user === 'open'
+      const justMoveShift  = fromOpenToUser || fromUserToOpen
+
+      justMoveShift
+       ? moveShiftTo(pickedUpShift.id, user, day )
+       : copyShiftTo(pickedUpShift.id, user, day )
     }
 
     this.setState({pickedUpShift: null, isDragging: false})
@@ -227,13 +229,13 @@ const actionsToProps: MAProps = {
   openModal,
   focusShift,
   createShift,
-  saveShiftToDB,
+  copyShiftTo,
+  moveShiftTo,
   leaveExtraHoursMode
 }
 
 const mapStateToProps = (state: Store, ow: OwnProps): MSProps => ({
   currentUser: getCurrentUser(state),
-  shifts: state.roster.shiftWeek,
   focusedShiftRef: state.ui.roster.shiftBoard.focusedShiftRef,
   extraHoursMode: state.ui.roster.extraHoursMode,
 })
