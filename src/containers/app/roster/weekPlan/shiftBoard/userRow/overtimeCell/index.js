@@ -2,7 +2,7 @@
 import React from 'react'
 import cn from 'classnames'
 import { overtimeCellWidth } from 'constants/roster'
-import { minToTime } from 'helpers/roster'
+import { minToTime, extractHours, withSign } from 'helpers/roster'
 import type { OvertimeStatus } from 'types/index'
 import './styles.css'
 
@@ -16,11 +16,9 @@ type Props = {
 
 export default ({overtime, userID, correction, status, type}: Props) => {
 
-  const roundDown = (num) => Math.floor(Math.abs(num) / 60)
-  const withSign  = (num) => num < 0 ? '- ' + num.toString().substring(1) : '+ ' + num
   const _overtime = overtime || 0
 
-  const overtimeShort = withSign(roundDown(_overtime))
+  const overtimeShort = withSign(extractHours(_overtime))
   const overtimeComplete = overtimeShort + ' h / ' + minToTime(_overtime).minutes + '  min'
   const displayOvertime = status === 'STARTED' || status === 'START_WEEK'
 

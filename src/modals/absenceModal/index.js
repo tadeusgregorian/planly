@@ -77,7 +77,7 @@ class AbsenceModal extends PureComponent{
       userNote:       absence ? (absence.userNote    || null)  : null,
       adminNote:      absence ? (absence.adminNote   || null)  : null,
       workDays:       absence ? (absence.workDays    || null)  : props.user.workDays,
-      useAvgHours:    absence ? (absence.useAvgHours || null)  : this.getDefaul_useAvgHours('ill'), // TODO: come back here ...
+      useAvgHours:    absence ? (absence.useAvgHours || null)  : this.getDefaul_useAvgHours('vac'), // its vac when nonAdmin requests vac... when admin picks absenceType -> this gets updated
       unpaid:         absence ? (absence.unpaid      || null)  : null,
       avgDailyMins:   user.avgDailyMins,
       focusedInput:   null, // we omit this before saving to db!
@@ -88,7 +88,7 @@ class AbsenceModal extends PureComponent{
   // returns the useAvgHours-Setting for a specific AbsenceType
   getDefaul_useAvgHours = (type: AbsenceType): true | null => {
     if(type === 'ill') return this.props.preferences.useAvgHoursForIll ? true : null
-    if(type === 'vac') return this.props.preferences.useAvgHoursForVac ? true :null
+    if(type === 'vac') return this.props.preferences.useAvgHoursForVac ? true : null
     return null
   }
 
@@ -114,11 +114,12 @@ class AbsenceModal extends PureComponent{
     })
 
     // checking if selected Range is Valid here
+
     if(startDate && endDate){
       if( endDate.year() !== startDate.year() ){
         this.setState({errorMessage: 'multiyear'})
       }else{
-        checkOverlappings(startDate, endDate, this.props.userID)
+        checkOverlappings(startDate, endDate, this.props.userID, this.state.id)
           .then((res: boolean)=> this.setState({errorMessage: res && 'overlapping'}))
       }
     }
@@ -168,6 +169,7 @@ class AbsenceModal extends PureComponent{
                   endDate={endDate ? moment(endDate, 'YYYYMMDD') : null}
                   onDatesChange={this.datesChanged}
                   minimumNights={0}
+                  isOutsideRange={adminMode ? () => false : undefined}
                   focusedInput={focusedInput}
                   onFocusChange={focusedInput => this.setState({ focusedInput })}/>
               }

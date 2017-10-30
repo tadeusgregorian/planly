@@ -3,4 +3,13 @@
   margin-left: auto;
   margin-right: 2px;
   z-index: 1;
+
+  .requestsBtn{
+    &.disabled{
+      box-shadow: none;
+      border: none;
+      background: #e2e2e2;
+      color: #989898;
+    }
+  }
 }

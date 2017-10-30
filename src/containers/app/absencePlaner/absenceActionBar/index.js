@@ -6,11 +6,12 @@ import Select from 'react-select';
 
 import { openAbsenceModal } from 'actions/ui/modals'
 import { setCurrentBranch, setCurrentYear, setCurrentMonth, setCurrentType } from 'actions/ui/absence'
-import { getYearsArray, getMonthsArray } from './localHelpers'
+import { getYearsArray, getMonthsArray, getNextYM, getPrevYM } from './localHelpers'
 
 import TypeSwitch from './typeSwitch'
 import RequestManager from './requestManager'
 import RequestVacBtn from './requestVacBtn'
+import MonthStepper from './monthStepper'
 
 import type { Branch, AbsenceType, Store, Absence, User } from 'types/index'
 import './styles.css'
@@ -41,10 +42,24 @@ class AbsenceActionBar extends PureComponent {
   onChangeMonth  = (opt: any) => this.props.setCurrentMonth(opt.value)
   requestVacClicked = () => this.props.openAbsenceModal(this.props.currentUser.id)
 
+  stepForward = () => {
+    const nextYM = getNextYM(this.props.currentYear, this.props.currentMonth)
+    this.props.setCurrentYear(nextYM.year)
+    this.props.setCurrentMonth(nextYM.month)
+  }
+
+  stepBack = () => {
+    const prevYM = getPrevYM(this.props.currentYear, this.props.currentMonth)
+    this.props.setCurrentYear(prevYM.year)
+    this.props.setCurrentMonth(prevYM.month)
+  }
+
   render(){
     const { currentBranch, currentYear, currentMonth, currentType, branches, adminMode } = this.props
 
-    const branchOptions = branches.map(b => ({value: b.id, label: b.name})).concat({value: 'all', label: 'Alle Standorte'})
+    const branchOptions = branches.map(b => ({value: b.id, label: b.name}))
+                          .concat({value: 'all', label: 'Alle Standorte'})
+
     const yearOptions   = getYearsArray().map(y => ({value: y, label: y}))
     const monthOptions  = getMonthsArray().map((y, i) => ({value: i, label: y}))
 
@@ -78,6 +93,10 @@ class AbsenceActionBar extends PureComponent {
               searchable={false}
             />
           </div>
+          <MonthStepper
+            stepBack={this.stepBack}
+            stepForward={this.stepForward}
+          />
           <TypeSwitch
             type={currentType}
             changeType={this.props.setCurrentType}

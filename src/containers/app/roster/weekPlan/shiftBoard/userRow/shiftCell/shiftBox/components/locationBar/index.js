@@ -10,7 +10,7 @@ type Props = {
   locations: Array<Location>,
   removeLocation?: ()=>any,
   openLocationsBox?: ()=>any,
-  editable?: true,
+  editable?: boolean,
 }
 
 export default (props: Props) => {

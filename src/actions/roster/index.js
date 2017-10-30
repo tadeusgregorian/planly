@@ -47,25 +47,13 @@ export const rejectEdit: ThunkAction = (shift: Shift) => (disp, getState) => {
   db().ref().update({ ...update1, ...update2})
 }
 
-// export const assignOpenShift:ThunkAction = (openShift: PreShift, user: string) => (disp, getState: GetState) => {
-//   const weekID        = getState().ui.roster.currentWeekID
-//   const branch        = getState().ui.roster.currentBranch
-//   const templateMode  = getState().ui.roster.templateMode
-//   const { s, e, b, day, id } = openShift
-//   const shift: PreShift = { s, e, b, day, user, id }
-//   const update1 = getShiftUpdate(openShift, weekID, branch, true) // deleting openShift
-//   const update2 = getShiftUpdate(shift, weekID, branch)           // creating new userShift
-//   const update3 = templateMode ? {} : getMiniShiftUpdate(shift, weekID)
-//   db().ref().update({ ...update1, ...update2, ...update3 })
-// }
-
 export const copyShiftTo:ThunkAction = (shiftID: string, user: string, day: Day) => (disp, getState: GetState) => {
   const shift       = getState().roster.shiftWeek.find(s => s.id === shiftID )
   const newShift    = { ...shift, id: generateGuid(), user, day }
   saveShiftToDB(newShift)(disp, getState)
 }
 
-type MoveShiftTo = (string, string, Day) => (Dispatch, GetState) => void
+type MoveShiftTo = (shiftID: string, userID: string, Day) => (Dispatch, GetState) => void
 export const moveShiftTo: MoveShiftTo = (shiftID, targetUser, targetDay) => (disp, getState) => {
   const shifts          = getState().roster.shiftWeek
   const users           = getState().core.users

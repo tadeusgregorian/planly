@@ -1,0 +1,29 @@
+.absenceMonthStepperMain{
+  margin-left: 8px;
+
+  .stepBtn{
+    background: white;
+    border: 1px solid #cccccc;
+    border-radius: 1px;
+    width: 36px;
+    margin-left: -1px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    color: grey;
+
+    &:hover{
+      background-color: #efefef;
+    }
+  }
+
+  .backBtn{
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+  }
+
+  .forwardBtn{
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+  }
+}

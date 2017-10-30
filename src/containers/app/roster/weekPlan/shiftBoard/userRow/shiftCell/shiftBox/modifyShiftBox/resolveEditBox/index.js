@@ -4,7 +4,6 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 
-import getCurrentUser from 'selectors/currentUser'
 import { shiftCellWidth } from 'constants/roster'
 
 import { unfocusShift } from 'actions/ui/roster'
@@ -13,14 +12,14 @@ import { acceptEdit, rejectEdit } from 'actions/roster'
 import ShiftEditBar from '../../components/shiftEditBar'
 import './styles.css'
 
-import type { PreShift, User, Store } from 'types/index'
+import type { PreShift, User } from 'types/index'
 
 type OwnProps = {
-  shift: PreShift
+  shift: PreShift,
+  currentUser: User,
 }
 
 type ConProps = {
-  currentUser: User,
   acceptEdit: (PreShift)=>any,
   rejectEdit: (PreShift)=>any,
   unfocusShift: ()=>any,
@@ -77,9 +76,5 @@ const actionCreators= {
   rejectEdit
 }
 
-const mapStateToProps = (state: Store) => ({
-  currentUser: getCurrentUser(state)
-})
-
-const connector: Connector<OwnProps, Props> = connect(mapStateToProps, actionCreators)
+const connector: Connector<OwnProps, Props> = connect(null, actionCreators)
 export default connector(ResolveEditBox)

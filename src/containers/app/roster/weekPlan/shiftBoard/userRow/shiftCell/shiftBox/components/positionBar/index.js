@@ -9,7 +9,7 @@ type Props = {
   position: string,
   positions: Array<Position>,
   openPositionBox?: ()=>any,
-  editable?: true,
+  editable?: boolean,
 }
 
 export default (props: Props) => {

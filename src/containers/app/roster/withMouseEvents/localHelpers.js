@@ -1,6 +1,6 @@
 //@flow
 
-import type { CellRef, ShiftRef } from 'types/index'
+import type { CellRef, ShiftRef, User, Day } from 'types/index'
 import { closest } from 'helpers/index'
 
 export const elementIsShift = (el: HTMLElement): boolean =>
@@ -31,10 +31,11 @@ export const getParentCell = (el: HTMLElement): ?CellRef => {
 }
 
 export const targetToShiftRef = (target: HTMLElement): ShiftRef => {
-  const day: any      = target.getAttribute('data-day')
-  const user: any     = target.getAttribute('data-user')
-  const id: any       = target.getAttribute('data-shift-id')
-  const hasEdit: any  = target.getAttribute('data-has-edit') === 'true'
+  const day: any       =   target.getAttribute('data-day')
+  const user: any      =   target.getAttribute('data-user')
+  const id: any        =   target.getAttribute('data-shift-id')
+  const hasEdit: any   = !!target.getAttribute('data-has-edit')
+  const position: any  =   target.getAttribute('data-pos')
 
   const top         = target.offsetTop
   const left        = target.offsetLeft
@@ -42,7 +43,7 @@ export const targetToShiftRef = (target: HTMLElement): ShiftRef => {
   const height      = target.offsetHeight
   const dimensions = { top, left, width, height }
 
-  return { day, user, id, hasEdit, dimensions }
+  return { day, user, id, hasEdit, dimensions, position }
 }
 
 export const targetToShiftCell = (target: HTMLElement): CellRef => {
@@ -54,11 +55,20 @@ export const targetToShiftCell = (target: HTMLElement): CellRef => {
   return shiftCell
 }
 
-export const sameShiftCells = (cell1: ?CellRef, cell2: ?CellRef): boolean => {
+export const sameShiftCells = (cell1: ?CellRef, cell2: ?CellRef): any => {
   if(!cell1 && !cell2) return true
   if(!cell1 &&  cell2) return false
   if( cell1 && !cell2) return false
   const pattern1 = cell1 && cell1.day + cell1.user
   const pattern2 = cell2 && cell2.day + cell2.user
   return pattern1 === pattern2
+}
+
+export const canFocus = (user: User, shift: ShiftRef): boolean => {
+  const shiftPos  = shift.position
+  const userPos   = user.position
+  const openShift = shift.user === 'open'
+  const isOwnShift = shift.user === user.id
+  const isQualified = openShift && (shiftPos === 'all' || shiftPos === userPos)
+  return isOwnShift || isQualified
 }

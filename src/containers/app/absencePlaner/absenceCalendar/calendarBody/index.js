@@ -1,8 +1,8 @@
 // @flow
 import React, { PureComponent } from 'react'
-
+import _ from 'lodash'
 import AbsenceRow from './absenceRow'
-import type { User, Absence, AbsenceType } from 'types/index'
+import type { User, Absence, AbsenceType, Position } from 'types/index'
 
 import './styles.css'
 
@@ -14,18 +14,22 @@ type Props = {
   absenceSums: Array<{user: string, days: number}>,
   users: Array<User>,
   adminMode: boolean,
-  type: AbsenceType | 'all'
+  type: AbsenceType | 'all',
+  positions: Array<Position>,
 }
 
 export default class CalendarBody extends PureComponent {
   props: Props
+
+  getPosNrOfUser = (user: User) =>
+    this.props.positions.find(p => p.id === user.position)
 
   render() {
     const { users, absences, year, month, adminMode, absenceSums, type } = this.props
 
     return(
       <fb className="absenceCalendarBodyMain">
-        { users.map(u => {
+        { _.sortBy(users, [this.getPosNrOfUser]).map(u => {
           const userAbsences = absences.filter(a => a.user === u.id)
           const absentDays = absenceSums.find(s => s.user === u.id)
           return ( <AbsenceRow

@@ -2,6 +2,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
+import cn from 'classnames'
 
 import { smartToMom } from 'helpers/index'
 import { setCurrentBranch, setCurrentYear, setCurrentMonth, setCurrentType } from 'actions/ui/absence'
@@ -54,9 +55,17 @@ class RequestManager extends PureComponent {
   }
 
   render(){
+    const count = this.props.vacationRequests.length
+    const label = count + (count === 1 ? ' Antrag' : ' Anträge')
+
     return(
       <fb className="absenceRequestsManagerMain">
-        <fb className='soBtn' onClick={this.togglePopover} >Anträge</fb>
+        <fb
+          className={cn({soBtn: 1, requestsBtn: 1, disabled: !count})}
+          onClick={()=> count && this.togglePopover()}
+        >
+          {label}
+        </fb>
         { this.state.isOpen && <RequestsPopover
           vacationRequests={this.props.vacationRequests}
           users={this.props.users}

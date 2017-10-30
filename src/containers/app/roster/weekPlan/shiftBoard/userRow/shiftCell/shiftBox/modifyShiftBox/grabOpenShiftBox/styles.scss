@@ -1,0 +1,122 @@
+@keyframes fadeinRes {
+    from {
+      opacity: 0;
+      top: -71px;
+    }
+    to   {
+      opacity: 1;
+      top: -81px;
+    }
+}
+
+.grabOpenShiftBoxMain{
+  position: absolute;
+  top: -53px;
+  left: -1px;
+  height: 48px;
+  background-color: white;
+  z-index: 2;
+  border-radius: 2px;
+  flex-direction: column;
+  box-shadow: 0px 1px 4px 3px rgba(0, 0, 0, 0.36);
+  animation: fadeinRes .1s ease-in;
+
+  .shiftWrapper{
+    flex-direction: column;
+
+    .headline{
+      padding-top: 4px;
+      color: #909090;
+      padding-left: 6px;
+      height: 20px;
+      align-items: center;
+      font-weight: 400;
+      font-size: 12px;
+      border-top-left-radius: 2px;
+      border-top-right-radius: 2px;
+      letter-spacing: 0.2px;
+    }
+  }
+
+  .buttonsWrapper{
+    margin: 2px;
+    flex-direction: row;
+    flex: 0 1 auto;
+
+    .actionButton{
+      flex: 1 0 auto;
+      margin: 1px;
+      justify-content: center;
+      align-items: center;
+      height: 22px;
+
+      border-radius: 2px;
+      font-weight: 500;
+      background: #00a3ef;
+      color: white;
+      font-size: 12px;
+      text-transform: uppercase;
+
+      &.accept{
+        color: #00a3ef;
+        background: #d1f0ff;
+        border: 1px solid #00a3ef;
+
+        &:hover{
+          background: #00a3ef;
+          color: white;
+        }
+
+        .icon{
+          font-size: 12px;
+        }
+      }
+
+      &:not(:last-child){
+        margin-bottom: 2px;
+      }
+    }
+  }
+
+
+  .closeButton{
+    position: absolute;
+    width: 16px;
+    height: 14px;
+    justify-content: center;
+    align-items: center;
+    top: 4px;
+    right: 2px;
+    color: #a2a2a2;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 0px;
+    font-weight: 600;
+    border-bottom-left-radius: 1px;
+    padding-bottom: 1px;
+    border-radius: 1px;
+
+    &:hover{
+      background-color: lightgrey;
+    }
+  }
+}
+
+.arrow_box_pp {
+	background: #ffffff;
+}
+.arrow_box_pp:after {
+	top: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	border-color: rgba(255, 255, 255, 0);
+	border-top-color: #ffffff;
+	border-width: 6px;
+	margin-left: -6px;
+  //box-shadow: 0px 1px 4px 2px rgba(0, 0, 0, 0.36);
+}

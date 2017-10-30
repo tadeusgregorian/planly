@@ -6,7 +6,7 @@ import { openModal } from 'actions/ui/modals'
 import { focusShift, createShift, leaveExtraHoursMode }  from 'actions/ui/roster'
 import { copyShiftTo, moveShiftTo }                      from 'actions/roster'
 
-import { getParentShift, getParentShiftEl, getParentCellEl, getParentCell, sameShiftCells } from './localHelpers'
+import { getParentShift, getParentShiftEl, getParentCellEl, getParentCell, sameShiftCells, canFocus } from './localHelpers'
 import getCurrentUser from 'selectors/currentUser'
 
 import type { User, Day, CellRef, ShiftRef, Store, OvertimeStatus } from 'types/index'
@@ -42,7 +42,6 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
   state: State
   props: Props
 
-  currentUser: string
   adminMode: boolean
   mouseIsDown: boolean
   wasDraggingAround: boolean
@@ -56,7 +55,6 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
 
     this.mouseIsDown = false
     this.wasDraggingAround = false
-    this.currentUser = this.props.currentUser.id
     this.adminMode = !!(this.props.currentUser && this.props.currentUser.isAdmin)
     this.state = {
       pickedUpShift: null,
@@ -155,8 +153,7 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
       if(target && target.getAttribute('data-type') === 'pre-otime-cell') // overtimeCell Left or Right
         return this.adminMode && this.oTimeCellClicked(target)
 
-
-      if(targetShift && (targetShift.user === this.currentUser || this.adminMode))
+      if(targetShift && (this.adminMode || canFocus(this.props.currentUser, targetShift)))
         return this.props.focusShift(targetShift)
 
       if(targetCell && this.adminMode && !targetCell.hasShift)

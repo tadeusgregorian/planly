@@ -15,18 +15,17 @@ type Props = {
   deleteShift: Function,
   saveIt: Function,
   hasNote: boolean,
+  isAdmin: boolean,
 }
 
 export default (props: Props) => {
   const hasNote = !!props.hasNote ? ' highlighted' : ''
-
+  const { isAdmin, withLocations, toggleLocationBox } = props
 
   return(
     <fb className="shiftActionBarMain">
-      <fb className='btn deleteBtn icon icon-delete' onClick={props.deleteShift}></fb>
-      { props.withLocations &&
-        <fb className='btn locationBtn icon icon-download' onClick={props.toggleLocationBox} />
-      }
+      { isAdmin && <fb className='btn deleteBtn icon icon-delete' onClick={props.deleteShift} /> }
+      { withLocations && isAdmin && <fb className='btn locationBtn icon icon-download' onClick={toggleLocationBox} /> }
       <fb className={'btn noteBtn icon icon-comment' + hasNote} onClick={props.showShiftNote} />
       <fb className='btn optionsBtn icon icon-done'   onClick={props.saveIt}></fb>
       <fb className='btn closeBtn icon icon-close'    onClick={props.unfocusShift}></fb>

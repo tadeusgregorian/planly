@@ -79,3 +79,9 @@ export const getNoteOfCell = (notes: Notes, cell: CellRef) =>
 
 export const getShiftOfCell = (shifts: Shifts, cell: CellRef): ?Shift =>
   cell && shifts.find(s => s.user === cell.user && s.day === cell.day )
+
+export const extractHours = (num: number): number => // returns how many full hours are contained in mins
+  Math.floor(Math.abs(num) / 60) * (num < 0 ? -1 : 1 )
+
+export const withSign = (num: number): string => // ads a '+' or '-' to a number
+  num < 0 ? '- ' + num.toString().substring(1) : '+ ' + num

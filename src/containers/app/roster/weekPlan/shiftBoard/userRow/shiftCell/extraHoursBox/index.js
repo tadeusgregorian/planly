@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import type { ExtraHours} from 'types/index'
 import { openModal } from 'actions/ui/modals'
-import { minToTime } from 'helpers/roster'
+import { minToTime, withSign, extractHours } from 'helpers/roster'
 import './styles.css'
 
 type OwnProps = {
@@ -15,13 +15,9 @@ type ConProps = {
   openModal: Function
 }
 
-
 const extraHoursBox = ({extraHours, openModal}: ConProps & OwnProps) => {
 
-  const roundDown = (num) => Math.floor(Math.abs(num) / 60) * (num < 0 ? -1 : 1 )
-  const withSign  = (num) => num < 0 ? '- ' + num.toString().substring(1) : '+ ' + num
-
-  const overtimeShort = withSign(roundDown(extraHours.mins))
+  const overtimeShort = withSign(extractHours(extraHours.mins))
   const overtimeComplete = overtimeShort + ' h | ' + minToTime(extraHours.mins).minutes + '  min'
 
   return(
@@ -30,8 +26,6 @@ const extraHoursBox = ({extraHours, openModal}: ConProps & OwnProps) => {
     </fb>
   )
 }
-
-
 
 const actionCreators = {
   openModal

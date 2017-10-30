@@ -24,7 +24,7 @@ export const removeAbsenceFromDB = (absenceID: string) => {
 }
 
 
-export const checkOverlappings = (start: moment, end: moment, user: string): Promise<boolean> => {
+export const checkOverlappings = (start: moment, end: moment, user: string, absenceID: string): Promise<boolean> => {
   const year       = start.year()
   const path       = getFBPath('absences')
   const queryRef   = db().ref(path).orderByChild('yearUser').equalTo(year + user)
@@ -35,7 +35,11 @@ export const checkOverlappings = (start: moment, end: moment, user: string): Pro
 
     const absences: Array<Absence> =  snap.val() ? _.values(snap.val()) : []
     const itOverlaps = absences.reduce(
-      (acc, val) => rangesOverlap(val.startDate, val.endDate, startSmart, endSmart) || acc,
+      (acc, val) =>
+        (
+          absenceID !== val.id && // otherwiese it overlaps with itselefe when editing Absence.
+          rangesOverlap(val.startDate, val.endDate, startSmart, endSmart)
+        ) || acc,
       false
     )
     return itOverlaps

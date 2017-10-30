@@ -160,9 +160,10 @@ export type ShiftRef = {
   id: string,
   day: Day,
   user: string,
-  hasEdit?: boolean,
-  inCreation?: boolean,
-  dimensions?: Dimensions
+  position?: ?string,
+  hasEdit?: ?boolean,
+  inCreation?: ?boolean,
+  dimensions?: ?Dimensions
 }
 
 export type MinimalShift = {

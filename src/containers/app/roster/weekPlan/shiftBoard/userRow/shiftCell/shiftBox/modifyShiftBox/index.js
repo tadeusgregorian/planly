@@ -11,14 +11,15 @@ import { saveShiftToDB, saveShiftEditToDB, updateNoteOfShift }   from 'actions/r
 
 import getCurrentUser from 'selectors/currentUser'
 
-import PickLocationBox from './pickLocationBox'
-import PickPositionBox from './pickPositionBox'
-import ResolveEditBox  from './resolveEditBox'
-import InputWindow     from './inputWindow'
-import ShiftTimesBar   from '../components/shiftTimesBar'
-import PositionBar    from '../components/positionBar'
-import LocationBar     from '../components/locationBar'
-import ShiftActionBar  from './shiftActionBar'
+import PickLocationBox  from './pickLocationBox'
+import PickPositionBox  from './pickPositionBox'
+import ResolveEditBox   from './resolveEditBox'
+import GrabOpenShiftBox from './grabOpenShiftBox'
+import InputWindow      from './inputWindow'
+import ShiftTimesBar    from '../components/shiftTimesBar'
+import PositionBar      from '../components/positionBar'
+import LocationBar      from '../components/locationBar'
+import ShiftActionBar   from './shiftActionBar'
 
 import type { PreShift, ShiftRef, Position, User, Store, MinimalShift, Branch, Location } from 'types/index'
 import './styles.css'
@@ -71,14 +72,16 @@ class ModifyShiftBox extends PureComponent{
     super(props)
 
     this.isAdmin = !!props.currentUser.isAdmin
+    const { shift, inCreation } = props
+    const { user, note, location, position } = shift
 
     this.state = {
       startTime: '',
       endTime: '',
       breakMinutes: '',
-      note: props.shift.note || '',
-      location: props.shift.location || '',
-      position: (props.inCreation && props.shift.user === 'open') ? 'all' : (props.shift.position || ''),
+      note: note || '',
+      location: location || '',
+      position: (inCreation && user === 'open') ? 'all' : ( position || ''),
       locationBoxOpen: false,
       positionBoxOpen: false,
     }
@@ -164,11 +167,14 @@ class ModifyShiftBox extends PureComponent{
     const { shift, currentUser, branch, positions } = this.props
     const { locationBoxOpen, positionBoxOpen, location, position, note } = this.state
     const locations: Array<Location> = (branch && branch.locations && _.values(branch.locations)) || []
-    const isPending = !!this.props.shift.edit
+    const isGrabbing = !this.isAdmin && shift.user === 'open' // when a nonAdmin trys to grab an open Shift
+    const isEdited   = !!shift.edit
+    const isPending  = !!(isEdited || isGrabbing)
 
     return(
       <fb className='modifyShiftBoxMain focused'>
-        { isPending && <ResolveEditBox shift={shift} currentUser={currentUser} />}
+        { isGrabbing && <GrabOpenShiftBox shift={shift} currentUser={currentUser} />}
+        { isEdited   && <ResolveEditBox shift={shift} currentUser={currentUser} />}
         { locationBoxOpen && <PickLocationBox
           shiftRef={this.props.focusedShiftRef}
           locations={locations}
@@ -192,6 +198,7 @@ class ModifyShiftBox extends PureComponent{
           locationBoxOpen={this.state.locationBoxOpen}
           showShiftNote={this.showShiftNote}
           deleteShift={this.deleteShift}
+          isAdmin={!!this.props.currentUser.isAdmin}
         />}
         { !isPending && <InputWindow
           startTime={this.state.startTime}
@@ -209,14 +216,14 @@ class ModifyShiftBox extends PureComponent{
         { location && <LocationBar
           location={location}
           locations={locations}
-          editable={true}
+          editable={!isPending}
           removeLocation={this.removeLocation}
           openLocationsBox={this.toggleLocationBox}
         /> }
         { position && <PositionBar
           position={position}
           positions={positions}
-          editable={true}
+          editable={!isPending}
           openPositionBox={this.togglePositionBox}
         /> }
       </fb>

@@ -38,7 +38,7 @@ class DisplayShiftBox extends PureComponent{
         data-user={user}
         data-shift-id={id}
         data-has-edit={!!edit || null} // when an attr is null -> it gets omitted by react
-        data-position={position || null}
+        data-pos={position || null}
       >
         { note && <fb className='noteIcon icon icon-comment' /> }
         <ShiftTimesBar shift={shift} />
