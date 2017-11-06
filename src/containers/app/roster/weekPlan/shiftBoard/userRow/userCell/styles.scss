@@ -2,7 +2,6 @@
   position: relative;
   flex: 1 1 auto;
   background-color: #f7f7f7;
-  border-left: 1px solid #dfe0e4;
   padding-left: 8px;
   align-items: flex-start;
   justify-content: center;
@@ -28,11 +27,21 @@
     font-weight: 400;
     color: #525252;
     font-size: 14px;
+
+    &.big{
+      font-size: 16px;
+      font-weight: 300;
+      margin-left: 4px;
+    }
   }
 
-  .times{
+  .times {
     font-size: 12px;
     margin-left: 1px;
+
+    &.hidden{
+      display: none;
+    }
 
     .currentWeek{
       color: #a7a7a7;
@@ -41,13 +50,13 @@
         margin-right: 3px;
 
         &.negative{
-          color: red;
+          color: #ff4a4a;
           font-weight: 400;
         }
 
         &.positive{
-          color: #38a1ef;
           font-weight: 400;
+          color: grey;
         }
       }
     }

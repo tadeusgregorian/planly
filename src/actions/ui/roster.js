@@ -60,3 +60,6 @@ export const leaveExtraHoursMode = () =>
 
 export const hideNonWorkers = (hide: boolean) =>
   ({ type: 'HIDE_NON_WORKES', payload: hide })
+
+export const toggleShiftBoardTimeDetails = () =>
+  ({ type: 'TOGGLE_SHIFTBOARD_TIME_DETAILS'})

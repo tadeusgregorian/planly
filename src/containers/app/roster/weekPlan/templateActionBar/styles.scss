@@ -7,6 +7,13 @@
   margin-bottom: 4px;
   z-index: 1;
 
+  .headline{
+    color: #ff5471;
+    font-size: 18px;
+    font-weight: 400;
+    text-transform: uppercase;
+  }
+
   .right{
     flex: 1;
     justify-content: flex-end;
@@ -15,8 +22,8 @@
     .createTemplateBtn{
 
       height: 100%;
-      padding: 0 8px;
-      background-color: #00a2ef;
+      padding: 0 12px;
+      background-color: #ff5577;
       color: white;
       justify-content: center;
       align-items: center;

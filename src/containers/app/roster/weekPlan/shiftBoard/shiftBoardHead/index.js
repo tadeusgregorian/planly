@@ -16,6 +16,7 @@ import './styles.css'
 
 type OwnProps = {
   templateMode: boolean,
+  timeDetailsVisible: boolean,
   weekID: string,
   adminMode: boolean,
 }
@@ -48,11 +49,19 @@ class ShiftBoardHead extends PureComponent {
   }
 
   render(){
-    const { templateMode, dayNotes, adminMode, hideNonWorkers, nonWorkersHidden } = this.props
+    const {
+      templateMode,
+      timeDetailsVisible,
+      dayNotes,
+      adminMode,
+      hideNonWorkers,
+      nonWorkersHidden } = this.props
 
     return(
       <fb className="shiftBoardHeadMain">
-        { !templateMode && <fb className='oTime' style={{width: overtimeCellWidth}}>&sum;</fb> }
+        { !templateMode && timeDetailsVisible &&
+          <fb className='oTime' style={{width: overtimeCellWidth}}>&sum;</fb>
+        }
         <UsersHead hideNonWorkers={hideNonWorkers} nonWorkersHidden={nonWorkersHidden} />
         <fb className='weekDays'>
           { weekDays.map((w, i) =>
@@ -64,7 +73,9 @@ class ShiftBoardHead extends PureComponent {
               dayNote={dayNotes.find(dN => dN.day === w)}/>
           )}
         </fb>
-        { !templateMode && <fb className='oTime' style={{width: overtimeCellWidth}}>&sum;</fb> }
+        { !templateMode && timeDetailsVisible &&
+          <fb className='oTime' style={{width: overtimeCellWidth}}>&sum;</fb>
+        }
       </fb>
     )
   }

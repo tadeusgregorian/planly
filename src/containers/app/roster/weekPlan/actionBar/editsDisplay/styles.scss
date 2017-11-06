@@ -1,15 +1,15 @@
 .actionBar_editsDisplayMain{
   position: relative;
   .content{
-    background: red;
     height: 100%;
-    border-radius: 2px;
-    background: #e2e2e2;
+    border-radius: 4px;
+    background: #fbfbfb;
     color: grey;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     padding: 0px 8px;
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.1);
 
     &.active{
       background: #00a3ef;

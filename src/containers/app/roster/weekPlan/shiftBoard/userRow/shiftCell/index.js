@@ -18,6 +18,7 @@ type Props = {
   extraHours: ?ExtraHours,
   position?: Position, // for open Shifts only
   shiftType: 'openshift' | 'usershift',
+  templateMode: boolean,
   style?: {},
   cssClasses?: Array<string>,
   blocked?: ?boolean, // indicates if the currentUser has permission to focus this cell.
@@ -40,6 +41,7 @@ export default class ShiftCell extends PureComponent {
       blocked,
       absence,
       hovered,
+      templateMode,
       highlighted } = this.props
     const fsr = this.props.focusedShiftRef
 
@@ -68,6 +70,7 @@ export default class ShiftCell extends PureComponent {
           <ShiftBox
             key={shift.id}
             shift={shift}
+            templateMode={templateMode}
             focused={   !!focusedShift && focusedShift.id === shift.id} />
         )}
         { inCreation    && <ShiftBox shift={dummyShift} focused inCreation/> }

@@ -36,7 +36,7 @@ class TemplateActionBar extends PureComponent {
 
     return(
       <fb className="actionBarMain">
-        <fb>Vorlage:</fb>
+        <fb className='headline'>Vorlage</fb>
         <TemplateSelect
           templatesFlat={tempsFlatOfBranch}
           currentTemplate={this.props.currentWeekID}

@@ -2,6 +2,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
+import cn from 'classnames'
 import type { Store, Shifts } from 'types/index'
 
 import SPopover from 'components/sPopover'
@@ -47,9 +48,11 @@ class OptionsDropdown extends PureComponent {
   }
 
   render(){
+    const active = this.state.dropdownOpen
+
     return(
       <fb className="optionsDropdownMain">
-        <fb className='optionsButton' onClick={this.togglePopover} ref={(ref)=>this.ref = ref}>
+        <fb className={cn({optionsButton: 1, active })}onClick={this.togglePopover} ref={(ref)=>this.ref = ref}>
           aktionen
         </fb>
         { this.state.dropdownOpen && <SPopover

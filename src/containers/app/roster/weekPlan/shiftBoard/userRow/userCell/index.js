@@ -11,13 +11,14 @@ type Props =  {
   position: ?Position,
   weekSum: number,
   weeklyMins: number,
+  timeDetailsVisible: boolean,
 }
 
 export default class  extends PureComponent{
   props: Props
 
   render(){
-    const { position, user, weekSum, weeklyMins } = this.props
+    const { position, user, weekSum, weeklyMins, timeDetailsVisible } = this.props
     const color     = position && position.color
     const shortcut  = position && position.shortcut
     const posStyle = { color: color, borderColor: color }
@@ -28,8 +29,8 @@ export default class  extends PureComponent{
     return(
       <fb className="userCellMain">
         <fb className='posBox' style={posStyle}>{shortcut}</fb>
-        <fb className='userName'>{user.name}</fb>
-        <fb className='times'>
+        <fb className={cn({userName: 1, big: !timeDetailsVisible})}>{user.name}</fb>
+        <fb className={cn({times: 1, hidden: !timeDetailsVisible})}>
           <fb className='currentWeek'>
             <fb className={cn({ istTime: 1, negative, positive })}  >{minToTimeString(weekSum)}</fb>
             <fb className='sollTime'>{' / ' + sollTime + ' h'}</fb>

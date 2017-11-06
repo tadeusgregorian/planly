@@ -5,12 +5,9 @@
   color: #909090;
   font-size: 18px;
   margin-left: 0px;
-  padding: 0 16px; }
-  .actionBarDateDisplayMain .icon {
-    padding-top: 2px;
-    padding-left: 2px; }
+  padding: 0 16px;
+  height: 24px;
+  border-radius: 2px; }
   .actionBarDateDisplayMain:hover {
-    color: white;
-    background-color: #00a3ef;
-    height: 26px;
-    border-radius: 3px; }
+    color: grey;
+    background-color: lightgrey; }

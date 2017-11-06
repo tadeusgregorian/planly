@@ -18,21 +18,28 @@ const nonWorkersHidden = simpleReducer({
   remove_shiftWeek     : false,
 })
 
+const timeDetailsVisible = (state = false, a) => {
+  if(a.type === 'TOGGLE_SHIFTBOARD_TIME_DETAILS') return !state
+  return state
+}
+
 type OptionsExpanded = boolean
 const optionsExpanded = (state = false, a) => {
   if(a.type === 'TOGGLE_POPOVER_OPTIONS') return !state
   if(a.type === 'UNFOCUS_SHIFT_CELL') return false
-  return false
+  return state
 }
 
 export type ShiftBoard = {
   focusedShiftRef: ?ShiftRef,
   optionsExpanded: OptionsExpanded,
   nonWorkersHidden: boolean,
+  timeDetailsVisible: boolean,
 }
 
 export default combineReducers({
   focusedShiftRef,
   optionsExpanded,
-  nonWorkersHidden
+  nonWorkersHidden,
+  timeDetailsVisible
 })

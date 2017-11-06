@@ -10,9 +10,13 @@
     padding: 0 8px;
     text-transform: uppercase;
     color: #989ca0;
-    background: #f2f2f3;
     font-size: 13px;
     font-weight: 500;
     box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.1);
+
+    &.active{
+      background: #fbfbfb;
+      color: #00a2ef;
+    }
   }
 }

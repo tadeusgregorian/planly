@@ -2,7 +2,6 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
-import _ from 'lodash'
 
 import { getDay, getOvertimeStatus } from './localHelpers'
 import type { User, Shifts, CellRef, Store, ShiftRef, Position, WeekAbsence, Correction, ExtraHours } from 'types/index'
@@ -31,7 +30,8 @@ type ConProps = {
   positions: Array<Position>,
   shifts: Shifts,
   extraHours: Array<ExtraHours>,
-  extraHoursMose: boolean,
+  extraHoursMode: boolean,
+  timeDetailsVisible: boolean,
   currentWeekID: string,
   currentWeekSums: {[userID: string]: number},
   currentOvertimes: {[userID: string]: number},
@@ -53,7 +53,8 @@ class ShiftBoard extends PureComponent{
       isDragging,
       shifts,
       extraHours,
-      extraHoursMose,
+      extraHoursMode,
+      timeDetailsVisible,
       templateMode,
       currentWeekID,
       initialStartWeeks,
@@ -76,25 +77,37 @@ class ShiftBoard extends PureComponent{
       correction={currentCorrections[userID]}
       overtimeStatus={getOvertimeStatus(currentWeekID, initialStartWeeks[userID])}
       templateMode={templateMode}
+      timeDetailsVisible={timeDetailsVisible}
       userID={userID}
       currentUser={currentUser}
       shifts={shifts.filter(s => s.user === userID)}
       extraHours={extraHours.filter(e => e.user === userID)}
       absences={absences.filter(a => a.user === userID)}
       shadowedDay={isDragging ? getDay(cellUnderMouse, userID) : false} // could do && cause of random Flow issue
-      highlightedDay={extraHoursMose ? getDay(cellUnderMouse, userID) : false} // could do && cause of random Flow issue
+      highlightedDay={extraHoursMode ? getDay(cellUnderMouse, userID) : false} // could do && cause of random Flow issue
       focusedShiftRef={focusedShiftRef}
       cellUnderMouse={cellUnderMouse && cellUnderMouse.user === userID ? cellUnderMouse : null}
     />
   }
 
   render(){
-    const { templateMode, currentWeekID, currentUser, visibleUsers } = this.props
+    const {
+      templateMode,
+      currentWeekID,
+      currentUser,
+      visibleUsers,
+      timeDetailsVisible } = this.props
+
     const adminMode = !!currentUser.isAdmin
 
     return(
       <fb id="shiftBoardMain">
-        <ShiftBoardHead templateMode={templateMode} weekID={currentWeekID} adminMode={adminMode} />
+        <ShiftBoardHead
+          templateMode={templateMode}
+          timeDetailsVisible={timeDetailsVisible}
+          weekID={currentWeekID}
+          adminMode={adminMode}
+        />
         <fb className='assignedShifts'>
           { this.renderUserRow('open', true) }
           { visibleUsers.map(user => this.renderUserRow(user.id, false, user)) }
@@ -110,7 +123,8 @@ const mapStateToProps = (state: Store) => ({
   positions: state.core.positions,
   shifts: state.roster.shiftWeek,
   extraHours: state.roster.extraHours,
-  extraHoursMose: state.ui.roster.extraHoursMode,
+  extraHoursMode: state.ui.roster.extraHoursMode,
+  timeDetailsVisible: state.ui.roster.shiftBoard.timeDetailsVisible,
   currentWeekID: state.ui.roster.currentWeekID,
   initialStartWeeks: getInitialStartWeeks(state),
   currentWeekSums: getCurrentWeekSums(state),

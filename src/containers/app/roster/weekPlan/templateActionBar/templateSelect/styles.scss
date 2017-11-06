@@ -4,7 +4,7 @@
   margin-left: 12px;
 
   .selectWrapper{
-    width: 200px;
+    width: 240px;
 
     .Dropdown-root{
       height: 100%;
@@ -12,8 +12,9 @@
       cursor: pointer;
 
       .Dropdown-control{
+        color: #5c5c5c;
         height: 100%;
-        background-color: #e9ebee;
+        background: white;
         padding: 0px;
         align-items: center;
         display: flex;

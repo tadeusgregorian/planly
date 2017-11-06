@@ -19,6 +19,7 @@ type Props = {
   shifts: Shifts,
   extraHours: Array<ExtraHours>,
   templateMode: boolean,
+  timeDetailsVisible: boolean,
   weekSum: number,
   overtime: ?number,
   overtimeStatus: OvertimeStatus,
@@ -42,6 +43,7 @@ export default class UserRow extends PureComponent{
       shifts,
       extraHours,
       templateMode,
+      timeDetailsVisible,
       overtime,
       overtimeStatus,
       position,
@@ -58,7 +60,7 @@ export default class UserRow extends PureComponent{
 
     return(
       <fb className="userRowMain">
-        { !templateMode && <OvertimeCell
+        { !templateMode && timeDetailsVisible && <OvertimeCell
           overtime={overtime}
           status={overtimeStatus}
           type='PRE'
@@ -72,6 +74,7 @@ export default class UserRow extends PureComponent{
               weekSum={weekSum}
               weeklyMins={weeklyMins}
               overtime={overtime}
+              timeDetailsVisible={timeDetailsVisible}
             />
           : <OpenUserCell />
         }
@@ -95,11 +98,12 @@ export default class UserRow extends PureComponent{
               shadowed={shadowed}
               highlighted={highlighted}
               focusedShiftRef={focusedShiftRef}
+              templateMode={templateMode}
               hovered={!!(cellUnderMouse && cellUnderMouse.day === day)}
             />
           })}
         </fb>
-        { !templateMode && <OvertimeCell
+        { !templateMode && timeDetailsVisible && <OvertimeCell
           overtime={overtime + weekSum - weeklyMins}
           status={overtimeStatus}
           type='POST'

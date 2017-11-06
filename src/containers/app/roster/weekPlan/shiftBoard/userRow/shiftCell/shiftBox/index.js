@@ -11,6 +11,7 @@ type Props = {
   shift: PreShift,
   focused: boolean,
   inCreation?: boolean,
+  templateMode?: boolean,
 }
 
 export default class ShiftBox extends PureComponent{

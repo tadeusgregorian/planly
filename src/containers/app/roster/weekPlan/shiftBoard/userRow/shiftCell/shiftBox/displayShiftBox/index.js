@@ -1,5 +1,6 @@
 //@flow
 import React, { PureComponent } from 'react'
+import cn from 'classnames'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import _ from 'lodash'
@@ -18,6 +19,7 @@ type ConProps = {
 
 type OwnProps = {
   shift: PreShift,
+  templateMode?: boolean,
 }
 
 type Props = OwnProps & ConProps
@@ -26,13 +28,13 @@ class DisplayShiftBox extends PureComponent{
   props: Props
 
   render(){
-    const { shift, branch, positions } = this.props
+    const { shift, branch, positions, templateMode } = this.props
     const { day, user, id, note, edit, location, position } = shift
 
     const locations: Array<Location> = (branch && branch.locations && _.values(branch.locations)) || []
 
     return(
-      <fb className='displayShiftBoxMain'
+      <fb className={cn({displayShiftBoxMain: 1, temp: templateMode})}
         data-target-type='shift'
         data-day={day}
         data-user={user}
