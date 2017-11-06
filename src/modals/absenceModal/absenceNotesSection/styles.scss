@@ -10,6 +10,9 @@
     box-sizing: border-box;
     height: 60px;
     border-color: lightgrey;
+    padding: 5px;
+    font-weight: 300;
+    font-size: 14px;
 
     &:focus{
       border-color: #00a2ef;

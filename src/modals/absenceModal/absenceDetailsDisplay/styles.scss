@@ -4,13 +4,15 @@
   font-size: 14px;
   color: #313131;
   background: none;
-  padding-left: 300px;
   background: whitesmoke;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
 
-  .row{
+  .col{
     align-items: center;
 
     .label{
+      font-weight: 300;
       margin-right: 10px;
       color: #00a1f0;
 
@@ -21,7 +23,22 @@
     }
 
     .count{
-      font-weight: 600;
+      font-weight: 400;
+      color: #686868;
+    }
+  }
+
+  .editIcon{
+    margin-left: 6px;
+    color: #c1c1c1;
+    padding: 4px;
+    font-size: 14px;
+    border-radius: 2px;
+    cursor: pointer;
+
+    &:hover{
+      background: orange;
+      color: white;
     }
   }
 }

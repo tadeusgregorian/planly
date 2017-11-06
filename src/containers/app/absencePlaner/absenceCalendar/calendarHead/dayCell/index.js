@@ -15,6 +15,7 @@ export default (props: Props) => {
   const weekDays = ['Mo','Di','Mi','Do','Fr','Sa','So']
   const dayOfMonth     = props.mom.date()
   const dayOfWeek      = props.mom.weekday()
+  const isSunnday      = dayOfWeek === 6
   const calendarWeek   = props.mom.week()
   const daysInMonth    = props.mom.daysInMonth()
   const isHolliday     = props.isHolliday
@@ -22,7 +23,7 @@ export default (props: Props) => {
   const toTight = (dayOfMonth === daysInMonth) || (dayOfMonth === 1 && dayOfWeek === 6)
 
   return(
-    <fb className="absenceDayCellMain" style={{width: props.width}}>
+    <fb className={cn({absenceDayCellMain: 1, su: isSunnday })} style={{width: props.width}}>
       { (dayOfMonth === 1 || dayOfWeek === 0) &&
         <fb className='weekDisplay'> { !toTight && ('KW ' + calendarWeek) }</fb>
       }

@@ -3,6 +3,10 @@
   flex-direction: column;
   justify-content: flex-end;
 
+  &.su{
+    background: linear-gradient( rgba(247, 247, 247, 0) 40%, #f7f7f7 70%);
+  }
+
   .weekDisplay{
     flex: 1;
     border-left: 1px solid #dfe0e4;

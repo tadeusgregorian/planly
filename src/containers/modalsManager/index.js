@@ -16,7 +16,8 @@ import SaveAsTemplateModal  from 'modals/saveAsTemplateModal'
 import CreateTemplateModal  from 'modals/createTemplateModal'
 import DayNoteModal         from 'modals/dayNoteModal'
 import PickBundesland       from 'modals/pickBundesland'
-import ConfirmationPopup     from 'modals/confirmationPopup'
+import ConfirmationPopup    from 'modals/confirmationPopup'
+import EditAbsenceDaysModal from 'modals/editAbsenceDaysModal'
 
 import './styles.css'
 
@@ -53,6 +54,7 @@ class ModalsManager extends PureComponent {
             case 'DAY_NOTE'             : return <DayNoteModal { ...props } />
             case 'BUNDESLAND'           : return <PickBundesland { ...props } />
             case 'CONFIRMATION'         : return <ConfirmationPopup { ...props } />
+            case 'EDIT_ABSENCE_DAYS'    : return <EditAbsenceDaysModal { ...props } />
             default: return null
           }
         })}

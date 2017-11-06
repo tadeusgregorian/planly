@@ -7,6 +7,7 @@ import moment from 'moment'
 import _ from 'lodash'
 
 import getCurrentUser from 'selectors/currentUser'
+import { openModal } from 'actions/ui/modals'
 import { saveAbsenceToDB, checkOverlappings, removeAbsenceFromDB } from 'actions/absence'
 import { generateGuid, momToSmart, smartToMom } from 'helpers/index'
 import { getEffectiveDays, getTotalDays, getButtonsToShow } from './localHelpers'
@@ -50,7 +51,8 @@ type OwnProps = {
 type ConProps = {
   user: User,
   currentUser: User,
-  preferences: AccountPreferences
+  preferences: AccountPreferences,
+  openModal: Function
 }
 
 class AbsenceModal extends PureComponent{
@@ -145,6 +147,13 @@ class AbsenceModal extends PureComponent{
     this.props.closeModal()
   }
 
+  openEffectiveDaysModal = () => {
+    this.props.openModal('EDIT_ABSENCE_DAYS', {
+      effectiveDays: this.state.effectiveDays,
+      changeEffectiveDays: (effectiveDays: number)=>this.setState({ effectiveDays })
+    })
+  }
+
   render(){
     const { closeModal, user, currentUser } = this.props
     const { type, startDate, endDate, focusedInput, note, totalDays, status, errorMessage, unpaid, effectiveDays } = this.state
@@ -173,7 +182,13 @@ class AbsenceModal extends PureComponent{
                   onFocusChange={focusedInput => this.setState({ focusedInput })}/>
               </fb>
             }
-            { startDate && endDate && !errorMessage && <AbsenceDetailsDisplay totalDays={totalDays} effectiveDays={effectiveDays} /> }
+            { startDate && endDate && !errorMessage &&
+              <AbsenceDetailsDisplay
+                totalDays={totalDays}
+                effectiveDays={effectiveDays}
+                openEffectiveDaysModal={this.openEffectiveDaysModal}
+              />
+            }
             { startDate && endDate &&  errorMessage && <ErrorMessageDisplay msg={errorMessage} /> }
             <AbsenceNotesSection note={note} changeNote={this.changeNote} />
             { adminMode && <AbsenceConfigs unpaid={unpaid} toggleUnpaid={this.toggleUnpaid}/> }
@@ -191,11 +206,15 @@ class AbsenceModal extends PureComponent{
   }
 }
 
+const actionCreators = {
+  openModal
+}
+
 const mapStateToProps = (state: Store, ownProps: OwnProps) => ({
   currentUser: getCurrentUser(state),
   user: (state.core.users.find(u => u.id === ownProps.userID): any), // -> telling Flow to shut up. Result must be a User
   preferences: state.core.accountDetails.preferences
 })
 
-const connector: Connector<OwnProps, OwnProps & ConProps > = connect(mapStateToProps)
+const connector: Connector<OwnProps, OwnProps & ConProps > = connect(mapStateToProps, actionCreators)
 export default connector(AbsenceModal)

@@ -5,7 +5,8 @@
   align-items: center;
   background: #f7f7f7;
   justify-content: flex-start;
-  padding-right: 10px;
+  padding-left: 2px;
+  padding-right: 4px;
   cursor: pointer;
 
   .addAbsenceBtn{
@@ -13,8 +14,8 @@
     background: #2ecc71;
     color: white;
     align-self: stretch;
-    margin: 2px;
-    margin-left: 2px;
+    margin: 2px 0px;
+    //margin-left: 2px;
     align-items: center;
     justify-content: center;
     border-radius: 2px;
@@ -34,11 +35,20 @@
       opacity: 1;
       transform: scale(1, 1);
     }
+
+    .userName{
+      margin-left: 4px;
+    }
   }
 
   .userName{
     flex: 1 1 auto;
     margin-left: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0px;
+    display: block;
   }
 
   .daysSum{
@@ -48,6 +58,7 @@
     padding: 2px 4px;
     background: #e2e2e2;
     border-radius: 2px;
+    flex: 0 0 auto;
 
     .vacDays{
       margin-left: 3px;
