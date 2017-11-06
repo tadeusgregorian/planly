@@ -1,23 +1,32 @@
 //@flow
 import React, { PureComponent } from 'react'
 import { generateGuid } from 'helpers/index'
-
+import { connect } from 'react-redux'
+import type { Connector } from 'react-redux'
+import { openModal } from 'actions/ui/modals'
 import _ from 'lodash'
 import LocationCreationRow from './locationCreationRow'
 import type { Location } from 'types/index'
 import './styles.css'
 
-type Props = {
+type OwnProps = {
   updateLocation: (Location)=>void,
   deleteLocation: (Location)=>void,
   locations: {[string]: Location}
 }
+
+type ConProps = {
+  openModal: Function
+}
+
+type Props = OwnProps & ConProps
+
 type State = {
   locBeingEdited: string, // the id of the locaction being edited or created
   onCreation: boolean // indicates that a new Location is being created / instead of an existing Loc being edited
 }
 
-export default class LocationEditor extends PureComponent {
+class LocationEditor extends PureComponent {
   props: Props
   state: State
   freshLocationID: string
@@ -38,6 +47,17 @@ export default class LocationEditor extends PureComponent {
   saveLocation = (loc: Location) => { // just passes it through to parent comp
     this.props.updateLocation(loc)
     this.cancelEditing()
+  }
+
+  deleteClicked = (loc) => {
+    const props = {
+      onAccept: ()=>this.props.deleteLocation(loc),
+      acceptBtnLabel: 'Löschen',
+      acceptBtnRed: true,
+      title: 'Arbeitsbreich löschen',
+      text: `Soll der Arbeitsbereich ${loc.name} wirklich gelöscht werden ?`
+    }
+    this.props.openModal('CONFIRMATION', props)
   }
 
   getEmptyLoc = () => ({
@@ -62,7 +82,7 @@ export default class LocationEditor extends PureComponent {
       <fb className='name'>{loc.name}</fb>
       <fb className='actionButtons'>
         <fb className='btn editBtn icon-pencil icon' onClick={() => this.editLocation(loc.id)} />
-        <fb className='btn deleteBtn icon-delete icon' onClick={() => this.props.deleteLocation(loc)}/>
+        <fb className='btn deleteBtn icon-delete icon' onClick={() => this.deleteClicked(loc)}/>
       </fb>
     </fb>
   )
@@ -93,3 +113,10 @@ export default class LocationEditor extends PureComponent {
     )
   }
 }
+
+const actionCreators = {
+  openModal
+}
+
+const connector: Connector<OwnProps, Props> = connect(null, actionCreators)
+export default connector(LocationEditor)

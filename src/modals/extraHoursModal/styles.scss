@@ -10,9 +10,26 @@
     font-size: 18px;
     line-height: 26px;
     text-align: center;
+    justify-content: center;
   }
 
   .mainInputWrapper{
     justify-content: center;
   }
+
+  .noteSection{
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #e5e5e5;
+    flex-direction: column;
+    align-items: center;
+
+    .extraHoursInput{
+      height: 50px;
+      width: 290px;
+      display: flex;
+      padding: 4px;
+    }
+  }
+
 }

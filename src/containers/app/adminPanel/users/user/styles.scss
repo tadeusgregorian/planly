@@ -2,38 +2,62 @@
 	.adminPanelUserItem{
 		font-size: 16px;
 		border-bottom: 1px solid rgba(211, 211, 211, 0.68);
-		padding: 2px 20px 2px 30px;
+		padding: 2px 10px 2px 30px;
 		color: grey;
-		justify-content: flex-start;
+		justify-content: space-between;
 		cursor: pointer;
 
 		&:hover {
 			background-color: #f4fcff;
 		}
 
-		.color-box {
-			height: 20px;
-			width: 20px;
-			flex: 0 0 auto;
-			border-radius: 3px;
-	    margin: 9px;
-		}
-
 		.item{
 			font-size: 14px;
-			flex: 1 0 auto;
+			flex: 1 1 auto;
 			padding: 6px;
 			align-items: center;
-			max-width: 180px;
+			//margin-right: 20px;
+
+			.icon{
+				justify-content: center;
+				align-items: center;
+				font-size: 14px;
+				margin-right: 6px;
+			}
 		}
 
 		.name{
+			flex: 1 1 200px;
 			font-size: 16px;
 		}
-	}
 
-	.userListItem:last-of-type{
-		//border: none;
+
+		.position{
+			flex: 1 1 80px;
+		}
+
+		.branches{
+			flex: 1 1 240px;
+			font-size: 14px;
+			min-width: 0;
+			margin-right: 40px;
+
+			.text{
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				width: 100%;
+			}
+		}
+
+		.status{
+			max-width: 100px;
+		}
+
+		.emailIcon{
+			font-size: 20px;
+			margin-right: 10px;
+		}
 	}
 
 	.deleted{
@@ -50,17 +74,5 @@
 			align-items: center;
 			cursor: pointer;
 		}
-	}
-
-	.icon{
-		justify-content: center;
-		align-items: center;
-		font-size: 14px;
-		margin-right: 6px;
-	}
-
-	.emailIcon{
-		font-size: 20px;
-		margin-right: 10px;
 	}
 }

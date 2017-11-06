@@ -20,6 +20,7 @@ export default (props: Props) => {
 
   return(
     <fb className="absenceTypeSelectMain">
+      <fb className='label'>Abwesenheitstyp</fb>
       <fb className={cn({opt: true, selected: selectedType === 'ill'})} onClick={selectedIll}>Krankheit</fb>
       <fb className={cn({opt: true, selected: selectedType === 'vac'})} onClick={selectedVac}>Urlaub</fb>
       <fb className={cn({opt: true, selected: selectedType === 'extra'})} onClick={selectedExt}>Sonstiges</fb>

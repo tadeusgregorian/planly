@@ -15,6 +15,8 @@ import InitialOvertimeModal from 'modals/initialOvertimeModal'
 import SaveAsTemplateModal  from 'modals/saveAsTemplateModal'
 import CreateTemplateModal  from 'modals/createTemplateModal'
 import DayNoteModal         from 'modals/dayNoteModal'
+import PickBundesland       from 'modals/pickBundesland'
+import ConfirmationPopup     from 'modals/confirmationPopup'
 
 import './styles.css'
 
@@ -49,6 +51,8 @@ class ModalsManager extends PureComponent {
             case 'SAVE_AS_TEMPLATE'     : return <SaveAsTemplateModal { ...props } />
             case 'CREATE_NEW_TEMPLATE'  : return <CreateTemplateModal { ...props } />
             case 'DAY_NOTE'             : return <DayNoteModal { ...props } />
+            case 'BUNDESLAND'           : return <PickBundesland { ...props } />
+            case 'CONFIRMATION'         : return <ConfirmationPopup { ...props } />
             default: return null
           }
         })}

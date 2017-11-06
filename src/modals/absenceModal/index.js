@@ -32,8 +32,7 @@ type State = {
   endDate: ?number,
   totalDays: ?number,
   effectiveDays: ?number,
-  userNote: ?string,
-  adminNote: ?string,
+  note: ?string,
   workDays: ?WorkDays,
   useAvgHours: ?true,
   unpaid: ?true,
@@ -74,8 +73,7 @@ class AbsenceModal extends PureComponent{
       endDate:        absence ? absence.endDate                : null,
       totalDays:      absence ? absence.totalDays              : null,
       effectiveDays:  absence ? absence.effectiveDays          : null,
-      userNote:       absence ? (absence.userNote    || null)  : null,
-      adminNote:      absence ? (absence.adminNote   || null)  : null,
+      note:           absence ? (absence.note        || null)  : null,
       workDays:       absence ? (absence.workDays    || null)  : props.user.workDays,
       useAvgHours:    absence ? (absence.useAvgHours || null)  : this.getDefaul_useAvgHours('vac'), // its vac when nonAdmin requests vac... when admin picks absenceType -> this gets updated
       unpaid:         absence ? (absence.unpaid      || null)  : null,
@@ -104,13 +102,14 @@ class AbsenceModal extends PureComponent{
 
   datesChanged = (d: {startDate: ?moment, endDate: ?moment}) => {
     const {startDate, endDate} = d
+    const bundesland = this.props.preferences.bundesland || 'HH' // ( just to satisfy flow, at this point Bundesland is defos not null )
     this.setState({
       startDate:      startDate ? momToSmart(startDate) : null,
       endDate:        endDate   ? momToSmart(endDate): null,
       year:           moment(startDate).year(),
       totalDays:      getTotalDays(startDate, endDate),
-      effectiveDays:  getEffectiveDays(startDate, endDate, this.state.workDays, 'HH'),
-      errorMessage:  !!(startDate && endDate) ? 'loading' : false
+      effectiveDays:  getEffectiveDays(startDate, endDate, this.state.workDays, bundesland),
+      errorMessage:   !!(startDate && endDate) ? 'loading' : false
     })
 
     // checking if selected Range is Valid here
@@ -131,10 +130,9 @@ class AbsenceModal extends PureComponent{
     this.setState({ workDays, effectiveDays:  getEffectiveDays(startDate, endDate, workDays, 'HH') })
   }
 
-  changeAdminNote = (note) => this.setState({adminNote: note})
-  changeUserNote = (note) => this.setState({userNote: note})
-
-  acceptRequest = () => this.saveAbsence({ ...this.state, status: 'accepted'})
+  changeNote    = (note) => this.setState({ note })
+  toggleUnpaid  = ()     => this.setState({ unpaid: this.state.unpaid ? null : true })
+  acceptRequest = ()     => this.saveAbsence({ ...this.state, status: 'accepted'})
 
   removeAbsence = () => {
     removeAbsenceFromDB(this.state.id)
@@ -149,7 +147,7 @@ class AbsenceModal extends PureComponent{
 
   render(){
     const { closeModal, user, currentUser } = this.props
-    const { type, startDate, endDate, focusedInput, userNote, adminNote, totalDays, status, errorMessage, unpaid, effectiveDays } = this.state
+    const { type, startDate, endDate, focusedInput, note, totalDays, status, errorMessage, unpaid, effectiveDays } = this.state
     const adminMode = !!currentUser.isAdmin
     const isComplete = startDate && endDate && type && !errorMessage
     const accepted = status === 'accepted'
@@ -160,10 +158,11 @@ class AbsenceModal extends PureComponent{
       <SModal.Main onClose={closeModal} title={user.name} >
   			<SModal.Body>
   				<fb className="absenceModalMain">
-            <fb className='firstRow'>
-              { adminMode && requested && <DisplayVacationRequest startDate={startDate} endDate={endDate} /> }
-              { accepted && adminMode && <AbsenceTypeSelect selectedType={type} selectType={this.changeType} /> }
-              { ((adminMode && accepted) || (!adminMode && requested)) &&
+            { adminMode && requested && <DisplayVacationRequest startDate={startDate} endDate={endDate} /> }
+            { adminMode && accepted  && <AbsenceTypeSelect selectedType={type} selectType={this.changeType} /> }
+            { ((adminMode && accepted) || (!adminMode && requested)) &&
+              <fb className='selectRangeWrapper'>
+                <fb className='label'>Zeitraum</fb>
                 <DateRangePicker
                   startDate={startDate ? moment(startDate, 'YYYYMMDD') : null}
                   endDate={endDate ? moment(endDate, 'YYYYMMDD') : null}
@@ -172,22 +171,12 @@ class AbsenceModal extends PureComponent{
                   isOutsideRange={adminMode ? () => false : undefined}
                   focusedInput={focusedInput}
                   onFocusChange={focusedInput => this.setState({ focusedInput })}/>
-              }
-            </fb>
+              </fb>
+            }
             { startDate && endDate && !errorMessage && <AbsenceDetailsDisplay totalDays={totalDays} effectiveDays={effectiveDays} /> }
             { startDate && endDate &&  errorMessage && <ErrorMessageDisplay msg={errorMessage} /> }
-            <AbsenceNotesSection
-              userNote={userNote}
-              adminNote={adminNote}
-              changeAdminNote={this.changeAdminNote}
-              changeUserNote={this.changeUserNote}
-              adminMode={adminMode}
-              expanded={!!(userNote || adminNote)}
-            />
-            { adminMode && <AbsenceConfigs
-              unpaid={unpaid}
-              toggleUnpaid={()=>this.setState({unpaid: unpaid ? null : true})}
-            />}
+            <AbsenceNotesSection note={note} changeNote={this.changeNote} />
+            { adminMode && <AbsenceConfigs unpaid={unpaid} toggleUnpaid={this.toggleUnpaid}/> }
   				</fb>
   			</SModal.Body>
         <SModal.Footer>
@@ -202,16 +191,11 @@ class AbsenceModal extends PureComponent{
   }
 }
 
-const actionCreators = {
-
-}
-
 const mapStateToProps = (state: Store, ownProps: OwnProps) => ({
   currentUser: getCurrentUser(state),
   user: (state.core.users.find(u => u.id === ownProps.userID): any), // -> telling Flow to shut up. Result must be a User
-  preferences:   state.core.accountDetails.preferences,
-  bundeslandCode: 'HH' // TODO: get bundeslandCode from the DB somewhere
+  preferences: state.core.accountDetails.preferences
 })
 
-const connector: Connector<OwnProps, OwnProps & ConProps > = connect(mapStateToProps, actionCreators)
+const connector: Connector<OwnProps, OwnProps & ConProps > = connect(mapStateToProps)
 export default connector(AbsenceModal)

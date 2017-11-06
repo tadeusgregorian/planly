@@ -1,46 +1,35 @@
 .emailStatusMain{
   position: absolute;
-  right: 7px;
+  right: 4px;
   top: 4px;
   padding: 0px 12px;
+  -ms-flex-align: center;
   align-items: center;
   font-size: 14px;
   font-weight: 400;
-  border: 1px solid #ffd281;
-  background-color: white;
+  background-color: grey;
   min-width: 100px;
   bottom: 4px;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
+  color: white;
+  border-radius: 1px;
 
-  icon{
+  .icon{
     padding: 0px;
-    padding-right: 8px;
+    padding-right: 6px;
   }
 
-  &.notInvited{
-    color: #ff3325;
-    background-color: #ffe8e8;
-
-    icon{
-      color: #ff3325;
-    }
+  &.NOT_INVITED{
+    color: white;
+    background-color: #ff3325;
   }
 
-  &.invited{
-    color: orange;
-    background-color: #ffeecf;
-    icon{
-      color: orange;
-    }
+  &.INVITED{
+    color: white;
+    background-color: orange;
   }
 
-  &.active{
-    color: #00ad49;
-    background-color: #c2ffc2;
-    icon{
-      color: #00ad49;
-    }
+  &.ACTIVE{
+    color: white;
+    background-color: #2fcb71;
   }
 }

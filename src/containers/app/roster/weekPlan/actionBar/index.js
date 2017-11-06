@@ -11,6 +11,7 @@ import DateDisplay from './dateDisplay'
 import EditsDisplay from './editsDisplay'
 import ExtraHoursBar from './extraHoursBar'
 import OptionsDropdown from './optionsDropdown'
+import 'react-datepicker/dist/react-datepicker.css';
 import { weekIDToMoment, momentToWeekID } from 'helpers/index'
 import { changeCurrentWeekID, leaveExtraHoursMode } from 'actions/ui/roster'
 import './styles.css'

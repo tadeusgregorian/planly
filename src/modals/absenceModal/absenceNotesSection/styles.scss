@@ -5,39 +5,16 @@
   border-radius: 2px;
   padding-top: 8px;
 
-  .sectionWrapper{
-    flex-direction: column;
-    flex: 1 1 auto;
+  .inp{
+    width: 100%;
+    box-sizing: border-box;
+    height: 60px;
+    border-color: lightgrey;
 
-    &:first-of-type{
-      margin-right: 6px;
-      padding-right: 6px;
-    }
-
-    .label{
-      font-size: 14px;
-      padding-left: 2px;
-      color: #a7a7a7;
-    }
-
-    .noteDisplay{
-      width: 100%;
-      box-sizing: border-box;
-      height: 60px;
-      border: 1px solid lightgrey;
-    }
-
-    .inp{
-      width: 100%;
-      box-sizing: border-box;
-      height: 60px;
-      border-color: lightgrey;
-
-      &:focus{
-        border-color: #00a2ef;
-        box-shadow: 0px 0px 2px 0px #00a2ef;
-        outline: none;
-      }
+    &:focus{
+      border-color: #00a2ef;
+      box-shadow: 0px 0px 2px 0px #00a2ef;
+      outline: none;
     }
   }
 }

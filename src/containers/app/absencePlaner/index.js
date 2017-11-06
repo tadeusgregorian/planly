@@ -2,7 +2,6 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
-import moment from 'moment'
 
 import { setRequestedAbsencesListener } from 'actions/listeners/absencePlaner'
 import { setAbsencesListener          } from 'actions/listeners/absencePlaner'
@@ -26,7 +25,7 @@ type ConProps = {
   absencesDS: DataStatus,
   currentYear: number,
   openAbsenceModal: (string, (Absence | void))=>{},
-  setAbsencesListener: (number)=>any,
+  setAbsencesListener: ()=>any,
   setRequestedAbsencesListener: ()=>any,
 }
 type Props = OwnProps & ConProps
@@ -36,7 +35,7 @@ class AbsencePlaner extends PureComponent {
 
   componentDidMount = () => {
     document.addEventListener('click', this.clickDetected)
-    this.props.setAbsencesListener(moment().year())
+    this.props.setAbsencesListener()
     this.props.setRequestedAbsencesListener()
   }
 
@@ -46,7 +45,7 @@ class AbsencePlaner extends PureComponent {
 
   componentWillReceiveProps = (np: Props) => {
     if(np.currentYear !== this.props.currentYear){
-      this.props.setAbsencesListener(np.currentYear)
+      this.props.setAbsencesListener()
     }
   }
 
@@ -62,7 +61,6 @@ class AbsencePlaner extends PureComponent {
 
   render() {
     const { absences, absencesDS, currentUser, absenceSums } = this.props
-    console.log(absenceSums);
 
     return(
       <fb className="absenceMain">

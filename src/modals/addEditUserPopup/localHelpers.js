@@ -39,15 +39,13 @@ export const getAverageHours = (inp: string | number, numOfDays: number): numbe
   return hoursPerDay
 }
 
-export const inpToInt = (inp: string) => inp === '' ? '' : parseInt(inp, 10)
-
 export const extractHours = (minsTotal: number) => Math.floor(minsTotal / 60 ) || 0
 export const extractMins  = (minsTotal: number) => minsTotal % 60
 
-export const getAvgs = (workDays: {}, weeklyHours: number | string): {avgHours: number, avgMins: number} => {
+export const getAvgs = (workDays: {}, weeklyHours: number | string): {avgHours: string, avgMins: string} => {
   const workDaysCount = _.keys(workDays).length
   const avgDailyMins = floatToMins(weeklyHours) / workDaysCount
-  const avgHours = extractHours(avgDailyMins)
-  const avgMins = extractMins(avgDailyMins)
+  const avgHours = extractHours(avgDailyMins).toString()
+  const avgMins = extractMins(avgDailyMins).toString()
   return { avgHours, avgMins}
 }

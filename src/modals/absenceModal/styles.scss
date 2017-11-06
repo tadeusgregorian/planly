@@ -1,16 +1,27 @@
 .absenceModalMain{
   width: 700px;
-  padding: 12px;
   flex-direction: column;
   color: #525252;
 
-  >*:not(:first-of-type){
-    margin-top: 10px;
+  >*{
+    padding: 10px;
+    padding-left: 20px;
+
+    >.label{
+      flex: 0 0 auto;
+      width: 200px;
+      color: grey;
+      align-items: center;
+    }
+
+    &:not(:last-of-type){
+      border-bottom: 1px solid #e6e6e6;
+    }
   }
 
-  .firstRow{
+  .selectRangeWrapper{
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-start;
     z-index: 2;
 
     .DateRangePicker{

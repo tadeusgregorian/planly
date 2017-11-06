@@ -94,6 +94,9 @@ export const isIntStr = (inp: string) => {
   return false
 }
 
+export const inpToInt = (inp: string): number =>
+  inp === '' ? 0 : parseInt(inp, 10)
+
 export const getPagePosOfElement = (elem: HTMLElement) => {
   let box = elem.getBoundingClientRect();
 

@@ -1,7 +1,7 @@
 //@flow
 import React, { PureComponent } from 'react'
-import cn from 'classnames'
 
+import cn from 'classnames'
 import ColorPicker from 'components/colorPicker'
 import type { Location } from 'types/index'
 import './styles.css'

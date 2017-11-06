@@ -1,6 +1,6 @@
 //@flow
 import moment from 'moment'
-import 'moment-feiertage'
+//import 'moment-feiertage'
 import { weekDays } from 'constants/roster'
 import type { Day, WorkDays, BundeslandCode, User, Absence, AbsenceStatus } from 'types/index'
 
@@ -22,7 +22,7 @@ export const getEffectiveDays = (start: ?moment, end: ?moment, workDays: ?WorkDa
     const curDay = moment(start).add(i, 'days')
     const curWeekDay = numToWeekDay(curDay.weekday())
     // $FlowFixMe -> moment-feiertage hat moment extended -> moment doesnt get that.
-    const isHoliday = curDay.isHoliday('HH')
+    const isHoliday = curDay.isHoliday(bundesland)
 
     if((!workDays || !workDays.hasOwnProperty(curWeekDay)) || isHoliday) ++excludedsCount
   }

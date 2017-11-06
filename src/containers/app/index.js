@@ -1,3 +1,4 @@
+//@flow
 import React, { PureComponent } from 'react'
 import { Route, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -6,10 +7,17 @@ import Roster from './roster'
 import AbsencePlaner from './absencePlaner'
 import AdminPanel from './adminPanel'
 import appDataLoaded from 'selectors/appDataLoaded'
+import { openModal } from 'actions/ui/modals'
+import type { Store } from 'types/index'
 import './styles.css'
 
 
 class App extends PureComponent {
+
+  componentDidUpdate = (prevProps) => {
+    const justLoaded = !prevProps.appDataLoaded && this.props.appDataLoaded
+    justLoaded && !this.props.preferences.bundesland && this.props.openModal('BUNDESLAND')
+  }
 
   render = () => {
     if(!this.props.appDataLoaded) return (<fb>Loading...</fb>)
@@ -27,8 +35,14 @@ class App extends PureComponent {
   }
 }
 
-const mapStateToProps = (state) => ({
-  appDataLoaded: appDataLoaded(state)
+
+const actionCreators = {
+  openModal
+}
+
+const mapStateToProps = (state: Store) => ({
+  appDataLoaded: appDataLoaded(state),
+  preferences: state.core.accountDetails.preferences,
 })
 
-export default withRouter(connect(mapStateToProps)(App))
+export default withRouter(connect(mapStateToProps, actionCreators)(App))

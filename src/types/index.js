@@ -46,8 +46,7 @@ export type Absence = { // this is the absence Obj we get from the DB ( Firebase
   totalDays: number,
   effectiveDays: number,
   avgDailyMins: number,
-  userNote?: string,
-  adminNote?: string,
+  note?: string,
   workDays?: WorkDays,
   useAvgHours?: true,
   touchingWeeks: {[string]: number},
@@ -66,8 +65,7 @@ export type AbsencePreDB = { // this is the absence Obj we want to write to the 
   totalDays: number,
   effectiveDays: number,
   avgDailyMins: number,
-  userNote: ?string,
-  adminNote: ?string,
+  note: ?string,
   workDays: ?WorkDays,
   useAvgHours: ?true
 }
@@ -84,8 +82,7 @@ export type AbsenceDB = { // this is how it gets extended before being written t
   effectiveDays: number,
   avgDailyMins: number,
   yearUser: string,
-  userNote: ?string,
-  adminNote: ?string,
+  note: ?string,
   workDays: ?WorkDays,
   useAvgHours: ?true,
   touchingWeeks: {[string]: number},
@@ -116,6 +113,7 @@ export type User = {
   isAdmin?: true | null, // can be set to null -> so it gets removed on DB
   isSuperAdmin?: true,
   workDays: WorkDays,
+  vacDays?: number, 
   avgDailyMins: number,
   deleted?: true | null, // can be set to null -> so it gets removed on DB
 }
@@ -171,8 +169,6 @@ export type MinimalShift = {
   e:  number,
   b:  number,
 }
-
-
 
 export type PreShift = {
   id: string,
@@ -270,11 +266,13 @@ export type TemplateFlat = {
 export type TemplatesFlat = Array<TemplateFlat>
 
 // AccountDetails
+export type BundeslandCode = 'BE'|'BB'|'HB'|'HH'|'HE'|'MV'|'NI'|'NW'|'RP'|'SL'|'SN'|'ST'|'SH'|'TH'
 
 export type AccountPreferences = {
   workdaysPerWeek: number,
   useAvgHoursForVac?: true,
   useAvgHoursForIll?: true,
+  bundesland?: BundeslandCode,
 }
 
 export type AccountDetails = {
@@ -314,5 +312,3 @@ export type DayNote = {
 export type OvertimeStatus = 'NOT_SET' | 'START_WEEK' | 'STARTED' | 'BEFORE_START'
 
 // ExtraStuff
-
-export type BundeslandCode = 'BE'|'BB'|'HB'|'HH'|'HE'|'MV'|'NI'|'NW'|'RP'|'SL'|'SN'|'ST'|'SH'|'TH'

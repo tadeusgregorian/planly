@@ -14,11 +14,6 @@ class AdminpanelUsers extends React.Component {
 	openReactivateUserPopup = () => { console.log('openReactivateUserPopup')}
 	openAddEditUserPopup = (user = null) => this.props.openModal('ADD_EDIT_USER', { user })
 
-	onSortEnd = ({oldIndex, newIndex}) => {
-		console.log(oldIndex)
-		console.log(newIndex)
- 	}
-
 
 	render() {
 		return (
@@ -27,11 +22,18 @@ class AdminpanelUsers extends React.Component {
 					<fb className="headlineText">Mitarbeiter verwalten</fb>
 					<SButton slick icon='icon-add' label='Nutzer hinzufügen' onClick={() => this.openAddEditUserPopup()} />
 				</fb>
-				{_.sortBy(this.props.users, ['sort']).map(user => (
+					<fb className='headRow'>
+						<fb className='item name'>Name</fb>
+						<fb className='item position'>Rolle</fb>
+						<fb className='item branches'>Standort</fb>
+						<fb className='item status'>Status</fb>
+					</fb>
+				{_.sortBy(this.props.users, ['name']).map(user => (
 					<UserElement
 						user={user}
 						userClicked={this.openAddEditUserPopup}
 						key={user.id}
+						branches={this.props.branches.filter(b => !!user.branches[b.id])}
 						position={this.props.positions.find(pos => pos.id === user.position)}
 					/>))
 				}

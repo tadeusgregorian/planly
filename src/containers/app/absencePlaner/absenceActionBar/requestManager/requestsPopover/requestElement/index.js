@@ -12,7 +12,7 @@ type Props = {
 }
 
 export default (props: Props) => {
-  const { userName, rangeStr, totalDays, arrowClicked, contentClicked } = props
+  const { userName, rangeStr, arrowClicked, contentClicked } = props
 
   return(
     <fb className="requestManagerPopoverElement">

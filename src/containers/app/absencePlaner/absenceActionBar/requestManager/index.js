@@ -38,7 +38,9 @@ class RequestManager extends PureComponent {
   closePopover  = () => this.setState({ isOpen: false })
   togglePopover = () => this.setState({ isOpen: !this.state.isOpen })
 
-  openRequest = (absence: Absence) => console.log(absence);
+  openRequest = (absence: Absence) => {
+    this.props.openAbsenceModal(absence.user, absence)
+  }
 
   jumpToRequest = (vacRequest: Absence) => {
     const { currentBranch, currentYear, currentMonth, currentType, users } = this.props

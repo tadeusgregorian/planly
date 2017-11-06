@@ -1,27 +1,21 @@
 .absenceDetailsDisplayMain{
-  flex-direction: column;
+  flex-direction: row;
   width: 100%;
-
   font-size: 14px;
   color: #313131;
   background: none;
-  border: 1px solid #e6e6e6;
-  border-radius: 2px;
+  padding-left: 300px;
+  background: whitesmoke;
 
   .row{
-    height: 28px;
     align-items: center;
-    padding-left: 6px;
-
-    &:first-of-type{
-      border-bottom: 1px solid #e6e6e6;
-    }
 
     .label{
-      width: 100px;
+      margin-right: 10px;
       color: #00a1f0;
 
       &.effective{
+        margin-left: 26px;
         color: orange;
       }
     }

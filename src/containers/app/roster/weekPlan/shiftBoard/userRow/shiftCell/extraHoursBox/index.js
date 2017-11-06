@@ -19,10 +19,18 @@ const extraHoursBox = ({extraHours, openModal}: ConProps & OwnProps) => {
 
   const overtimeShort = withSign(extractHours(extraHours.mins))
   const overtimeComplete = overtimeShort + ' h | ' + minToTime(extraHours.mins).minutes + '  min'
+  const note = extraHours.note
+  console.log(note);
 
   return(
-    <fb className='extraHoursBoxMain' data-type='extra-hours-box' data-id={extraHours.id}>
+    <fb
+      className='extraHoursBoxMain'
+      data-type='extra-hours-box'
+      data-id={extraHours.id}
+      data-balloon={note ? note : null}
+    >
       {overtimeComplete}
+      {note && <fb className='icon icon-comment commentIcon' />  }
     </fb>
   )
 }

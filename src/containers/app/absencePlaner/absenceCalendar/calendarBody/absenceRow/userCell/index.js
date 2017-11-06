@@ -14,6 +14,9 @@ type Props = {
 }
 
 export default ({user, adminMode, daysSum, type}: Props) => {
+  const vacMode = type === 'vac'
+  const { vacDays } = user
+
   const typeDaysGerman = {
     all: 'Abwesenheitstage',
     vac: 'Urlaubstage',
@@ -22,14 +25,13 @@ export default ({user, adminMode, daysSum, type}: Props) => {
   }
 
   return(
-    <fb className='absenceUserCellMain' data-type='absence-user' data-user={user.id}>
+    <fb className='absenceUserCellMain'>
+      <fb className='addAbsenceBtn' data-type='absence-user' data-user={user.id}>+</fb>
       <fb className='userName'>{user.name}</fb>
-      { !!daysSum &&
-          <fb className='daysSum' data-balloon={'Summe der ' + typeDaysGerman[type] + ' in 2017'}>{daysSum + ' T'}</fb>
-      }
-      <fb className={cn({addAbsenceBtn: 1, adminMode: adminMode})}>
-        <fb className='icon icon-plus'/>
-      </fb>
+        <fb className='daysSum' data-balloon={'Summe der ' + typeDaysGerman[type] + ' in 2017'}>
+          <fb className='count'>{daysSum}</fb>
+          { vacMode && vacDays && <fb className='vacDays'>{'/ ' + vacDays}</fb>}
+        </fb>
     </fb>
   )
 }

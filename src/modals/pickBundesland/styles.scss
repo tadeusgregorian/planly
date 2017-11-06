@@ -1,0 +1,26 @@
+.pickBundeslandMain{
+
+  flex-direction: column;
+  padding: 12px;
+  min-width: 600px;
+  justify-content: center;
+  align-items: center;
+
+  .label{
+    color: #636363;
+    font-weight: 300;
+    margin: 6px 0px;
+  }
+
+  .dropdownWrapper{
+    margin: 10px 2px;
+
+    .Dropdown-root{
+      width: 220px;
+
+      .Dropdown-control{
+        height: 34px;
+      }
+    }
+  }
+}

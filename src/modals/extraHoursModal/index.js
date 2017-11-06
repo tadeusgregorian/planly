@@ -60,9 +60,6 @@ class ExtraHoursModal extends PureComponent{
   //$FlowFixMe
   getUser = ():string => this.props.user || this.props.extraHours.user
 
-
-
-
   saveClicked = () => {
     const { hours, minutes, negative, note } = this.state
     const { extraHours } = this.props
@@ -83,10 +80,14 @@ class ExtraHoursModal extends PureComponent{
     this.props.closeModal()
   }
 
+  noteChanged = (e) => {
+    this.setState({note: e.target.value})
+  }
+
   render(){
     const { users, extraHours } = this.props
     const user = this.getUser()
-    const { negative, hours, minutes } = this.state
+    const { negative, hours, minutes, note } = this.state
     const userObj = users.find(u => u.id === user )
     const userName = userObj ? userObj.name : '...'
 
@@ -105,6 +106,16 @@ class ExtraHoursModal extends PureComponent{
               hoursChanged={(hours)=>this.setState({hours})}
               minutesChanged={(minutes)=>this.setState({minutes})}
             />
+            <fb className='noteSection'>
+              {/* <fb className='label'>Notiz</fb> */}
+              <textarea
+                type='text'
+                value={note}
+                onChange={this.noteChanged}
+                className='extraHoursInput'
+                placeholder='Notiz'
+              />
+            </fb>
   				</fb>
           <SModal.Footer>
             { extraHours && <SButton label='entfernen'   onClick={this.removeClicked} grey left /> }

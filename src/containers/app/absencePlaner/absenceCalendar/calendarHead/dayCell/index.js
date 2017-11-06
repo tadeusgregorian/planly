@@ -1,11 +1,13 @@
 //@flow
 import React from 'react'
 import moment from 'moment'
+import cn from 'classnames'
 import './styles.css'
 
 type Props = {
   mom: moment,
-  width: number
+  width: number,
+  isHolliday: boolean,
 }
 
 export default (props: Props) => {
@@ -15,6 +17,7 @@ export default (props: Props) => {
   const dayOfWeek      = props.mom.weekday()
   const calendarWeek   = props.mom.week()
   const daysInMonth    = props.mom.daysInMonth()
+  const isHolliday     = props.isHolliday
 
   const toTight = (dayOfMonth === daysInMonth) || (dayOfMonth === 1 && dayOfWeek === 6)
 
@@ -24,7 +27,7 @@ export default (props: Props) => {
         <fb className='weekDisplay'> { !toTight && ('KW ' + calendarWeek) }</fb>
       }
       <fb className='weekDay'>{weekDays[dayOfWeek]}</fb>
-      <fb className='monthDay'>{dayOfMonth}</fb>
+      <fb className={cn({monthDay: 1, holliday: isHolliday})} >{dayOfMonth}</fb>
     </fb>
   )
 }

@@ -1,23 +1,31 @@
+//@flow
 import React from 'react'
 import './styles.css'
 
-const SModalMain = ({title, children, onClose}) => (
+type PropsMain = {
+	title: string,
+	children: any,
+	onClose: Function,
+	unclosable: ?boolean | ?string
+}
+
+const SModalMain = ({title, children, onClose, unclosable}: PropsMain) => (
 	<fb className="sModalContainer">
 		<fb className='sModalMain'>
 			<fb className='sModalHead'>
 				<fb className='sModalTitle'><span className="titleSpan">{title}</span></fb>
-				<fb className='sModalX' onClick={onClose}><fb className='icon icon-close'/></fb>
+				{ !unclosable && <fb className='sModalX' onClick={onClose}><fb className='icon icon-close'/></fb> }
 				</fb>
 			{children}
 		</fb>
 	</fb>
 )
 
-const SModalBody = ({children, style}) => (
+const SModalBody = ({children, style}: {children: any, style: {}} ) => (
 	<fb className='sModalBody' style={style}>{children}</fb>
 )
 
-export const SModalFooter = ({children, style}) => (
+export const SModalFooter = ({children, style}: {children: any, style: {}} ) => (
 	<fb className='sModalFooter' style={style}>{children}</fb>
 )
 

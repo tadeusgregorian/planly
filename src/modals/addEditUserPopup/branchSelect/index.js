@@ -23,6 +23,7 @@ export default ({selected, branches, onChange}: Props) => {
         onChange={onChange}
         searchable={false}
         placeholder='Filiale wählen'
+        autoBlur={true}
       />
     </div>
   )

@@ -1169,15 +1169,15 @@ fb {
   display: flex;
   box-sizing: border-box; }
 
-input {
+input, textarea {
   border: 1px solid #bbbbbb;
   border-radius: 2px;
   font-size: 16px;
   color: #484848; }
-  input:focus {
+  input:focus, textarea:focus {
     border-color: #2ea8ff;
     outline: none; }
-  input::placeholder {
+  input::placeholder, textarea::placeholder {
     color: #bfbfbf; }
 
 .Container_Main {

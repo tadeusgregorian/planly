@@ -1,5 +1,14 @@
 .absenceTypeSelectMain{
 
+  width: 100%;
+  border-bottom: 1px solid lightgrey;
+
+  .label{
+    color: grey;
+    align-items: center;
+    width: 300px;
+  }
+
   .opt{
     color: grey;
     font-size: 16px;

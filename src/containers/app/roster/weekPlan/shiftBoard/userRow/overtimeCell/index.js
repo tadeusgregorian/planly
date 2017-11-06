@@ -27,7 +27,6 @@ export default ({overtime, userID, correction, status, type}: Props) => {
       { status === 'BEFORE_START' && <fb>-</fb> }
       { status === 'NOT_SET'      && <fb
           className='icon icon-question questionMark'
-          data-balloon='Überstaunden-Stand eintragen'
           data-type='pre-otime-cell'
           data-user={userID}
           data-status={status} />

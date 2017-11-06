@@ -6,8 +6,9 @@ import type { GetState } from 'types/index'
 import { db } from '../firebaseInit'
 
 
-export const setAbsencesListener = (year: number) => (dispatch: Dispatch, getState: GetState) => {
+export const setAbsencesListener = () => (dispatch: Dispatch, getState: GetState) => {
   dispatch({ type: 'remove_absences' })
+  const year        = getState().ui.absence.currentYear
   const path        = getFBPath('absences')
   const queryRef    = db().ref(path).orderByChild('year').equalTo(year)
 

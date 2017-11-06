@@ -9,17 +9,17 @@ import SModal 					from 'components/sModal'
 import Expander 				from 'components/expander'
 import SButton 					from 'components/sButton'
 import FlatInput 				from 'components/flatInput'
-//import WithTooltip 			from 'components/withTooltip'
 import FlatFormRow 			from 'components/flatFormRow'
 import WorkDaysPicker 	from 'components/workDaysPicker'
 
-import AvgDailyMinsRow  from './avgDailyMinsRow'
-import ErrorMessageBar  from './errorMessageBar'
-import PositionSelect  	from './positionSelect'
-import BranchSelect 		from './branchSelect'
+import AvgDailyMinsRow  	from './avgDailyMinsRow'
+import TotalVacDays  			from './totalVacDays'
+import ErrorMessageBar  	from './errorMessageBar'
+import PositionSelect  		from './positionSelect'
+import BranchSelect 			from './branchSelect'
 
-import { getNextID, isValidEmail, isIntStr } from 'helpers/index'
-import { inpToInt, extractHours, extractMins, floatToMins, minsToFloat, getAvgs } from './localHelpers'
+import { getNextID, isValidEmail, isIntStr, inpToInt } from 'helpers/index'
+import { extractHours, extractMins, floatToMins, minsToFloat, getAvgs } from './localHelpers'
 import type { WorkDays, UserStatus, Store } from 'types/index'
 import './styles.css'
 
@@ -33,8 +33,9 @@ class AddEditUserPopup extends PureComponent {
 		status: 					UserStatus,
 		workDays: 				WorkDays,
 		weeklyHours: 			string,
-		avgHours:					number,
-		avgMins:					number,
+		avgHours:					string,
+		avgMins:					string,
+		vacDays: 					string,
 		errorText: 				string,
 	}
 
@@ -54,9 +55,10 @@ class AddEditUserPopup extends PureComponent {
 			position: 				user ? user.position 		: 'p001',
 			status: 					user ? user.status 			: 'NOT_INVITED',
 			workDays: 				user ? user.workDays 		: { mo: 1, tu: 1, we: 1, th: 1, fr: 1, sa: 1 },
+			vacDays:   				user ? user.vacDays			: '',
 			weeklyHours: 			user ? minsToFloat(user.weeklyMins) 		: '0', // gets stripped away before saving to DB
-			avgHours:					user ? extractHours(user.avgDailyMins)  : 0,   // gets stripped away before saving to DB
-			avgMins:					user ? extractMins(user.avgDailyMins) 	: 0,   // gets stripped away before saving to DB
+			avgHours:					user ? extractHours(user.avgDailyMins).toString()  : '',   // gets stripped away before saving to DB
+			avgMins:					user ? extractMins(user.avgDailyMins).toString() 	 : '',   // gets stripped away before saving to DB
 			errorText: 				'', 																					 // gets stripped away before saving to DB
 		}
 	}
@@ -79,11 +81,12 @@ class AddEditUserPopup extends PureComponent {
 	}
 
 	saveUser = (sendInvite: boolean) => {
-		const { avgHours , avgMins, weeklyHours, status, name, id,  } = this.state
+		const { avgHours , avgMins, weeklyHours, status, vacDays } = this.state
 		let dbUser  = {
 			...this.props.user,   // props like 'isAdmin' are not in state, thats why doing ...user ( from props )
 			..._.omit(this.state, ['errorText', 'avgHours', 'avgMins', 'weeklyHours']),
-			avgDailyMins: avgMins + (avgHours * 60 || 0),
+			avgDailyMins: inpToInt(avgMins) + (inpToInt(avgHours) * 60),
+			vacDays:			vacDays && inpToInt(vacDays),
 			weeklyMins: 	floatToMins(weeklyHours),
 			status: 			sendInvite ? 'INVITED' : status
 		}
@@ -118,14 +121,14 @@ class AddEditUserPopup extends PureComponent {
 		this.setState({ weeklyHours, ...getAvgs(this.state.workDays, weeklyHours)})
 	}
 
-	avgDailyMinsChanged = (target, inp) => isIntStr(inp) && this.setState({[target]: inpToInt(inp)})
+	avgDailyMinsChanged = (target, inp) => isIntStr(inp) && this.setState({[target]: inp})
 
 	workDaysChanged = (workDays) => {
 		this.setState({ workDays, ...getAvgs(workDays, this.state.weeklyHours) })
 	}
 
 	render() {
-		const { name, email, weeklyHours, position, branches, status, workDays, avgHours, avgMins } = this.state
+		const { name, email, weeklyHours, position, branches, status, workDays, avgHours, avgMins, vacDays } = this.state
 		const allBranches = this.props.branches
 		const allPositions = this.props.positions
 		const emailDisabled = status === 'ACTIVE'
@@ -156,6 +159,7 @@ class AddEditUserPopup extends PureComponent {
 							</FlatFormRow>
 						</fb>
 						<Expander label='Abwesenheit'>
+							<TotalVacDays vacDays={vacDays} onChange={(vacDays)=>this.setState({ vacDays })} />
 							<WorkDaysPicker workDays={workDays} onChange={this.workDaysChanged} />
 							<AvgDailyMinsRow avgHours={avgHours} avgMins={avgMins} onChange={this.avgDailyMinsChanged} />
 						</Expander>
