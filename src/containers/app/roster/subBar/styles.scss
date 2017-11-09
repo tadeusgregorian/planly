@@ -1,7 +1,7 @@
 .rosterSubBarMain{
   background-color: white;
   color: #008fd2;
-  height: 44px;
+  height: 40px;
   align-items: stretch;
   align-items: center;
   padding: 0px 10px;
@@ -16,47 +16,69 @@
     flex: 0 1 1200px;
     align-items: stretch;
     padding-left: 1px;
+    color: #b5b5b5;
+
+    .branchSelector{
+      padding: 0px;
+      width: 200px;
+      border: none;
+
+      .Dropdown-root{
+        height: 100%;
+        width: 100%;
+
+        .Dropdown-control{
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          height: 100%;
+          border: none;
+          border-right: 1px solid #e2e8ea;
+          border-left: 1px solid #e2e8ea;
+          border-radius: 0px;
+          padding: 0 0 0 8px;
+          color: #555;
+
+          .Dropdown-arrow{
+            right: 12px;
+            top: 20px;
+          }
+        }
+
+        .Dropdown-menu{
+          margin-top: 0px;
+          box-shadow: 0px 8px 12px -2px rgba(0, 0, 0, 0.46);
+        }
+      }
+    }
 
     .subBarButton{
-      border-right: 1px solid #e2e8ea;
-      color: grey;
+      //border-right: 1px solid #e2e8ea;
       align-items: center;
       padding: 0 16px;
       cursor: pointer;
-      height: 100%;
+      align-self: stretch;
+      font-size: 16px;
+      text-decoration: uppercase;
+      font-weight: 400;
+      margin: 4px;
+      margin-right: 0px;
+      border-radius: 2px;
 
-      &.branchSelector{
-        padding: 0px;
-        width: 200px;
-        border: none;
-
-        .Dropdown-root{
-          height: 100%;
-          width: 100%;
-
-          .Dropdown-control{
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            height: 100%;
-            border: none;
-            border-right: 1px solid #e2e8ea;
-            border-left: 1px solid #e2e8ea;
-            border-radius: 0px;
-            padding: 0 0 0 8px;
-
-            .Dropdown-arrow{
-              right: 12px;
-              top: 20px;
-            }
-          }
-
-          .Dropdown-menu{
-            margin-top: 0px;
-            box-shadow: 0px 8px 12px -2px rgba(0, 0, 0, 0.46);
-          }
-        }
+      &:hover{
+        background: #f3f3f3;
       }
+
+      &.activeBlue{
+        color: #008acc;
+        background: #cfefff;
+      }
+
+      &.activePink{
+        color: #ff5571;
+        background: #ffe6eb;
+      }
+
     }
   }
 }

@@ -2,6 +2,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
+import cn from 'classnames'
 
 import { getDay, getOvertimeStatus } from './localHelpers'
 import type { User, Shifts, CellRef, Store, ShiftRef, Position, WeekAbsence, Correction, ExtraHours } from 'types/index'
@@ -19,6 +20,7 @@ import './styles.css'
 
 type OwnProps = {
   shifts: Shifts,
+  loading: boolean,
   templateMode: boolean,
   isDragging?: ?boolean,    // comes from HOC // there is a ? before the colon -> because flow thows error cause of injection of props
   cellUnderMouse?: ?CellRef,  // comes from HOC // there is a ? before the colon -> because flow thows error cause of injection of props
@@ -93,9 +95,11 @@ class ShiftBoard extends PureComponent{
   render(){
     const {
       templateMode,
+      loading,
       currentWeekID,
       currentUser,
       visibleUsers,
+      focusedShiftRef,
       timeDetailsVisible } = this.props
 
     const adminMode = !!currentUser.isAdmin
@@ -112,6 +116,8 @@ class ShiftBoard extends PureComponent{
           { this.renderUserRow('open', true) }
           { visibleUsers.map(user => this.renderUserRow(user.id, false, user)) }
         </fb>
+        <fb className={cn({loadingLayer: 1, visible: loading})}>loading...</fb>
+        <fb className={cn({darkOverlay:  1, visible: !!focusedShiftRef})}></fb>
       </fb>
     )
   }

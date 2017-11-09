@@ -16,13 +16,13 @@ export const setInitialRosterListeners: ThunkAction = () => (dispatch, getState)
   setTemplatesFlatListener(dispatch, getState)
   setWeekSumsListener(dispatch, getState)
   setCorrectionsListener(dispatch, getState)
-  dispatch({type: 'remove_shiftWeek'})
+  //dispatch({type: 'remove_shiftWeek'})
 }
 
 export const setRosterListeners: ThunkAction = () => (dispatch, getState: GetState) => {
   dispatch({type: 'remove_shiftWeek'})
-  setExtraHoursListener(dispatch, getState)
   setShiftWeekListener(dispatch, getState)
+  setExtraHoursListener(dispatch, getState)
   setWeekAbsenceListener(dispatch, getState)
   setDayNotesListener(dispatch, getState)
 }

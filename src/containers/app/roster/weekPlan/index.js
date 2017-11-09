@@ -9,6 +9,7 @@ import WithMouseEvents from '../withMouseEvents'
 import ShiftBoard from './shiftBoard'
 import ActionBar from './actionBar'
 import TemplateActionBar from './templateActionBar'
+import type { DataStatus } from 'types/index'
 import './styles.css'
 
 type ConnectedProps = {
@@ -16,6 +17,7 @@ type ConnectedProps = {
   currentBranch: string,
   currentWeekID: string,
   templateMode: boolean,
+  shiftWeekDataStatus: DataStatus,
   setRosterListeners: ()=>any,
   setInitialRosterListeners: ()=>any
 }
@@ -39,13 +41,16 @@ class WeekPlan extends PureComponent{
   }
 
   render(){
-    const { templateMode } = this.props
+
+    const { templateMode, shiftWeekDataStatus } = this.props
+    const shiftsLoaded = shiftWeekDataStatus === 'LOADED'
+
     return(
       <fb className="shiftWeekWrapper">
         <fb className='shiftWeekMain'>
           { !templateMode ? <ActionBar /> : <TemplateActionBar /> }
           <WithMouseEvents>
-            <ShiftBoard shifts={this.props.shifts} templateMode={templateMode}/>
+            <ShiftBoard shifts={this.props.shifts} templateMode={templateMode} loading={!shiftsLoaded} />
           </WithMouseEvents>
         </fb>
       </fb>
@@ -63,6 +68,7 @@ const mapStateToProps = (state: Store) => ({
   currentWeekID: state.ui.roster.currentWeekID,
   templateMode: state.ui.roster.templateMode,
   shifts: state.roster.shiftWeek,
+  shiftWeekDataStatus: state.roster.shiftWeekDataStatus,
 })
 
 const connector: Connector<{}, Props> = connect(mapStateToProps, actionsToProps)

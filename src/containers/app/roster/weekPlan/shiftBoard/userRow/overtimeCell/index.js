@@ -12,9 +12,10 @@ type Props = {
   type: 'PRE' | 'POST',
   // correction: ?Correction,
   userID: string,
+  empty: boolean,
 }
 
-export default ({overtime, userID, correction, status, type}: Props) => {
+export default ({ overtime, userID, correction, status, type, empty }: Props) => {
 
   const _overtime = overtime || 0
 
@@ -22,14 +23,22 @@ export default ({overtime, userID, correction, status, type}: Props) => {
   const overtimeComplete = overtimeShort + ' h / ' + minToTime(_overtime).minutes + '  min'
   const displayOvertime = status === 'STARTED' || status === 'START_WEEK'
 
+  if(empty) return <fb className="overtimeCellMain" style={{width: overtimeCellWidth}}/>
+
   if(type === 'PRE') return(
     <fb className="overtimeCellMain" style={{width: overtimeCellWidth}} >
-      { status === 'BEFORE_START' && <fb>-</fb> }
-      { status === 'NOT_SET'      && <fb
+      { status === 'BEFORE_START' &&
+      <fb className='setInFuture' data-balloon='Initale Überstunden schon eingetragen.'>-</fb>
+      }
+      { status === 'NOT_SET'      &&
+      <fb data-balloon='Überstunden hier eintragen' >
+        <fb
           className='icon icon-question questionMark'
           data-type='pre-otime-cell'
           data-user={userID}
-          data-status={status} />
+          data-status={status}
+        />
+      </fb>
       }
       { displayOvertime && <fb
           className={cn({overtimeWrapper: 1, startWeek: status === 'START_WEEK'})}
@@ -45,7 +54,6 @@ export default ({overtime, userID, correction, status, type}: Props) => {
   if(type === 'POST') return (
     <fb className="overtimeCellMain post" style={{width: overtimeCellWidth}} data-balloon={overtimeComplete} >
       {displayOvertime && overtimeShort}
-      {/* { correction && <fb className='icon icon-av_timer timerIcon' /> } */}
     </fb>
   )
 }

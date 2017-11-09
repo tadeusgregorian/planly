@@ -11,9 +11,9 @@ export const toDBShift = (sh: PreShift, branch: string): Shift => ({
   position:  sh.position  || null, // firebase needs null to delete a node ( undefined throws an error )
   location:  sh.location  || null,
   note:      sh.note      || null,
+  isOpen:    sh.isOpen    || null,
   branch:    branch,
   branchDay: branch + sh.day,
-  userDay:   sh.user + sh.day,
 })
 
 // returns a object that you can call as an argument for the firebase-update method for db-writes

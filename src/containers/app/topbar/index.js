@@ -1,6 +1,7 @@
 //@flow
 import React from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import { logoutFromFirebase } from 'actions/auth'
 
 import getCurrentUser from 'selectors/currentUser'
@@ -40,4 +41,4 @@ const mapStateToProps = (state) => ({
 })
 
 
-export default connect(mapStateToProps)(Topbar)
+export default withRouter(connect(mapStateToProps)(Topbar))

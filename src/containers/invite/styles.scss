@@ -5,8 +5,20 @@
 	align-items: flex-start;
 	padding-top: 160px;
 
+	.errorMsg{
+		padding: 4px;
+    color: white;
+    background: red;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 6px;
+    border-radius: 2px;
+    font-weight: 300;
+	}
+
 	.container {
-		padding: 18px;
+		padding-top: 16px;
+		padding-bottom: 30px;
 		justify-content: flex-start;
 		align-items: center;
 		flex-direction: column;
@@ -17,16 +29,43 @@
 		border-radius: 2px;
 		flex: 0 0 auto;
 
-		>*{
-			margin-bottom: 4px;
+		.content{
+			width: 200px;
+			flex-direction: column;
+
+			>*{
+				margin-bottom: 6px;
+				justify-content: center;
+			}
+
+			.description{
+				font-weight: 300;
+			}
+
+			.email{
+				margin-bottom: 12px;
+			}
+
+			.pw{
+				box-sizing: border-box;
+				padding: 6px;
+				font-size: 14px;
+				width: 100%;
+			}
+
+			.saveBtn{
+				height: 30px;
+			}
 		}
 	}
+
 	.title {
 		font-size: 32px;
 		font-weight: 100;
     flex: 0 0 auto;
     margin-bottom: 40px;
 	}
+
 
 	.passwordForgottenBtn{
 		width: 100%;

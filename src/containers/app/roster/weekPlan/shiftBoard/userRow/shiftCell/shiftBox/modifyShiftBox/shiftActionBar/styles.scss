@@ -10,6 +10,7 @@
 }
 
 .shiftActionBarMain{
+  will-change: transform;
   position: absolute;
   top: -23px;
   right: -1px;

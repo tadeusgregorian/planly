@@ -113,7 +113,7 @@ export type User = {
   isAdmin?: true | null, // can be set to null -> so it gets removed on DB
   isSuperAdmin?: true,
   workDays: WorkDays,
-  vacDays?: number, 
+  vacDays?: number,
   avgDailyMins: number,
   deleted?: true | null, // can be set to null -> so it gets removed on DB
 }
@@ -196,7 +196,6 @@ export type Shift = {
   position?: ?string,
   location?: ?string,
   branchDay: string,
-  userDay: string,
 }
 
 export type Shifts = Array<Shift>

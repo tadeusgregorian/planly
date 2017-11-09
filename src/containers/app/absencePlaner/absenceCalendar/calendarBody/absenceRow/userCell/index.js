@@ -26,7 +26,7 @@ export default ({user, adminMode, daysSum, type}: Props) => {
 
   return(
     <fb className='absenceUserCellMain'>
-      <fb className='addAbsenceBtn' data-type='absence-user' data-user={user.id}>+</fb>
+      { adminMode && <fb className='addAbsenceBtn' data-type='absence-user' data-user={user.id}>+</fb> }
       <fb className='userName'>{user.name}</fb>
         <fb className='daysSum' data-balloon={'Summe der ' + typeDaysGerman[type] + ' in 2017'}>
           <fb className='count'>{daysSum}</fb>

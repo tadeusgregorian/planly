@@ -13,7 +13,7 @@ module.exports = (inviteData) => {
   let txt = ''
   txt += `Hi ${name}, \n`
   txt += `es wurde ein Zugang zum Plandy-Dienstplaner für dich eingerichtet.\n`
-  txt += `Klicke auf den Folgenden link um diensen zu aktivieren und einzurichten:\n`
+  txt += `Klicke auf den Folgenden link um deinen Account zu aktivieren:\n`
   txt += `${url}/invite/${accountID}/${userID}, \n`
   txt += `\n`
   txt += `Mit freundlichen Grüßen \n`

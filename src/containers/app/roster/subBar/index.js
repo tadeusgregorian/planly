@@ -1,8 +1,8 @@
 // @flow
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
+import cn from 'classnames'
 import type { Store } from 'types/index'
-import { NavLink } from 'react-router-dom'
 import {
   changeCurrentBranch,
   leaveTemplateMode,
@@ -23,27 +23,24 @@ class SubBar extends PureComponent {
   }
 
   render(){
-    const { currentBranch, changeCurrentBranch, branches } = this.props
+    const { currentBranch, changeCurrentBranch, branches, templateMode } = this.props
     const currentBranchName = branches.find(b => b.id === currentBranch).name
     return(
       <fb className="rosterSubBarMain">
         <fb className='centered'>
-          <fb className='subBarButton branchSelector'>
+          <fb className='branchSelector'>
             <Dropdown
               value={{value: currentBranch, label: currentBranchName}}
               options={branches.map(b => ({value: b.id, label: b.name}))}
               onChange={(opt) => changeCurrentBranch(opt.value)}
             />
           </fb>
-          <NavLink to='/app/dienstplan/wochenplan'>
-            <fb className='subBarButton' onClick={this.weekPlanClicked}>Wochenplan</fb>
-          </NavLink>
-          <NavLink to='/app/dienstplan/wochenplan'>
-            <fb className='subBarButton' onClick={this.templatesClicked}>Vorlagen</fb>
-          </NavLink>
-          <NavLink to='/app/dienstplan/overtime'>
-            <fb className='subBarButton'>Überstunden</fb>
-          </NavLink>
+          <fb
+            className={cn({subBarButton: 1, activeBlue: !templateMode})}
+            onClick={this.weekPlanClicked}>Wochenplan</fb>
+          <fb
+            className={cn({subBarButton: 1, activePink: templateMode})}
+            onClick={this.templatesClicked}>Vorlagen</fb>
         </fb>
       </fb>
     )
@@ -60,6 +57,7 @@ const mapStateToProps = (state: Store) => ({
   currentBranch: state.ui.roster.currentBranch,
   branches: state.core.branches,
   templatesFlat: state.roster.templatesFlat,
+  templateMode: state.ui.roster.templateMode,
 })
 
 export default connect (mapStateToProps, actionsToProps)(SubBar)

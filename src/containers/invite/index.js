@@ -50,7 +50,6 @@ export default class Invite extends PureComponent {
       .then(res => res.json())
       .then(json => {
         const user = JSON.parse(json)
-        console.log(user)
         user && user.id && this.populateState(user)
       })
       .catch(err => console.log('error tade: ', err))
@@ -77,18 +76,21 @@ export default class Invite extends PureComponent {
     // maybe instable: ( race condition possible )
     // createUserWith.. automatically signs user in after creation ->
     // we have registred an authStateChange listener -> handles LoggingIn
-    // For that it checks the allUsers from the database -> to look the AccountID that the user is associated with.
+    // For that it checks the allUsers from the database -> to get the AccountID that the user is associated with.
     // -> this entry is being created here in the .then function -> still it somehow gets executed on the DB prior
     // to the query of the authStateChange-listener. So it works here just fine. Just kind of spooky. so watch out here...
     firebase.auth().createUserWithEmailAndPassword(email, pw1)
       .then(fbUser => this.createUserEntry(fbUser))
       .then(res    => this.props.history.push('/'))
-      .catch(error => console.log(error.code))
+      .catch(error => {
+        if(error.code === 'auth/email-already-in-use') this.setError('Email-Adresse bereits in Nutzung')
+      })
   }
 
   setError = (error: string) => this.setState({ error })
 
 	render() {
+
     const { pw1, pw2, email, error, status, name } = this.state
     const isActive = status === 'ACTIVE'
 
@@ -101,13 +103,15 @@ export default class Invite extends PureComponent {
 		return (
 			<fb className='inviteUserMain'>
         <fb className='container'>
-          { error && <fb>{error}</fb> }
+          { error && <fb className='errorMsg'>{error}</fb> }
           <fb className="title">{`Hallo, ${name}`}</fb>
-          <fb className='text'>Erstelle ein Passwort</fb>
-          <fb className='text email'>{email}</fb>
-          <input type='text' value={pw1}  onChange={(e)=>this.setState({ pw1: e.target.value })}  />
-          <input type='text' value={pw2}  onChange={(e)=>this.setState({ pw2: e.target.value })}  />
-          <fb className='soBtn' onClick={this.saveClicked}>speichern</fb>
+          <fb className='content'>
+            <fb className='description text'>Passwort anlegen für</fb>
+            <fb className='text email'>{email}</fb>
+            <input className='pw' type='password' value={pw1}  onChange={(e)=>this.setState({ pw1: e.target.value })} placeholder='passwort' />
+            <input className='pw' type='password' value={pw2}  onChange={(e)=>this.setState({ pw2: e.target.value })} placeholder='passwort wiederholen' />
+            <fb className='saveBtn soBtn' onClick={this.saveClicked}>speichern</fb>
+          </fb>
         </fb>
 			</fb>
 		)

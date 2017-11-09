@@ -60,12 +60,14 @@ export default class UserRow extends PureComponent{
 
     return(
       <fb className="userRowMain">
-        { !templateMode && timeDetailsVisible && <OvertimeCell
-          overtime={overtime}
-          status={overtimeStatus}
-          type='PRE'
-          userID={userID}
-        />
+        { !templateMode && timeDetailsVisible &&
+          <OvertimeCell
+            overtime={overtime}
+            status={overtimeStatus}
+            type='PRE'
+            empty={isOpen}
+            userID={userID}
+          />
         }
         { (!isOpen && user)
           ? <UserCell
@@ -107,6 +109,7 @@ export default class UserRow extends PureComponent{
           overtime={overtime + weekSum - weeklyMins}
           status={overtimeStatus}
           type='POST'
+          empty={isOpen}
           userID={userID}
         /> }
       </fb>

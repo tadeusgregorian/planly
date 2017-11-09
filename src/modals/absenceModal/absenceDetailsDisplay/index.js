@@ -5,6 +5,7 @@ import './styles.css'
 type Props = {
   totalDays: ?number,
   effectiveDays: ?number,
+  adminMode: boolean,
   openEffectiveDaysModal: Function,
 }
 
@@ -21,12 +22,14 @@ export default (props: Props) => {
         <fb className='label effective'>Tage effektiv</fb>
         <fb className='count effective'>{props.effectiveDays}</fb>
       </fb>
+      { props.adminMode &&
       <fb data-balloon='Effektive Tage manuel eintragen'>
         <fb
           className='icon icon-pencil editIcon'
           onClick={props.openEffectiveDaysModal}
         />
       </fb>
+      }
     </fb>
   )
 }

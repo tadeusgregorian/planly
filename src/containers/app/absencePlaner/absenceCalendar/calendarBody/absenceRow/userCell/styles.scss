@@ -30,6 +30,7 @@
 
   &:hover{
     .addAbsenceBtn{
+      margin-right: -4px;
       width: 30px;
       display: flex;
       opacity: 1;
@@ -37,7 +38,7 @@
     }
 
     .userName{
-      margin-left: 4px;
+      //margin-left: 4px;
     }
   }
 

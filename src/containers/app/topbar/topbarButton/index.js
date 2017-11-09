@@ -5,7 +5,7 @@ import './styles.css'
 export default ({label, onClick, to}) => {
 
   return(
-    <NavLink to={to}>
+    <NavLink to={to} className='navlink'>
       <fb className="topbarButton">
         {label}
       </fb>

@@ -1,7 +1,13 @@
-.topbarButton {
-  padding-right: 20px;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  cursor: pointer;
-  color: white; }
+.navlink {
+  height: 100%; }
+  .navlink.active .topbarButton {
+    background: #1fb7ff;
+    margin-left: 2px; }
+  .navlink .topbarButton {
+    padding-right: 20px;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    cursor: pointer;
+    color: white;
+    padding: 0px 12px; }

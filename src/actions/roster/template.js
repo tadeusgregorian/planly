@@ -35,11 +35,12 @@ export const createNewTemplate: ThunkAction = (name: string) => (dispatch, getSt
 
 export const importTemplateWeek: ThunkAction = (tempID: string) => (dispatch, getState: GetState) => {
   const weekID  = getState().ui.roster.currentWeekID
+  const branch  = getState().ui.roster.currentBranch
 
   return fetchTemplateWeek(tempID).then(shifts => {
     const updates = {}
     shifts.forEach(s => updates[getFBPath('miniShiftWeeks', [weekID, s.user, s.id])] = getMini(s))
-    shifts.forEach(s => updates[getFBPath('shiftWeeks',     [weekID, s.id])]         = s)
+    shifts.forEach(s => updates[getFBPath('shiftWeeks',     [weekID, s.id])]         = toDBShift(s, branch))
     return db().ref().update(updates)
   })
 }

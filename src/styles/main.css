@@ -1,8 +1,7 @@
-@import 'https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,700i';
+@import 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700';
 @font-face {
   font-family: 'icomoon';
-  src: url("../fonts/icomoon.eot?uqosd8");
-  src: url("../fonts/icomoon.eot?uqosd8#iefix") format("embedded-opentype"), url("../fonts/icomoon.ttf?uqosd8") format("truetype"), url("../fonts/icomoon.woff?uqosd8") format("woff");
+  src: url("../fonts/icomoon.ttf?uqosd8") format("truetype"), url("../fonts/icomoon.woff?uqosd8") format("woff");
   font-weight: normal;
   font-style: normal; }
 
@@ -1152,11 +1151,12 @@ input,
 li,
 fb,
 span {
-  font-family: "Roboto", sans-serif;
-  margin: 0; }
+  margin: 0;
+  font-family: "Roboto", sans-serif; }
 
 html {
-  height: 100%; }
+  height: 100%;
+  font-family: "Roboto", sans-serif; }
 
 body {
   height: 100%;

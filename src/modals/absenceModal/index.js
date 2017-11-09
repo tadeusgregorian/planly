@@ -184,6 +184,7 @@ class AbsenceModal extends PureComponent{
             }
             { startDate && endDate && !errorMessage &&
               <AbsenceDetailsDisplay
+                adminMode={adminMode}
                 totalDays={totalDays}
                 effectiveDays={effectiveDays}
                 openEffectiveDaysModal={this.openEffectiveDaysModal}
