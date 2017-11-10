@@ -1,3 +1,4 @@
+//@flow
 import { simpleReducer } from './reducerHelpers'
 import { combineReducers } from 'redux'
 
