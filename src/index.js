@@ -7,7 +7,7 @@ import 'moment-feiertage'  // this one after moment
 import configureStore from './configs/configureStore'
 import 'styles/main.css';
 import App from 'containers';
-import registerServiceWorker from './registerServiceWorker';
+//import registerServiceWorker from './registerServiceWorker';
 
 const store = configureStore()
 
@@ -15,7 +15,7 @@ ReactDOM.render(
   <Provider store={store}><App /></Provider>,
   document.getElementById('root')
 )
-registerServiceWorker()
+//registerServiceWorker()
 
 if (module.hot) {
   module.hot.accept('containers', () => {

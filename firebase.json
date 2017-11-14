@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "build",
+    "public": "buildroot",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -12,8 +12,20 @@
         "function": "getInviteStatus"
       },
       {
+        "source": "/mob/**",
+        "destination": "/mob/index.html"
+      },
+      {
+        "source": "/app/**",
+        "destination": "/app/index.html"
+      },
+      {
+        "source": "/web/**",
+        "destination": "/web/index.html"
+      },
+      {
         "source": "**",
-        "destination": "/index.html"
+        "function": "bouncer"
       }
     ]
   }

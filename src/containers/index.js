@@ -6,6 +6,7 @@ import { setAuthStateListener, registerInitialListeners } from 'actions/listener
 import { initIziToast } from 'helpers'
 import ModalsManager from './modalsManager'
 import 'react-select/dist/react-select.css'
+import 'react-dates/initialize' // needs to be here for an airBnB bug fix
 import 'react-dates/lib/css/_datepicker.css';
 
 import Login    from './login'

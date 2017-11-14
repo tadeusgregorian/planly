@@ -75,7 +75,7 @@ class AbsenceModal extends PureComponent{
       endDate:        absence ? absence.endDate                : null,
       totalDays:      absence ? absence.totalDays              : null,
       effectiveDays:  absence ? absence.effectiveDays          : null,
-      note:           absence ? (absence.note        || null)  : null,
+      note:           absence ? (absence.note        || '')    : '',
       workDays:       absence ? (absence.workDays    || null)  : props.user.workDays,
       useAvgHours:    absence ? (absence.useAvgHours || null)  : this.getDefaul_useAvgHours('vac'), // its vac when nonAdmin requests vac... when admin picks absenceType -> this gets updated
       unpaid:         absence ? (absence.unpaid      || null)  : null,
@@ -143,7 +143,7 @@ class AbsenceModal extends PureComponent{
 
   saveAbsence   = (absenceDirty) => {
     const cleanAbsence = _.omit(absenceDirty, ['focusedInput', 'errorMessage'])
-    saveAbsenceToDB(cleanAbsence)
+    saveAbsenceToDB({ ...cleanAbsence, note: this.state.note || null }) // turning '' to null
     this.props.closeModal()
   }
 

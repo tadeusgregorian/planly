@@ -27,9 +27,15 @@
 
     .DateRangePicker{
       .DateRangePickerInput{
-        border-color: #00a1f0;
+        //border-color: #00a1f0;
         .DateInput{
           padding: 4px;
+
+          .DateInput_input{
+            text-align: center;
+            padding: 8px 0px;
+            border-radius: 0px;
+          }
         }
       }
     }
