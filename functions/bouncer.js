@@ -4,17 +4,22 @@ const cookieParser = require('cookie-parser')();
 const path = require('path');
 
 module.exports = () => {
-  const validateFirebaseIdToken = (req, res, next) => {
+
+  const handleRequest = (req, res, next) => {
     const __session = req.cookies.__session;
 
-    if(__session && __session === 'loggedin_mobile') res.redirect('/mob')
-    if(__session && __session === 'loggedin_desktop') res.redirect('/app')
+    console.log('Session Coockie is: ', __session);
 
-    res.redirect('/web')
+    if(__session && __session === 'loggedin_mobile')  res.redirect('/mob/')
+    if(__session && __session === 'loggedin_desktop') res.redirect('/app/')
 
+    console.log('delivering WEB now!');
+
+    res.sendFile(path.join(__dirname + '/website/index.html'))
+  }
 
   app.use(cookieParser);
-  app.use(validateFirebaseIdToken);
+  app.use(handleRequest);
 
   return app
 }

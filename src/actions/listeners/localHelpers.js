@@ -24,3 +24,20 @@ export const getCookie = (name) => {
   }
   return '';
 };
+
+export const deleteCookie = (name) =>  {
+  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+
+export const isMobile = () => {
+ const isMobile =
+      navigator.userAgent.match(/Android/i)
+   || navigator.userAgent.match(/webOS/i)
+   || navigator.userAgent.match(/iPhone|iPad|iPod/i)
+   || navigator.userAgent.match(/BlackBerry/i)
+   || navigator.userAgent.match(/Windows Phone/i)
+   || navigator.userAgent.match(/IEMobile/i)
+   || navigator.userAgent.match(/Opera Mini/i)
+   || window.screen.width <= 600
+  return !!isMobile
+}

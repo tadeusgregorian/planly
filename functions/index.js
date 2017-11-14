@@ -46,4 +46,4 @@ exports.onEmailInviteAdded = functions.database
   })
 
 exports.getInviteStatus = functions.https.onRequest(reqInviteStatus(admin))
-exports.bouncer         = functions.https.onRequest(bouncer(admin))
+exports.bouncer         = functions.https.onRequest(bouncer())
