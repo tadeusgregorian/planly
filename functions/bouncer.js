@@ -8,16 +8,13 @@ module.exports = () => {
   const handleRequest = (req, res, next) => {
     const __session = req.cookies.__session;
 
-    console.log('Session Coockie is: ', __session);
+    res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
 
-    if(__session && __session === 'loggedin_mobile')  res.redirect('/mob/')
-    if(__session && __session === 'loggedin_desktop') res.redirect('/app/')
-
-    console.log('delivering WEB now!');
-
-    res.sendFile(path.join(__dirname + '/website/index.html'))
+    if(__session === 'loggedin_mobile') return res.sendFile(path.join(__dirname + '/mob/index.html'))
+    if(__session === 'loggedin_desktop') return res.sendFile(path.join(__dirname + '/app/index.html'))
+    res.sendFile(path.join(__dirname + '/web/index.html'))
+    
   }
-
   app.use(cookieParser);
   app.use(handleRequest);
 

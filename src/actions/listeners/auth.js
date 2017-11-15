@@ -17,6 +17,7 @@ export const setAuthStateListener = (initializor: Function) => {
       if (!user) {
         dispatch({type: 'USER_LOGGED_OUT'})
         createCookie('__session', 'loggedout', 1000)
+        return
       }
 
       firebase.database().ref('allUsers/' + user.uid).once('value')

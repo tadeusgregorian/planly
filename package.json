@@ -26,8 +26,6 @@
     "reselect": "^3.0.1"
   },
   "devDependencies": {
-    "copy-dir-cli": "0.0.3",
-    "del-cli": "^1.1.0",
     "flow-bin": "^0.59.0",
     "node-sass-chokidar": "0.0.3",
     "npm-run-all": "^4.1.2",
@@ -42,7 +40,7 @@
     "start": "npm-run-all -p watch-css start-js",
     "startsimple": "npm run start-js",
     "build": "npm run build-css && react-scripts build",
-    "buildprod": "REACT_APP_TARGET=production npm run build && del-cli ./buildroot/app/ && copy ./build ./buildroot/app/ ",
+    "buildprod": "REACT_APP_TARGET=production npm run build && cp -R ./build ./buildroot/app/ && cp ./build/index.html ./functions/app/index.html ",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "flow": "flow"
