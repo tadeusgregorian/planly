@@ -58,3 +58,7 @@
       .rosterSubBarMain .centered .subBarButton.activePink {
         color: #ff5571;
         background: #ffe6eb; }
+
+@media print {
+  .rosterSubBarMain {
+    display: none; } }

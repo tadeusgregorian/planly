@@ -25,3 +25,13 @@
         -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
     }
 }
+
+@media print{
+  .shiftWeekWrapper{
+    .shiftWeekMain{
+      margin: -40px 0px 0px -65px;
+      width: 1200px;
+      transform: scale(0.87)
+    }
+  }
+}

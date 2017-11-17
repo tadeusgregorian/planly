@@ -1,6 +1,6 @@
 //@flow
 import React, { PureComponent } from 'react'
-import { Route, withRouter, Redirect } from 'react-router-dom'
+import { Route, withRouter, Redirect, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Topbar from './topbar'
 import Roster from './roster'
@@ -25,12 +25,14 @@ class App extends PureComponent {
     return(
       <fb className="appMain">
         <Topbar />
-        <fb className="appMainContent">
-          <Route path='/app/dienstplan' component={Roster} />
-          <Route path='/app/abwesenheit' component={AbsencePlaner} />
-          <Route path='/app/einstellungen' component={AdminPanel} />
-          <Redirect to='/app/dienstplan' />
-        </fb>
+          <fb className="appMainContent">
+            <Switch>
+              <Route path='/app/dienstplan' component={Roster} />
+              <Route path='/app/abwesenheit' component={AbsencePlaner} />
+              <Route path='/app/einstellungen' component={AdminPanel} />
+              <Route component={Roster}/>
+            </Switch>
+          </fb>
       </fb>
     )
   }

@@ -2,7 +2,7 @@
 import firebase from 'firebase'
 import { trackFBListeners } from './firebaseHelpers'
 import { checkClientDate } from '../clientDateCheck'
-import { createCookie, isMobile } from './localHelpers';
+import { createCookie, deleteCookie, isMobile } from './localHelpers';
 import type { GetState } from 'types/index'
 
 
@@ -16,7 +16,7 @@ export const setAuthStateListener = (initializor: Function) => {
 
       if (!user) {
         dispatch({type: 'USER_LOGGED_OUT'})
-        createCookie('__session', 'loggedout', 1000)
+        deleteCookie('__session')
         return
       }
 

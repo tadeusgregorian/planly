@@ -1,0 +1,30 @@
+/* eslint-disable */
+
+path / {
+  read() { false }
+  write() { false }
+}
+
+path /allUsers {
+  read() { auth.uid !== null }
+  write() { auth.uid !== null }
+}
+
+path /accounts/{accID} {
+  read() { isOwnAccount(accID, auth.uid) }
+  write() { isOwnAccount(accID, auth.uid) }
+}
+
+path /accounts/{accID}/roster/extraHours/{weekID} {
+  index() { ['branch'] }
+}
+
+path /accounts/{accID}/roster/dayNotes/{weekID} {
+  index() { ['branch'] }
+}
+
+path /accounts/{accID}/roster/shiftWeeks/{weekID} {
+  index() { ['use', 'branch', 'branchDay'] }
+}
+
+isOwnAccount(accID, uid) { root.allUsers[uid]['account'] === accID }

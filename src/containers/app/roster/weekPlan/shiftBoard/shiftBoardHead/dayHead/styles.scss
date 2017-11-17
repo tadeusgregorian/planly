@@ -90,3 +90,13 @@
     }
   }
 }
+
+@media print{
+  .headDayMain{
+    .noteBar{
+      top: -14px; //
+      font-weight: 500;
+      color: red;
+    }
+  }
+}

@@ -18,3 +18,7 @@
       .topbarMain .centered .right .logoutIcon {
         cursor: pointer;
         color: white; }
+
+@media print {
+  .topbarMain {
+    display: none; } }

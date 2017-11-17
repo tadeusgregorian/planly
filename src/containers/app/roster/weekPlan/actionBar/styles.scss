@@ -12,3 +12,11 @@
     align-self: stretch;
   }
 }
+
+@media print{
+  .actionBarMain{
+    .right{
+      display: none;
+    }
+  }
+}

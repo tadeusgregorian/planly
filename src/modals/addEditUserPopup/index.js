@@ -86,7 +86,7 @@ class AddEditUserPopup extends PureComponent {
 			...this.props.user,   // props like 'isAdmin' are not in state, thats why doing ...user ( from props )
 			..._.omit(this.state, ['errorText', 'avgHours', 'avgMins', 'weeklyHours']),
 			avgDailyMins: inpToInt(avgMins) + (inpToInt(avgHours) * 60),
-			vacDays:			vacDays && inpToInt(vacDays),
+			vacDays:			vacDays ? inpToInt(vacDays) : null,
 			weeklyMins: 	floatToMins(weeklyHours),
 			status: 			sendInvite ? 'INVITED' : status
 		}

@@ -19,9 +19,9 @@ $(function() {
 
     $('#loginBtn').click(function(){
         if(isMobile()){
-          window.location.href = '/mob'
+          window.location.href = '/mob/'
         }else{
-          window.location.href = '/app'
+          window.location.href = '/app/'
         }
     });
 })

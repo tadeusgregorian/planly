@@ -13,7 +13,7 @@ module.exports = () => {
     if(__session === 'loggedin_mobile') return res.sendFile(path.join(__dirname + '/mob/index.html'))
     if(__session === 'loggedin_desktop') return res.sendFile(path.join(__dirname + '/app/index.html'))
     res.sendFile(path.join(__dirname + '/web/index.html'))
-    
+
   }
   app.use(cookieParser);
   app.use(handleRequest);

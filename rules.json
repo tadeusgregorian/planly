@@ -1,0 +1,23 @@
+{
+  "rules": {
+    "allUsers": {
+      ".read": "auth.uid != null",
+      ".write": "auth.uid != null"
+    },
+    "accounts": {
+      "$accID": {
+        ".read": "root.child('allUsers').child(auth.uid).child('account').val() == $accID",
+        ".write": "newData.parent().parent().child('allUsers').child(auth.uid).child('account').val() == $accID",
+        "roster": {
+          "shiftWeeks": {
+            ".indexOn": [
+              "use",
+              "branch",
+              "branchDay"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

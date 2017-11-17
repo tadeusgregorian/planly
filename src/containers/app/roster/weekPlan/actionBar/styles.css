@@ -9,3 +9,7 @@
     flex: 1;
     justify-content: flex-end;
     align-self: stretch; }
+
+@media print {
+  .actionBarMain .right {
+    display: none; } }

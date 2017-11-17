@@ -18,3 +18,9 @@
     border-radius: 4px;
     background-color: rgba(0, 0, 0, 0.5);
     -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.5); }
+
+@media print {
+  .shiftWeekWrapper .shiftWeekMain {
+    margin: -40px 0px 0px -65px;
+    width: 1200px;
+    transform: scale(0.87); } }
