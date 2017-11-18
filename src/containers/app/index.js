@@ -30,7 +30,7 @@ class App extends PureComponent {
               <Route path='/app/dienstplan' component={Roster} />
               <Route path='/app/abwesenheit' component={AbsencePlaner} />
               <Route path='/app/einstellungen' component={AdminPanel} />
-              <Route component={Roster}/>
+              <Redirect to='/app/dienstplan'/>
             </Switch>
           </fb>
       </fb>

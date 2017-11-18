@@ -10,9 +10,162 @@ path /allUsers {
   write() { auth.uid !== null }
 }
 
+path /emailInvites {
+  read() { auth.uid !== null }
+  write() { auth.uid !== null }
+}
+
 path /accounts/{accID} {
   read() { isOwnAccount(accID, auth.uid) }
   write() { isOwnAccount(accID, auth.uid) }
+}
+
+path /allUsers/{uid} is TransUser;
+
+path /accounts/{accID}/uses/{uID} is User;
+path /accounts/{accID}/positions/{pID} is Position;
+path /accounts/{accID}/branches/{pID} is Branch;
+
+path /accounts/{accID}/absencePlaner/absences/{aID} is Absence;
+path /accounts/{accID}/absencePlaner/weeklyAbsences/{weekID}/{aID} is WeeklyAbsence;
+
+path /accounts/{accID}/roster/corrections/{corID} is Correction;
+path /accounts/{accID}/roster/extraHours/{weekID}/{eID} is ExtraHours;
+path /accounts/{accID}/roster/miniShiftWeeks/{weekID}/{uID}/{shiftID} is MiniShiftWeek;
+path /accounts/{accID}/roster/shiftWeeks/{weekID}/{shiftID} is Shift;
+path /accounts/{accID}/roster/templatesFlat/{tempID} is TemplateFlat;
+path /accounts/{accID}/roster/weekSums/{sumID} is Number;
+
+
+// Types //
+
+type TransUser {
+  account: String,
+  userID: String
+}
+
+type WeeklyAbsence {
+  avgDailyMins: Number,
+  firstWeekDay: Number,
+  id: String,
+  lastWeekDay: Number,
+  type: String,
+  useAvgHours: Boolean|Null,
+  user: String,
+  workDays: Object|Null,
+}
+
+type Absence {
+  avgDailyMins: Number,
+  effectiveDays: Number,
+  endDate: Number,
+  endWeekDay: Number,
+  id: String,
+  startDate: Number,
+  startWeekDay: Number,
+  status: String,
+  totalDays: Number,
+  touchingWeeks: Object,
+  type: String,
+  useAvgHours: Boolean|Null,
+  user: String,
+  workDays: Object|Null,
+  year: Number,
+  yearUser: Number
+}
+
+type Location {
+  id: String,
+  name: String,
+  color: String,
+  deleted: Boolean|Null
+}
+
+type Branch {
+  id: String,
+  name: String,
+  locations: Location[]|Null
+}
+
+type Position {
+  id: String,
+  name: String,
+  color: String,
+  nr: Number,
+  shortcut: String,
+}
+
+type ExtraHours{
+  branch: String,
+  branchDay: String|Null,
+  day: Day,
+  id: String,
+  mins: Number,
+  user: String,
+}
+
+type Correction{
+  initial: Boolean|Null,
+  mins: Number,
+  user: String,
+  week: String,
+}
+
+type MiniShiftWeek{
+  mins: Number,
+  weekDay: Number,
+}
+
+type Day extends String {
+  validate() {this=='mo'||this =='tu'||this =='we'||this=='th'||this=='fr'||this=='sa'||this=='su'}
+}
+
+type Shift {
+  id: String,
+  s: Number,
+  e: Number,
+  b: Number,
+  user: String,
+  day: Day,
+  edit: Object | Null,
+  note: String | Null,
+  branch: String,
+  branchDay: String,
+  location: String | Null,
+  position: String | Null,
+}
+
+type TemplateFlat {
+  branch: String,
+  id: String,
+  name: String
+}
+
+type User {
+  id: String,
+  name: String,
+  positions: String,
+  branches: Object,
+  position: String,
+  weeklyMins: Number,
+  status: String,
+  avgDailyMins: Number,
+  isAdmins: String | Null,
+  isAdmin: Number | Null,
+  isSuperAdmin: Number | Null,
+  workDays: Object | Null,
+  vacDays: Number | Null,
+  deleted: Boolean|Null
+}
+
+// Functions //
+
+isOwnAccount(accID, uid) { root.allUsers[uid]['account'] === accID }
+
+// indexing for Query-Optimistion //
+
+path /accounts/{accID}/absencePlaner/absences {
+  index() { ['year'] }
 }
 
 path /accounts/{accID}/roster/extraHours/{weekID} {
@@ -26,5 +179,3 @@ path /accounts/{accID}/roster/dayNotes/{weekID} {
 path /accounts/{accID}/roster/shiftWeeks/{weekID} {
   index() { ['use', 'branch', 'branchDay'] }
 }
-
-isOwnAccount(accID, uid) { root.allUsers[uid]['account'] === accID }

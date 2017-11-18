@@ -7,7 +7,7 @@ const getPathToAbsences = (accountID, weekID) =>
 const getPathToWeekSums = (accountID) =>
   `/accounts/${accountID}/roster/weekSums/`
 
-const doubleD = (num) => (num < 9 ? '0' : '') + num
+//const doubleD = (num) => (num < 9 ? '0' : '') + num
 
 const _values = (obj) => { // cause Object.values doesnt work with this node version...
   let arr = []
@@ -43,7 +43,7 @@ exports.updateWeekSums = function(rootRef, target) {
     })
 
     const minsSum = minsGridFinal.reduce((acc, val) => val + acc, 0)
-    const key = userID + '_' + doubleD(weekID)
+    const key = userID + '_' + weekID
 
     return rootRef.child(getPathToWeekSums(accountID)).child(key).set(minsSum)
   })

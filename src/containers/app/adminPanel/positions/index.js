@@ -7,7 +7,7 @@ import { rearrangePositions } from 'actions/positions'
 import { openModal } from 'actions/ui'
 import SButton from 'components/sButton'
 import type { Position, Store } from 'types/index'
-import {SortableContainer, SortableElement, SortableHandle, arrayMove} from 'react-sortable-hoc';
+import {SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 
 import './styles.css';
 

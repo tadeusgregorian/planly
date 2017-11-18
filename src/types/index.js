@@ -297,7 +297,6 @@ export type ExtraHours = {
 export type ExtraHoursDB = ExtraHours & {
   branch: string,
   branchDay: string,
-  userDay: string
 }
 
 export type DayNote = {

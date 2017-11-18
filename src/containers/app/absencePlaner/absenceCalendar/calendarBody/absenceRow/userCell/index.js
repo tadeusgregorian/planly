@@ -1,7 +1,5 @@
 //@flow
 import React from 'react'
-import cn from 'classnames'
-//import WithTooltip from 'components/withTooltip'
 
 import type { User, AbsenceType } from 'types/index'
 import './styles.css'

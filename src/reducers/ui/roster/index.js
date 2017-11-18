@@ -17,7 +17,6 @@ const currentWeekID = simpleReducer({
   LEAVE_TEMPLATE_MODE: getRealCurrentWeekID(),
 })
 
-
 const templateMode = simpleReducer({
   default: false,
   ENTER_TEMPLATE_MODE: true,

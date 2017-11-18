@@ -20,6 +20,5 @@ export const saveExtraHoursToDB:ThunkAction = (extraHours: ExtraHours, deleteIt 
 
 const extendExtraHours = (extraHours: ExtraHours, branch): ExtraHoursDB =>{
   const branchDay = branch + extraHours.day
-  const userDay   = extraHours.user + extraHours.day
-  return { ...extraHours, branch, branchDay, userDay }
+  return { ...extraHours, branch, branchDay }
 }

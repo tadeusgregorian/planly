@@ -2,19 +2,380 @@
   "rules": {
     "allUsers": {
       ".read": "auth.uid != null",
+      ".write": "auth.uid != null",
+      "$uid": {
+        ".validate": "newData.hasChildren(['account', 'userID'])",
+        "account": {
+          ".validate": "newData.isString()"
+        },
+        "userID": {
+          ".validate": "newData.isString()"
+        },
+        "$other": {
+          ".validate": "false"
+        }
+      }
+    },
+    "emailInvites": {
+      ".read": "auth.uid != null",
       ".write": "auth.uid != null"
     },
     "accounts": {
       "$accID": {
         ".read": "root.child('allUsers').child(auth.uid).child('account').val() == $accID",
         ".write": "newData.parent().parent().child('allUsers').child(auth.uid).child('account').val() == $accID",
-        "roster": {
-          "shiftWeeks": {
+        "uses": {
+          "$uID": {
+            ".validate": "newData.hasChildren(['id', 'name', 'positions', 'branches', 'position', 'weeklyMins', 'status', 'avgDailyMins'])",
+            "id": {
+              ".validate": "newData.isString()"
+            },
+            "name": {
+              ".validate": "newData.isString()"
+            },
+            "positions": {
+              ".validate": "newData.isString()"
+            },
+            "branches": {
+              ".validate": "newData.hasChildren()"
+            },
+            "position": {
+              ".validate": "newData.isString()"
+            },
+            "weeklyMins": {
+              ".validate": "newData.isNumber()"
+            },
+            "status": {
+              ".validate": "newData.isString()"
+            },
+            "avgDailyMins": {
+              ".validate": "newData.isNumber()"
+            },
+            "isAdmins": {
+              ".validate": "newData.isString()"
+            },
+            "isAdmin": {
+              ".validate": "newData.isNumber()"
+            },
+            "isSuperAdmin": {
+              ".validate": "newData.isNumber()"
+            },
+            "workDays": {
+              ".validate": "newData.hasChildren()"
+            },
+            "vacDays": {
+              ".validate": "newData.isNumber()"
+            },
+            "deleted": {
+              ".validate": "newData.isBoolean()"
+            },
+            "$other": {
+              ".validate": "false"
+            }
+          }
+        },
+        "positions": {
+          "$pID": {
+            ".validate": "newData.hasChildren(['id', 'name', 'color', 'nr', 'shortcut'])",
+            "id": {
+              ".validate": "newData.isString()"
+            },
+            "name": {
+              ".validate": "newData.isString()"
+            },
+            "color": {
+              ".validate": "newData.isString()"
+            },
+            "nr": {
+              ".validate": "newData.isNumber()"
+            },
+            "shortcut": {
+              ".validate": "newData.isString()"
+            },
+            "$other": {
+              ".validate": "false"
+            }
+          }
+        },
+        "branches": {
+          "$pID": {
+            ".validate": "newData.hasChildren(['id', 'name'])",
+            "id": {
+              ".validate": "newData.isString()"
+            },
+            "name": {
+              ".validate": "newData.isString()"
+            },
+            "locations": {
+              "$key1": {
+                ".validate": "newData.hasChildren() && newData.hasChildren(['id', 'name', 'color'])",
+                "id": {
+                  ".validate": "newData.isString()"
+                },
+                "name": {
+                  ".validate": "newData.isString()"
+                },
+                "color": {
+                  ".validate": "newData.isString()"
+                },
+                "deleted": {
+                  ".validate": "newData.isBoolean()"
+                },
+                "$other": {
+                  ".validate": "false"
+                }
+              },
+              ".validate": "newData.hasChildren()"
+            },
+            "$other": {
+              ".validate": "false"
+            }
+          }
+        },
+        "absencePlaner": {
+          "absences": {
+            "$aID": {
+              ".validate": "newData.hasChildren(['avgDailyMins', 'effectiveDays', 'endDate', 'endWeekDay', 'id', 'startDate', 'startWeekDay', 'status', 'totalDays', 'touchingWeeks', 'type', 'user', 'year', 'yearUser'])",
+              "avgDailyMins": {
+                ".validate": "newData.isNumber()"
+              },
+              "effectiveDays": {
+                ".validate": "newData.isNumber()"
+              },
+              "endDate": {
+                ".validate": "newData.isNumber()"
+              },
+              "endWeekDay": {
+                ".validate": "newData.isNumber()"
+              },
+              "id": {
+                ".validate": "newData.isString()"
+              },
+              "startDate": {
+                ".validate": "newData.isNumber()"
+              },
+              "startWeekDay": {
+                ".validate": "newData.isNumber()"
+              },
+              "status": {
+                ".validate": "newData.isString()"
+              },
+              "totalDays": {
+                ".validate": "newData.isNumber()"
+              },
+              "touchingWeeks": {
+                ".validate": "newData.hasChildren()"
+              },
+              "type": {
+                ".validate": "newData.isString()"
+              },
+              "useAvgHours": {
+                ".validate": "newData.isBoolean()"
+              },
+              "user": {
+                ".validate": "newData.isString()"
+              },
+              "workDays": {
+                ".validate": "newData.hasChildren()"
+              },
+              "year": {
+                ".validate": "newData.isNumber()"
+              },
+              "yearUser": {
+                ".validate": "newData.isNumber()"
+              },
+              "$other": {
+                ".validate": "false"
+              }
+            },
             ".indexOn": [
-              "use",
-              "branch",
-              "branchDay"
+              "year"
             ]
+          },
+          "weeklyAbsences": {
+            "$weekID": {
+              "$aID": {
+                ".validate": "newData.hasChildren(['avgDailyMins', 'firstWeekDay', 'id', 'lastWeekDay', 'type', 'user'])",
+                "avgDailyMins": {
+                  ".validate": "newData.isNumber()"
+                },
+                "firstWeekDay": {
+                  ".validate": "newData.isNumber()"
+                },
+                "id": {
+                  ".validate": "newData.isString()"
+                },
+                "lastWeekDay": {
+                  ".validate": "newData.isNumber()"
+                },
+                "type": {
+                  ".validate": "newData.isString()"
+                },
+                "useAvgHours": {
+                  ".validate": "newData.isBoolean()"
+                },
+                "user": {
+                  ".validate": "newData.isString()"
+                },
+                "workDays": {
+                  ".validate": "newData.hasChildren()"
+                },
+                "$other": {
+                  ".validate": "false"
+                }
+              }
+            }
+          }
+        },
+        "roster": {
+          "corrections": {
+            "$corID": {
+              ".validate": "newData.hasChildren(['mins', 'user', 'week'])",
+              "initial": {
+                ".validate": "newData.isBoolean()"
+              },
+              "mins": {
+                ".validate": "newData.isNumber()"
+              },
+              "user": {
+                ".validate": "newData.isString()"
+              },
+              "week": {
+                ".validate": "newData.isString()"
+              },
+              "$other": {
+                ".validate": "false"
+              }
+            }
+          },
+          "extraHours": {
+            "$weekID": {
+              "$eID": {
+                ".validate": "newData.hasChildren(['branch', 'day', 'id', 'mins', 'user'])",
+                "branch": {
+                  ".validate": "newData.isString()"
+                },
+                "branchDay": {
+                  ".validate": "newData.isString()"
+                },
+                "day": {
+                  ".validate": "newData.isString() && (newData.val() == 'mo' || newData.val() == 'tu' || newData.val() == 'we' || newData.val() == 'th' || newData.val() == 'fr' || newData.val() == 'sa' || newData.val() == 'su')"
+                },
+                "id": {
+                  ".validate": "newData.isString()"
+                },
+                "mins": {
+                  ".validate": "newData.isNumber()"
+                },
+                "user": {
+                  ".validate": "newData.isString()"
+                },
+                "$other": {
+                  ".validate": "false"
+                }
+              },
+              ".indexOn": [
+                "branch"
+              ]
+            }
+          },
+          "miniShiftWeeks": {
+            "$weekID": {
+              "$uID": {
+                "$shiftID": {
+                  ".validate": "newData.hasChildren(['mins', 'weekDay'])",
+                  "mins": {
+                    ".validate": "newData.isNumber()"
+                  },
+                  "weekDay": {
+                    ".validate": "newData.isNumber()"
+                  },
+                  "$other": {
+                    ".validate": "false"
+                  }
+                }
+              }
+            }
+          },
+          "shiftWeeks": {
+            "$weekID": {
+              "$shiftID": {
+                ".validate": "newData.hasChildren(['id', 's', 'e', 'b', 'user', 'day', 'branch', 'branchDay'])",
+                "id": {
+                  ".validate": "newData.isString()"
+                },
+                "s": {
+                  ".validate": "newData.isNumber()"
+                },
+                "e": {
+                  ".validate": "newData.isNumber()"
+                },
+                "b": {
+                  ".validate": "newData.isNumber()"
+                },
+                "user": {
+                  ".validate": "newData.isString()"
+                },
+                "day": {
+                  ".validate": "newData.isString() && (newData.val() == 'mo' || newData.val() == 'tu' || newData.val() == 'we' || newData.val() == 'th' || newData.val() == 'fr' || newData.val() == 'sa' || newData.val() == 'su')"
+                },
+                "edit": {
+                  ".validate": "newData.hasChildren()"
+                },
+                "note": {
+                  ".validate": "newData.isString()"
+                },
+                "branch": {
+                  ".validate": "newData.isString()"
+                },
+                "branchDay": {
+                  ".validate": "newData.isString()"
+                },
+                "location": {
+                  ".validate": "newData.isString()"
+                },
+                "position": {
+                  ".validate": "newData.isString()"
+                },
+                "$other": {
+                  ".validate": "false"
+                }
+              },
+              ".indexOn": [
+                "use",
+                "branch",
+                "branchDay"
+              ]
+            }
+          },
+          "templatesFlat": {
+            "$tempID": {
+              ".validate": "newData.hasChildren(['branch', 'id', 'name'])",
+              "branch": {
+                ".validate": "newData.isString()"
+              },
+              "id": {
+                ".validate": "newData.isString()"
+              },
+              "name": {
+                ".validate": "newData.isString()"
+              },
+              "$other": {
+                ".validate": "false"
+              }
+            }
+          },
+          "weekSums": {
+            "$sumID": {
+              ".validate": "newData.isNumber()"
+            }
+          },
+          "dayNotes": {
+            "$weekID": {
+              ".indexOn": [
+                "branch"
+              ]
+            }
           }
         }
       }

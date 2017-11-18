@@ -4,7 +4,7 @@ import { db } from '../firebaseInit'
 import { getFBPath } from './../actionHelpers'
 import { generateGuid } from 'helpers/index'
 import { getShiftUpdate, getMiniShiftUpdate, getMini, getUserPos } from './localHelpers'
-import type { PreShift, Shift, Day, User, ThunkAction, GetState, MinimalShift } from 'types/index'
+import type { PreShift, Shift, Day, ThunkAction, GetState, MinimalShift } from 'types/index'
 
 export const saveShiftToDB:ThunkAction = (shift: PreShift, deleteIt = false) => (disp, getState: GetState) => {
   const branch        = getState().ui.roster.currentBranch

@@ -2,7 +2,7 @@
 import React, { PureComponent } from 'react'
 //import type { WorkDays } from 'types/index'
 import SCheckbox from 'components/sCheckbox'
-import Expander from 'components/expander'
+//import Expander from 'components/expander'
 //import WorkDaysPicker from 'components/workDaysPicker'
 import './styles.css'
 

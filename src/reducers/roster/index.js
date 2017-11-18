@@ -1,5 +1,5 @@
 //@flow
-import _ from 'lodash'
+
 import { createDataStatusReducer, createFirebaseReducer_array, createFirebaseReducer_object } from '../reducerHelpers'
 import { combineReducers } from 'redux'
 import type { Notes, ShiftEdits, Shifts, DataStatus, TemplatesFlat, WeekAbsence, Correction, ExtraHours, DayNote } from 'types/index'

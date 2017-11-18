@@ -20,6 +20,7 @@ export function saveUserToDB(user: User) {
 
 type JobData = {userID: string, email: string, name: string, accountID:string, url: string}
 export const addInvitationJob = ({ userID, email, name, accountID, url }: JobData) => {
+	console.log('Doing This ???');
 	const key = db().ref('emailInvites').push().key
 	db().ref('emailInvites').child(key).set({
 		userID,

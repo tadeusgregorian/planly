@@ -1,6 +1,6 @@
 //@flow
 
-import type { CellRef, ShiftRef, User, Day } from 'types/index'
+import type { CellRef, ShiftRef, User } from 'types/index'
 import { closest } from 'helpers/index'
 
 export const elementIsShift = (el: HTMLElement): boolean =>
