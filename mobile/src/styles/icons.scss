@@ -1,0 +1,113 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('../fonts/icomoon.ttf?3u9yc2')  format('truetype'),
+        url('../fonts/icomoon.woff?3u9yc2') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-times:before {
+  content: "\e902";
+}
+.icon-tick:before {
+  content: "\e907";
+}
+.icon-plus2:before {
+  content: "\e908";
+}
+.icon-minus2:before {
+  content: "\e909";
+}
+.icon-th-menu:before {
+  content: "\e900";
+}
+.icon-home3:before {
+  content: "\e90a";
+}
+.icon-arrow-forward:before {
+  content: "\e90b";
+}
+.icon-arrow-back:before {
+  content: "\e90c";
+}
+.icon-user:before {
+  content: "\e90e";
+}
+.icon-group:before {
+  content: "\e90f";
+}
+.icon-eye2:before {
+  content: "\e910";
+}
+.icon-cog:before {
+  content: "\e901";
+}
+.icon-download2:before {
+  content: "\e911";
+}
+.icon-plane:before {
+  content: "\e915";
+}
+.icon-flag2:before {
+  content: "\e91a";
+}
+.icon-arrow-forward-outline:before {
+  content: "\e91e";
+}
+.icon-arrow-back-outline:before {
+  content: "\e920";
+}
+.icon-location-outline:before {
+  content: "\e921";
+}
+.icon-mail:before {
+  content: "\e927";
+}
+.icon-eye-outline:before {
+  content: "\e92d";
+}
+.icon-tag:before {
+  content: "\e937";
+}
+.icon-code-outline:before {
+  content: "\e903";
+}
+.icon-business-card:before {
+  content: "\e938";
+}
+.icon-bell2:before {
+  content: "\e939";
+}
+.icon-flag-outline:before {
+  content: "\e93d";
+}
+.icon-plane-outline:before {
+  content: "\e93e";
+}
+.icon-phone-outline:before {
+  content: "\e940";
+}
+.icon-coffee:before {
+  content: "\e943";
+}
+.icon-thermometer:before {
+  content: "\e944";
+}
+.icon-messages:before {
+  content: "\e946";
+}

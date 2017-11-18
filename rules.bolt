@@ -177,5 +177,5 @@ path /accounts/{accID}/roster/dayNotes/{weekID} {
 }
 
 path /accounts/{accID}/roster/shiftWeeks/{weekID} {
-  index() { ['use', 'branch', 'branchDay'] }
+  index() { ['user', 'branch', 'branchDay'] }
 }

@@ -1,0 +1,29 @@
+.shiftBoardMain{
+  position: relative;
+  flex-direction: column;
+  width: 100%;
+  overflow-y: scroll;
+  padding: 8px;
+  flex: 1 1 auto;
+
+  .loadingLayer{
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.32);
+    color: white;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+    transition-delay: 1s;
+    pointer-events: none;
+    opacity: 0;
+
+    &.isLoading{
+      opacity: 1;
+    }
+  }
+}

@@ -1,0 +1,36 @@
+.navigationMain{
+  flex: 0 0 auto;
+  height: 50px;
+  width: 100%;
+  border-bottom: 1px solid lightgrey;
+  padding: 4px;
+
+  .openSideNavBtn{
+    width: 50px;
+    align-self: stretch;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    background: #e6e6e6;
+    border-radius: 2px;
+  }
+
+  .branch{
+    align-items: center;
+    justify-content: center;
+    margin-left: 5px;
+    flex: 1 1 auto;
+    border-radius: 4px;
+    background: #e0f5ff;
+    color: #008acb;
+    border: 1px solid #d0f0ff;
+  }
+
+  .myPlan{
+    color: #0089cd;
+    align-items: center;
+    justify-content: center;
+    flex: 1 1 auto;
+    font-size: 18px;
+  }
+}
