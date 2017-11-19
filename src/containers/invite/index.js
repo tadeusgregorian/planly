@@ -7,8 +7,8 @@ import type { User } from 'types/index'
 import './styles.css'
 
 type Props = {
-  match: { params: { aID: string, uID: string } },
-  history: { push: Function },
+  match: any, //{ params: { aID: string, uID: string } },
+  history: any // { push: Function },
 }
 
 type State = {
