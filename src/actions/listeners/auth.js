@@ -2,7 +2,7 @@
 import firebase from 'firebase'
 import { trackFBListeners } from './firebaseHelpers'
 import { checkClientDate } from '../clientDateCheck'
-import { createCookie, deleteCookie, isMobile } from './localHelpers';
+import { createCookie, deleteCookie } from './localHelpers';
 import type { GetState } from 'types/index'
 
 
@@ -16,7 +16,7 @@ export const setAuthStateListener = (initializor: Function) => {
 
       if (!user) {
         dispatch({type: 'USER_LOGGED_OUT'})
-        deleteCookie('__session')
+        deleteCookie('loggedIn')
         return
       }
 
@@ -24,8 +24,7 @@ export const setAuthStateListener = (initializor: Function) => {
         .then(snap => {
           if(!snap.val()) return firebase.auth().signOut()
 
-          const client = isMobile() ? 'mobile' : 'desktop'
-          createCookie('__session', 'loggedin_' + client, 1000)
+          createCookie('loggedIn', 'true', 1000)
 
           dispatch({type: 'USER_LOGGED_IN' })
           dispatch({type: 'SET_ACCOUNT_ID',       payload: snap.val().account})

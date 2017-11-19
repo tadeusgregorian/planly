@@ -23,6 +23,12 @@
 		<!-- custom css -->
 		<link rel="stylesheet" href="/web/css/main.css">
 
+		<script>
+	    if (document.cookie.indexOf('loggedIn') >= 0){
+				window.location.href='/login'
+			}
+		</script>
+
 	</head>
 	<body>
 		<!-- start preloader -->

@@ -18,23 +18,21 @@ $(function() {
     });
 
     $('#loginBtn').click(function(){
-        if(isMobile()){
-          window.location.href = '/mob/'
-        }else{
-          window.location.href = '/app/'
-        }
+        window.location.href = '/login/'
     });
 })
 
-function isMobile() {
- const isMobile =
-      navigator.userAgent.match(/Android/i)
-   || navigator.userAgent.match(/webOS/i)
-   || navigator.userAgent.match(/iPhone|iPad|iPod/i)
-   || navigator.userAgent.match(/BlackBerry/i)
-   || navigator.userAgent.match(/Windows Phone/i)
-   || navigator.userAgent.match(/IEMobile/i)
-   || navigator.userAgent.match(/Opera Mini/i)
-   || window.screen.width <= 600
-  return !!isMobile
-}
+export const getCookie = (name) => {
+  if (document.cookie.length > 0) {
+    let c_start = document.cookie.indexOf(name + '=');
+    if (c_start !== -1) {
+      c_start = c_start + name.length + 1;
+      let c_end = document.cookie.indexOf(';', c_start);
+      if (c_end === -1) {
+        c_end = document.cookie.length;
+      }
+      return unescape(document.cookie.substring(c_start, c_end));
+    }
+  }
+  return '';
+};

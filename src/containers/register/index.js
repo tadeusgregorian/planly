@@ -3,7 +3,7 @@ import { createUserWithEmailAndPassword } from 'actions/auth';
 import { createAccount } from 'actions/register';
 import InputMinimal from 'components/inputMinimal'
 import SButton from 'components/sButton'
-import { Toast } from 'helpers'
+import { Toast } from 'helpers/iziToast'
 import './styles.css'
 
 

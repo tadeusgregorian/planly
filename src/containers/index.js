@@ -15,6 +15,7 @@ import Login    from './login'
 import Register from './register'
 import Invite   from './invite'
 import App      from './app'
+import Mob      from './mob'
 
 initIziToast()
 
@@ -32,8 +33,6 @@ class Container extends PureComponent {
     const isAuthenticating 	=  authState === 'isAuthenticating'
 
     if(isAuthenticating)  return (<fb>authenticating...</fb>)
-    if(!loggedIn)         return(<Router><Redirect to='/login' /></Router>)
-    if(onMobile())        return(<Router><Redirect to='/mob' /></Router>)
 
     return (
       <Router>
@@ -41,11 +40,10 @@ class Container extends PureComponent {
           <fb className='Container_Main_Inside'>
             <Switch>
               <Route path='/invite/:aID/:uID' render={(props) =>  <Invite { ...props } /> } />
-              <Route path='/login'    component={Login} />
-              <Route path='/app'      component={App} />
-              <Route path='/mob'      component={App} />
-              <Route path='/register' component={Register} />
-              <Redirect to="/app/einstellungen/" />
+              <Route path='/register'         component={Register} />
+              <Route path='/login'    render={()=> !loggedIn ? <Login/>  : <Redirect to={onMobile() ? '/mob' : '/app'} />} />
+              <Route path='/app'      render={()=>  loggedIn ? <App/>    : <Redirect to='/login' /> } />
+              <Route path='/mob'      render={()=>  loggedIn ? <Mob/>    : <Redirect to='/login' /> } />
             </Switch>
           </fb>
           <ModalsManager />

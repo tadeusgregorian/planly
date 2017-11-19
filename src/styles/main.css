@@ -1183,10 +1183,14 @@ input, textarea {
   input::placeholder, textarea::placeholder {
     color: #bfbfbf; }
 
-.Container_Main {
-  flex-direction: column; }
-  .Container_Main .Container_Main_Inside {
-    flex-direction: column; }
+#root {
+  height: 100%; }
+  #root .Container_Main {
+    flex-direction: column;
+    height: 100%; }
+    #root .Container_Main .Container_Main_Inside {
+      flex-direction: column;
+      height: 100%; }
 
 a {
   text-decoration: none !important; }

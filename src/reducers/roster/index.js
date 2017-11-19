@@ -20,6 +20,7 @@ export type Roster = {
   weekAbsences: Array<WeekAbsence>,
   dayNotes: Array<DayNote>,
   shiftWeekDataStatus: DataStatus,
+  weekAbsencesDataStatus: DataStatus,
 }
 
 export default combineReducers({
@@ -33,4 +34,5 @@ export default combineReducers({
   extraHours: createFirebaseReducer_array('extraHours'),
   dayNotes: createFirebaseReducer_array('dayNotes'),
   shiftWeekDataStatus: createDataStatusReducer('shiftWeek'),
+  weekAbsencesDataStatus: createDataStatusReducer('weekAbsences'),
 })
