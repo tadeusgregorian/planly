@@ -3,7 +3,7 @@
     "rules": "./rules.bolt"
   },
   "hosting": {
-    "public": "buildroot",
+    "public": "build",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -15,20 +15,8 @@
         "function": "getInviteStatus"
       },
       {
-        "source": "/mob/**",
-        "destination": "/mob/index.html"
-      },
-      {
-        "source": "/app/**",
-        "destination": "/app/index.html"
-      },
-      {
-        "source": "/web/**",
-        "destination": "/web/index.html"
-      },
-      {
         "source": "**",
-        "function": "bouncer"
+        "destination": "/index.html"
       }
     ]
   }

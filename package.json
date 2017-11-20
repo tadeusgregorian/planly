@@ -2,7 +2,6 @@
   "name": "planly",
   "version": "0.1.0",
   "private": true,
-  "homepage": "/app",
   "dependencies": {
     "classnames": "^2.2.5",
     "firebase": "^4.6.2",
@@ -39,8 +38,8 @@
     "start-js": "react-scripts start",
     "start": "npm-run-all -p watch-css start-js",
     "startsimple": "npm run start-js",
-    "build": "npm run build-css && react-scripts build",
-    "buildprod": "REACT_APP_TARGET=production npm run build && cp ./build/index.html ./functions/app/index.html && rm -r -f ./buildroot/app && mv build buildroot/app ",
+    "build": "npm run build-css && react-scripts build && cp -r ./web ./build",
+    "buildprod": "REACT_APP_TARGET=production npm run build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "flow": "flow"
