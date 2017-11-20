@@ -16,7 +16,7 @@ ReactDOM.render(
   document.getElementById('root')
 )
 //registerServiceWorker()
-//changeInAplanoTest
+//masterNow
 
 if (module.hot) {
   module.hot.accept('containers', () => {
