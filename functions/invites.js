@@ -17,7 +17,6 @@ module.exports = (admin) => {
 
     if(!accID || !userID){
       res.sendStatus(404)
-      console.log('Is it getting executed here ?');
       throw new Error('Something wrong: accID:' + accID + ' userID: ' + userID)
     }
 

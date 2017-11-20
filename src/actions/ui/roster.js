@@ -1,6 +1,6 @@
 //@flow
 import { getNextWeekID, getPrevWeekID, generateGuid } from 'helpers/index'
-import type { ThunkAction, GetState, ShiftRef, CellRef } from 'types/index'
+import type { ThunkAction, GetState, ShiftRef, CellRef, Day, PlanMode } from 'types/index'
 import { getLastTempIDOfBranch } from './localHelpers'
 
 export const changeCurrentBranch: ThunkAction = (branchID: string) => (dispatch, getState: GetState) => {
@@ -14,6 +14,14 @@ export const changeCurrentBranch: ThunkAction = (branchID: string) => (dispatch,
 
 export const changeCurrentWeekID = (weekID: string) =>
   ({ type: 'SET_CURRENT_WEEK_ID', payload: weekID })
+
+export const changeCurrentDay = (day: Day) => {
+  console.log('changeDay: ', day);
+  return ({ type: 'SET_CURRENT_DAY', payload: day })
+}
+
+export const setPlanMode = (mode: PlanMode) =>
+  ({ type: 'SET_PLAN_MODE', payload: mode })
 
 export const enterTemplateMode: ThunkAction = () => (dispatch, getState: GetState) => {
   const currentBranch = getState().ui.roster.currentBranch

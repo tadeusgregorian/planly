@@ -1,7 +1,6 @@
 //@flow
 import moment from 'moment'
 
-export * from './iziToast'
 export * from './dateHelpers'
 export * from './roster'
 
@@ -104,4 +103,17 @@ export const getPagePosOfElement = (elem: HTMLElement) => {
     top: box.top + window.scrollY,
     left: box.left + window.scrollX
   };
+}
+
+export const onMobile = () => {
+ const isMobile =
+      navigator.userAgent.match(/Android/i)
+   || navigator.userAgent.match(/webOS/i)
+   || navigator.userAgent.match(/iPhone|iPad|iPod/i)
+   || navigator.userAgent.match(/BlackBerry/i)
+   || navigator.userAgent.match(/Windows Phone/i)
+   || navigator.userAgent.match(/IEMobile/i)
+   || navigator.userAgent.match(/Opera Mini/i)
+   || window.screen.width <= 600
+  return !!isMobile
 }

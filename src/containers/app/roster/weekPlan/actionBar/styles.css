@@ -4,7 +4,8 @@
   padding-right: 2px;
   align-items: center;
   background-color: #e9ebee;
-  margin-bottom: 4px; }
+  margin-bottom: 4px;
+  flex: 0 0 auto; }
   .actionBarMain .right {
     flex: 1;
     justify-content: flex-end;

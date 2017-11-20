@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 import InputMinimal from 'components/inputMinimal'
 import SButton from 'components/sButton'
-import { Toast, isValidEmail } from 'helpers'
+import { Toast } from 'helpers/iziToast'
+import { isValidEmail } from 'helpers/index'
 import './styles.css'
 
 

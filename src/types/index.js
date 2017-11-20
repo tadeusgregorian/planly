@@ -310,3 +310,6 @@ export type DayNote = {
 export type OvertimeStatus = 'NOT_SET' | 'START_WEEK' | 'STARTED' | 'BEFORE_START'
 
 // ExtraStuff
+
+export type PlanMode = 'PERSONAL' | 'TEAM'
+export type SideNav = 'OPTIONS' | 'BRANCH_PICK'

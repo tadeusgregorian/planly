@@ -1,9 +1,12 @@
 //@flow
+import moment from 'moment'
 import { combineReducers } from 'redux'
 import { simpleReducer } from '../../reducerHelpers'
 import { getRealCurrentWeekID } from 'helpers/roster'
 import shiftBoard from './shiftBoard'
+import type { Day, PlanMode } from 'types/index'
 import type { ShiftBoard } from './shiftBoard'
+import { weekDays } from 'constants/roster'
 
 const currentBranch = simpleReducer({
   default: localStorage.currentBranch || 'b001',
@@ -15,6 +18,18 @@ const currentWeekID = simpleReducer({
   SET_CURRENT_WEEK_ID: 'PAYLOAD',
   ENTER_TEMPLATE_MODE: 'PAYLOAD',
   LEAVE_TEMPLATE_MODE: getRealCurrentWeekID(),
+})
+
+// Mobile only
+const currentDay = simpleReducer({
+  default: weekDays[moment().weekday()],
+  SET_CURRENT_DAY: 'PAYLOAD',
+})
+
+// Mobile only
+const planMode = simpleReducer({
+  default: 'PERSONAL',
+  SET_PLAN_MODE: 'PAYLOAD',
 })
 
 const templateMode = simpleReducer({
@@ -32,16 +47,20 @@ const extraHoursMode = simpleReducer({
 export type Roster = {
   currentBranch: string,
   currentWeekID: string,
+  currentDay: Day,
   currentTemplate: string,
   templateMode: boolean,
   shiftBoard: ShiftBoard,
   extraHoursMode: boolean,
+  planMode: PlanMode,
 }
 
 export default combineReducers({
   currentBranch,
   currentWeekID,
+  currentDay,
   templateMode,
   shiftBoard,
   extraHoursMode,
+  planMode
 })

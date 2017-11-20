@@ -3,7 +3,7 @@ import { signInWithEmailAndPassword, checkIfEmailExists, sendPasswordResetEmail 
 import InputMinimal from 'components/inputMinimal'
 import SButton from 'components/sButton'
 import PasswordForgotten from './passwordForgotten'
-import { Toast } from 'helpers'
+import { Toast } from 'helpers/iziToast'
 import './styles.css'
 
 

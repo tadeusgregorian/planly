@@ -3,7 +3,6 @@ const functions       = require('firebase-functions')
 const sumsUpdater         = require('./sumsUpdater')
 const absenceHandler      = require('./absenceHandler')
 const reqInviteStatus     = require('./invites')
-const bouncer             = require('./bouncer')
 const sendInvitationMail  = require('./mailSender')
 const admin               = require('firebase-admin')
 admin.initializeApp(functions.config().firebase)
@@ -46,4 +45,3 @@ exports.onEmailInviteAdded = functions.database
   })
 
 exports.getInviteStatus = functions.https.onRequest(reqInviteStatus(admin))
-exports.bouncer         = functions.https.onRequest(bouncer())
