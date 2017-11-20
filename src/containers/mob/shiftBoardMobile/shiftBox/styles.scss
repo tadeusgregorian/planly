@@ -1,0 +1,70 @@
+.shiftBoxMain{
+  position: relative;
+  align-self: stretch;
+  //height: 50px;
+  border-radius: 2px;
+  flex: 0 0 auto;
+  margin-bottom: 8px;
+  background: #f9f9f9;
+  box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.1);
+  padding: 6px;
+  padding-bottom: 2px;
+  flex-direction: column;
+  color: #4e4e4e;
+
+  &.open{
+    border: 1px solid #ff6d94;
+    box-sizing: border-box;
+    padding-left: 5px;
+
+    .row{
+      .userName{
+        color: #ff6d94;
+      }
+    }
+  }
+
+
+  .row{
+    height: 22px;
+
+    .breakMins{
+      margin-left: 2px;
+      color: #c3c3c3;
+    }
+
+    .userName{
+      color: #3baae8;
+      //margin-left: 2px;
+
+    }
+
+    .branchName{
+      white-space: nowrap;
+      overflow: hidden;
+      display: block;
+      text-overflow: ellipsis;
+      color: #3baae8;
+    }
+
+    .location{
+      text-transform: uppercase;
+      font-size: 16px;
+      font-weight: 700;
+      margin-right: 2px;
+      opacity: 0.8;
+    }
+
+    .note{
+      position: absolute;
+      top: 2px;
+      right: 6px;
+      color: #ef9a00;
+      font-size: 22px;
+    }
+  }
+
+  .secondRow{
+    justify-content: space-between;
+  }
+}

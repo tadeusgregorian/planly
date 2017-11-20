@@ -1,0 +1,36 @@
+#appMain{
+  flex-direction: column;
+  width: 100vw;
+  height: 100%;
+  overflow: scroll;
+  flex-direction: column;
+  align-items: center;
+
+  .sticky{
+    padding-top: 60px;
+  }
+
+  .content{
+    flex: 0 0 auto;
+    height: 1200px;
+    width: 100%;
+    background: #eaeaea;
+
+      // .loadingLayer{
+      //   position: absolute;
+      //   width: 100%;
+      //   height: 100%;
+      //   background: rgba(0, 0, 0, 0.42);
+      //   color: white;
+      //   align-items: center;
+      //   justify-content: center;
+      //   transition: opacity 0.3s ease;
+      //   pointer-events: none;
+      //   opacity: 0;
+      //
+      //   &.visible{
+      //     opacity: 1;
+      //   }
+      // }
+  }
+}

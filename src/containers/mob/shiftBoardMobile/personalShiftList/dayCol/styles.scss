@@ -1,0 +1,43 @@
+.shiftBoardDayColMain{
+  flex-direction: column;
+  flex: 0 0 auto;
+
+  .dayHead{
+    color: #8b8f94;
+    height: 22px;
+    padding-left: 4px;
+    font-weight: 100;
+    margin-top: 4px;
+    border-bottom: 1px solid #0192dd;
+    margin-bottom: 6px;
+
+
+    .weekDay{
+      margin-right: 5px;
+      font-weight: 600;
+      color: #0093dc;
+      text-transform: uppercase;
+    }
+
+    &.isEmpty{
+      border-bottom: 1px solid lightgrey;
+      opacity: 0.6;
+      padding-left: 12px;
+
+      .weekDay{
+        font-weight: 400;
+        color: #adadad;
+      }
+
+      .date{
+        color: #adadad;
+      }
+    }
+
+    .date{
+      color: #65b9e4;
+    }
+  }
+
+
+}
