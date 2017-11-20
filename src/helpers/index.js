@@ -117,3 +117,5 @@ export const onMobile = () => {
    || window.screen.width <= 600
   return !!isMobile
 }
+
+export const isProdEnv = () => process.env.REACT_APP_ENV === 'production'

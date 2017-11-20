@@ -6,20 +6,17 @@ import { saveUserToDB, addInvitationJob } from 'actions/users'
 import EmailStatus 			from './emailStatus'
 
 import SModal 					from 'components/sModal'
-import Expander 				from 'components/expander'
 import SButton 					from 'components/sButton'
 import FlatInput 				from 'components/flatInput'
 import FlatFormRow 			from 'components/flatFormRow'
 import WorkDaysPicker 	from 'components/workDaysPicker'
 
-import AvgDailyMinsRow  	from './avgDailyMinsRow'
-import TotalVacDays  			from './totalVacDays'
 import ErrorMessageBar  	from './errorMessageBar'
 import PositionSelect  		from './positionSelect'
 import BranchSelect 			from './branchSelect'
 
-import { getNextID, isValidEmail, isIntStr, inpToInt } from 'helpers/index'
-import { extractHours, extractMins, floatToMins, minsToFloat, getAvgs } from './localHelpers'
+import { getNextID, isValidEmail, isIntStr, inpToInt, replaceDotsWithCommas } from 'helpers/index'
+import { floatToMins, minsToFloat, getAvgDailyMins } from './localHelpers'
 import type { WorkDays, UserStatus, Store } from 'types/index'
 import './styles.css'
 
@@ -33,8 +30,6 @@ class AddEditUserPopup extends PureComponent {
 		status: 					UserStatus,
 		workDays: 				WorkDays,
 		weeklyHours: 			string,
-		avgHours:					string,
-		avgMins:					string,
 		vacDays: 					string,
 		errorText: 				string,
 	}
@@ -56,9 +51,7 @@ class AddEditUserPopup extends PureComponent {
 			status: 					user ? user.status 			: 'NOT_INVITED',
 			workDays: 				user ? user.workDays 		: { mo: 1, tu: 1, we: 1, th: 1, fr: 1, sa: 1 },
 			vacDays:   				user ? user.vacDays			: '',
-			weeklyHours: 			user ? minsToFloat(user.weeklyMins) 		: '0', // gets stripped away before saving to DB
-			avgHours:					user ? extractHours(user.avgDailyMins).toString()  : '',   // gets stripped away before saving to DB
-			avgMins:					user ? extractMins(user.avgDailyMins).toString() 	 : '',   // gets stripped away before saving to DB
+			weeklyHours: 			user ? minsToFloat(user.weeklyMins) 		: '', // gets stripped away before saving to DB
 			errorText: 				'', 																					 // gets stripped away before saving to DB
 		}
 	}
@@ -81,11 +74,11 @@ class AddEditUserPopup extends PureComponent {
 	}
 
 	saveUser = (sendInvite: boolean) => {
-		const { avgHours , avgMins, weeklyHours, status, vacDays } = this.state
+		const { weeklyHours, status, vacDays, workDays } = this.state
 		let dbUser  = {
 			...this.props.user,   // props like 'isAdmin' are not in state, thats why doing ...user ( from props )
 			..._.omit(this.state, ['errorText', 'avgHours', 'avgMins', 'weeklyHours']),
-			avgDailyMins: inpToInt(avgMins) + (inpToInt(avgHours) * 60),
+			avgDailyMins: getAvgDailyMins(workDays, weeklyHours),
 			vacDays:			vacDays ? inpToInt(vacDays) : null,
 			weeklyMins: 	floatToMins(weeklyHours),
 			status: 			sendInvite ? 'INVITED' : status
@@ -96,10 +89,9 @@ class AddEditUserPopup extends PureComponent {
 	}
 
 	sendInvitation = () => {
-		const url = 'https://plandy-91a56.firebaseapp.com' // TODO: use different URL depending on DEV / PROD environment
 		const { name, id, email } = this.state
 		const { accountID } = this.props
-		addInvitationJob({ url, name, userID: id, email, accountID })
+		addInvitationJob({ name, userID: id, email, accountID })
 	}
 
 	updateUser = (key, newValue) => this.setState({[key]: newValue })
@@ -117,23 +109,20 @@ class AddEditUserPopup extends PureComponent {
 		}
 	}
 
-	weeklyHoursChanged = (weeklyHours) => {
-		this.setState({ weeklyHours, ...getAvgs(this.state.workDays, weeklyHours)})
-	}
-
+	weeklyHoursChanged 	= (weeklyHours) => this.setState({ weeklyHours })
+	onVacDaysChanged 		= (vacDays) 		=> isIntStr(vacDays) && this.setState({ vacDays })
 	avgDailyMinsChanged = (target, inp) => isIntStr(inp) && this.setState({[target]: inp})
-
-	workDaysChanged = (workDays) => {
-		this.setState({ workDays, ...getAvgs(workDays, this.state.weeklyHours) })
-	}
+	workDaysChanged 		= (workDays) 		=> this.setState({ workDays })
 
 	render() {
-		const { name, email, weeklyHours, position, branches, status, workDays, avgHours, avgMins, vacDays } = this.state
-		const allBranches = this.props.branches
-		const allPositions = this.props.positions
+		const { name, email, weeklyHours, position, branches, status, workDays, vacDays } = this.state
+		const allBranches 	= this.props.branches
+		const allPositions 	= this.props.positions
 		const emailDisabled = status === 'ACTIVE'
-		const notInvited = status === 'NOT_INVITED'
-		const editMode = !!this.props.user
+		const notInvited 		= status === 'NOT_INVITED'
+		const editMode 			= !!this.props.user
+		const avgHours 			= Math.round(getAvgDailyMins(workDays, weeklyHours) / 60 * 100) / 100
+		const avgHoursStr 	= replaceDotsWithCommas(avgHours) + ' Stunden'
 
 		return (
 			<SModal.Main title={ editMode ? 'Mitarbeiter bearbeiten' : 'Neuer Mitarbeiter' } onClose={this.props.closeModal}>
@@ -155,14 +144,16 @@ class AddEditUserPopup extends PureComponent {
 								<BranchSelect branches={allBranches} selected={branches} onChange={this.branchesChanged} />
 							</FlatFormRow>
 							<FlatFormRow label='Wochenstunden'>
-								<FlatInput value={weeklyHours} onInputChange={this.weeklyHoursChanged} defaultText='z.B. 40'/>
+								<FlatInput value={weeklyHours} onInputChange={this.weeklyHoursChanged} defaultText='0'/>
+							</FlatFormRow>
+							<FlatFormRow label='Urlaubstage'>
+								<FlatInput value={vacDays} onInputChange={this.onVacDaysChanged} defaultText='0'/>
+							</FlatFormRow>
+							<FlatFormRow label='Arbeitstage'>
+								<WorkDaysPicker workDays={workDays} onChange={this.workDaysChanged} />
+								<fb className='avgDailyHours'>&Oslash; {avgHoursStr}</fb>
 							</FlatFormRow>
 						</fb>
-						<Expander label='Abwesenheit'>
-							<TotalVacDays vacDays={vacDays} onChange={(vacDays)=>this.setState({ vacDays })} />
-							<WorkDaysPicker workDays={workDays} onChange={this.workDaysChanged} />
-							<AvgDailyMinsRow avgHours={avgHours} avgMins={avgMins} onChange={this.avgDailyMinsChanged} />
-						</Expander>
 					</fb>
 				</SModal.Body>
 				<SModal.Footer>

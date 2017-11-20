@@ -2,7 +2,7 @@ const functions       = require('firebase-functions')
 
 const sumsUpdater         = require('./sumsUpdater')
 const absenceHandler      = require('./absenceHandler')
-const reqInviteStatus     = require('./invites')
+const getUser             = require('./getUser')
 const sendInvitationMail  = require('./mailSender')
 const admin               = require('firebase-admin')
 admin.initializeApp(functions.config().firebase)
@@ -44,4 +44,4 @@ exports.onEmailInviteAdded = functions.database
     return sendInvitationMail({ rootRef, inviteID, accountID, userID, name, url, email })
   })
 
-exports.getInviteStatus = functions.https.onRequest(reqInviteStatus(admin))
+exports.getUser = functions.https.onRequest(getUser(admin))
