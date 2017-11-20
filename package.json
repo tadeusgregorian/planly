@@ -38,8 +38,7 @@
     "start-js": "react-scripts start",
     "start": "npm-run-all -p watch-css start-js",
     "startsimple": "npm run start-js",
-    "build": "npm run build-css && react-scripts build && cp -r ./web ./build",
-    "buildprod": "REACT_APP_TARGET=production npm run build",
+    "build": "npm run build-css && react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "flow": "flow"

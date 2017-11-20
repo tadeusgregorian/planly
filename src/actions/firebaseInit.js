@@ -1,7 +1,7 @@
 import firebase from 'firebase'
 
 export const initFirebase = () => {
-  if(process.env.NODE_ENV === 'production'){
+  if(process.env.REACT_APP_ENV === 'production'){
     firebase.initializeApp({
       apiKey: "AIzaSyDN42YFUUW6a73BncV17h8pzOKJJUlJO-E",
       authDomain: "aplano-c4071.firebaseapp.com",
