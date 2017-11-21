@@ -29,8 +29,9 @@ export default class Login extends PureComponent {
 	}
 
 	componentDidMount = () => {
-		if(window.location.href.includes('fresh-user')) console.log('FREsH')
-		Toast.success('Registrierung Erfolgreich. Du kannst dich jetzt einloggen.')
+		if(window.location.href.includes('fresh-user')) {
+			Toast.success('Registrierung Erfolgreich. Du kannst dich jetzt einloggen.')
+		}
 	}
 
 	tryToLogin = () => {
@@ -53,7 +54,6 @@ requestPWLink = async (email: string) => {
 			Toast.error('Diese E-Mail Adresse ist nicht registriert')
 		}
 	}
-
 
 	render() {
 		const { password, username, passwordForgotten, loading } = this.state

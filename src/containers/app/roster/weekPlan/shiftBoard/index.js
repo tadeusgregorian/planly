@@ -99,7 +99,7 @@ class ShiftBoard extends PureComponent{
       currentWeekID,
       currentUser,
       visibleUsers,
-      focusedShiftRef,
+      //focusedShiftRef,
       timeDetailsVisible } = this.props
 
     const adminMode = !!currentUser.isAdmin
@@ -117,7 +117,7 @@ class ShiftBoard extends PureComponent{
           { visibleUsers.map(user => this.renderUserRow(user.id, false, user)) }
         </fb>
         <fb className={cn({loadingLayer: 1, visible: loading})}>loading...</fb>
-        <fb className={cn({darkOverlay:  1, visible: !!focusedShiftRef})}></fb>
+        {/* <fb className={cn({darkOverlay:  1, visible: !!focusedShiftRef})}></fb> */}
       </fb>
     )
   }
