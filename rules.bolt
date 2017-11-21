@@ -41,7 +41,9 @@ path /accounts/{accID}/roster/weekSums/{sumID} is Number;
 
 type TransUser {
   account: String,
-  userID: String
+  userID: String,
+  email: String,
+  timestamp: Number,
 }
 
 type WeeklyAbsence {

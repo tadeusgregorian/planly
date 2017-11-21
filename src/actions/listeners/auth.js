@@ -22,7 +22,11 @@ export const setAuthStateListener = (initializor: Function) => {
 
       firebase.database().ref('allUsers/' + user.uid).once('value')
         .then(snap => {
-          if(!snap.val()) return firebase.auth().signOut()
+          
+          if(!snap.val()) {
+            console.log('uid not found in allUsers List');
+            return firebase.auth().signOut()
+          }
 
           createCookie('loggedIn', 'true', 1000)
 

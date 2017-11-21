@@ -8,6 +8,7 @@ import type { Notes, ShiftEdits, Shifts, DataStatus, TemplatesFlat, WeekAbsence,
 //const cleanUp = (data) => _.omit(data, ['userDay', 'branchDay', 'branch'])
 
 const correctionsSame = (c1, c2) => c1.user === c2.user && c1.week === c2.week
+const shiftEditsSame = (e1, e2) => e1.shiftID === e2.shiftID
 
 export type Roster = {
   notes: Notes,
@@ -26,7 +27,7 @@ export type Roster = {
 export default combineReducers({
   notes: createFirebaseReducer_array('notes'),
   templatesFlat: createFirebaseReducer_array('templatesFlat'),
-  shiftEdits: createFirebaseReducer_array('shiftEdits'),
+  shiftEdits: createFirebaseReducer_array('shiftEdits', null, shiftEditsSame), // default checks .id properties to compare, if none -> need to pas in comparer func
   weekSums: createFirebaseReducer_object('weekSums'),
   corrections: createFirebaseReducer_array('corrections', null, correctionsSame),
   weekAbsences: createFirebaseReducer_array('weekAbsences'),
