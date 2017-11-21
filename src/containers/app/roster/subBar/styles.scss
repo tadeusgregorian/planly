@@ -53,33 +53,38 @@
       }
     }
 
-    .subBarButton{
-      //border-right: 1px solid #e2e8ea;
-      align-items: center;
-      padding: 0 16px;
-      cursor: pointer;
-      align-self: stretch;
-      font-size: 16px;
-      text-decoration: uppercase;
-      font-weight: 400;
-      margin: 4px;
-      margin-right: 0px;
-      border-radius: 2px;
-
-      &:hover{
-        background: #f3f3f3;
+    .navigation{
+      &.hidden{
+        display: none;
       }
 
-      &.activeBlue{
-        color: #008acc;
-        background: #cfefff;
-      }
+      .subBarButton{
+        //border-right: 1px solid #e2e8ea;
+        align-items: center;
+        padding: 0 16px;
+        cursor: pointer;
+        align-self: stretch;
+        font-size: 16px;
+        text-decoration: uppercase;
+        font-weight: 400;
+        margin: 4px;
+        margin-right: 0px;
+        border-radius: 2px;
 
-      &.activePink{
-        color: #ff5571;
-        background: #ffe6eb;
-      }
+        &:hover{
+          background: #f3f3f3;
+        }
 
+        &.activeBlue{
+          color: #008acc;
+          background: #cfefff;
+        }
+
+        &.activePink{
+          color: #ff5571;
+          background: #ffe6eb;
+        }
+      }
     }
   }
 }

@@ -40,7 +40,9 @@
         .rosterSubBarMain .centered .branchSelector .Dropdown-root .Dropdown-menu {
           margin-top: 0px;
           box-shadow: 0px 8px 12px -2px rgba(0, 0, 0, 0.46); }
-    .rosterSubBarMain .centered .subBarButton {
+    .rosterSubBarMain .centered .navigation.hidden {
+      display: none; }
+    .rosterSubBarMain .centered .navigation .subBarButton {
       align-items: center;
       padding: 0 16px;
       cursor: pointer;
@@ -51,12 +53,12 @@
       margin: 4px;
       margin-right: 0px;
       border-radius: 2px; }
-      .rosterSubBarMain .centered .subBarButton:hover {
+      .rosterSubBarMain .centered .navigation .subBarButton:hover {
         background: #f3f3f3; }
-      .rosterSubBarMain .centered .subBarButton.activeBlue {
+      .rosterSubBarMain .centered .navigation .subBarButton.activeBlue {
         color: #008acc;
         background: #cfefff; }
-      .rosterSubBarMain .centered .subBarButton.activePink {
+      .rosterSubBarMain .centered .navigation .subBarButton.activePink {
         color: #ff5571;
         background: #ffe6eb; }
 
