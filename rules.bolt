@@ -73,7 +73,8 @@ type Absence {
   user: String,
   workDays: Object|Null,
   year: Number,
-  yearUser: Number
+  yearUser: String,
+  unpaid: Boolean|Null,
 }
 
 type Location {

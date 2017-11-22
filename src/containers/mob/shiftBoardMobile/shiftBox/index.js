@@ -47,7 +47,7 @@ const shiftBox = (props: Props) => {
         { inTeamMode  && <fb className='userName'>{ userName }</fb> }
         { inPersMode  && multiBranch && <fb className='branchName'>{ branchObj.name }</fb> }
         { locObj      && <fb className='location' style={{color: locObj.color}}>{locObj.name}</fb> }
-        { note        && <fb className='note icon icon-messages'></fb> }
+        { note        && <fb className='note icon icon-comment'></fb> }
       </fb>
     </fb>
   )

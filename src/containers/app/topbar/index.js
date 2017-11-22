@@ -23,7 +23,7 @@ type Props = {
     <fb className="topbarMain">
       <fb className='centered'>
         <fb className="side left">
-          <TopbarButton label='Dienstplan'      to='/app/dienstplan/wochenplan'/>
+          <TopbarButton label='Dienstplan'      to='/app/dienstplan'/>
           <TopbarButton label='Abwesenheit'     to='/app/abwesenheit' />
           <TopbarButton label='Einstellungen'   to='/app/einstellungen' />
         </fb>

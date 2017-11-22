@@ -1,6 +1,7 @@
 .topbarMain {
   width: 100%;
-  height: 46px;
+  flex: 0 0 auto;
+  height: 44px;
   background-color: #00a3ef;
   align-items: center;
   justify-content: center;

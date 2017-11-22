@@ -11,9 +11,12 @@ import type { AbsencePreDB, Absence } from 'types/index'
 export const saveAbsenceToDB = (absence: AbsencePreDB) => {
   const absenceDB = extendForDB(absence)
   const request = absence.status === 'requested' ? absenceDB : null // delete just in case...
-  const updates = { [getFBPath('absences', [absence.id])]: absenceDB }
+  const updates = {}
+
+  updates[getFBPath('absences', [absence.id])] = absenceDB
   updates[getFBPath('vacationRequests', [absence.id])] = request
 
+  //console.log(JSON.stringify(absenceDB));
   db().ref().update(updates)
 }
 

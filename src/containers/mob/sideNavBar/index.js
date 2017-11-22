@@ -53,7 +53,7 @@ class SideNavBar extends PureComponent {
     return(
         <aside className="js-side-nav side-nav">
           <nav className="js-side-nav-container side-nav__container ">
-            <fb className="icon icon-arrow-back closeBtn" onClick={closeSideNav} ></fb>
+            <fb className="icon icon-arrow-left2 closeBtn" onClick={closeSideNav} ></fb>
             <header className={'header' + (branchPick ? ' branch' : '')}>
               { options && 'Optionen' }
               { branchPick && 'Standort Wählen' }

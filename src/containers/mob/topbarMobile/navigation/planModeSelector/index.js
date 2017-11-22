@@ -18,8 +18,8 @@ export default (props: Props) => {
 
   return(
     <fb className="planModeSelectorMain">
-      <fb className={'icon icon-user2 sel personal' + persClass} onClick={setPersonal}></fb>
-      <fb className={'icon icon-home sel team' + teamClass} onClick={setTeam}></fb>
+      <fb className={'icon icon-user sel personal' + persClass} onClick={setPersonal}></fb>
+      <fb className={'icon icon-group sel team' + teamClass} onClick={setTeam}></fb>
     </fb>
   )
 }
