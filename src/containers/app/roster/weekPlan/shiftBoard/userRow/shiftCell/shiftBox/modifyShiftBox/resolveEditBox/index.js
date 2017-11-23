@@ -3,6 +3,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
+import cn from 'classnames'
 
 import { shiftCellWidth } from 'constants/roster'
 
@@ -29,6 +30,9 @@ type Props = OwnProps & ConProps
 
 class ResolveEditBox extends PureComponent{
   props: Props
+  state = { fadeIn: false}
+
+  componentDidMount =  () => { setTimeout(()=>this.setState({ fadeIn: true }), 1) }
 
   close = () => this.props.unfocusShift()
 
@@ -43,11 +47,12 @@ class ResolveEditBox extends PureComponent{
   }
 
   render(){
+    const { fadeIn } = this.state
     const { currentUser, shift } = this.props
     const { isAdmin } = currentUser
 
     return(
-      <fb className='resolveEditBoxMain arrow_box_pp' style={{width: shiftCellWidth - 3}}>
+      <fb className={cn({resolveEditBoxMain: 1, arrow_box_pp: 1, fadeIn})}  style={{width: shiftCellWidth - 3}}>
         <fb className='closeButton icon icon-close' onClick={this.close}></fb>
         <fb className='shiftWrapper' key='shiftWrapper'>
           <fb className='headline'>Editiert</fb>

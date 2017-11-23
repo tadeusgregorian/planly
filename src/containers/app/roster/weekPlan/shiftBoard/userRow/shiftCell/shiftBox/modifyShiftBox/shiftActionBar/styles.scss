@@ -1,29 +1,19 @@
-@keyframes fadein {
-    from {
-      opacity: 0;
-      top: -13px;
-    }
-    to   {
-      opacity: 1;
-      top: -23px;
-    }
-}
 
 .shiftActionBarMain{
   will-change: transform;
   position: absolute;
-  top: -23px;
+  top: -18px;
   right: -1px;
   height: 20px;
   font-size: 14px;
   border-radius: 2px;
   background: #00a3ef;
-  //border-bottom: 1px solid #008bcc;
-  //box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.11);
-  //pointer-events: auto;
-  animation: fadein .15s ease;
-  //transition: 1s ease-in-out;
-  //transform: translateY(-6px);
+  overflow: hidden;
+  transition: transform 0.08s ease-out;
+
+  &.fadeIn{
+    transform: translate(0px, -5px)
+  }
 
   .btn{
     color: white;

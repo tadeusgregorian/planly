@@ -38,7 +38,7 @@ class AbsenceCalendar extends PureComponent {
         <CalendarHead
           year={year}
           month={month}
-          type={type} 
+          type={type}
           adminMode={adminMode}
           bundesland={bundesland}
         />

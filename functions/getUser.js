@@ -10,7 +10,7 @@ module.exports = (admin) => {
     next();
   });
 
-  app.get('/api/get-invite-status/:accID/:userID', (req, res)=> {
+  app.get('/api/get-user/:accID/:userID', (req, res)=> {
 
     const accID  = req.params.accID
     const userID = req.params.userID
@@ -32,6 +32,3 @@ module.exports = (admin) => {
 
   return app
 }
-
-// 1501754871f662f3c2b399G8
-// u001

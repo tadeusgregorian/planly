@@ -11,8 +11,12 @@
     ],
     "rewrites": [
       {
-        "source": "/api/get-invite-status/**",
-        "function": "getInviteStatus"
+        "source": "/api/get-user/**",
+        "function": "getUser"
+      },
+      {
+        "source": "/api/activate-user/**",
+        "function": "activateUser"
       },
       {
         "source": "**",

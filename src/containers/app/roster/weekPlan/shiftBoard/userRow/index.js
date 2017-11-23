@@ -54,9 +54,11 @@ export default class UserRow extends PureComponent{
       cellUnderMouse,
       absences } = this.props
 
-      const isAdmin     = currentUser.isAdmin
-      const weeklyMins  = user ? user.weeklyMins : 0
-      const weekSum     = templateMode ? calculateWeekSum(shifts) : this.props.weekSum
+      const isAdmin      = currentUser.isAdmin
+      const isOwnRow     = currentUser.id === userID
+      const weeklyMins   = user ? user.weeklyMins : 0
+      const weekSum      = templateMode ? calculateWeekSum(shifts) : this.props.weekSum
+      const isAuthorized = isAdmin || isOwnRow
 
     return(
       <fb className="userRowMain">
@@ -65,7 +67,7 @@ export default class UserRow extends PureComponent{
             overtime={overtime}
             status={overtimeStatus}
             type='PRE'
-            empty={isOpen}
+            empty={isOpen || !isAuthorized}
             userID={userID}
           />
         }
@@ -76,6 +78,7 @@ export default class UserRow extends PureComponent{
               weekSum={weekSum}
               weeklyMins={weeklyMins}
               overtime={overtime}
+              currentUser={currentUser}
               timeDetailsVisible={timeDetailsVisible}
             />
           : <OpenUserCell />
@@ -109,7 +112,7 @@ export default class UserRow extends PureComponent{
           overtime={overtime + weekSum - weeklyMins}
           status={overtimeStatus}
           type='POST'
-          empty={isOpen}
+          empty={isOpen || !isAuthorized}
           userID={userID}
         /> }
       </fb>

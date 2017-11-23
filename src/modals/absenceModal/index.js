@@ -52,16 +52,19 @@ type ConProps = {
   user: User,
   currentUser: User,
   preferences: AccountPreferences,
+  currentYear: number,
+  currentMonth: number,
   openModal: Function
 }
 
 class AbsenceModal extends PureComponent{
   state: State
   props: OwnProps & ConProps
+  currentMom: moment // current Year and Month ob Absence UI
 
   constructor(props){
     super(props)
-    const { absence, user } = props
+    const { absence, user, currentYear, currentMonth } = props
     const adminMode = !!this.props.currentUser.isAdmin
 
 
@@ -83,11 +86,12 @@ class AbsenceModal extends PureComponent{
       focusedInput:   null, // we omit this before saving to db!
       errorMessage:   false, // we omit this before saving to db!
     }
+
+    this.currentMom = moment().year(currentYear).month(currentMonth)
   }
 
   // returns the useAvgHours-Setting for a specific AbsenceType
   getDefaul_useAvgHours = (type: AbsenceType): true | null => {
-    if(type === 'ill') return this.props.preferences.useAvgHoursForIll ? true : null
     if(type === 'vac') return this.props.preferences.useAvgHoursForVac ? true : null
     return null
   }
@@ -176,6 +180,7 @@ class AbsenceModal extends PureComponent{
                   startDate={startDate ? moment(startDate, 'YYYYMMDD') : null}
                   endDate={endDate ? moment(endDate, 'YYYYMMDD') : null}
                   onDatesChange={this.datesChanged}
+                  initialVisibleMonth={() => this.currentMom}
                   minimumNights={0}
                   isOutsideRange={adminMode ? () => false : undefined}
                   focusedInput={focusedInput}
@@ -214,7 +219,9 @@ const actionCreators = {
 const mapStateToProps = (state: Store, ownProps: OwnProps) => ({
   currentUser: getCurrentUser(state),
   user: (state.core.users.find(u => u.id === ownProps.userID): any), // -> telling Flow to shut up. Result must be a User
-  preferences: state.core.accountDetails.preferences
+  preferences: state.core.accountDetails.preferences,
+  currentYear: state.ui.absence.currentYear,
+  currentMonth: state.ui.absence.currentMonth,
 })
 
 const connector: Connector<OwnProps, OwnProps & ConProps > = connect(mapStateToProps, actionCreators)

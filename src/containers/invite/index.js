@@ -2,7 +2,7 @@
 
 import React, { PureComponent } from 'react';
 import firebase from 'firebase'
-
+import { isProdEnv } from 'helpers/index'
 import type { User } from 'types/index'
 import './styles.css'
 
@@ -20,6 +20,8 @@ type State = {
   email:  string,
   userID:  string,
   name: string,
+  dataLoaded: boolean,
+  registrating: boolean,
 }
 
 
@@ -38,15 +40,17 @@ export default class Invite extends PureComponent {
       status: '',
       email: '',
       name: '',
+      dataLoaded: false,
+      registrating: false,
     }
 	}
+
+  getBaseUrl = () => isProdEnv() ? 'https://app.aplano.de' : 'https://plandy-91a56.firebaseapp.com'
 
   componentDidMount = () => {
     const { accID, userID } = this.state
 
-    const baseUrl = 'https://plandy-91a56.firebaseapp.com' // TODO: come back here and check Environment to pick DEV/PROD url
-
-    fetch(baseUrl + `/api/get-invite-status/${accID}/${userID}/`)
+    fetch(this.getBaseUrl() + `/api/get-user/${accID}/${userID}/`)
       .then(res => res.json())
       .then(json => {
         const user = JSON.parse(json)
@@ -57,13 +61,12 @@ export default class Invite extends PureComponent {
 
   populateState = (u: User) => {
     const email = u.email || '' // flow issue ( At this point there is defos an email ) // as long as the admin didnt delete it meanwhile...
-    this.setState({ email , status: u.status, name: u.name })
+    this.setState({ email , status: u.status, name: u.name, dataLoaded: true })
   }
 
-  createUserEntry = (fbUser: {email: string, uid: string}): Promise<{}> => {
-    const { email, uid } = fbUser
+  createUserEntry = (firebaseUid: string): Promise<{}> => {
     const { userID, accID } = this.state
-    return firebase.database().ref(`allUsers/${uid}`).set({ userID, email, account: accID })
+    return fetch(this.getBaseUrl() + `/api/activate-user/${accID}/${userID}/${firebaseUid}`)
   }
 
   saveClicked = () => {
@@ -73,16 +76,12 @@ export default class Invite extends PureComponent {
     if( pw1 && pw1.length < 6 ) return this.setError('Passwort ist zu kurz' )
     if( status === 'ACTIVE')    return this.setError('Zugang ist bereits aktiveirt')
 
-    // maybe instable: ( race condition possible )
-    // createUserWith.. automatically signs user in after creation ->
-    // we have registred an authStateChange listener -> handles LoggingIn
-    // For that it checks the allUsers from the database -> to get the AccountID that the user is associated with.
-    // -> this entry is being created here in the .then function -> still it somehow gets executed on the DB prior
-    // to the query of the authStateChange-listener. So it works here just fine. Just kind of spooky. so watch out here...
-    firebase.auth().createUserWithEmailAndPassword(email, pw1)
-      .then(fbUser => this.createUserEntry(fbUser))
-      .then(res    => this.props.history.push('/'))
+    this.setState({ registrating: true })
+    firebase.auth().createUserWithEmailAndPassword(email, pw1) // trys to signIn after registration -> but gets logged out again -> cause user isnt in allUsers jet
+      .then(fbUser => this.createUserEntry(fbUser.uid))
+      .then(res    => this.props.history.push('/login/fresh-user'))
       .catch(error => {
+        this.setState({ registrating: false })
         if(error.code === 'auth/email-already-in-use') this.setError('Email-Adresse bereits in Nutzung')
       })
   }
@@ -91,12 +90,31 @@ export default class Invite extends PureComponent {
 
 	render() {
 
-    const { pw1, pw2, email, error, status, name } = this.state
-    const isActive = status === 'ACTIVE'
+    const { pw1, pw2, email, error, status, name, dataLoaded, registrating } = this.state
 
-    if(isActive) return (
+    if(status === 'ACTIVE') return (
       <fb className='inviteUserMain'>
         <fb className='container'>Zugang bereits Aktiviert</fb>
+      </fb>
+    )
+
+    if(status === 'NOT_INVITED') return ( // this should not happen here at all... -> means someone has changed the url parameter ( uid ) manually
+      <fb className='inviteUserMain'>
+        <fb className='container'>Du wurdest noch nicht eingeladen</fb>
+      </fb>
+    )
+
+    if(name && !email) return (
+      <fb className='inviteUserMain'>
+        <fb className='container'>Email nicht mehr vorhanden - Neue einladung Erforderlich. </fb>
+      </fb>
+    )
+
+    if(!dataLoaded) return (
+      <fb className='inviteUserMain'>
+        <fb className='container'>
+          loading...
+        </fb>
       </fb>
     )
 
@@ -108,9 +126,26 @@ export default class Invite extends PureComponent {
           <fb className='content'>
             <fb className='description text'>Passwort anlegen für</fb>
             <fb className='text email'>{email}</fb>
-            <input className='pw' type='password' value={pw1}  onChange={(e)=>this.setState({ pw1: e.target.value })} placeholder='passwort' />
-            <input className='pw' type='password' value={pw2}  onChange={(e)=>this.setState({ pw2: e.target.value })} placeholder='passwort wiederholen' />
-            <fb className='saveBtn soBtn' onClick={this.saveClicked}>speichern</fb>
+            <input
+              className='pw'
+              type='password'
+              value={pw1}
+              onChange={(e)=>this.setState({ pw1: e.target.value })}
+              placeholder='passwort'
+            />
+            <input
+              className='pw'
+              type='password'
+              value={pw2}
+              onChange={(e)=>this.setState({ pw2: e.target.value })}
+              placeholder='passwort wiederholen'
+              onKeyDown={(e)=> { if(e.key === 'Enter') this.saveClicked() }}
+            />
+            <fb
+              className='saveBtn soBtn'
+              onClick={this.saveClicked}>
+              { registrating ? '...' : 'speichern'}
+            </fb>
           </fb>
         </fb>
 			</fb>

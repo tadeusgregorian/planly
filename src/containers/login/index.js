@@ -1,3 +1,4 @@
+//@flow
 import React, { PureComponent } from 'react';
 import { signInWithEmailAndPassword, checkIfEmailExists, sendPasswordResetEmail } from 'actions/auth';
 import InputMinimal from 'components/inputMinimal'
@@ -6,12 +7,31 @@ import PasswordForgotten from './passwordForgotten'
 import { Toast } from 'helpers/iziToast'
 import './styles.css'
 
+type State = {
+	password: string,
+	username: string,
+	passwordForgotten: boolean,
+	loading: boolean,
+}
+
 
 export default class Login extends PureComponent {
+	state: State
+
 	constructor() {
 		super()
-		this.state = { username: '', password: '', passwordForgotten: false, loading: false}
-		this.requestPWLink = this.requestPWLink.bind(this)
+		this.state = {
+			username: '',
+			password: '',
+			passwordForgotten: false,
+			loading: false
+		}
+	}
+
+	componentDidMount = () => {
+		if(window.location.href.includes('fresh-user')) {
+			Toast.success('Registrierung Erfolgreich. Du kannst dich jetzt einloggen.')
+		}
 	}
 
 	tryToLogin = () => {
@@ -23,7 +43,7 @@ export default class Login extends PureComponent {
 			})
 	}
 
-	async requestPWLink (email) {
+requestPWLink = async (email: string) => {
 		//Toast.info('...')
 		const emailExists = await checkIfEmailExists(email)
 		if(emailExists){
@@ -34,7 +54,6 @@ export default class Login extends PureComponent {
 			Toast.error('Diese E-Mail Adresse ist nicht registriert')
 		}
 	}
-
 
 	render() {
 		const { password, username, passwordForgotten, loading } = this.state

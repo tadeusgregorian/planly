@@ -1,10 +1,10 @@
 .navlink{
   height: 100%;
+  margin-left: 2px;
 
   &.active{
     .topbarButton{
       background: #1fb7ff;
-      margin-left: 2px;
     }
   }
 

@@ -36,7 +36,6 @@ export default class WorkDaysPicker extends PureComponent{
     return(
       <fb className="wordDaysAndHoursMain">
         <fb className='row workDaysRow'>
-          <fb className='workDaysRowLabel'>Arbeitstage</fb>
           <fb className='workDaysContent'>
             { weekDaysArray.map(w =>
               <fb

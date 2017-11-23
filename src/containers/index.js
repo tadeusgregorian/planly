@@ -44,7 +44,7 @@ class Container extends PureComponent {
               <Route path='/login'    render={()=> !loggedIn ? <Login/>  : <Redirect to={onMobile() ? '/mob' : '/app'} />} />
               <Route path='/app'      render={()=>  loggedIn ? <App/>    : <Redirect to='/login' /> } />
               <Route path='/mob'      render={()=>  loggedIn ? <Mob/>    : <Redirect to='/login' /> } />
-              <Redirect to='/login' /> 
+              <Redirect to='/login' />
             </Switch>
           </fb>
           <ModalsManager />

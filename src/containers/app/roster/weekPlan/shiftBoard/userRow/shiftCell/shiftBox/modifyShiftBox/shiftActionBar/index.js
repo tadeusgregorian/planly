@@ -1,8 +1,7 @@
 //@flow
 
-import React from 'react'
-//import type { PreShift } from 'types/index'
-//import { shiftCellWidth } from 'constants/roster'
+import React, { PureComponent } from 'react'
+import cn from 'classnames'
 import './styles.css'
 
 type Props = {
@@ -18,17 +17,32 @@ type Props = {
   isAdmin: boolean,
 }
 
-export default (props: Props) => {
-  const hasNote = !!props.hasNote ? ' highlighted' : ''
-  const { isAdmin, withLocations, toggleLocationBox } = props
+export default class ShiftActionBar extends PureComponent {
+  props: Props
+  state = { fadeIn: false }
 
-  return(
-    <fb className="shiftActionBarMain">
-      { isAdmin && <fb className='btn deleteBtn icon icon-delete' onClick={props.deleteShift} /> }
-      { withLocations && isAdmin && <fb className='btn locationBtn icon icon-download' onClick={toggleLocationBox} /> }
-      <fb className={'btn noteBtn icon icon-comment' + hasNote} onClick={props.showShiftNote} />
-      <fb className='btn optionsBtn icon icon-done'   onClick={props.saveIt}></fb>
-      <fb className='btn closeBtn icon icon-close'    onClick={props.unfocusShift}></fb>
-    </fb>
-  )
+  componentDidMount = () => { setTimeout(()=>this.setState({ fadeIn: true }), 1) }
+
+  render(){
+    const {
+      isAdmin,
+      withLocations,
+      toggleLocationBox,
+      saveIt,
+      unfocusShift,
+      showShiftNote,
+      deleteShift } = this.props
+    const hasNote = !!this.props.hasNote ? ' highlighted' : ''
+    const { fadeIn } = this.state
+
+    return(
+      <fb className={cn({shiftActionBarMain: 1, fadeIn})}>
+        { isAdmin && <fb className='btn deleteBtn icon icon-delete' onClick={deleteShift} /> }
+        { withLocations && isAdmin && <fb className='btn locationBtn icon icon-download' onClick={toggleLocationBox} /> }
+        <fb className={'btn noteBtn icon icon-comment' + hasNote} onClick={showShiftNote} />
+        <fb className='btn optionsBtn icon icon-done'   onClick={saveIt}></fb>
+        <fb className='btn closeBtn icon icon-close'    onClick={unfocusShift}></fb>
+      </fb>
+    )
+  }
 }

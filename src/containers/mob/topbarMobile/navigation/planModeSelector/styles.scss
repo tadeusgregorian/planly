@@ -8,14 +8,14 @@
 
   .sel{
     flex: 1 1 auto;
-    font-size: 32px;
+    font-size: 34px;
     align-items: center;
     justify-content: center;
     align-self: stretch;
     color: lightgrey;
 
     &.personal{
-      font-size: 30px;
+      font-size: 34px;
     }
 
     &.active{

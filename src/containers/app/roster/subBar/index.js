@@ -1,18 +1,30 @@
 // @flow
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
+import type { Connector } from 'react-redux'
 import cn from 'classnames'
-import type { Store } from 'types/index'
+import getCurrentUser from 'selectors/currentUser'
 import {
   changeCurrentBranch,
   leaveTemplateMode,
   enterTemplateMode,
 } from 'actions/ui/roster'
 import Dropdown from 'react-dropdown'
+import type { Store, Branch, User } from 'types/index'
 import './styles.css'
 
+type Props = {
+  currentBranch: string,
+  branches: Array<Branch>,
+  templateMode: boolean,
+  currentUser: User,
+  changeCurrentBranch: Function,
+  leaveTemplateMode: Function,
+  enterTemplateMode: Function
+}
 
 class SubBar extends PureComponent {
+  props: Props
 
   weekPlanClicked = () => {
     this.props.leaveTemplateMode()
@@ -23,8 +35,11 @@ class SubBar extends PureComponent {
   }
 
   render(){
-    const { currentBranch, changeCurrentBranch, branches, templateMode } = this.props
-    const currentBranchName = branches.find(b => b.id === currentBranch).name
+    const { currentBranch, changeCurrentBranch, branches, templateMode, currentUser } = this.props
+    const branchObj: Branch = (branches.find(b => b.id === currentBranch): any)
+    const currentBranchName = branchObj.name
+    const isAdmin = currentUser.isAdmin
+
     return(
       <fb className="rosterSubBarMain">
         <fb className='centered'>
@@ -35,13 +50,15 @@ class SubBar extends PureComponent {
               onChange={(opt) => changeCurrentBranch(opt.value)}
             />
           </fb>
-          <fb
-            className={cn({subBarButton: 1, activeBlue: !templateMode})}
-            onClick={this.weekPlanClicked}>Wochenplan</fb>
-          <fb
-            className={cn({subBarButton: 1, activePink: templateMode})}
-            onClick={this.templatesClicked}>Vorlagen</fb>
-        </fb>
+          <fb className={cn({navigation: 1, hidden: !isAdmin})}>
+            <fb
+              className={cn({subBarButton: 1, activeBlue: !templateMode })}
+              onClick={this.weekPlanClicked}>Wochenplan</fb>
+            <fb
+              className={cn({subBarButton: 1, activePink: templateMode })}
+              onClick={this.templatesClicked}>Vorlagen</fb>
+          </fb>
+          </fb>
       </fb>
     )
   }
@@ -56,8 +73,9 @@ const actionsToProps = {
 const mapStateToProps = (state: Store) => ({
   currentBranch: state.ui.roster.currentBranch,
   branches: state.core.branches,
-  templatesFlat: state.roster.templatesFlat,
   templateMode: state.ui.roster.templateMode,
+  currentUser: getCurrentUser(state)
 })
 
-export default connect (mapStateToProps, actionsToProps)(SubBar)
+const connector: Connector<{}, Props> = connect(mapStateToProps, actionsToProps)
+export default connector(SubBar)

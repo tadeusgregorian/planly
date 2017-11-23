@@ -8,7 +8,6 @@ import { openAbsenceModal } from 'actions/ui/modals'
 import { setCurrentBranch, setCurrentYear, setCurrentMonth, setCurrentType } from 'actions/ui/absence'
 import { getYearsArray, getMonthsArray, getNextYM, getPrevYM } from './localHelpers'
 
-import TypeSwitch from './typeSwitch'
 import RequestManager from './requestManager'
 import RequestVacBtn from './requestVacBtn'
 import MonthStepper from './monthStepper'
@@ -26,7 +25,6 @@ type ConProps = {
   currentBranch: string,
   currentYear: number,
   currentMonth: number,
-  currentType: AbsenceType | 'all',
   openAbsenceModal: (string, Absence | void)=>any,
   setCurrentBranch: (string)=>any,
   setCurrentYear:   (number)=>any,
@@ -55,7 +53,7 @@ class AbsenceActionBar extends PureComponent {
   }
 
   render(){
-    const { currentBranch, currentYear, currentMonth, currentType, branches, adminMode } = this.props
+    const { currentBranch, currentYear, currentMonth, branches, adminMode } = this.props
 
     const branchOptions = branches.map(b => ({value: b.id, label: b.name}))
                           .concat({value: 'all', label: 'Alle Standorte'})
@@ -97,10 +95,6 @@ class AbsenceActionBar extends PureComponent {
             stepBack={this.stepBack}
             stepForward={this.stepForward}
           />
-          <TypeSwitch
-            type={currentType}
-            changeType={this.props.setCurrentType}
-           />
            { adminMode
              ? <RequestManager />
              : <RequestVacBtn onClick={this.requestVacClicked}/>}
@@ -123,7 +117,6 @@ const mapStateToProps = (state: Store) => ({
   currentBranch: state.ui.absence.currentBranch,
   currentYear: state.ui.absence.currentYear,
   currentMonth: state.ui.absence.currentMonth,
-  currentType: state.ui.absence.currentType,
 })
 
 const connector: Connector<OwnProps, ConProps & OwnProps> = connect(mapStateToProps, actionCreators)

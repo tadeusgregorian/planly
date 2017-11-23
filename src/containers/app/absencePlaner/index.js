@@ -7,6 +7,7 @@ import { setRequestedAbsencesListener } from 'actions/listeners/absencePlaner'
 import { setAbsencesListener          } from 'actions/listeners/absencePlaner'
 import { getClickedAbsenceID, getClickedUserID } from './localHelpers'
 import { openAbsenceModal } from 'actions/ui/modals'
+import { setCurrentType } from 'actions/ui/absence'
 
 import getCurrentUser from 'selectors/currentUser'
 import getAbsencesFiltered from 'selectors/absencesFiltered'
@@ -14,7 +15,8 @@ import getAbsenceSums from 'selectors/absenceSums'
 
 import AbsenceActionBar from './absenceActionBar'
 import AbsenceCalendar from './absenceCalendar'
-import type { User, Store, DataStatus, Absence } from 'types/index'
+import AbsenceSubBar from './absenceSubBar'
+import type { User, Store, DataStatus, Absence, AbsenceTypeFilter } from 'types/index'
 import './styles.css'
 
 type OwnProps = {}
@@ -24,6 +26,8 @@ type ConProps = {
   absenceSums: Array<{user: string, days: number}>,
   absencesDS: DataStatus,
   currentYear: number,
+  currentType: AbsenceTypeFilter,
+  setCurrentType: (AbsenceTypeFilter)=>any,
   openAbsenceModal: (string, (Absence | void))=>{},
   setAbsencesListener: ()=>any,
   setRequestedAbsencesListener: ()=>any,
@@ -60,10 +64,14 @@ class AbsencePlaner extends PureComponent {
   }
 
   render() {
-    const { absences, absencesDS, currentUser, absenceSums } = this.props
+    const { absences, absencesDS, currentUser, absenceSums, currentType, setCurrentType } = this.props
 
     return(
       <fb className="absenceMain">
+        <AbsenceSubBar
+          currentType={currentType}
+          setCurrentType={setCurrentType}
+        />
         <fb className='absenceContent'>
           <AbsenceActionBar
             currentUser={currentUser}
@@ -84,6 +92,7 @@ class AbsencePlaner extends PureComponent {
 const actionCreators = {
   setAbsencesListener,
   setRequestedAbsencesListener,
+  setCurrentType,
   openAbsenceModal,
 }
 
@@ -92,6 +101,7 @@ const mapStateToProps = (state: Store) => ({
   currentUser: getCurrentUser(state),
   absences: getAbsencesFiltered(state),
   absenceSums: getAbsenceSums(state),
+  currentType: state.ui.absence.currentType,
   absencesDS: state.absencePlaner.absencesDataStatus,
 })
 

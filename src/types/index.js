@@ -36,22 +36,24 @@ export type WeekAbsence = { // these get created and fanned out in cloud functio
 }
 
 export type Absence = { // this is the absence Obj we get from the DB ( Firebase deleted keys where the value is null or empty obj )
-  id: string,
-  user: string,
-  type: AbsenceType,
-  year: number,
-  status: AbsenceStatus,
-  startDate: number,
-  endDate: number,
-  totalDays: number,
-  effectiveDays: number,
-  avgDailyMins: number,
-  note?: string,
-  workDays?: WorkDays,
-  useAvgHours?: true,
-  touchingWeeks: {[string]: number},
+  id: string,//
+  user: string, //
+  type: AbsenceType,//
+  year: number, //
+  status: AbsenceStatus,//
+  startDate: number,//
+  endDate: number,//
+  totalDays: number,//
+  effectiveDays: number,//
+  avgDailyMins: number,//
+  note?: string, //
+  workDays?: WorkDays, //
+  useAvgHours?: true, //
+  touchingWeeks: {[string]: number},//
   startWeekDay: number, //startWeekDay = weekday of the startDate
   endWeekDay: number, // endWeekDay = weekday of the endDate
+  unpaid?: boolean, //
+  yearUser: string,
 }
 
 export type AbsencePreDB = { // this is the absence Obj we want to write to the DB
@@ -67,7 +69,8 @@ export type AbsencePreDB = { // this is the absence Obj we want to write to the 
   avgDailyMins: number,
   note: ?string,
   workDays: ?WorkDays,
-  useAvgHours: ?true
+  useAvgHours: ?true,
+  unpaid?: boolean,
 }
 
 export type AbsenceDB = { // this is how it gets extended before being written to DB

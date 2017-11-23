@@ -2,6 +2,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
+import cn from 'classnames'
 import _ from 'lodash'
 
 import { timeInpOK, withColon, from4To5, shiftDataValid, zipShift, shiftToShiftInput } from './localHelpers'
@@ -55,6 +56,7 @@ type State = {
   location: string,
   locationBoxOpen: boolean,
   positionBoxOpen: boolean,
+  fadeIn: boolean,
 }
 
 type InputRefs = {
@@ -84,6 +86,7 @@ class ModifyShiftBox extends PureComponent{
       position: (inCreation && user === 'open') ? 'all' : ( position || ''),
       locationBoxOpen: false,
       positionBoxOpen: false,
+      fadeIn: false,
     }
 
     this.inputRefs  = {
@@ -93,8 +96,11 @@ class ModifyShiftBox extends PureComponent{
   }
 
   componentWillMount    = () => {if(!this.props.inCreation) this.populateState()}
-  componentDidMount     = () => window.addEventListener('keydown', this.onKeyDown)
   componentWillUnmount  = () => window.removeEventListener('keydown', this.onKeyDown)
+  componentDidMount     = () => {
+    window.addEventListener('keydown', this.onKeyDown)
+    setTimeout(()=>this.setState({ fadeIn: true }), 1)
+  }
 
   populateState = () => {
     this.setState({ ...shiftToShiftInput(this.props.shift)})
@@ -165,14 +171,14 @@ class ModifyShiftBox extends PureComponent{
 
   render(){
     const { shift, currentUser, branch, positions } = this.props
-    const { locationBoxOpen, positionBoxOpen, location, position, note } = this.state
+    const { locationBoxOpen, positionBoxOpen, location, position, note, fadeIn } = this.state
     const locations: Array<Location> = (branch && branch.locations && _.values(branch.locations)) || []
     const isGrabbing = !this.isAdmin && shift.user === 'open' // when a nonAdmin trys to grab an open Shift
     const isEdited   = !!shift.edit
     const isPending  = !!(isEdited || isGrabbing)
 
     return(
-      <fb className='modifyShiftBoxMain focused'>
+      <fb className={cn({modifyShiftBoxMain: 1, fadeIn})}>
         { isGrabbing && <GrabOpenShiftBox shift={shift} currentUser={currentUser} />}
         { isEdited   && <ResolveEditBox shift={shift} currentUser={currentUser} />}
         { locationBoxOpen && <PickLocationBox
