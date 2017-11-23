@@ -60,18 +60,21 @@ requestPWLink = async (email: string) => {
 		if(passwordForgotten) return <PasswordForgotten requestPWLink={this.requestPWLink}/>
 
 		return (
-			<fb className='login-outer-container'>
-				<fb className="login-container">
-					<fb className="title">PLANLY</fb>
-					<InputMinimal defaultText="Email" 		value={username} onInputChange={val => this.setState({username: val})} icon='email' rounded autoFocus />
-					<InputMinimal defaultText="Passwort" 	value={password} onInputChange={val => this.setState({password: val})} icon='lock' rounded onEnter={this.tryToLogin} password/>
-					<SButton
-						label={loading ? '...' : 'Einloggen'}
-						onClick={this.tryToLogin}
-						sStyle={{alignSelf: 'stretch', marginLeft: 2, marginRight: -2, marginTop: 8}}
-						color='#2ecc71'
-					/>
-					<fb className="passwordForgottenBtn" onClick={() => this.setState({passwordForgotten: true})}>Passwort vergessen?</fb>
+			<fb className='loginMain'>
+				<fb className="loginWrapper">
+					<fb className='toHomepage'><fb className='icon icon-navigate_before' />zur Homepage</fb>
+					<fb className='loginBox'>
+						<fb className="title">APLANO</fb>
+						<InputMinimal defaultText="Email" 		value={username} onInputChange={val => this.setState({username: val})} icon='email' rounded autoFocus />
+						<InputMinimal defaultText="Passwort" 	value={password} onInputChange={val => this.setState({password: val})} icon='lock' rounded onEnter={this.tryToLogin} password/>
+						<SButton
+							label={loading ? '...' : 'Einloggen'}
+							onClick={this.tryToLogin}
+							sStyle={{alignSelf: 'stretch', marginLeft: 2, marginRight: -2, marginTop: 8}}
+							color='#2ecc71'
+						/>
+						<fb className="passwordForgottenBtn" onClick={() => this.setState({passwordForgotten: true})}>Passwort vergessen?</fb>
+					</fb>
 				</fb>
 			</fb>
 		)

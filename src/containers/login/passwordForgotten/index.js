@@ -33,7 +33,7 @@ export default class PasswordForgotten extends PureComponent {
 		return (
 			<fb className='pwForgotten-outer-container'>
 				<fb className="pwForgotten-container">
-					<fb className="title">APOTOWER</fb>
+					<fb className="title">APLANO</fb>
 					<fb className="infoText">{this.getExplenationText()}</fb>
 					<InputMinimal defaultText="Email" value={email} onInputChange={val => this.setState({email: val})} icon='email' onEnter={this.onClick} autoFocus/>
 					<SButton label="Link Anfordern" onClick={this.onClick} sStyle={{width: '100%', marginLeft: 2, marginRight: -2, marginTop: 8}} color='#2ecc71'/>
