@@ -3,6 +3,7 @@ import firebase from 'firebase'
 import { trackFBListeners } from './firebaseHelpers'
 import { checkClientDate } from '../clientDateCheck'
 import { createCookie, deleteCookie } from './localHelpers';
+import { isProdEnv } from 'helpers/index'
 import type { GetState } from 'types/index'
 
 
@@ -22,13 +23,15 @@ export const setAuthStateListener = (initializor: Function) => {
 
       firebase.database().ref('allUsers/' + user.uid).once('value')
         .then(snap => {
-          
+
           if(!snap.val()) {
             console.log('uid not found in allUsers List');
             return firebase.auth().signOut()
           }
 
-          createCookie('loggedIn', 'true', 1000)
+          console.log('not here ?');
+          const domain = isProdEnv() ? process.env.REACT_APP_DOMAIN : window.location.hostname
+          createCookie('loggedIn', 'true', domain, 1000)
 
           dispatch({type: 'USER_LOGGED_IN' })
           dispatch({type: 'SET_ACCOUNT_ID',       payload: snap.val().account})
