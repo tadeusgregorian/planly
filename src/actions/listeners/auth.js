@@ -22,7 +22,7 @@ export const setAuthStateListener = (initializor: Function) => {
 
       firebase.database().ref('allUsers/' + user.uid).once('value')
         .then(snap => {
-          
+
           if(!snap.val()) {
             console.log('uid not found in allUsers List');
             return firebase.auth().signOut()

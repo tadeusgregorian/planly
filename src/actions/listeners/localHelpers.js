@@ -1,6 +1,6 @@
-export const createCookie = (name, value, days) => {
+
+export const createCookie = (name, value, domain, days) => {
   let expires;
-  const domain = window.location.hostname
   if (days) {
     let date = new Date();
     date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
