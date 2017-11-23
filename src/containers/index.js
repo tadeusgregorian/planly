@@ -7,6 +7,8 @@ import { setAuthStateListener, registerInitialListeners } from 'actions/listener
 import { initIziToast } from 'helpers/iziToast'
 import { onMobile } from 'helpers/index'
 import ModalsManager from './modalsManager'
+import type { Store } from 'types/index'
+
 import 'react-select/dist/react-select.css'
 import 'react-dates/initialize' // needs to be here for an airBnB bug fix
 import 'react-dates/lib/css/_datepicker.css';
@@ -28,9 +30,11 @@ class Container extends PureComponent {
   }
 
   render() {
-    const { authState }     =  this.props
+    const { authState, weekSums }     =  this.props
     const loggedIn 					=  authState === 'loggedIn'
     const isAuthenticating 	=  authState === 'isAuthenticating'
+
+    console.log(weekSums);
 
     if(isAuthenticating)  return (<fb>authenticating...</fb>)
 
@@ -60,11 +64,12 @@ const mapDispatchToProps = {
   registerInitialListeners
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: Store) => ({
   firebaseInitialized: state.firebaseInitialized,
 	firebaseAuthListener: state.firebaseListeners.firebaseAuth,
   authState: state.auth.authState,
-  modals: state.ui.modals
+  modals: state.ui.modals,
+  weekSums: state.roster.weekSums
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Container)

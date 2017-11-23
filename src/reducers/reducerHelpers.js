@@ -12,6 +12,7 @@ export const createFirebaseReducer_array = (target, extractor, comparer) => {
 		case 'child_removed_'  + target : return state.filter(el => !isSame(el, a.payload))
 		case 'remove_'				 + target : return []
 		default: return state;
+
 		}
 	}
 }
@@ -19,11 +20,12 @@ export const createFirebaseReducer_array = (target, extractor, comparer) => {
 export const createFirebaseReducer_object = (target) => {
 	return (state = {}, action) => {
 		switch (action.type) {
-		case 'value_received_' 	+ target : return action.payload
+		case 'value_received_' 	+ target : return action.payload || {}
 		case 'child_added_' 		+ target : return { ...state, [action.key]: action.payload }
 		case 'child_changed_' 	+ target : return { ...state, [action.key]: action.payload }
 		case 'child_removed_' 	+ target : return { ...state, [action.key]: null }
-		default: return state;
+    default: return state;
+
 		}
 	}
 }

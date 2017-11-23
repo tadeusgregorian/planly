@@ -9,13 +9,15 @@ export const createAccount = (firebaseUserID: string, email: string) => {
   const accountID = generateGuid()
   let updates = {}
   updates['accounts/'+ accountID] = getEmptyAccount(email)
-  updates['allUsers/'+ firebaseUserID] = getFirstUser(accountID)
+  updates['allUsers/'+ firebaseUserID] = getFirstUser(accountID, email)
   firebase.database().ref().update(updates)
 }
 
-const getFirstUser = (accountID) => ({
+const getFirstUser = (accountID, email) => ({
   account: accountID,
-  userID: 'u001'
+  userID: 'u001',
+  email: email,
+  timestamp: firebase.database.ServerValue.TIMESTAMP
 })
 
 type DBAccount = {
@@ -24,13 +26,20 @@ type DBAccount = {
   positions: { [string]: Position }
 }
 
-const getEmptyAccount = (adminEmail): DBAccount => ({
-  creationDate: firebase.database.ServerValue.TIMESTAMP,
+const getEmptyAccount = (email): DBAccount => ({
+  accountDetails: {
+    creationDate: firebase.database.ServerValue.TIMESTAMP,
+    preferences: {
+      bundesland: 'HH',
+      useAvgHoursForVac: true,
+      workDaysPerWeek: 6,
+    }
+  },
   users: {
     u001: {
       id: 'u001',
       name: 'Tadeus Gregorius',
-      email: adminEmail,
+      email: email,
       position: 'p001',
       branches: { b001: true },
       weeklyMins: 2400,
