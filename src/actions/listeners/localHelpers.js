@@ -8,11 +8,11 @@ export const createCookie = (name, value, domain, days) => {
 
   //document.cookie = name + '=' + value + expires + '; path=/ ; domain=' + domain  + ';';
 
-  const cookieStr =  `loggedIn=${value}; expires=${expires}; path=/; domain=${domain}`
+  const cookieStr =  `${name}=${value}; expires=${expires}; path=/; domain=${domain}`
   console.log(cookieStr);
   document.cookie= cookieStr
 };
 
-export const deleteCookie = (name) =>  {
-  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+export const deleteCookie = (name, domain) =>  {
+  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/; domain=${domain}`;
 }

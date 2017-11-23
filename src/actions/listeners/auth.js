@@ -14,10 +14,11 @@ export const setAuthStateListener = (initializor: Function) => {
     dispatch({type: 'USER_IS_AUTHENTICATING'})
 
     firebase.auth().onAuthStateChanged((user) => {
+      const domain = isProdEnv() ? process.env.REACT_APP_DOMAIN : window.location.hostname
 
       if (!user) {
         dispatch({type: 'USER_LOGGED_OUT'})
-        deleteCookie('loggedIn')
+        deleteCookie('loggedIn', domain)
         return
       }
 
@@ -30,7 +31,6 @@ export const setAuthStateListener = (initializor: Function) => {
           }
 
           console.log('not here ?');
-          const domain = isProdEnv() ? process.env.REACT_APP_DOMAIN : window.location.hostname
           createCookie('loggedIn', 'true', domain, 1000)
 
           dispatch({type: 'USER_LOGGED_IN' })
