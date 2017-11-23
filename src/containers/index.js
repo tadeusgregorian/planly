@@ -30,11 +30,9 @@ class Container extends PureComponent {
   }
 
   render() {
-    const { authState, weekSums }     =  this.props
+    const { authState }     =  this.props
     const loggedIn 					=  authState === 'loggedIn'
     const isAuthenticating 	=  authState === 'isAuthenticating'
-
-    console.log(weekSums);
 
     if(isAuthenticating)  return (<fb>authenticating...</fb>)
 
@@ -68,8 +66,7 @@ const mapStateToProps = (state: Store) => ({
   firebaseInitialized: state.firebaseInitialized,
 	firebaseAuthListener: state.firebaseListeners.firebaseAuth,
   authState: state.auth.authState,
-  modals: state.ui.modals,
-  weekSums: state.roster.weekSums
+  modals: state.ui.modals
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Container)
