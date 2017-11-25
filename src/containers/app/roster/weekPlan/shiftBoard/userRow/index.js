@@ -86,7 +86,7 @@ export default class UserRow extends PureComponent{
         <fb className='shiftCellsWrapper'>
           { weekDays.map((day, dayNum) => {
             const dayShifts       = shifts.filter(s => s.day === day)
-            const extraHoursOfDay = (isAdmin || userID === currentUser.id) ? extraHours.find(s => s.day === day) : null // we do find / not filter -> not more than one per day possible !
+            const extraHoursOfDay = (isAdmin || userID === currentUser.id) ? extraHours.filter(s => s.day === day) : [] // we do find / not filter -> not more than one per day possible !
             const shadowed        = shadowedDay === day
             const highlighted     = highlightedDay === day
             const blocked         = !isAdmin && currentUser.id !== userID

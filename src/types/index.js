@@ -2,7 +2,8 @@
 import type { RootReducer } from 'reducers/index'
 
 export type Store = RootReducer
-export type GetState = ()=> Store
+
+export type GetState = () => Store
 
 export type Action = {type: string}
 export type Dispatch = (action: Action | ThunkAction | Array<Action>) => any // eslint-disable-line no-use-before-define

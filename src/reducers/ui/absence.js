@@ -20,7 +20,7 @@ const currentMonth = simpleReducer({
 })
 
 const currentType = simpleReducer({
-  default: 'all',
+  default: 'vac',
   ABSENCE_SET_CURRENT_TYPE: 'PAYLOAD'
 })
 

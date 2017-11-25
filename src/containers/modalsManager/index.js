@@ -4,20 +4,21 @@ import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import { closeModal } from 'actions/ui'
 import type { Store } from 'types/index'
-import ShiftNoteModal       from 'modals/shiftNoteModal'
-import AbsenceModal         from 'modals/absenceModal'
-import AddEditBranchPopup   from 'modals/addEditBranchPopup'
-import AddEditPositionPopup from 'modals/addEditPositionPopup'
-import AddEditUserPopup     from 'modals/addEditUserPopup'
-import ExtraHoursModal      from 'modals/extraHoursModal'
-import ImportTemplateModal  from 'modals/importTemplateModal'
-import InitialOvertimeModal from 'modals/initialOvertimeModal'
-import SaveAsTemplateModal  from 'modals/saveAsTemplateModal'
-import CreateTemplateModal  from 'modals/createTemplateModal'
-import DayNoteModal         from 'modals/dayNoteModal'
-import PickBundesland       from 'modals/pickBundesland'
-import ConfirmationPopup    from 'modals/confirmationPopup'
-import EditAbsenceDaysModal from 'modals/editAbsenceDaysModal'
+import ShiftNoteModal         from 'modals/shiftNoteModal'
+import AbsenceModal           from 'modals/absenceModal'
+import AbsenceCorrectionModal from 'modals/absenceCorrectionModal'
+import AddEditBranchPopup     from 'modals/addEditBranchPopup'
+import AddEditPositionPopup   from 'modals/addEditPositionPopup'
+import AddEditUserPopup       from 'modals/addEditUserPopup'
+import ExtraHoursModal        from 'modals/extraHoursModal'
+import ImportTemplateModal    from 'modals/importTemplateModal'
+import InitialOvertimeModal   from 'modals/initialOvertimeModal'
+import SaveAsTemplateModal    from 'modals/saveAsTemplateModal'
+import CreateTemplateModal    from 'modals/createTemplateModal'
+import DayNoteModal           from 'modals/dayNoteModal'
+import PickBundesland         from 'modals/pickBundesland'
+import ConfirmationPopup      from 'modals/confirmationPopup'
+import EditAbsenceDaysModal   from 'modals/editAbsenceDaysModal'
 
 import './styles.css'
 
@@ -55,6 +56,7 @@ class ModalsManager extends PureComponent {
             case 'BUNDESLAND'           : return <PickBundesland { ...props } />
             case 'CONFIRMATION'         : return <ConfirmationPopup { ...props } />
             case 'EDIT_ABSENCE_DAYS'    : return <EditAbsenceDaysModal { ...props } />
+            case 'ABSENCE_CORRECTION'   : return <AbsenceCorrectionModal { ...props } />
             default: return null
           }
         })}

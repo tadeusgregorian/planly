@@ -105,6 +105,7 @@ type ExtraHours{
   id: String,
   mins: Number,
   user: String,
+  note: String|Null,
 }
 
 type Correction{

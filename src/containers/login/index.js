@@ -62,11 +62,14 @@ requestPWLink = async (email: string) => {
 		return (
 			<fb className='loginMain'>
 				<fb className="loginWrapper">
-					<fb className='toHomepage'><fb className='icon icon-navigate_before' />zur Homepage</fb>
+					<fb className='toHomepage' onClick={()=> window.location.href = "https://www.aplano.de" }>
+						<fb className='icon icon-navigate_before' />
+						zur Homepage
+					</fb>
 					<fb className='loginBox'>
 						<fb className="title">APLANO</fb>
-						<InputMinimal defaultText="Email" 		value={username} onInputChange={val => this.setState({username: val})} icon='email' rounded autoFocus />
-						<InputMinimal defaultText="Passwort" 	value={password} onInputChange={val => this.setState({password: val})} icon='lock' rounded onEnter={this.tryToLogin} password/>
+						<InputMinimal defaultText="Email" 		value={username} onInputChange={val => this.setState({username: val})} icon='email' iStyle={{fontSize: 16}} rounded autoFocus />
+						<InputMinimal defaultText="Passwort" 	value={password} onInputChange={val => this.setState({password: val})} icon='lock'  iStyle={{fontSize: 16}} rounded onEnter={this.tryToLogin} password/>
 						<SButton
 							label={loading ? '...' : 'Einloggen'}
 							onClick={this.tryToLogin}

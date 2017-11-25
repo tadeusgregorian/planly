@@ -1,0 +1,19 @@
+.absenceCorrectionModalMain{
+  padding: 20px;
+  min-width: 500px;
+  flex-direction: column;
+
+  >*{
+    &:not(:last-of-type){
+      border-bottom: 1px solid lightgrey;
+    }
+  }
+
+  .inpWrapper{
+    width: 100%;
+
+    input{
+      width: 100%;
+    }
+  }
+}

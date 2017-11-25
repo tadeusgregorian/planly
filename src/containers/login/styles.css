@@ -6,7 +6,8 @@
   padding-top: 160px; }
   .loginMain .loginWrapper {
     flex: 0 0 auto;
-    width: 308px;
+    width: 100%;
+    max-width: 308px;
     flex: 0 0 auto;
     flex-direction: column; }
     .loginMain .loginWrapper .toHomepage {

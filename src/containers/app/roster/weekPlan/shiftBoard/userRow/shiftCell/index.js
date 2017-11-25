@@ -15,7 +15,7 @@ type Props = {
   shadowed?: boolean,
   highlighted?: boolean,
   shifts: Shifts,
-  extraHours: ?ExtraHours,
+  extraHours: Array<ExtraHours>,
   position?: Position, // for open Shifts only
   shiftType: 'openshift' | 'usershift',
   templateMode: boolean,
@@ -51,7 +51,7 @@ export default class ShiftCell extends PureComponent {
     const dummyShift:PreShift = { s: 0, e: 0, b: 0, user, day, id: focusedShiftID }
     const cssClassesObj       = cssClasses ? cssClasses.reduce((acc, val) => ({ ...acc, [val]: true }), {}) : {} // turnes the classesArray to an obj for classnames
     const absenceIconClass    = absence && (absence === 'ill' ? 'icon icon-healing' : 'icon icon-beach_access')
-    const isEmpty             = !shifts.length && !inCreation && !extraHours
+    const isEmpty             = !shifts.length && !inCreation && !extraHours.length
     const showExtendBtn       = hovered && !highlighted && !shadowed && !fsr && !isEmpty
     const showCreateBox       = hovered && !highlighted && !shadowed && !fsr &&  isEmpty
 
@@ -73,8 +73,10 @@ export default class ShiftCell extends PureComponent {
             templateMode={templateMode}
             focused={   !!focusedShift && focusedShift.id === shift.id} />
         )}
+        { extraHours.map(e =>
+          <ExtraHoursBox key={e.id} extraHours={e} /> )
+        }
         { inCreation    && <ShiftBox shift={dummyShift} focused inCreation/> }
-        { extraHours    && <ExtraHoursBox extraHours={extraHours} /> }
         { showCreateBox && <fb className='createShiftBox'>+</fb> }
         { shadowed      && <fb className='dropZone'></fb> }
         { absence       && !focusedShift && <fb className='absenceLayer'><fb className={absenceIconClass} /></fb> }
