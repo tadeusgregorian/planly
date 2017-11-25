@@ -6,7 +6,7 @@ import { db } from '../firebaseInit'
 import { getFBPath } from './../actionHelpers'
 import { momToSmart } from 'helpers/index'
 import { extendForDB, rangesOverlap } from './localHelpers'
-import type { AbsencePreDB, Absence } from 'types/index'
+import type { AbsencePreDB, Absence, AbsenceCorrection } from 'types/index'
 
 export const saveAbsenceToDB = (absence: AbsencePreDB) => {
   const absenceDB = extendForDB(absence)
@@ -24,6 +24,10 @@ export const removeAbsenceFromDB = (absenceID: string) => {
   const updates = {[getFBPath('absences', [absenceID])]: null }
   updates[getFBPath('vacationRequests', [absenceID])] = null // cleaning it away, just in case
   db().ref().update(updates)
+}
+
+export const saveAbsenceCorrectionToDB = (absCorr: AbsenceCorrection) => {
+  db().ref(getFBPath('absenceCorrection', [absCorr.id])).set({ absCorr })
 }
 
 

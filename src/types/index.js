@@ -94,6 +94,14 @@ export type AbsenceDB = { // this is how it gets extended before being written t
   endWeekDay: number,
 }
 
+export type AbsenceCorrection = {
+  id: string,
+  user: string,
+  year: number,
+  extraDays?: number,
+  vacDays?: number,
+}
+
 export type DataStatus =
   'REQUESTED' |
   'NOT_REQUESTED' |

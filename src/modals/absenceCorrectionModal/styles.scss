@@ -3,10 +3,9 @@
   min-width: 500px;
   flex-direction: column;
 
-  >*{
-    &:not(:last-of-type){
-      border-bottom: 1px solid lightgrey;
-    }
+  .daysDisplay{
+    justify-content: center;
+    flex: 1 1 auto;
   }
 
   .inpWrapper{
@@ -14,6 +13,8 @@
 
     input{
       width: 100%;
+      text-align: center;
+      padding: 4px;
     }
   }
 }

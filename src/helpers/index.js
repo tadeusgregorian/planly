@@ -85,7 +85,7 @@ export const smartWeekToMom = (smartWeek: number | string) => {
 }
 
 // checks if the string is in the format of a Integer
-export const isIntStr = (inp: string) => {
+export const isIntStr = (inp: string): boolean => {
   const lastChar = inp.slice(-1)
   if(inp === '0') return true
   if(inp === '') return true
