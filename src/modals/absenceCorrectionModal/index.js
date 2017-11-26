@@ -3,8 +3,9 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
-import { isIntStr, generateGuid } from 'helpers/index'
+import { isIntStr, generateGuid, inp } from 'helpers/index'
 import { saveAbsenceCorrectionToDB } from 'actions/absence'
+import getAbsenceSums from 'selectors/absenceSums'
 
 import Row          from './rowDisplay'
 import SModal       from 'components/sModal'
@@ -17,16 +18,18 @@ import './styles.css'
 type OwnProps = {
   closeModal: Function,
   user: string,
-  year: number
 }
 
 type ConProps = {
+  year: number,
+  absentDays: number,
   absenceCorrection?: AbsenceCorrection,
-  saveAbsenceCorrectionToDB: (AbsenceCorrection) => void
+  //saveAbsenceCorrectionToDB: (AbsenceCorrection) => void
 }
 
 type State = {
   extraDays: string,
+  transferedDays: string,
   vacDays: string,
 }
 
@@ -38,12 +41,13 @@ class AbsenceCorrectionModal extends PureComponent{
     super(props)
 
     this.state = {
-      extraDays: this.getDefault('extraDays'),
-      vacDays:   this.getDefault('vacDays')
+      extraDays:      this.getDefault('extraDays'),
+      transferedDays: this.getDefault('transferedDays'),
+      vacDays:        this.getDefault('vacDays'),
     }
   }
 
-  getDefault = (prop) => {
+  getDefault = (prop): string => {
     const { absenceCorrection } = this.props
     const val = absenceCorrection && absenceCorrection[prop]
     return val ? val.toString() : ''
@@ -52,40 +56,41 @@ class AbsenceCorrectionModal extends PureComponent{
   toNullOrInt = (val) => val ? parseInt(val, 10) : null
 
   saveClicked = () => {
-    const { absenceCorrection } = this.props
+    const { absenceCorrection, user, year } = this.props
 
-    const id        = absenceCorrection ? absenceCorrection.id : generateGuid()
-    const extraDays = this.toNullOrInt(this.state.extraDays)
-    const vacDays   = this.toNullOrInt(this.state.vacDays)
+    const id              = absenceCorrection ? absenceCorrection.id : generateGuid()
+    const extraDays       = this.toNullOrInt(this.state.extraDays)
+    const transferedDays  = this.toNullOrInt(this.state.transferedDays)
+    const vacDays         = this.toNullOrInt(this.state.vacDays)
 
+    const correction = { id, user, year, extraDays, vacDays, transferedDays }
+    saveAbsenceCorrectionToDB(correction)
     this.props.closeModal()
   }
 
-  onExtraDaysChanged = (e) => {
-    const inp = e.target.value
-    isIntStr(inp) && this.setState({ extraDays: inp })
-  }
-
-  onVacDaysChanged = (e) => {
-    const inp = e.target.value
-    isIntStr(inp) && this.setState({ vacDays: inp })
-  }
-
+  onExtraDaysChanged = (e)      => isIntStr(inp(e)) && this.setState({ extraDays: inp(e) })
+  onVacDaysChanged = (e)        => isIntStr(inp(e)) && this.setState({ vacDays: inp(e) })
+  onTransferedDaysChanged = (e) => isIntStr(inp(e)) && this.setState({ transferedDays: inp(e) })
 
   render(){
-    const { extraDays, vacDays } = this.state
+    const { extraDays, vacDays, transferedDays } = this.state
+    const { absentDays } = this.props
 
     return(
       <SModal.Main onClose={this.props.closeModal} title='Urlabsberechnung'>
   			<SModal.Body>
   				<fb className="absenceCorrectionModalMain">
             <Row label='eingetragener Urlaub 2017'>
-              <fb className='daysDisplay'>19</fb>
+              <fb className='daysDisplay'>{absentDays}</fb>
             </Row>
             <Row label='nicht eingetragener Urlaub 2017'>
               <fb className='inpWrapper'><input value={extraDays} onChange={this.onExtraDaysChanged} placeholder='0' /></fb>
             </Row>
-            <Row label='Urlaubsanspurch 2017'>
+            <fb style={{height: 30}} />
+            <Row label='Resturlaub aus Vorjahr'>
+              <fb className='inpWrapper'><input value={transferedDays} onChange={this.onTransferedDaysChanged} placeholder='0' /></fb>
+            </Row>
+            <Row label='korrigierter Urlaubsanspurch 2017'>
               <fb className='inpWrapper'><input value={vacDays} onChange={this.onVacDaysChanged} placeholder='35' /></fb>
             </Row>
   				</fb>
@@ -99,11 +104,14 @@ class AbsenceCorrectionModal extends PureComponent{
 }
 
 const actionCreators = {
-  saveAbsenceCorrectionToDB
+  //saveAbsenceCorrectionToDB
 }
 
 const mapStateToProps = (state: Store, ownProps: OwnProps) => ({
-  absenceCorrection: {}
+  year: state.ui.absence.currentYear,
+  //$FlowFixMe -> we are sure that this returns a number
+  absentDays: getAbsenceSums(state).find(s => s.user === ownProps.user).days,
+  absenceCorrection: state.absencePlaner.absenceCorrections.find(ac => ac.user === ownProps.user) // dont need to filter for year -> cause we have always only
 })
 
 const connector: Connector<OwnProps, OwnProps & ConProps> = connect(mapStateToProps, actionCreators)

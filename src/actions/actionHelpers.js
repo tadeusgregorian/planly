@@ -10,7 +10,7 @@ export type TargetKey =
 | 'templatesFlat'
 | 'absences'
 | 'absencesWeekly'
-| 'absenceCorrection'
+| 'absenceCorrections'
 | 'vacationRequests'
 | 'miniShiftWeeks'
 | 'weekSums'
@@ -22,22 +22,22 @@ export type TargetKey =
 // If childPaths provided it concats the childPaths to a path-string.
 export const getFBPath	= (target: TargetKey, childPaths?: Array<string>): string => {
   const pathfinder = {
-    users: 					   '/users/',
-    branches: 			   '/branches/',
-    positions: 			   '/positions/',
-    accountDetails:    '/accountDetails/',
-    weekSums:          '/roster/weekSums/',
-    shiftWeeks: 		   '/roster/shiftWeeks/',
-    shiftEdits: 		   '/roster/shiftEdits/',
-    extraHours:        '/roster/extraHours/',
-    corrections:       '/roster/corrections/',
-    miniShiftWeeks:    '/roster/miniShiftWeeks/',
-    templatesFlat: 	   '/roster/templatesFlat/',
-    absences:          '/absencePlaner/absences/',
-    absenceCorrection: '/absencePlaner/absenceCorrection/',
-    absencesWeekly:    '/absencePlaner/absencesWeekly/',
-    vacationRequests:  '/absencePlaner/vacationRequests/',
-    dayNotes:          '/roster/dayNotes/',
+    users: 					    '/users/',
+    branches: 			    '/branches/',
+    positions: 			    '/positions/',
+    accountDetails:     '/accountDetails/',
+    weekSums:           '/roster/weekSums/',
+    shiftWeeks: 		    '/roster/shiftWeeks/',
+    shiftEdits: 		    '/roster/shiftEdits/',
+    extraHours:         '/roster/extraHours/',
+    corrections:        '/roster/corrections/',
+    miniShiftWeeks:     '/roster/miniShiftWeeks/',
+    templatesFlat: 	    '/roster/templatesFlat/',
+    absences:           '/absencePlaner/absences/',
+    absenceCorrections: '/absencePlaner/absenceCorrections/',
+    absencesWeekly:     '/absencePlaner/absencesWeekly/',
+    vacationRequests:   '/absencePlaner/vacationRequests/',
+    dayNotes:           '/roster/dayNotes/',
   }
 
 	const accPath  = 'accounts/' + window.accountID

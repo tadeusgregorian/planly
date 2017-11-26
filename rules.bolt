@@ -172,6 +172,10 @@ path /accounts/{accID}/absencePlaner/absences {
   index() { ['year'] }
 }
 
+path /accounts/{accID}/absencePlaner/absenceCorrections {
+  index() { ['year'] }
+}
+
 path /accounts/{accID}/roster/extraHours/{weekID} {
   index() { ['branch'] }
 }

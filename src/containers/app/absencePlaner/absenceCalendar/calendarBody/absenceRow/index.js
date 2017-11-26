@@ -13,7 +13,7 @@ type Props = {
   year: number,
   type: AbsenceType | 'all',
   absences: Array<Absence>,
-  absentDays?: number,
+  absentDays: number,
   adminMode: boolean,
 }
 

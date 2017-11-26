@@ -118,4 +118,6 @@ export const onMobile = () => {
   return !!isMobile
 }
 
+export const inp = (e) => e.target.value
+
 export const isProdEnv = () => process.env.REACT_APP_ENV === 'production'

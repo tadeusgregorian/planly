@@ -27,7 +27,8 @@ export const removeAbsenceFromDB = (absenceID: string) => {
 }
 
 export const saveAbsenceCorrectionToDB = (absCorr: AbsenceCorrection) => {
-  db().ref(getFBPath('absenceCorrection', [absCorr.id])).set({ absCorr })
+  const path = getFBPath('absenceCorrections', [absCorr.id])
+  db().ref(path).child(absCorr.id).set({ absCorr })
 }
 
 

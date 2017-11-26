@@ -3,8 +3,9 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 
-import { setRequestedAbsencesListener } from 'actions/listeners/absencePlaner'
-import { setAbsencesListener          } from 'actions/listeners/absencePlaner'
+import { setRequestedAbsencesListener  } from 'actions/listeners/absencePlaner'
+import { setAbsencesListener           } from 'actions/listeners/absencePlaner'
+import { setAbsenceCorrectionsListener } from 'actions/listeners/absencePlaner'
 import { getClickedAbsenceID, getClickedUserID } from './localHelpers'
 import { openAbsenceModal } from 'actions/ui/modals'
 import { setCurrentType } from 'actions/ui/absence'
@@ -30,6 +31,7 @@ type ConProps = {
   setCurrentType: (AbsenceTypeFilter)=>any,
   openAbsenceModal: (string, (Absence | void))=>{},
   setAbsencesListener: ()=>any,
+  setAbsenceCorrectionsListener: ()=>any,
   setRequestedAbsencesListener: ()=>any,
 }
 type Props = OwnProps & ConProps
@@ -40,6 +42,7 @@ class AbsencePlaner extends PureComponent {
   componentDidMount = () => {
     document.addEventListener('click', this.clickDetected)
     this.props.setAbsencesListener()
+    this.props.setAbsenceCorrectionsListener()
     this.props.setRequestedAbsencesListener()
   }
 
@@ -49,6 +52,7 @@ class AbsencePlaner extends PureComponent {
 
   componentWillReceiveProps = (np: Props) => {
     if(np.currentYear !== this.props.currentYear){
+      this.props.setAbsenceCorrectionsListener()
       this.props.setAbsencesListener()
     }
   }
@@ -92,6 +96,7 @@ class AbsencePlaner extends PureComponent {
 const actionCreators = {
   setAbsencesListener,
   setRequestedAbsencesListener,
+  setAbsenceCorrectionsListener,
   setCurrentType,
   openAbsenceModal,
 }

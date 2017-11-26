@@ -15,6 +15,15 @@ export const setAbsencesListener = () => (dispatch: Dispatch, getState: GetState
   createFirebaseListener(dispatch, getState, 'absences', path, queryRef)
 }
 
+export const setAbsenceCorrectionsListener = () => (dispatch: Dispatch, getState: GetState) => {
+  dispatch({ type: 'remove_absenceCorrections' })
+  const year        = getState().ui.absence.currentYear
+  const path        = getFBPath('absenceCorrections')
+  const queryRef    = db().ref(path).orderByChild('year').equalTo(year)
+
+  createFirebaseListener(dispatch, getState, 'absenceCorrections', path, queryRef)
+}
+
 export const setRequestedAbsencesListener = () => (dispatch: Dispatch, getState: GetState) => {
   const path        = getFBPath('vacationRequests')
   createFirebaseListener(dispatch, getState, 'vacationRequests', path)

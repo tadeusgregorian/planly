@@ -10,7 +10,7 @@ import './styles.css'
 type OwnProps = {
   user: User,
   adminMode: boolean,
-  daysSum?: number,
+  daysSum: number,
   type: AbsenceType | 'all',
 }
 
@@ -32,7 +32,7 @@ const UserCell =  ({user, adminMode, daysSum, type, openModal}: Props) => {
   }
 
   const daysSumClicked = () => {
-    adminMode && vacMode && openModal('ABSENCE_CORRECTION')
+    adminMode && vacMode && openModal('ABSENCE_CORRECTION', { user: user.id, absentDays: daysSum })
   }
 
   return(

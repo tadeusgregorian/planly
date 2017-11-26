@@ -2,7 +2,6 @@
 import type { RootReducer } from 'reducers/index'
 
 export type Store = RootReducer
-
 export type GetState = () => Store
 
 export type Action = {type: string}
@@ -98,8 +97,9 @@ export type AbsenceCorrection = {
   id: string,
   user: string,
   year: number,
-  extraDays?: number,
-  vacDays?: number,
+  extraDays?: number | null,
+  transferedDays?: number | null,
+  vacDays?: number | null,
 }
 
 export type DataStatus =
