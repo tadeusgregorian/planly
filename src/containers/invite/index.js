@@ -12,6 +12,7 @@ type Props = {
 }
 
 type State = {
+  inviteID: string,
   accID: string,
   pw1:  string,
   pw2:  string,
@@ -32,8 +33,9 @@ export default class Invite extends PureComponent {
 		super(props)
 
 		this.state = {
-      accID: props.match.params.aID,
-      userID: props.match.params.uID,
+      inviteID: props.match.params.inviteID,
+      accID: props.match.params.accID,
+      userID: '',
       pw1: '',
       pw2: '',
       error: '',
@@ -46,9 +48,9 @@ export default class Invite extends PureComponent {
 	}
 
   componentDidMount = () => {
-    const { accID, userID } = this.state
+    const { inviteID } = this.state
 
-    fetch(getAppUrl() + `/api/get-user/${accID}/${userID}/`)
+    fetch(getAppUrl() + `/api/get-invited-user/${inviteID}/`)
       .then(res => res.json())
       .then(json => {
         const user = JSON.parse(json)
@@ -59,7 +61,7 @@ export default class Invite extends PureComponent {
 
   populateState = (u: User) => {
     const email = u.email || '' // flow issue ( At this point there is defos an email ) // as long as the admin didnt delete it meanwhile...
-    this.setState({ email , status: u.status, name: u.name, dataLoaded: true })
+    this.setState({ email , status: u.status, name: u.name, userID: u.id, dataLoaded: true })
   }
 
   createUserEntry = (firebaseUid: string): Promise<{}> => {

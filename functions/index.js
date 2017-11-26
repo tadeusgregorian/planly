@@ -40,9 +40,9 @@ exports.onEmailInviteAdded = functions.database
   .onWrite(event => {
     const rootRef = event.data.adminRef.root
     const { inviteID } = event.params
-    const { status, accountID, userID, name, url, email } = event.data.val()
+    const { status, accountID, name, url, email } = event.data.val()
     if(status !== 'PENDING') return
-    return sendInvitationMail({ rootRef, inviteID, accountID, userID, name, url, email })
+    return sendInvitationMail({ rootRef, inviteID, accountID, name, url, email })
   })
 
 exports.getUser = functions.https.onRequest(getUser(admin))

@@ -41,8 +41,8 @@ class Container extends PureComponent {
         <fb className="Container_Main">
           <fb className='Container_Main_Inside'>
             <Switch>
-              <Route path='/invite/:aID/:uID' render={(props) =>  <Invite { ...props } /> } />
-              <Route path='/register'         component={Register} />
+              <Route path='/invite/:accID/:inviteID'  render={(props) =>  <Invite { ...props } /> } />
+              <Route path='/register'                 component={Register} />
               <Route path='/login'    render={()=> !loggedIn ? <Login/>  : <Redirect to={onMobile() ? '/mob' : '/app'} />} />
               <Route path='/app'      render={()=>  loggedIn ? <App/>    : <Redirect to='/login' /> } />
               <Route path='/mob'      render={()=>  loggedIn ? <Mob/>    : <Redirect to='/login' /> } />

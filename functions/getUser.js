@@ -10,25 +10,36 @@ module.exports = (admin) => {
     next();
   });
 
-  app.get('/api/get-user/:accID/:userID', (req, res)=> {
+  app.get('/api/get-invited-user/:inviteID', (req, res)=> {
 
-    const accID  = req.params.accID
-    const userID = req.params.userID
+    const inviteID  = req.params.inviteID
 
-    if(!accID || !userID){
+    if(!inviteID){
+      console.log('here?');
       res.sendStatus(404)
-      throw new Error('Something wrong: accID:' + accID + ' userID: ' + userID)
+      throw new Error('Something wrong: inviteID:' + inviteID )
     }
 
-    const ref = admin.database().ref(`accounts/${accID}/users/${userID}`)
-    return ref.once('value').then(snap => {
+    const inviteRef = admin.database().ref(`emailInvites/${inviteID}`)
+    return inviteRef.once('value').then(snap => {
 
-      const user = snap.val() && JSON.stringify(snap.val())
-      if(!user) res.sendStatus(404)
+      const invite = snap.val()
+      console.log(invite);
 
-      return res.json(user)
-    })
+      if(!invite) res.sendStatus(404)
+      const { userID, accountID }  = invite
+
+      const userRef = admin.database().ref(`accounts/${accountID}/users/${userID}`)
+      return userRef.once('value').then(snap => {
+
+        const user = snap.val() && JSON.stringify(snap.val())
+        if(!user) res.sendStatus(404)
+
+        return res.json(user)
+      }).catch(e => console.log(e))
+    }).catch(e => console.log(e))
   })
+
 
   return app
 }

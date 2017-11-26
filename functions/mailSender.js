@@ -5,7 +5,7 @@ let Mailjet = require('node-mailjet').connect(
 
 module.exports = (inviteData) => {
 
-  const { rootRef, inviteID, accountID, userID, name, email, url } = inviteData
+  const { rootRef, inviteID, accountID, name, email, url } = inviteData
 
   //TODO: check if mail is correct Mail format!
   console.log(`user ${name} on account: ${accountID} gets mail a to ${email}`);
@@ -14,7 +14,7 @@ module.exports = (inviteData) => {
   txt += `Hi ${name}, \n`
   txt += `es wurde ein Zugang zum Aplano-Dienstplaner für dich eingerichtet.\n`
   txt += `Klicke auf den Folgenden link um deinen Account zu aktivieren:\n`
-  txt += `${url}/invite/${accountID}/${userID} \n`
+  txt += `${url}/invite/${accountID}/${inviteID} \n`
   txt += `\n`
   txt += `Mit freundlichen Grüßen \n`
   txt += `Dein Aplano Team \n`
