@@ -28,7 +28,7 @@ export type RootReducer = {
 	absencePlaner: AbsencePlaner
 }
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
 	firebaseInitialized: simpleReducer({'FIREBASE_INITIALIZED': true}),
 	core,
 	auth,
@@ -37,6 +37,25 @@ const rootReducer = combineReducers({
 	ui,
 	roster,
 	absencePlaner,
-});
+})
+
+const rootReducer = (state: any, action: {}) => {
+  if (action.type === 'USER_LOGGED_OUT') {
+    state = undefined
+  }
+
+  return appReducer(state, action)
+}
+
+// const rootReducer = combineReducers({
+// 	firebaseInitialized: simpleReducer({'FIREBASE_INITIALIZED': true}),
+// 	core,
+// 	auth,
+// 	clientDate,
+// 	firebaseListeners,
+// 	ui,
+// 	roster,
+// 	absencePlaner,
+// });
 
 export default rootReducer

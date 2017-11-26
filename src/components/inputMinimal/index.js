@@ -9,6 +9,7 @@ export default ({
 	name,
 	defaultText,
 	password,
+	email,
 	onInputChange,
 	onEnter,
 	value,
@@ -33,11 +34,17 @@ export default ({
 		return styleObj
 	}
 
+	const getType = () => {
+		if(email) return 'email'
+		if(password) return 'password'
+		return 'text'
+	}
+
 	return(
 		<div className='inputMinimalMain'>
 			<input
 				value={value}
-				type={password ? "password" : "text"}
+				type={getType()}
 				name={name}
 				style={getStyle()}
 				placeholder={defaultText}

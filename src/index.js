@@ -7,9 +7,13 @@ import 'moment-feiertage'  // this one after moment
 import configureStore from './configs/configureStore'
 import 'styles/main.css';
 import App from 'containers';
+import { isProduction, isBuild } from 'configs/index'
 //import registerServiceWorker from './registerServiceWorker';
 
 const store = configureStore()
+
+console.log('isProduction: ', isProduction());
+console.log('isBuild: ', isBuild());
 
 ReactDOM.render(
   <Provider store={store}><App /></Provider>,

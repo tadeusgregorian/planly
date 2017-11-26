@@ -1,7 +1,7 @@
 //@flow
 import { getFBPath } from './actionHelpers'
 import firebase from 'firebase'
-import { isProdEnv } from 'helpers/index'
+import { getAppUrl, isProduction } from 'configs/index'
 import { db } from './firebaseInit'
 import type { User } from 'types/index'
 import moment from 'moment'
@@ -22,8 +22,7 @@ export function saveUserToDB(user: User) {
 type JobData = {userID: string, email: string, name: string, accountID:string}
 export const addInvitationJob = ({ userID, email, name, accountID }: JobData) => {
 
-	const url    = isProdEnv() ? 'https://app.aplano.de' : 'https://plandy-91a56.firebaseapp.com'
-	const _email = isProdEnv() ? email : 'arm.gregorian@hotmail.de'
+	const _email = isProduction() ? email : 'arm.gregorian@hotmail.de'
 
 	const key = db().ref('emailInvites').push().key
 	db().ref('emailInvites').child(key).set({
@@ -31,7 +30,7 @@ export const addInvitationJob = ({ userID, email, name, accountID }: JobData) =>
 		email: _email,
 		name,
 		accountID,
-		url,
+		url: getAppUrl(),
 		status: 'PENDING',
 		timestamp: firebase.database.ServerValue.TIMESTAMP })
 }

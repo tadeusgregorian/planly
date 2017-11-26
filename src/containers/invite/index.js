@@ -2,7 +2,7 @@
 
 import React, { PureComponent } from 'react';
 import firebase from 'firebase'
-import { isProdEnv } from 'helpers/index'
+import { getAppUrl } from 'configs/index'
 import type { User } from 'types/index'
 import './styles.css'
 
@@ -45,12 +45,10 @@ export default class Invite extends PureComponent {
     }
 	}
 
-  getBaseUrl = () => isProdEnv() ? 'https://app.aplano.de' : 'https://plandy-91a56.firebaseapp.com'
-
   componentDidMount = () => {
     const { accID, userID } = this.state
 
-    fetch(this.getBaseUrl() + `/api/get-user/${accID}/${userID}/`)
+    fetch(getAppUrl() + `/api/get-user/${accID}/${userID}/`)
       .then(res => res.json())
       .then(json => {
         const user = JSON.parse(json)
@@ -66,7 +64,7 @@ export default class Invite extends PureComponent {
 
   createUserEntry = (firebaseUid: string): Promise<{}> => {
     const { userID, accID } = this.state
-    return fetch(this.getBaseUrl() + `/api/activate-user/${accID}/${userID}/${firebaseUid}`)
+    return fetch(getAppUrl() + `/api/activate-user/${accID}/${userID}/${firebaseUid}`)
   }
 
   saveClicked = () => {

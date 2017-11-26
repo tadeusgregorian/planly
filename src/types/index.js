@@ -99,7 +99,7 @@ export type AbsenceCorrection = {
   year: number,
   extraDays?: number | null,
   transferedDays?: number | null,
-  vacDays?: number | null,
+  vacDaysCorrected?: number | null,
 }
 
 export type DataStatus =

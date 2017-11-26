@@ -11,7 +11,7 @@ import { openModal } from 'actions/ui/modals'
 import { saveAbsenceToDB, checkOverlappings, removeAbsenceFromDB } from 'actions/absence'
 import { generateGuid, momToSmart, smartToMom } from 'helpers/index'
 import { getEffectiveDays, getTotalDays, getButtonsToShow } from './localHelpers'
-import type { Store, User, Absence, WorkDays, AbsenceType, AbsenceStatus, AccountPreferences } from 'types/index'
+import type { Store, User, Absence, WorkDays, AbsenceType, AbsenceTypeFilter, AbsenceStatus, AccountPreferences } from 'types/index'
 
 import ErrorMessageDisplay from './errorMessageDisplay'
 import AbsenceDetailsDisplay from './absenceDetailsDisplay'
@@ -54,6 +54,7 @@ type ConProps = {
   preferences: AccountPreferences,
   currentYear: number,
   currentMonth: number,
+  currentType: AbsenceTypeFilter,
   openModal: Function
 }
 
@@ -64,14 +65,15 @@ class AbsenceModal extends PureComponent{
 
   constructor(props){
     super(props)
-    const { absence, user, currentYear, currentMonth } = props
+    const { absence, user, currentYear, currentMonth, currentType } = props
     const adminMode = !!this.props.currentUser.isAdmin
+    const initialType = adminMode ? ( currentType === 'all' ? '' : currentType ) : 'vac' // nonAdmin can only have VAC; ALL is treated as no type selected
 
 
     this.state = {
       id:             absence ? absence.id            : generateGuid(),
       user:           absence ? absence.user          : props.userID,
-      type:           absence ? absence.type          : adminMode ? '' : 'vac',
+      type:           absence ? absence.type          : initialType,
       year:           absence ? absence.year          : moment().year(),
       status:         absence ? absence.status        : this.getDefault_status(),
       startDate:      absence ? absence.startDate              : null,
@@ -159,12 +161,13 @@ class AbsenceModal extends PureComponent{
   }
 
   render(){
-    const { closeModal, user, currentUser } = this.props
+    const { closeModal, user, currentUser, currentType } = this.props
     const { type, startDate, endDate, focusedInput, note, totalDays, status, errorMessage, unpaid, effectiveDays } = this.state
     const adminMode = !!currentUser.isAdmin
     const isComplete = startDate && endDate && type && !errorMessage
     const accepted = status === 'accepted'
     const requested = status === 'requested'
+    const typeSelectable = adminMode && accepted && currentType === 'all'
     const showBtn = getButtonsToShow(this.props, this.state)
 
     return(
@@ -172,7 +175,7 @@ class AbsenceModal extends PureComponent{
   			<SModal.Body>
   				<fb className="absenceModalMain">
             { adminMode && requested && <DisplayVacationRequest startDate={startDate} endDate={endDate} /> }
-            { adminMode && accepted  && <AbsenceTypeSelect selectedType={type} selectType={this.changeType} /> }
+            { typeSelectable && <AbsenceTypeSelect selectedType={type} selectType={this.changeType} /> }
             { ((adminMode && accepted) || (!adminMode && requested)) &&
               <fb className='selectRangeWrapper'>
                 <fb className='label'>Zeitraum</fb>
@@ -222,6 +225,7 @@ const mapStateToProps = (state: Store, ownProps: OwnProps) => ({
   preferences: state.core.accountDetails.preferences,
   currentYear: state.ui.absence.currentYear,
   currentMonth: state.ui.absence.currentMonth,
+  currentType: state.ui.absence.currentType
 })
 
 const connector: Connector<OwnProps, OwnProps & ConProps > = connect(mapStateToProps, actionCreators)

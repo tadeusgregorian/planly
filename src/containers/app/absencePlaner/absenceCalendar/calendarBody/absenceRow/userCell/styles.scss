@@ -20,8 +20,11 @@
     justify-content: center;
     border-radius: 2px;
     opacity: 0;
-    transform: scale(0.2, 0.2);
-    transition: transform 0.2s ease-out, opacity 0.2s ease;
+    //transform: scale(0.2, 0.2);
+    transition: opacity 0.2s ease;
+
+    will-change: transform;
+    will-change: opacity;
 
     &:hover{
       background: #10b355;
@@ -34,7 +37,7 @@
       width: 30px;
       display: flex;
       opacity: 1;
-      transform: scale(1, 1);
+      //transform: scale(1.2);
     }
 
     .userName{
@@ -50,19 +53,5 @@
     white-space: nowrap;
     min-width: 0px;
     display: block;
-  }
-
-  .daysSum{
-    color: grey;
-    font-weight: 400;
-    font-size: 14px;
-    padding: 2px 4px;
-    background: #e2e2e2;
-    border-radius: 2px;
-    flex: 0 0 auto;
-
-    .vacDays{
-      margin-left: 3px;
-    }
   }
 }

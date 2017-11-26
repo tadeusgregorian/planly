@@ -37,8 +37,9 @@
     "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
     "start-js": "react-scripts start",
     "start": "npm-run-all -p watch-css start-js",
-    "startsimple": "npm run start-js",
     "build": "npm run build-css && react-scripts build",
+    "startprod": "REACT_APP_ENV=production npm run start",
+    "buildprod": "REACT_APP_ENV=production npm run build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "flow": "flow"

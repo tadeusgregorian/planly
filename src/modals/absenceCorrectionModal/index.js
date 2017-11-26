@@ -30,7 +30,7 @@ type ConProps = {
 type State = {
   extraDays: string,
   transferedDays: string,
-  vacDays: string,
+  vacDaysCorrected: string,
 }
 
 class AbsenceCorrectionModal extends PureComponent{
@@ -43,7 +43,7 @@ class AbsenceCorrectionModal extends PureComponent{
     this.state = {
       extraDays:      this.getDefault('extraDays'),
       transferedDays: this.getDefault('transferedDays'),
-      vacDays:        this.getDefault('vacDays'),
+      vacDaysCorrected:        this.getDefault('vacDaysCorrected'),
     }
   }
 
@@ -61,19 +61,19 @@ class AbsenceCorrectionModal extends PureComponent{
     const id              = absenceCorrection ? absenceCorrection.id : generateGuid()
     const extraDays       = this.toNullOrInt(this.state.extraDays)
     const transferedDays  = this.toNullOrInt(this.state.transferedDays)
-    const vacDays         = this.toNullOrInt(this.state.vacDays)
+    const vacDaysCorrected         = this.toNullOrInt(this.state.vacDaysCorrected)
 
-    const correction = { id, user, year, extraDays, vacDays, transferedDays }
+    const correction = { id, user, year, extraDays, vacDaysCorrected, transferedDays }
     saveAbsenceCorrectionToDB(correction)
     this.props.closeModal()
   }
 
   onExtraDaysChanged = (e)      => isIntStr(inp(e)) && this.setState({ extraDays: inp(e) })
-  onVacDaysChanged = (e)        => isIntStr(inp(e)) && this.setState({ vacDays: inp(e) })
+  onVacDaysChanged = (e)        => isIntStr(inp(e)) && this.setState({ vacDaysCorrected: inp(e) })
   onTransferedDaysChanged = (e) => isIntStr(inp(e)) && this.setState({ transferedDays: inp(e) })
 
   render(){
-    const { extraDays, vacDays, transferedDays } = this.state
+    const { extraDays, vacDaysCorrected, transferedDays } = this.state
     const { absentDays } = this.props
 
     return(
@@ -91,7 +91,7 @@ class AbsenceCorrectionModal extends PureComponent{
               <fb className='inpWrapper'><input value={transferedDays} onChange={this.onTransferedDaysChanged} placeholder='0' /></fb>
             </Row>
             <Row label='korrigierter Urlaubsanspurch 2017'>
-              <fb className='inpWrapper'><input value={vacDays} onChange={this.onVacDaysChanged} placeholder='35' /></fb>
+              <fb className='inpWrapper'><input value={vacDaysCorrected} onChange={this.onVacDaysChanged} placeholder='' /></fb>
             </Row>
   				</fb>
           <SModal.Footer>

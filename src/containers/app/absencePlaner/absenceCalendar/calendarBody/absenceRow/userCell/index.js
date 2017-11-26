@@ -1,57 +1,29 @@
 //@flow
-import React from 'react'
-import { connect } from 'react-redux'
-import type { Connector } from 'react-redux'
-
-import { openModal } from 'actions/ui/modals'
+import React, { PureComponent } from 'react'
 import type { User, AbsenceType } from 'types/index'
+import SumsDisplay from './sumsDisplay'
 import './styles.css'
 
-type OwnProps = {
+type Props = {
   user: User,
   adminMode: boolean,
   daysSum: number,
+  year: number,
   type: AbsenceType | 'all',
 }
 
-type ConProps = {
-  openModal: Function
-}
+export default class UserCell extends PureComponent {
+  props: Props
 
-type Props = OwnProps & ConProps
+  render(){
+    const { user, adminMode } = this.props
 
-const UserCell =  ({user, adminMode, daysSum, type, openModal}: Props) => {
-  const vacMode = type === 'vac'
-  const { vacDays } = user
-
-  const typeDaysGerman = {
-    all: 'Abwesenheitstage',
-    vac: 'Urlaubstage',
-    ill: 'Krankheitstage',
-    extra: 'Abwesenheitstage/Sonstiges'
+    return(
+      <fb className='absenceUserCellMain'>
+        { adminMode && <fb className='addAbsenceBtn' data-type='absence-user' data-user={user.id}>+</fb> }
+        <fb className='userName'>{user.name}</fb>
+        <SumsDisplay { ...this.props }/>
+      </fb>
+    )
   }
-
-  const daysSumClicked = () => {
-    adminMode && vacMode && openModal('ABSENCE_CORRECTION', { user: user.id, absentDays: daysSum })
-  }
-
-  return(
-    <fb className='absenceUserCellMain'>
-      { adminMode && <fb className='addAbsenceBtn' data-type='absence-user' data-user={user.id}>+</fb> }
-      <fb className='userName'>{user.name}</fb>
-        <fb className='daysSum' data-balloon={'Summe der ' + typeDaysGerman[type] + ' in 2017'} onClick={daysSumClicked}>
-          <fb className='count'>{daysSum}</fb>
-          { vacMode && vacDays && <fb className='vacDays'>{'/ ' + vacDays}</fb>}
-        </fb>
-    </fb>
-  )
 }
-
-const actionCreators = {
-  openModal
-}
-
-const mapStateToProps = (state: Store, ownProps: OwnProps) => ({})
-
-const connector: Connector<OwnProps, Props> = connect(mapStateToProps, actionCreators)
-export default connector(UserCell)

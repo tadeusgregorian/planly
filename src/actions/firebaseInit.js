@@ -1,7 +1,9 @@
+//@flow
 import firebase from 'firebase'
+import { isProduction } from 'configs/index'
 
 export const initFirebase = () => {
-  if(process.env.REACT_APP_ENV === 'production'){
+  if(isProduction()){
     console.log('REACT_APP_ENV: production');
     firebase.initializeApp({
       apiKey: "AIzaSyDN42YFUUW6a73BncV17h8pzOKJJUlJO-E",
@@ -10,7 +12,7 @@ export const initFirebase = () => {
       projectId: "aplano-c4071", // project-name: aplano
     })
   }else{
-    console.log('REACT_APP_ENV:' +  process.env.REACT_APP_ENV);
+    console.log('REACT_APP_ENV: development');
     firebase.initializeApp({
       apiKey: "AIzaSyCHXizDBRTQ_0JpB5-k8FzCRu3UWgCNnxI",
       authDomain: "plandy-91a56.firebaseapp.com",

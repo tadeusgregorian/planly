@@ -3,7 +3,7 @@ import firebase from 'firebase'
 import { trackFBListeners } from './firebaseHelpers'
 import { checkClientDate } from '../clientDateCheck'
 import { createCookie, deleteCookie } from './localHelpers';
-import { isProdEnv } from 'helpers/index'
+import { getDomain } from 'configs/index'
 import type { GetState } from 'types/index'
 
 
@@ -14,11 +14,10 @@ export const setAuthStateListener = (initializor: Function) => {
     dispatch({type: 'USER_IS_AUTHENTICATING'})
 
     firebase.auth().onAuthStateChanged((user) => {
-      const domain = isProdEnv() ? process.env.REACT_APP_DOMAIN : window.location.hostname
 
       if (!user) {
         dispatch({type: 'USER_LOGGED_OUT'})
-        deleteCookie('loggedIn', domain)
+        deleteCookie('loggedIn', getDomain())
         return
       }
 
@@ -31,7 +30,7 @@ export const setAuthStateListener = (initializor: Function) => {
           }
 
           console.log('not here ?');
-          createCookie('loggedIn', 'true', domain, 1000)
+          createCookie('loggedIn', 'true', getDomain(), 1000)
 
           dispatch({type: 'USER_LOGGED_IN' })
           dispatch({type: 'SET_ACCOUNT_ID',       payload: snap.val().account})

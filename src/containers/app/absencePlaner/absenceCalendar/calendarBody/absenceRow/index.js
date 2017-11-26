@@ -25,7 +25,7 @@ export default class AbsenceRow extends PureComponent {
 
     return(
       <fb className="absenceRowMain">
-        <UserCell user={user} adminMode={adminMode} daysSum={absentDays} type={type}/>
+        <UserCell user={user} adminMode={adminMode} daysSum={absentDays} type={type} year={year}/>
         <MonthCell month={month} year={year} absences={absences} />
       </fb>
     )
