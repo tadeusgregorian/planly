@@ -14,7 +14,7 @@ module.exports = (inviteData) => {
   txt += `Hi ${name}, \n`
   txt += `es wurde ein Zugang zum Aplano-Dienstplaner für dich eingerichtet.\n`
   txt += `Klicke auf den Folgenden link um deinen Account zu aktivieren:\n`
-  txt += `${url}/invite/${accountID}/${userID}, \n`
+  txt += `${url}/invite/${accountID}/${userID} \n`
   txt += `\n`
   txt += `Mit freundlichen Grüßen \n`
   txt += `Dein Aplano Team \n`
@@ -23,7 +23,7 @@ module.exports = (inviteData) => {
   const emailData = {
     'FromEmail':  'tadeus.gregorian@apotower.de',
     'FromName':   'Aplano Team',
-    'Subject':    name + ' - Planly Einladung',
+    'Subject':    name + ' - Aplano Einladung',
     'Text-part':  txt,
     'Recipients': [{'Email': email}]
   }
