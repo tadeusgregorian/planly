@@ -1,7 +1,7 @@
 // @flow
 
 import moment from 'moment'
-import _ from 'lodash'
+import values from 'lodash/values'
 import { db } from '../firebaseInit'
 import { getFBPath } from './../actionHelpers'
 import { momToSmart } from 'helpers/index'
@@ -41,7 +41,7 @@ export const checkOverlappings = (start: moment, end: moment, user: string, abse
 
   return queryRef.once('value').then( snap => {
 
-    const absences: Array<Absence> =  snap.val() ? _.values(snap.val()) : []
+    const absences: Array<Absence> =  snap.val() ? values(snap.val()) : []
     const itOverlaps = absences.reduce(
       (acc, val) =>
         (
