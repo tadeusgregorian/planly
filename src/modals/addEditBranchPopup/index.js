@@ -39,7 +39,7 @@ class AddEditBranchPopup extends PureComponent {
 		this.state = {
 			id: branch ? branch.id : getNextID('b', branches.length + 1),
 			name:  branch ? branch.name : '',
-			locations: branch ? branch.locations : {}
+			locations: branch ? (branch.locations || null) : {}
 		}
 	}
 
