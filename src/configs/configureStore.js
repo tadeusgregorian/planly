@@ -4,7 +4,10 @@ import thunk from "redux-thunk"
 import rootReducer from '../reducers'
 
 export default function configureStore() {
-  const middlewares = [thunk];
+  const middlewares = process.env.NODE_ENV !== 'production'
+    ? [require('redux-immutable-state-invariant').default(), thunk]
+    : [thunk];
+
   const middlewareEnhancer = applyMiddleware(...middlewares);
   const storeEnhancers = [middlewareEnhancer];
   const composedEnhancer = composeWithDevTools(...storeEnhancers);

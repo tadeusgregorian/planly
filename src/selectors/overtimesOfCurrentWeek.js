@@ -23,7 +23,7 @@ const getCurrentOvertimes = (
     if(!corrections.length) return {}
     if(!users.length)       return {}
 
-    const currentTotalMins = {}
+    let currentTotalMins = {}
 
     for(let key in weekSums){ // here we sum up the single weekSums of the users ( we neglect users without an initialStartWeek )
       const user = extractUser(key)
@@ -43,16 +43,18 @@ const getCurrentOvertimes = (
       (currentTotalMins[c.user] = c.mins + (currentTotalMins[c.user] || 0)) // adds the correction to users total minutes sum
     })
 
-    for(let user in currentTotalMins){ // here we remove the minutes the user had to work between startWeek and currentWeek
+    Object.keys(currentTotalMins).forEach(user =>  { // here we remove the minutes the user had to work between startWeek and currentWeek
+
       const initialStartWeek = initialStartWeeks[user]
-      if(currentWeekID < initialStartWeek) break;
+      if(currentWeekID < initialStartWeek) return;
+
       const currentWeekMom = smartWeekToMom(currentWeekID)
       const startWeekMom = smartWeekToMom(initialStartWeek)
       const totalWeeks = Math.round(currentWeekMom.diff(startWeekMom, 'days') / 7)
       const userObj: User = (users.find(u => u.id === user): any) // telling flow there is definitely a User comming out
       const plannedMinutes = userObj.weeklyMins * totalWeeks
       currentTotalMins[user] = currentTotalMins[user] - plannedMinutes
-    }
+    })
 
     return currentTotalMins
 }

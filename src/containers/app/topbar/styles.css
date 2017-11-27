@@ -17,6 +17,8 @@
     .topbarMain .centered .right {
       justify-content: flex-end; }
       .topbarMain .centered .right .logoutIcon {
+        margin-left: 6px;
+        margin-right: 2px;
         cursor: pointer;
         color: white; }
 

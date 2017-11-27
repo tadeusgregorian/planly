@@ -35,7 +35,6 @@ type State = {
   effectiveDays: ?number,
   note: ?string,
   workDays: ?WorkDays,
-  useAvgHours: ?true,
   unpaid: ?true,
   avgDailyMins: number,
   focusedInput: any,
@@ -82,7 +81,6 @@ class AbsenceModal extends PureComponent{
       effectiveDays:  absence ? absence.effectiveDays          : null,
       note:           absence ? (absence.note        || '')    : '',
       workDays:       absence ? (absence.workDays    || null)  : props.user.workDays,
-      useAvgHours:    absence ? (absence.useAvgHours || null)  : this.getDefaul_useAvgHours('vac'), // its vac when nonAdmin requests vac... when admin picks absenceType -> this gets updated
       unpaid:         absence ? (absence.unpaid      || null)  : null,
       avgDailyMins:   user.avgDailyMins,
       focusedInput:   null, // we omit this before saving to db!
@@ -93,20 +91,16 @@ class AbsenceModal extends PureComponent{
   }
 
   // returns the useAvgHours-Setting for a specific AbsenceType
-  getDefaul_useAvgHours = (type: AbsenceType): true | null => {
-    if(type === 'vac') return this.props.preferences.useAvgHoursForVac ? true : null
+  getUseAvgHours = (): true | null => {
+    const isVac = this.state.type === 'vac'
+    if(isVac) return this.props.preferences.useAvgHoursForVac ? true : null
     return null
   }
 
-  getDefault_status = (): AbsenceStatus => {
-    const { isAdmin } = this.props.currentUser
-    return isAdmin ? 'accepted' : 'requested'
-  }
+  getDefault_status = (): AbsenceStatus =>
+    this.props.currentUser.isAdmin ? 'accepted' : 'requested'
 
-  changeType = (type: AbsenceType) => {
-    const useAvgHours = this.getDefaul_useAvgHours(type)
-    this.setState({ type , useAvgHours })
-  }
+  changeType = (type: AbsenceType) => { this.setState({ type }) }
 
   datesChanged = (d: {startDate: ?moment, endDate: ?moment}) => {
     const {startDate, endDate} = d
@@ -149,7 +143,12 @@ class AbsenceModal extends PureComponent{
 
   saveAbsence   = (absenceDirty) => {
     const cleanAbsence = _.omit(absenceDirty, ['focusedInput', 'errorMessage'])
-    saveAbsenceToDB({ ...cleanAbsence, note: this.state.note || null }) // turning '' to null
+    saveAbsenceToDB({
+      ...cleanAbsence,
+      note: this.state.note || null, // turning '' to null
+      useAvgHours: this.getUseAvgHours()
+
+    })
     this.props.closeModal()
   }
 
