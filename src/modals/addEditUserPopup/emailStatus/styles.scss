@@ -1,35 +1,53 @@
 .emailStatusMain{
   position: absolute;
-  right: 4px;
-  top: 4px;
-  padding: 0px 12px;
-  -ms-flex-align: center;
-  align-items: center;
-  font-size: 14px;
-  font-weight: 400;
-  background-color: grey;
-  min-width: 100px;
-  bottom: 4px;
-  color: white;
-  border-radius: 1px;
+  right: 0px;
+  top: 0px;
+  height: 100%;
+  padding: 4px;
+  align-self: stretch;
 
-  .icon{
-    padding: 0px;
-    padding-right: 6px;
+
+  .statusBar{
+    padding: 0px 12px;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 400;
+    //background-color: grey;
+    //min-width: 100px;
+    bottom: 4px;
+    color: white;
+    border-radius: 1px;
+
+    .icon{
+      padding: 0px;
+      padding-right: 6px;
+    }
+
+    &.NOT_INVITED{
+      color: #ff3325;
+      //background-color: #ff3325;
+    }
+
+    &.INVITED{
+      color: orange;
+      //background-color: orange;
+    }
+
+    &.ACTIVE{
+      color: #2fcb71;
+      // background-color: #2fcb71;
+    }
   }
 
-  &.NOT_INVITED{
-    color: white;
-    background-color: #ff3325;
-  }
+  .sendInvitationBtn{
+    margin-left: 4px;
 
-  &.INVITED{
-    color: white;
-    background-color: orange;
-  }
+    .icon{
+      margin-right: 8px;
+    }
 
-  &.ACTIVE{
-    color: white;
-    background-color: #2fcb71;
+    .text{
+      font-size: 14px;
+    }
   }
 }

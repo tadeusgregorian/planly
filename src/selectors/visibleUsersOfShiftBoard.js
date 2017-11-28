@@ -1,6 +1,6 @@
 //@flow
 import { createSelector } from 'reselect'
-import _ from 'lodash'
+import sortBy from 'lodash/sortBy'
 import type { User, Store, Shift, Position } from 'types/index'
 
 const getUsers            = (state: Store) => state.core.users
@@ -13,7 +13,7 @@ const getShifts           = (state: Store) => state.roster.shiftWeek
 
 const getVisibleUsers = ( users: Array<User>, positions: Array<Position>, currentBranch: string, nonWorkersHidden: boolean, shifts:Array<Shift> ): Array<User> => (
 
-  _.sortBy(users, [getPosNrOfUser(positions), 'name' ])
+  sortBy(users, [getPosNrOfUser(positions), 'name' ])
   .filter(u => {
     if(shifts.find(s => s.user === u.id && s.branch === currentBranch)) return true
     if(u.deleted) return false

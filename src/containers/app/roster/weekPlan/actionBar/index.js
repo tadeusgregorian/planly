@@ -46,7 +46,7 @@ const ActionBar = (props) => {
         <TimeDetailsToogler />
         { adminMode && !extraHoursMode && <OptionsDropdown /> }
         { extraHoursMode && <ExtraHoursBar leave={leaveExtraHoursMode}/> }
-        <EditsDisplay />
+        { adminMode && <EditsDisplay /> }
       </fb>
     </fb>
   )

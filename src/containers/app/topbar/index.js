@@ -6,14 +6,16 @@ import { logoutFromFirebase } from 'actions/auth'
 
 import getCurrentUser from 'selectors/currentUser'
 import TopbarButton from './topbarButton'
-import type { User } from 'types/index'
+import type { User, Store } from 'types/index'
 import './styles.css'
 
 type Props = {
-  currentUser: User
+  currentUser: User,
+  vacRequestsCount: number,
+  shiftEditsCount: number,
 }
 
- const Topbar = ( { currentUser }: Props) => {
+ const Topbar = ( { currentUser, vacRequestsCount, shiftEditsCount }: Props) => {
 
   const logoutPressed = () => { logoutFromFirebase() }
   const isAdmin = currentUser && currentUser.isAdmin
@@ -22,8 +24,8 @@ type Props = {
     <fb className="topbarMain">
       <fb className='centered'>
         <fb className="side left">
-                       <TopbarButton label='Dienstplan'      to='/app/dienstplan'/>
-                       <TopbarButton label='Abwesenheit'     to='/app/abwesenheit' />
+                       <TopbarButton label='Dienstplan'      to='/app/dienstplan'    notifications={shiftEditsCount}/>
+                       <TopbarButton label='Abwesenheit'     to='/app/abwesenheit'   notifications={vacRequestsCount} />
           { isAdmin && <TopbarButton label='Einstellungen'   to='/app/einstellungen' /> }
         </fb>
         <fb className="side right">
@@ -35,8 +37,10 @@ type Props = {
   )
 }
 
-const mapStateToProps = (state) => ({
-  currentUser: getCurrentUser(state)
+const mapStateToProps = (state: Store) => ({
+  currentUser: getCurrentUser(state),
+  vacRequestsCount: state.absencePlaner.vacationRequests.length,
+  shiftEditsCount: state.roster.shiftEdits.length,
 })
 
 

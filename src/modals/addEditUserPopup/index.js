@@ -1,7 +1,8 @@
 //@flow
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import _ from 'lodash'
+import omit from 'lodash/omit'
+import { Toast } from 'helpers/iziToast'
 import { saveUserToDB, addInvitationJob } from 'actions/users'
 import EmailStatus 			from './emailStatus'
 
@@ -15,8 +16,8 @@ import ErrorMessageBar  	from './errorMessageBar'
 import PositionSelect  		from './positionSelect'
 import BranchSelect 			from './branchSelect'
 
-import { getNextID, isValidEmail, isIntStr, inpToInt, replaceDotsWithCommas } from 'helpers/index'
-import { floatToMins, minsToFloat, getAvgDailyMins } from './localHelpers'
+import { getNextID, isValidEmail, isIntStr, isFloatStr, inpToInt, replaceDotsWithCommas } from 'helpers/index'
+import { floatToMins, minsToFloat, getAvgDailyMins, minsToDetailedTime } from './localHelpers'
 import type { WorkDays, UserStatus, Store } from 'types/index'
 import './styles.css'
 
@@ -60,9 +61,9 @@ class AddEditUserPopup extends PureComponent {
 		const { name, email, branches, position } = this.state
 		let errorText = ''
 
-		if(!_.keys(branches).length)			 errorText = 'Bitte wählen Sie mindestens eine Filiale aus.'
+		if(!Object.keys(branches).length)	 errorText = 'Bitte wählen Sie mindestens eine Filiale aus.'
 		if(!position)											 errorText = 'Bitte wählen Sie eine Position aus.'
-		if(email && !isValidEmail(email))  errorText = 'Bitte geben Sie eine gültige Email-Adresse an'
+		if(!isValidEmail(email))  				 errorText = 'Bitte geben Sie eine gültige Email-Adresse an'
 		if(name === '') 									 errorText = 'Bitte geben Sie einen Benutzernamen ein.'
 
 		if(errorText){
@@ -74,14 +75,13 @@ class AddEditUserPopup extends PureComponent {
 	}
 
 	saveUser = (sendInvite: boolean) => {
-		const { weeklyHours, status, vacDays, workDays } = this.state
+		const { weeklyHours, vacDays, workDays } = this.state
 		let dbUser  = {
 			...this.props.user,   // props like 'isAdmin' are not in state, thats why doing ...user ( from props )
-			..._.omit(this.state, ['errorText', 'avgHours', 'avgMins', 'weeklyHours']),
+			...omit(this.state, ['errorText', 'avgHours', 'avgMins', 'weeklyHours']),
 			avgDailyMins: getAvgDailyMins(workDays, weeklyHours),
 			vacDays:			vacDays ? inpToInt(vacDays) : null,
-			weeklyMins: 	floatToMins(weeklyHours),
-			status: 			sendInvite ? 'INVITED' : status
+			weeklyMins: 	floatToMins(weeklyHours)
 		}
 
 		sendInvite && this.sendInvitation()
@@ -91,6 +91,9 @@ class AddEditUserPopup extends PureComponent {
 	sendInvitation = () => {
 		const { name, id, email } = this.state
 		const { accountID } = this.props
+
+		this.setState({ status: 'INVITED' })
+		Toast.success('Einladung gesendet an ' + email )
 		addInvitationJob({ name, userID: id, email, accountID })
 	}
 
@@ -109,20 +112,23 @@ class AddEditUserPopup extends PureComponent {
 		}
 	}
 
-	weeklyHoursChanged 	= (weeklyHours) => this.setState({ weeklyHours })
-	onVacDaysChanged 		= (vacDays) 		=> isIntStr(vacDays) && this.setState({ vacDays })
-	avgDailyMinsChanged = (target, inp) => isIntStr(inp) && this.setState({[target]: inp})
+	weeklyHoursChanged 	= (weeklyHours) => isFloatStr(weeklyHours) 	&& this.setState({ weeklyHours })
+	onVacDaysChanged 		= (vacDays) 		=> isIntStr(vacDays) 	 			&& this.setState({ vacDays })
+	avgDailyMinsChanged = (target, inp) => isIntStr(inp) 		   			&& this.setState({[target]: inp})
 	workDaysChanged 		= (workDays) 		=> this.setState({ workDays })
 
 	render() {
 		const { name, email, weeklyHours, position, branches, status, workDays, vacDays } = this.state
 		const allBranches 	= this.props.branches
 		const allPositions 	= this.props.positions
-		const emailDisabled = status === 'ACTIVE'
-		const notInvited 		= status === 'NOT_INVITED'
 		const editMode 			= !!this.props.user
 		const avgHours 			= Math.round(getAvgDailyMins(workDays, weeklyHours) / 60 * 100) / 100
 		const avgHoursStr 	= replaceDotsWithCommas(avgHours) + ' Stunden'
+		const validEmail    = isValidEmail(email)
+
+		const avgTimeStr    = minsToDetailedTime(getAvgDailyMins(workDays, weeklyHours))
+		const avgTimeTTip   = 'Durchschnittliche tägliche Arbeitszeit: ' + avgTimeStr
+
 
 		return (
 			<SModal.Main title={ editMode ? 'Mitarbeiter bearbeiten' : 'Neuer Mitarbeiter' } onClose={this.props.closeModal}>
@@ -134,15 +140,17 @@ class AddEditUserPopup extends PureComponent {
 								<FlatInput value={name} onInputChange={this.nameInputChanged} defaultText='Max Mustermann'/>
 							</FlatFormRow>
 							<FlatFormRow label='Email'>
-								<FlatInput value={email} onInputChange={this.emailInputChanged} defaultText='max@gmail.de' disabled={emailDisabled}/>
-								<EmailStatus status={status} hide={!editMode}/>
+								<FlatInput value={email} onInputChange={this.emailInputChanged} defaultText='max@gmail.de' disabled={status === 'ACTIVE'}/>
+								<EmailStatus status={status} hide={!editMode} sendInvitation={this.sendInvitation} validEmail={validEmail} />
 							</FlatFormRow>
 							<FlatFormRow label='Position'>
 								<PositionSelect positions={allPositions} selected={position} onChange={this.positionChanged} />
 							</FlatFormRow>
-							<FlatFormRow label='Filialen'>
-								<BranchSelect branches={allBranches} selected={branches} onChange={this.branchesChanged} />
-							</FlatFormRow>
+							{	allBranches.length > 1 &&
+								<FlatFormRow label='Filialen'>
+									<BranchSelect branches={allBranches} selected={branches} onChange={this.branchesChanged} />
+								</FlatFormRow>
+							}
 							<FlatFormRow label='Wochenstunden'>
 								<FlatInput value={weeklyHours} onInputChange={this.weeklyHoursChanged} defaultText='0'/>
 							</FlatFormRow>
@@ -151,14 +159,14 @@ class AddEditUserPopup extends PureComponent {
 							</FlatFormRow>
 							<FlatFormRow label='Arbeitstage'>
 								<WorkDaysPicker workDays={workDays} onChange={this.workDaysChanged} />
-								<fb className='avgDailyHours'>&Oslash; {avgHoursStr}</fb>
+								{ !!avgHours && <fb className='avgDailyHours'  data-balloon={avgTimeTTip} >&Oslash; {avgHoursStr}</fb> }
 							</FlatFormRow>
 						</fb>
 					</fb>
 				</SModal.Body>
 				<SModal.Footer>
-					<SButton right label='speichern' onClick={()=>this.onSaveClicked(false)} color={!notInvited && '#2ECC71' } />
-					<SButton label='speichern & einladen' onClick={()=>this.onSaveClicked(true)} disabled={status === 'ACTIVE'} color={notInvited && '#2ECC71'} />
+					<SButton right label='speichern' onClick={()=>this.onSaveClicked(false)} color={ (editMode || !validEmail) && '#2ECC71' } />
+					{ !editMode && <SButton label='speichern & einladen' onClick={()=>this.onSaveClicked(true)} color='#2ECC71' disabled={ !validEmail } /> }
 				</SModal.Footer>
 			</SModal.Main>
 		)

@@ -12,7 +12,7 @@ const getWeekAndBranch = (getState) => ({
 
 export const setInitialRosterListeners: ThunkAction = () => (dispatch, getState) => {
   setRosterListeners()(dispatch, getState)
-  setShiftEditsListener(dispatch, getState)
+  //setShiftEditsListener(dispatch, getState)
   setTemplatesFlatListener(dispatch, getState)
   setWeekSumsListener(dispatch, getState)
   setCorrectionsListener(dispatch, getState)
@@ -81,7 +81,7 @@ const setTemplatesFlatListener = (dispatch: Dispatch, getState: GetState) => {
   createFirebaseListener(dispatch, getState, 'templatesFlat', path)
 }
 
-const setShiftEditsListener = (dispatch, getState: any) => {
+export const setShiftEditsListener = (dispatch: Dispatch, getState: GetState) => {
   const path = getFBPath('shiftEdits')
   createFirebaseListener(dispatch, getState, 'shiftEdits', path)
 }

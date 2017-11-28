@@ -24,7 +24,7 @@ export const setAbsenceCorrectionsListener = () => (dispatch: Dispatch, getState
   createFirebaseListener(dispatch, getState, 'absenceCorrections', path, queryRef)
 }
 
-export const setRequestedAbsencesListener = () => (dispatch: Dispatch, getState: GetState) => {
+export const setRequestedAbsencesListener = (dispatch: Dispatch, getState: GetState) => {
   const path        = getFBPath('vacationRequests')
   createFirebaseListener(dispatch, getState, 'vacationRequests', path)
 }

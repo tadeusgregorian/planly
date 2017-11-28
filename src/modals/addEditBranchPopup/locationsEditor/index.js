@@ -4,7 +4,7 @@ import { generateGuid } from 'helpers/index'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import { openModal } from 'actions/ui/modals'
-import _ from 'lodash'
+import values from 'lodash/values'
 import LocationCreationRow from './locationCreationRow'
 import type { Location } from 'types/index'
 import './styles.css'
@@ -100,7 +100,7 @@ class LocationEditor extends PureComponent {
 
     return(
       <fb className="locationsEditorMain">
-        { _.values(locations).filter(loc => !loc.deleted).map(loc => {
+        { values(locations).filter(loc => !loc.deleted).map(loc => {
           return loc.id === this.state.locBeingEdited
             ? this.renderCreateLocRow(loc)
             : this.renderLocationDisplay(loc)

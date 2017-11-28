@@ -1,7 +1,7 @@
 //@flow
 
 import React from 'react'
-import _ from 'lodash'
+import sortBy from 'lodash/sortBy'
 import {connect} from 'react-redux'
 import UserElement from './user'
 import { openModal } from 'actions/ui'
@@ -29,7 +29,7 @@ class AdminpanelUsers extends React.Component {
 					<fb className='item status'>Status</fb>
 				</fb>
 				<fb className='usersList'>
-				{_.sortBy(this.props.users, ['name']).map(user => (
+				{sortBy(this.props.users, ['name']).map(user => (
 					<UserElement
 						user={user}
 						userClicked={this.openAddEditUserPopup}

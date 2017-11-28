@@ -75,6 +75,7 @@ type Absence {
   year: Number,
   yearUser: String,
   unpaid: Boolean|Null,
+  note: String|Null
 }
 
 type Location {

@@ -1,6 +1,5 @@
 //@flow
 import React from 'react'
-import _ from 'lodash'
 import type { Branch } from 'types/index'
 import Select from 'react-select';
 
@@ -18,7 +17,7 @@ export default ({selected, branches, onChange}: Props) => {
     <div className="branchesSelectWrapper">
       <Select multi
         clearable={false}
-        value={_.keys(selected)}
+        value= {Object.keys(selected)}
         options={branches.map(b => ({value: b.id, label: b.name}))}
         onChange={onChange}
         searchable={false}

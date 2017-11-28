@@ -1,6 +1,6 @@
 //@flow
 import { db } from '../firebaseInit'
-import _ from 'lodash'
+import values from 'lodash/values'
 import type { PreShift, Shift, User } from 'types/index'
 import { weekDays } from 'constants/roster'
 import { getFBPath } from './../actionHelpers'
@@ -37,7 +37,7 @@ export const getMini = (shift: PreShift): {mins: number, weekDay: number} => {
 
 export const fetchTemplateWeek = (tempID: string): Promise<Array<Shift>> => (
   db().ref(getFBPath('shiftWeeks', [tempID])).once('value').then(snap => {
-    return snap.val() ? _.values(snap.val()) : []
+    return snap.val() ? values(snap.val()) : []
   })
 )
 

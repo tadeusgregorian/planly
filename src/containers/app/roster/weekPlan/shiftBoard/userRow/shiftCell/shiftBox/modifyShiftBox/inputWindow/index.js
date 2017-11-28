@@ -9,6 +9,7 @@ type Props = {
   breakMinutes: string,
   getStartTimeRef: (HTMLInputElement)=>void,
   getEndTimeRef: (HTMLInputElement)=>void,
+  getBreakRef: (HTMLInputElement)=>void,
   startTimeChanged: (SyntheticInputEvent)=>void,
   endTimeChanged: (SyntheticInputEvent)=>void,
   breakChanged: (SyntheticInputEvent)=>void,
@@ -78,6 +79,7 @@ export default (props: Props) => {
             type="text"
             placeholder='min'
             maxLength="3"
+            ref={props.getBreakRef}
           />
         </fb>
     </fb>

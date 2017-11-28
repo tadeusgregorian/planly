@@ -1,6 +1,5 @@
 // //@flow
 // import { createSelector } from 'reselect'
-// import _ from 'lodash'
 // import type { Store, User } from 'types/index'
 //
 // const getUsers         = (state: Store) => state.core.users
@@ -11,7 +10,7 @@
 //     const currentWeek = parseInt(weekID, 10) || 0 // in templateMode WeekID is a string GUID -> return 0
 //
 //
-//     const weeklyHoursArray = _.keys(u.weeklyHours)
+//     const weeklyHoursArray = Object.keys(u.weeklyHours)
 //
 //     if(weeklyHoursArray.length === 1){
 //       return { ...u, currentWeeklyHours: u.weeklyHours[weeklyHoursArray[0]]}

@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react'
 import cn from 'classnames'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
-import _ from 'lodash'
+import values from 'lodash/values'
 
 import ShiftTimesBar from '../components/shiftTimesBar'
 import LocationBar   from '../components/locationBar'
@@ -31,7 +31,7 @@ class DisplayShiftBox extends PureComponent{
     const { shift, branch, positions, templateMode } = this.props
     const { day, user, id, note, edit, location, position } = shift
 
-    const locations: Array<Location> = (branch && branch.locations && _.values(branch.locations)) || []
+    const locations: Array<Location> = (branch && branch.locations && values(branch.locations)) || []
 
     return(
       <fb className={cn({displayShiftBoxMain: 1, temp: templateMode})}

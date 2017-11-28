@@ -93,6 +93,12 @@ export const isIntStr = (inp: string): boolean => {
   return false
 }
 
+export const isFloatStr = (inp = ''): boolean => {
+  return inp.split('').reduce((acc, val) => {
+    return (acc && ( val === ',' || ( parseInt(val, 10) >= 0 && parseInt(val, 10) <= 10 )))
+  }, true)
+}
+
 export const inpToInt = (inp: string): number =>
   inp === '' ? 0 : parseInt(inp, 10)
 

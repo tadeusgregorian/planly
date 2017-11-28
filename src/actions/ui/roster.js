@@ -25,6 +25,8 @@ export const setPlanMode = (mode: PlanMode) =>
 
 export const enterTemplateMode: ThunkAction = () => (dispatch, getState: GetState) => {
   const currentBranch = getState().ui.roster.currentBranch
+  console.log(currentBranch);
+  console.log(getLastTempIDOfBranch(getState, currentBranch));
   dispatch({ type: 'ENTER_TEMPLATE_MODE', payload: getLastTempIDOfBranch(getState, currentBranch) })
 }
 

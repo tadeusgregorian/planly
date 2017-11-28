@@ -10,6 +10,8 @@
     flex: 1;
     justify-content: flex-end;
     align-self: stretch; }
+    .actionBarMain .right > * {
+      margin-left: 6px; }
 
 @media print {
   .actionBarMain .right {

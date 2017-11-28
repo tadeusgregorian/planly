@@ -3,7 +3,6 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 
-import { setRequestedAbsencesListener  } from 'actions/listeners/absencePlaner'
 import { setAbsencesListener           } from 'actions/listeners/absencePlaner'
 import { setAbsenceCorrectionsListener } from 'actions/listeners/absencePlaner'
 import { getClickedAbsenceID, getClickedUserID } from './localHelpers'
@@ -31,8 +30,7 @@ type ConProps = {
   setCurrentType: (AbsenceTypeFilter)=>any,
   openAbsenceModal: (string, (Absence | void))=>{},
   setAbsencesListener: ()=>any,
-  setAbsenceCorrectionsListener: ()=>any,
-  setRequestedAbsencesListener: ()=>any,
+  setAbsenceCorrectionsListener: ()=>any
 }
 type Props = OwnProps & ConProps
 
@@ -43,7 +41,6 @@ class AbsencePlaner extends PureComponent {
     document.addEventListener('click', this.clickDetected)
     this.props.setAbsencesListener()
     this.props.setAbsenceCorrectionsListener()
-    this.props.setRequestedAbsencesListener()
   }
 
   componentWillUnmount  = () => {
@@ -95,7 +92,6 @@ class AbsencePlaner extends PureComponent {
 
 const actionCreators = {
   setAbsencesListener,
-  setRequestedAbsencesListener,
   setAbsenceCorrectionsListener,
   setCurrentType,
   openAbsenceModal,

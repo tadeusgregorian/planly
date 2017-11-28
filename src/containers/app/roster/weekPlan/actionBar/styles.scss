@@ -11,6 +11,10 @@
     flex: 1;
     justify-content: flex-end;
     align-self: stretch;
+
+    >*{
+      margin-left: 6px;
+    }
   }
 }
 

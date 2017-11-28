@@ -1,6 +1,5 @@
 //@flow
-import { replaceCommasWithDots, replaceDotsWithCommas } from 'helpers/index'
-import _ from 'lodash'
+import { replaceCommasWithDots, replaceDotsWithCommas, minToTime } from 'helpers/index'
 
 export const isValidFloat = (num: string | number) =>
   !isNaN(parseFloat(replaceCommasWithDots(num.toString())))
@@ -31,7 +30,13 @@ export const extractHours = (minsTotal: number) => Math.floor(minsTotal / 60 ) |
 export const extractMins  = (minsTotal: number) => minsTotal % 60
 
 export const getAvgDailyMins = (workDays: {}, _weeklyHours: number | string): number => {
-  const workDaysCount = _.keys(workDays).length
+  const workDaysCount = Object.keys(workDays).length
   const weeklyHours = _weeklyHours ? (parseFloat(replaceCommasWithDots(_weeklyHours.toString())) || 0) : 0
   return Math.floor((weeklyHours * 60) / workDaysCount)
+}
+
+export const minsToDetailedTime = (mins: number): string => {
+  const extractedHours     = minToTime(mins).hours
+  const additionalMins     = minToTime(mins).minutes
+  return `${extractedHours} Stunden ${additionalMins} Minuten`
 }

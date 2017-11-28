@@ -1,7 +1,7 @@
 //flow
 
 import React from 'react'
-import _ from 'lodash'
+import sortBy from 'lodash/sortBy'
 import { shiftCellWidth } from 'constants/roster'
 
 import type { ShiftRef, Position } from 'types/index'
@@ -27,7 +27,7 @@ export default (props: Props) => {
 
   return(
     <fb className="pickPositionBoxMain" style={style}>
-      {positions && _.sortBy(positions, 'nr').map(pos =>
+      {positions && sortBy(positions, 'nr').map(pos =>
         <fb
           key={pos.id}
           className='posItem'

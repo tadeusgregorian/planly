@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import cn from 'classnames'
-import _ from 'lodash'
+import values from 'lodash/values'
 
 import { timeInpOK, withColon, from4To5, shiftDataValid, zipShift, shiftToShiftInput } from './localHelpers'
 import { toggleOptions, unfocusShift }     from 'actions/ui/roster'
@@ -61,7 +61,8 @@ type State = {
 
 type InputRefs = {
   startTime: ?HTMLInputElement,
-  endTime: ?HTMLInputElement
+  endTime: ?HTMLInputElement,
+  break: ?HTMLInputElement,
 }
 
 class ModifyShiftBox extends PureComponent{
@@ -91,7 +92,8 @@ class ModifyShiftBox extends PureComponent{
 
     this.inputRefs  = {
       startTime: null,
-      endTime: null
+      endTime: null,
+      break: null
     }
   }
 
@@ -109,6 +111,7 @@ class ModifyShiftBox extends PureComponent{
   componentDidUpdate = (pp: Props, ps: State) => {
     // used to move focus from the start- to endTime-inputField
     from4To5(ps.startTime, this.state.startTime) && this.focusEndTime()
+    from4To5(ps.endTime, this.state.endTime) && this.focusBreak()
   }
 
   startTimeChanged = (inp: SyntheticInputEvent) => this.updateStateIfOK('startTime', inp.target.value)
@@ -117,6 +120,7 @@ class ModifyShiftBox extends PureComponent{
 
   focusStartTime  = () => {this.inputRefs.startTime && this.inputRefs.startTime.focus()}
   focusEndTime    = () => {this.inputRefs.endTime   && this.inputRefs.endTime.focus()}
+  focusBreak      = () => {this.inputRefs.break     && this.inputRefs.break.focus()}
 
   updateStateIfOK = (target: string, newState: string) => {
     const prevState       = this.state[target]
@@ -172,7 +176,7 @@ class ModifyShiftBox extends PureComponent{
   render(){
     const { shift, currentUser, branch, positions } = this.props
     const { locationBoxOpen, positionBoxOpen, location, position, note, fadeIn } = this.state
-    const locations: Array<Location> = (branch && branch.locations && _.values(branch.locations)) || []
+    const locations: Array<Location> = (branch && branch.locations && values(branch.locations)) || []
     const isGrabbing = !this.isAdmin && shift.user === 'open' // when a nonAdmin trys to grab an open Shift
     const isEdited   = !!shift.edit
     const isPending  = !!(isEdited || isGrabbing)
@@ -212,11 +216,13 @@ class ModifyShiftBox extends PureComponent{
           breakMinutes={this.state.breakMinutes}
           getStartTimeRef={ref => {this.inputRefs.startTime = ref}}
           getEndTimeRef={ref => {this.inputRefs.endTime = ref}}
+          getBreakRef={ref => {this.inputRefs.break = ref}}
           startTimeChanged={this.startTimeChanged}
           endTimeChanged={this.endTimeChanged}
           breakChanged={this.breakChanged}
           focusStartTime={this.focusStartTime}
           focusEndTime={this.focusEndTime}
+          focusBreak={this.focusBreak}
         /> }
         { isPending && <ShiftTimesBar shift={shift} /> }
         { location && <LocationBar

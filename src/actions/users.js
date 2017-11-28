@@ -25,12 +25,19 @@ export const addInvitationJob = ({ userID, email, name, accountID }: JobData) =>
 	const _email = isProduction() ? email : 'arm.gregorian@hotmail.de'
 
 	const key = db().ref('emailInvites').push().key
-	db().ref('emailInvites').child(key).set({
+	const inviteObj = {
 		userID,
 		email: _email,
 		name,
 		accountID,
 		url: getAppUrl(),
 		status: 'PENDING',
-		timestamp: firebase.database.ServerValue.TIMESTAMP })
+		timestamp: firebase.database.ServerValue.TIMESTAMP
+	}
+
+	const updates = {}
+	updates[ getFBPath('users', [ userID, 'status' ]) ] = 'INVITED'
+	updates['emailInvites/' + key] = inviteObj
+
+	db().ref().update(updates)
 }

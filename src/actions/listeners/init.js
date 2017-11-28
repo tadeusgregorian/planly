@@ -1,5 +1,7 @@
 
 import { createFirebaseListener } from './firebaseHelpers'
+import { setRequestedAbsencesListener } from './absencePlaner'
+import { setShiftEditsListener } from './roster'
 import { getFBPath } from '../actionHelpers'
 
 export const registerInitialListeners = () => (disp, getS) => {
@@ -7,6 +9,10 @@ export const registerInitialListeners = () => (disp, getS) => {
   registerUsersListener(disp, getS)
   registerPositionsListener(disp, getS)
   registerBranchesListener(disp, getS)
+
+  // these are being loaded -> to be able to show Notifications-Count in Topbar
+  setShiftEditsListener(disp, getS)
+  setRequestedAbsencesListener(disp, getS)
 }
 
 const setAccountDetailsListener = (disp, getS) =>

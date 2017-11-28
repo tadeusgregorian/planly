@@ -1,6 +1,7 @@
 //@flow
 import React, { PureComponent } from 'react'
-import _ from 'lodash'
+import has from 'lodash/has'
+import omit from 'lodash/omit'
 import cn from 'classnames'
 import type { WorkDays } from 'types/index'
 import './styles.css'
@@ -15,8 +16,8 @@ export default class WorkDaysPicker extends PureComponent{
 
   dayClicked = (weekDay: string) => {
     const { workDays } = this.props
-    const removing = _.has(workDays,weekDay)
-    const newWorkDays = removing ? _.omit(workDays, weekDay) : { ...workDays, [weekDay]: 1 }
+    const removing = has(workDays,weekDay)
+    const newWorkDays = removing ? omit(workDays, weekDay) : { ...workDays, [weekDay]: 1 }
     this.props.onChange(newWorkDays)
   }
 
@@ -40,7 +41,7 @@ export default class WorkDaysPicker extends PureComponent{
             { weekDaysArray.map(w =>
               <fb
                 key={w.value}
-                className={cn({dayBtn: true, selected: _.has(workDays, w.value) })}
+                className={cn({dayBtn: true, selected: has(workDays, w.value) })}
                 onClick={()=>this.dayClicked(w.value)}
               >
                 {w.label}

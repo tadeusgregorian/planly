@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import values from 'lodash/values'
 
 export const createFirebaseReducer_array = (target, extractor, comparer) => {
   const isSame = comparer || ((e1, e2) => e1.id === e2.id) // comparing id property by default
@@ -6,7 +6,7 @@ export const createFirebaseReducer_array = (target, extractor, comparer) => {
 
 	return (state = [], a) => {
 		switch (a.type) {
-		case 'value_received_' + target : return _.values(a.payload).map(extract)
+		case 'value_received_' + target : return values(a.payload).map(extract)
 		case 'child_added_'    + target : return [...state, extract(a.payload)]
 		case 'child_changed_'  + target : return state.map(el => isSame(a.payload, el) ? extract(a.payload) : el)
 		case 'child_removed_'  + target : return state.filter(el => !isSame(el, a.payload))

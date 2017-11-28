@@ -44,13 +44,15 @@ class SubBar extends PureComponent {
     return(
       <fb className="rosterSubBarMain">
         <fb className='centered'>
-          <fb className='branchSelector'>
-            <Dropdown
-              value={{value: currentBranch, label: currentBranchName}}
-              options={branches.map(b => ({value: b.id, label: b.name}))}
-              onChange={(opt) => changeCurrentBranch(opt.value)}
-            />
-          </fb>
+          { branches.length > 1 &&
+            <fb className='branchSelector'>
+              <Dropdown
+                value={{value: currentBranch, label: currentBranchName}}
+                options={branches.map(b => ({value: b.id, label: b.name}))}
+                onChange={(opt) => changeCurrentBranch(opt.value)}
+              />
+            </fb>
+          }
           <fb className={cn({navigation: 1, hidden: !isAdmin})}>
             <fb
               className={cn({subBarButton: 1, activeBlue: !templateMode })}

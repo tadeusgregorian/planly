@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import { DateRangePicker } from 'react-dates'
 import moment from 'moment'
-import _ from 'lodash'
+import omit from 'lodash/omit'
 
 import getCurrentUser from 'selectors/currentUser'
 import { openModal } from 'actions/ui/modals'
@@ -142,7 +142,7 @@ class AbsenceModal extends PureComponent{
   }
 
   saveAbsence   = (absenceDirty) => {
-    const cleanAbsence = _.omit(absenceDirty, ['focusedInput', 'errorMessage'])
+    const cleanAbsence = omit(absenceDirty, ['focusedInput', 'errorMessage'])
     saveAbsenceToDB({
       ...cleanAbsence,
       note: this.state.note || null, // turning '' to null

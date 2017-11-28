@@ -1,13 +1,13 @@
 // //@flow
 // import React, { PureComponent } from 'react'
 // import FlatInput from 'components/flatInput'
-// import _ from 'lodash'
 // import moment from 'moment'
 // import { withoutProp, momToSmartWeek, smartWeekToMom } from 'helpers/index.js'
 // import DatePicker from 'react-datepicker';
 // import cn from 'classnames'
 // import 'react-datepicker/dist/react-datepicker.css';
 // import './styles.css'
+// import max from 'lodash/max'
 //
 // type Props = {
 //   weeklyHours: number,
@@ -20,10 +20,10 @@
   // state:  { extendButtonVisible: boolean }
   // state = { extendButtonVisible: false }
 
-  // isMultirow = () => _.keys(this.props.weeklyHours).length > 1
-  // smartWeeksArray = () => _.keys(this.props.weeklyHours).sort().reverse()
+  // isMultirow = () => Object.keys(this.props.weeklyHours).length > 1
+  // smartWeeksArray = () => Object.keys(this.props.weeklyHours).sort().reverse()
   // dateBeforeLast = () => this.smartWeeksArray()[this.smartWeeksArray().length - 2]
-  // latestCreatedDate = () => _.max(this.smartWeeksArray())
+  // latestCreatedDate = () => max(this.smartWeeksArray())
   //
   // mouseOver = () => this.setState({ extendButtonVisible: true })
   // mouseOut = () => this.setState({ extendButtonVisible: false })
@@ -75,7 +75,7 @@
   //   const { weeklyHours } = this.props
   //   return(
   //     <fb className='inputWrapper'>
-  //       { _.keys(weeklyHours).map((smartWeek, i) => {
+  //       { Object.keys(weeklyHours).map((smartWeek, i) => {
   //
   //         return (
   //           <fb className='weeklyHoursRow' key={smartWeek}>

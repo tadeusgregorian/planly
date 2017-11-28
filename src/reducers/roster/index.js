@@ -4,9 +4,6 @@ import { createDataStatusReducer, createFirebaseReducer_array, createFirebaseRed
 import { combineReducers } from 'redux'
 import type { Notes, ShiftEdits, Shifts, DataStatus, TemplatesFlat, WeekAbsence, Correction, ExtraHours, DayNote } from 'types/index'
 
-// we extract this because there is userDay, and branchDay in DB ( just needed for mobile-Firebase-Querys)
-//const cleanUp = (data) => _.omit(data, ['userDay', 'branchDay', 'branch'])
-
 const correctionsSame = (c1, c2) => c1.user === c2.user && c1.week === c2.week
 const shiftEditsSame = (e1, e2) => e1.shiftID === e2.shiftID
 

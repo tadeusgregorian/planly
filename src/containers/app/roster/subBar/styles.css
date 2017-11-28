@@ -19,7 +19,8 @@
     .rosterSubBarMain .centered .branchSelector {
       padding: 0px;
       width: 200px;
-      border: none; }
+      border: none;
+      margin-right: 4px; }
       .rosterSubBarMain .centered .branchSelector .Dropdown-root {
         height: 100%;
         width: 100%; }
@@ -51,7 +52,7 @@
       text-decoration: uppercase;
       font-weight: 400;
       margin: 4px;
-      margin-right: 0px;
+      margin-left: 0px;
       border-radius: 2px; }
       .rosterSubBarMain .centered .navigation .subBarButton:hover {
         background: #f3f3f3; }

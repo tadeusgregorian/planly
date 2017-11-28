@@ -1,7 +1,7 @@
 //@flow
 import React from 'react';
 import {connect} from 'react-redux';
-import _ from 'lodash'
+import sortBy from 'lodash/sortBy'
 import PositionElement from './position';
 import { rearrangePositions } from 'actions/positions'
 import { openModal } from 'actions/ui'
@@ -27,7 +27,7 @@ const SortableItem = SortableElement(({position, onClick}) =>
 const SortableList = SortableContainer(({items, onClick}) => {
 	return (
 		<ul>
-			{_.sortBy(items, 'nr').map((position, i) => (
+			{sortBy(items, 'nr').map((position, i) => (
 				<SortableItem
 					key={position.id}
 					index={position.nr}

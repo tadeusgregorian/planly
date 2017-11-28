@@ -1,6 +1,6 @@
 // @flow
 import React, { PureComponent } from 'react'
-import _ from 'lodash'
+import sortBy from 'lodash/sortBy'
 import AbsenceRow from './absenceRow'
 import type { User, Absence, AbsenceType, Position } from 'types/index'
 
@@ -29,7 +29,7 @@ export default class CalendarBody extends PureComponent {
 
     return(
       <fb className="absenceCalendarBodyMain">
-        { _.sortBy(users, [this.getPosNrOfUser]).map(u => {
+        { sortBy(users, [this.getPosNrOfUser]).map(u => {
           const userAbsences = absences.filter(a => a.user === u.id)
           const absentDays = absenceSums.find(s => s.user === u.id)
           return ( <AbsenceRow
