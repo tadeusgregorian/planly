@@ -18,8 +18,8 @@ export default class AdminPanel extends PureComponent {
 				<fb className='adminpanel-body edgebox'>
 					<fb className='adminpanel-navbar'>
 						<NavLink activeClassName="selected" className="navbar-item" to={`${baseUrl}mitarbeiter`}>Mitarbeiter</NavLink>
-						<NavLink activeClassName="selected" className="navbar-item" to={`${baseUrl}positionen`}>Gruppen</NavLink>
-						<NavLink activeClassName="selected" className="navbar-item" to={`${baseUrl}filialen`}>Filianen</NavLink>
+						<NavLink activeClassName="selected" className="navbar-item" to={`${baseUrl}positionen`}>Positionen</NavLink>
+						<NavLink activeClassName="selected" className="navbar-item" to={`${baseUrl}filialen`}>Filialen</NavLink>
 						<NavLink activeClassName="selected" className="navbar-item" to={`${baseUrl}account`}>Account</NavLink>
 					</fb>
 					<fb className='adminPanelContent'>

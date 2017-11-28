@@ -12,8 +12,8 @@ module.exports = (inviteData) => {
 
   let txt = ''
   txt += `Hi ${name}, \n`
-  txt += `es wurde ein Zugang zum Aplano-Dienstplaner für dich eingerichtet.\n`
-  txt += `Klicke auf den Folgenden link um deinen Account zu aktivieren:\n`
+  txt += `es wurde ein Zugang zum Aplano-Dienstplaner für Dich eingerichtet.\n`
+  txt += `Klicke auf den folgenden Link um Deinen Account zu aktivieren:\n`
   txt += `${url}/invite/${accountID}/${inviteID} \n`
   txt += `\n`
   txt += `Mit freundlichen Grüßen \n`
@@ -29,7 +29,10 @@ module.exports = (inviteData) => {
   }
 
   return sendEmail.request(emailData)
-    .then((res) => rootRef.child(`emailInvites/${inviteID}/status`).set('SENT'))
+    .then((res) => {
+			console.log('Main succesfully sent to: ' + email)
+			rootRef.child(`emailInvites/${inviteID}/status`).set('SENT')
+		})
     .catch((err) => {
       console.log('Mail sending failed: ' + err)
       return rootRef.child(`emailInvites/${inviteID}/status`).set('FAILED')

@@ -31,6 +31,7 @@ class SubBar extends PureComponent {
   }
 
   templatesClicked = () => {
+    if(false) console.log('what'); // just a random test
     this.props.enterTemplateMode()
   }
 

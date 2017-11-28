@@ -77,7 +77,7 @@ class AbsenceCorrectionModal extends PureComponent{
     const { absentDays } = this.props
 
     return(
-      <SModal.Main onClose={this.props.closeModal} title='Urlabsberechnung'>
+      <SModal.Main onClose={this.props.closeModal} title='Urlaubsberechnung'>
   			<SModal.Body>
   				<fb className="absenceCorrectionModalMain">
             <Row label='eingetragener Urlaub 2017'>
@@ -90,7 +90,7 @@ class AbsenceCorrectionModal extends PureComponent{
             <Row label='Resturlaub aus Vorjahr'>
               <fb className='inpWrapper'><input value={transferedDays} onChange={this.onTransferedDaysChanged} placeholder='0' /></fb>
             </Row>
-            <Row label='korrigierter Urlaubsanspurch 2017'>
+            <Row label='korrigierter Urlaubsanspruch 2017'>
               <fb className='inpWrapper'><input value={vacDaysCorrected} onChange={this.onVacDaysChanged} placeholder='' /></fb>
             </Row>
   				</fb>

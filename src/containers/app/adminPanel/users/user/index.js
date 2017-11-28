@@ -21,12 +21,11 @@ export default (props: Props) => {
 	const displayStatus = () => {
 		switch (user.status) {
 			case 'NOT_INVITED': return 'inaktiv'
-			case 'INVITED'    : return 'eingeladed'
+			case 'INVITED'    : return 'eingeladen'
 			case 'ACTIVE'			: return 'aktiv'
 			default: return 'error-'
 		}
 	}
-
 
 	if(deleted) {
 		return (

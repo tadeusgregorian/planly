@@ -22,12 +22,13 @@ class AdminpanelUsers extends React.Component {
 					<fb className="headlineText">Mitarbeiter verwalten</fb>
 					<SButton slick icon='icon-add' label='Nutzer hinzufügen' onClick={() => this.openAddEditUserPopup()} />
 				</fb>
-					<fb className='headRow'>
-						<fb className='item name'>Name</fb>
-						<fb className='item position'>Rolle</fb>
-						<fb className='item branches'>Standort</fb>
-						<fb className='item status'>Status</fb>
-					</fb>
+				<fb className='headRow'>
+					<fb className='item name'>Name</fb>
+					<fb className='item position'>Rolle</fb>
+					<fb className='item branches'>Standort</fb>
+					<fb className='item status'>Status</fb>
+				</fb>
+				<fb className='usersList'>
 				{_.sortBy(this.props.users, ['name']).map(user => (
 					<UserElement
 						user={user}
@@ -37,6 +38,7 @@ class AdminpanelUsers extends React.Component {
 						position={this.props.positions.find(pos => pos.id === user.position)}
 					/>))
 				}
+				</fb>
 			</div>
 		);
 	}

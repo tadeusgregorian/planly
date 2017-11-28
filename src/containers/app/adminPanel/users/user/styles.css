@@ -4,7 +4,9 @@
   padding: 2px 10px 2px 30px;
   color: grey;
   justify-content: space-between;
-  cursor: pointer; }
+  cursor: pointer;
+  height: 36px;
+  flex: 0 0 auto; }
   .adminpanelUsers .adminPanelUserItem:hover {
     background-color: #f4fcff; }
   .adminpanelUsers .adminPanelUserItem .item {

@@ -7,6 +7,7 @@ import Roster from './roster'
 import AbsencePlaner from './absencePlaner'
 import AdminPanel from './adminPanel'
 import appDataLoaded from 'selectors/appDataLoaded'
+import getCurrentUser from 'selectors/currentUser'
 import { openModal } from 'actions/ui/modals'
 import type { Store } from 'types/index'
 import './styles.css'
@@ -20,7 +21,10 @@ class App extends PureComponent {
   }
 
   render = () => {
-    if(!this.props.appDataLoaded) return (<fb>Loading...</fb>)
+    const { currentUser, appDataLoaded } = this.props
+    const isAdmin = currentUser && currentUser.isAdmin
+
+    if(!appDataLoaded) return (<fb>Loading...</fb>)
 
     return(
       <fb className="appMain">
@@ -29,7 +33,7 @@ class App extends PureComponent {
             <Switch>
               <Route path='/app/dienstplan' component={Roster} />
               <Route path='/app/abwesenheit' component={AbsencePlaner} />
-              <Route path='/app/einstellungen' component={AdminPanel} />
+              <Route path='/app/einstellungen' render={() => isAdmin ? <AdminPanel { ...this.props } /> : <Redirect to='/app/dienstplan'/> } />
               <Redirect to='/app/dienstplan'/>
             </Switch>
           </fb>
@@ -45,6 +49,7 @@ const actionCreators = {
 
 const mapStateToProps = (state: Store) => ({
   appDataLoaded: appDataLoaded(state),
+  currentUser: getCurrentUser(state),
   preferences: state.core.accountDetails.preferences,
 })
 

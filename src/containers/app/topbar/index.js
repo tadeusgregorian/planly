@@ -13,22 +13,21 @@ type Props = {
   currentUser: User
 }
 
- const Topbar = (props:Props) => {
+ const Topbar = ( { currentUser }: Props) => {
 
-  const logoutPressed = () => {
-    logoutFromFirebase()
-  }
+  const logoutPressed = () => { logoutFromFirebase() }
+  const isAdmin = currentUser && currentUser.isAdmin
 
   return(
     <fb className="topbarMain">
       <fb className='centered'>
         <fb className="side left">
-          <TopbarButton label='Dienstplan'      to='/app/dienstplan'/>
-          <TopbarButton label='Abwesenheit'     to='/app/abwesenheit' />
-          <TopbarButton label='Einstellungen'   to='/app/einstellungen' />
+                       <TopbarButton label='Dienstplan'      to='/app/dienstplan'/>
+                       <TopbarButton label='Abwesenheit'     to='/app/abwesenheit' />
+          { isAdmin && <TopbarButton label='Einstellungen'   to='/app/einstellungen' /> }
         </fb>
         <fb className="side right">
-          <fb className='userName'>{props.currentUser && props.currentUser.name}</fb>
+          <fb className='userName'>{currentUser && currentUser.name}</fb>
           <fb className="icon logoutIcon icon-arrow-right2" onClick={logoutPressed} />
         </fb>
       </fb>
