@@ -29,7 +29,7 @@ type ConProps = {
   currentType: AbsenceTypeFilter,
   setCurrentType: (AbsenceTypeFilter)=>any,
   openAbsenceModal: (string, (Absence | void))=>{},
-  setAbsencesListener: ()=>any,
+  setAbsencesListener: (number)=>any,
   setAbsenceCorrectionsListener: ()=>any
 }
 type Props = OwnProps & ConProps
@@ -39,7 +39,7 @@ class AbsencePlaner extends PureComponent {
 
   componentDidMount = () => {
     document.addEventListener('click', this.clickDetected)
-    this.props.setAbsencesListener()
+    this.props.setAbsencesListener(this.props.currentYear)
     this.props.setAbsenceCorrectionsListener()
   }
 
@@ -49,8 +49,7 @@ class AbsencePlaner extends PureComponent {
 
   componentWillReceiveProps = (np: Props) => {
     if(np.currentYear !== this.props.currentYear){
-      this.props.setAbsenceCorrectionsListener()
-      this.props.setAbsencesListener()
+      this.props.setAbsencesListener(np.currentYear)
     }
   }
 

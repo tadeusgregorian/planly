@@ -50,7 +50,8 @@ export default class ShiftCell extends PureComponent {
     const focusedShiftID      = focusedShift ? focusedShift.id : 'aRondomStringTade...'
     const dummyShift:PreShift = { s: 0, e: 0, b: 0, user, day, id: focusedShiftID }
     const cssClassesObj       = cssClasses ? cssClasses.reduce((acc, val) => ({ ...acc, [val]: true }), {}) : {} // turnes the classesArray to an obj for classnames
-    const absenceIconClass    = absence && (absence === 'ill' ? 'icon icon-healing' : 'icon icon-beach_access')
+    const absenceIconMap      = { vac: 'icon icon-beach_access', ill: 'icon icon-healing', extra: 'icon icon-star4' }
+    const absenceIconClass    = absence && absenceIconMap[absence]
     const isEmpty             = !shifts.length && !inCreation && !extraHours.length
     const showExtendBtn       = hovered && !highlighted && !shadowed && !fsr && !isEmpty
     const showCreateBox       = hovered && !highlighted && !shadowed && !fsr &&  isEmpty

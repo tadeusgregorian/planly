@@ -24,6 +24,10 @@ export const momentToWeekID = (mom: moment): string => {
   return mom.year() + doubleD(mom.week())
 }
 
+export const smartDateToYear = (smartDate: number): number => {
+  return parseInt(smartDate.toString().substr( -4 ), 10)
+}
+
 // turns a num like 8 into '08' and 44 into '44'
 export const doubleD = (num: number) => {
   if(!Number.isInteger(num)) throw new Error('Tade - doublD expects Integer number, but got' + num)
@@ -62,12 +66,6 @@ export const 	timeStringToMin = (str: string): number => {
 	let hours = parseInt(str.substr(0, 2), 10)
 	let minutes = parseInt(str.substr(3, 2), 10)
 	return (hours * 60 + minutes)
-}
-
-export const intervalsOverlap = (start1: number, end1: number, start2: number, end2: number) => {
-	if(start1 > start2) return (end2 - start1) >= 0
-	if(start1 < start2) return (end1 - start2) >= 0
-	if(start1 === start2) return true
 }
 
 export const shiftToMinimalShift = (shift: Shift): MinimalShift => ({

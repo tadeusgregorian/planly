@@ -24,73 +24,17 @@ export type AbsenceType = 'vac' | 'ill' | 'extra'
 export type AbsenceTypeFilter = 'vac' | 'ill' | 'extra' | 'all'
 export type AbsenceStatus = 'requested' | 'accepted'
 
-export type WeekAbsence = { // these get created and fanned out in cloud functions -> are all accepted absences
-  id: string,
-  user: string,
-  type: AbsenceType,
-  workDays?: WorkDays,
-  useAvgHours?: true,
-  avgDailyMins: number,
-  firstWeekDay: number,
-  lastWeekDay: number,
-}
-
 export type Absence = { // this is the absence Obj we get from the DB ( Firebase deleted keys where the value is null or empty obj )
   id: string,//
   user: string, //
   type: AbsenceType,//
-  year: number, //
   status: AbsenceStatus,//
+  year: number,
   startDate: number,//
   endDate: number,//
-  totalDays: number,//
   effectiveDays: number,//
-  avgDailyMins: number,//
-  note?: string, //
-  workDays?: WorkDays, //
-  useAvgHours?: true, //
-  touchingWeeks: {[string]: number},//
-  startWeekDay: number, //startWeekDay = weekday of the startDate
-  endWeekDay: number, // endWeekDay = weekday of the endDate
-  unpaid?: boolean, //
-  yearUser: string,
-}
-
-export type AbsencePreDB = { // this is the absence Obj we want to write to the DB
-  id: string,
-  user: string,
-  type: AbsenceType,
-  year: number,
-  status: AbsenceStatus,
-  startDate: number,
-  endDate: number,
-  totalDays: number,
-  effectiveDays: number,
-  avgDailyMins: number,
-  note: ?string,
-  workDays: ?WorkDays,
-  useAvgHours: ?true,
-  unpaid?: boolean,
-}
-
-export type AbsenceDB = { // this is how it gets extended before being written to DB
-  id: string,
-  user: string,
-  type: AbsenceType,
-  year: number,
-  status: AbsenceStatus,
-  startDate: number,
-  endDate: number,
-  totalDays: number,
-  effectiveDays: number,
-  avgDailyMins: number,
-  yearUser: string,
-  note: ?string,
-  workDays: ?WorkDays,
-  useAvgHours: ?true,
-  touchingWeeks: {[string]: number},
-  startWeekDay: number,
-  endWeekDay: number,
+  note?: ?string, //
+  user_startDate: string,
 }
 
 export type AbsenceCorrection = {
@@ -98,8 +42,9 @@ export type AbsenceCorrection = {
   user: string,
   year: number,
   extraDays?: number | null,
-  transferedDays?: number | null,
+  vacDaysTransfered?: number | null,
   vacDaysCorrected?: number | null,
+  vacDays?: number | null,
 }
 
 export type DataStatus =

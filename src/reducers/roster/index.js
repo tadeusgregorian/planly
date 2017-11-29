@@ -2,7 +2,7 @@
 
 import { createDataStatusReducer, createFirebaseReducer_array, createFirebaseReducer_object } from '../reducerHelpers'
 import { combineReducers } from 'redux'
-import type { Notes, ShiftEdits, Shifts, DataStatus, TemplatesFlat, WeekAbsence, Correction, ExtraHours, DayNote } from 'types/index'
+import type { Notes, ShiftEdits, Shifts, DataStatus, TemplatesFlat, Correction, ExtraHours, DayNote } from 'types/index'
 
 const correctionsSame = (c1, c2) => c1.user === c2.user && c1.week === c2.week
 const shiftEditsSame = (e1, e2) => e1.shiftID === e2.shiftID
@@ -15,10 +15,8 @@ export type Roster = {
   weekSums: {[string]: number},
   corrections: Array<Correction>,
   templatesFlat: TemplatesFlat,
-  weekAbsences: Array<WeekAbsence>,
   dayNotes: Array<DayNote>,
   shiftWeekDataStatus: DataStatus,
-  weekAbsencesDataStatus: DataStatus,
 }
 
 export default combineReducers({
@@ -27,10 +25,8 @@ export default combineReducers({
   shiftEdits: createFirebaseReducer_array('shiftEdits', null, shiftEditsSame), // default checks .id properties to compare, if none -> need to pas in comparer func
   weekSums: createFirebaseReducer_object('weekSums'),
   corrections: createFirebaseReducer_array('corrections', null, correctionsSame),
-  weekAbsences: createFirebaseReducer_array('weekAbsences'),
   shiftWeek: createFirebaseReducer_array('shiftWeek'),
   extraHours: createFirebaseReducer_array('extraHours'),
   dayNotes: createFirebaseReducer_array('dayNotes'),
   shiftWeekDataStatus: createDataStatusReducer('shiftWeek'),
-  weekAbsencesDataStatus: createDataStatusReducer('weekAbsences'),
 })

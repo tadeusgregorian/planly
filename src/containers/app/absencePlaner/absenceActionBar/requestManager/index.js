@@ -5,6 +5,7 @@ import type { Connector } from 'react-redux'
 import cn from 'classnames'
 
 import { smartToMom } from 'helpers/index'
+import { smartDateToYear } from 'helpers/roster'
 import { setCurrentBranch, setCurrentYear, setCurrentMonth, setCurrentType } from 'actions/ui/absence'
 import { openAbsenceModal } from 'actions/ui/modals'
 
@@ -51,7 +52,7 @@ class RequestManager extends PureComponent {
 
     currentBranch !== 'all' && !user.branches[currentBranch] && setCurrentBranch('all')
     currentType   !== 'all' && currentType !== 'vac'         && setCurrentType('all')
-    currentYear   !== vacRequest.year                        && setCurrentYear(vacRequest.year)
+    currentYear   !== vacRequest.year                        && setCurrentYear(smartDateToYear(vacRequest.startDate))
     currentMonth  !== startMonth                             && setCurrentMonth(startMonth)
 
   }

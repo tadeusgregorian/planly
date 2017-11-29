@@ -2,11 +2,14 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
+import moment from 'moment'
 import cn from 'classnames'
 import getShiftsFiltered from 'selectors/shiftsFiltered_mobile'
-import { setShiftWeekListener_mobile, setWeekAbsenceListener } from 'actions/listeners/roster'
+import { setShiftWeekListener_mobile } from 'actions/listeners/roster'
+import { setAbsencesListener } from 'actions/listeners/absencePlaner'
 import TeamShiftList from './teamShiftList'
 import PersonalShiftList from './personalShiftList'
+import { getYear } from 'helpers/index'
 import type { Store, PlanMode, Shift, DataStatus } from 'types/index'
 import './styles.css'
 
@@ -17,17 +20,15 @@ type Props = {
   currentWeekID: string,
   shiftWeek: Array<Shift>,
   shiftWeekDS: DataStatus,
-  weekAbsencesDS: DataStatus,
   setShiftWeekListener_mobile: Function,
-  setWeekAbsenceListener: Function,
+  setAbsencesListener: Function,
 }
 
 class ShiftBoardMobile extends PureComponent {
 
   componentDidMount = () => {
     this.props.setShiftWeekListener_mobile()
-    this.props.setWeekAbsenceListener()
-
+    this.props.setAbsencesListener(moment().year())
   }
 
   componentWillReceiveProps = (np: Props) => {
@@ -36,24 +37,25 @@ class ShiftBoardMobile extends PureComponent {
       currentWeekID,
       planMode,
       currentDay,
-      setWeekAbsenceListener,
+      setAbsencesListener,
       setShiftWeekListener_mobile } = this.props
 
-    const branchChanged   = np.currentBranch    !== currentBranch
-    const swChanged       = np.currentWeekID    !== currentWeekID
-    const modeChanged     = np.planMode         !== planMode
-    const dayChanged      = np.currentDay       !== currentDay
+    const branchChanged   = np.currentBranch          !== currentBranch
+    const swChanged       = np.currentWeekID          !== currentWeekID
+    const modeChanged     = np.planMode               !== planMode
+    const dayChanged      = np.currentDay             !== currentDay
+    const yearChanged     = getYear(np.currentWeekID) !== getYear(currentWeekID)
 
     if(branchChanged || swChanged || modeChanged || dayChanged) setShiftWeekListener_mobile()
-    if(swChanged) setWeekAbsenceListener()
+    if(yearChanged) setAbsencesListener(getYear(np.currentWeekID))
   }
 
 
   render(){
-    const { shiftWeekDS, weekAbsencesDS, planMode, shiftWeek, currentWeekID } = this.props
+    const { shiftWeekDS, planMode, shiftWeek, currentWeekID } = this.props
     const shifts = shiftWeek
     const inTeamMode = planMode === 'TEAM'
-    const isLoading = shiftWeekDS !== 'LOADED' || weekAbsencesDS !== 'LOADED'
+    const isLoading = shiftWeekDS !== 'LOADED'
 
     return(
       <fb className='shiftBoardMobileMain' >
@@ -69,7 +71,7 @@ class ShiftBoardMobile extends PureComponent {
 
 const actionCreators = {
   setShiftWeekListener_mobile,
-  setWeekAbsenceListener,
+  setAbsencesListener,
 }
 
 const mapStateToProps = (state: Store) => ({
@@ -78,9 +80,7 @@ const mapStateToProps = (state: Store) => ({
   currentBranch: state.ui.roster.currentBranch,
   currentWeekID: state.ui.roster.currentWeekID,
   shiftWeek: getShiftsFiltered(state),
-  weekAbsences: state.roster.weekAbsences,
   shiftWeekDS: state.roster.shiftWeekDataStatus,
-  weekAbsencesDS: state.roster.weekAbsencesDataStatus,
 })
 
 const connector: Connector<{}, Props> = connect(mapStateToProps, actionCreators)

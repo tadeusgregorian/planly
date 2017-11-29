@@ -9,7 +9,7 @@ import OpenUserCell from './openUserCell'
 
 import { calculateWeekSum } from './localHelpers'
 
-import type { User, Shifts, ShiftRef, Position, WeekAbsence, OvertimeStatus, ExtraHours, CellRef } from 'types/index'
+import type { User, Shifts, ShiftRef, Position, AbsenceType, OvertimeStatus, ExtraHours, CellRef } from 'types/index'
 import './styles.css'
 
 type Props = {
@@ -29,7 +29,7 @@ type Props = {
   currentUser: User,
   focusedShiftRef: ?ShiftRef,
   cellUnderMouse: ?CellRef,
-  absences: Array<WeekAbsence>,
+  absentDays: { [ weekDay: number ]: AbsenceType },
 }
 
 export default class UserRow extends PureComponent{
@@ -52,7 +52,7 @@ export default class UserRow extends PureComponent{
       currentUser,
       focusedShiftRef,
       cellUnderMouse,
-      absences } = this.props
+      absentDays } = this.props
 
       const isAdmin      = currentUser.isAdmin
       const isOwnRow     = currentUser.id === userID
@@ -90,12 +90,12 @@ export default class UserRow extends PureComponent{
             const shadowed        = shadowedDay === day
             const highlighted     = highlightedDay === day
             const blocked         = !isAdmin && currentUser.id !== userID
-            const absence         = absences.reduce((acc, abs) => dayNum >= abs.firstWeekDay && dayNum <= abs.lastWeekDay && abs.type , false) // holds the absenceType if is absent
+            //const absence         = absences.reduce((acc, abs) => dayNum >= abs.firstWeekDay && dayNum <= abs.lastWeekDay && abs.type , false) // holds the absenceType if is absent
             return <ShiftCell
               day={day}
               user={userID}
               key={day}
-              absence={absence}
+              absence={ absentDays[dayNum] || false }
               blocked={blocked}
               shifts={dayShifts}
               extraHours={extraHoursOfDay}

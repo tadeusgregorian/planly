@@ -6,22 +6,17 @@ import type { GetState } from 'types/index'
 import { db } from '../firebaseInit'
 
 
-export const setAbsencesListener = () => (dispatch: Dispatch, getState: GetState) => {
+export const setAbsencesListener = (year: number) => (dispatch: Dispatch, getState: GetState) => {
   dispatch({ type: 'remove_absences' })
-  const year        = getState().ui.absence.currentYear
   const path        = getFBPath('absences')
   const queryRef    = db().ref(path).orderByChild('year').equalTo(year)
-
   createFirebaseListener(dispatch, getState, 'absences', path, queryRef)
 }
 
 export const setAbsenceCorrectionsListener = () => (dispatch: Dispatch, getState: GetState) => {
   dispatch({ type: 'remove_absenceCorrections' })
-  const year        = getState().ui.absence.currentYear
-  const path        = getFBPath('absenceCorrections')
-  const queryRef    = db().ref(path).orderByChild('year').equalTo(year)
-
-  createFirebaseListener(dispatch, getState, 'absenceCorrections', path, queryRef)
+  const path = getFBPath('absenceCorrections')
+  createFirebaseListener(dispatch, getState, 'absenceCorrections', path)
 }
 
 export const setRequestedAbsencesListener = (dispatch: Dispatch, getState: GetState) => {

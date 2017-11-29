@@ -1,8 +1,9 @@
 //@flow
 import moment from 'moment'
-//import 'moment-feiertage'
 import { weekDays } from 'constants/roster'
-import type { Day, WorkDays, BundeslandCode, User, Absence, AbsenceStatus } from 'types/index'
+import { momToSmart } from 'helpers/index'
+
+import type { Day, BundeslandCode, User, Absence, AbsenceStatus } from 'types/index'
 
 const numToWeekDay = (num: number): Day => {
   return weekDays[num]
@@ -13,20 +14,21 @@ export const getTotalDays = (start: ?moment, end: ?moment): number | null => {
   return moment(end).diff(start, 'days') + 1
 }
 
-export const getEffectiveDays = (start: ?moment, end: ?moment, workDays: ?WorkDays, bundesland: BundeslandCode): number | null => {
+export const getEffectiveDays = (start: ?moment, end: ?moment, bundesland: BundeslandCode): number | null => {
   if(!start || !end) return null
   let excludedsCount = 0
   const totalDays = moment(end).diff(start, 'days') + 1
 
   for(let i = 0; i < totalDays; i++){
-    const curDay = moment(start).add(i, 'days')
-    const curWeekDay = numToWeekDay(curDay.weekday())
+    const curDay      = moment(start).add(i, 'days')
+    const curWeekDay  = numToWeekDay(curDay.weekday())
     // $FlowFixMe -> moment-feiertage hat moment extended -> moment doesnt get that.
-    const isHoliday = curDay.isHoliday(bundesland)
+    const isHoliday   = curDay.isHoliday(bundesland)
+    const isSaturday  = curWeekDay === 5
+    const isSunday    = curWeekDay === 6
 
-    if((!workDays || !workDays.hasOwnProperty(curWeekDay)) || isHoliday) ++excludedsCount
+    if( isSaturday || isSunday || isHoliday) ++excludedsCount
   }
-
   return totalDays - excludedsCount
 }
 
@@ -45,4 +47,25 @@ export const getButtonsToShow = (props: Props , state: State): ButtonsToShow => 
   const Reject  =  adminMode && requested
   const Request = !adminMode && requested && creationMode
   return { Save, Delete, Accept, Reject, Request }
+}
+
+type  RangesOverlap = (number, number, number, number) => boolean
+const rangesOverlap: RangesOverlap  = (xStart, xEnd, yStart, yEnd) => {
+  console.log(xStart, xEnd, yStart, yEnd);
+  return yStart <= xEnd && yEnd >= xStart
+}
+
+type         AbsenceOverlaps = (moment, moment, Array<Absence>, string, string) => boolean
+export const absenceOverlaps: AbsenceOverlaps = (start, end, absences, user, absenceID): boolean => {
+  const startSmart = momToSmart(start)
+  const endSmart   = momToSmart(end)
+
+  return absences.filter(a => a.user === user).reduce(
+    (acc, val) =>
+      (
+        absenceID !== val.id && // otherwiese it overlaps with itselefe when editing Absence.
+        rangesOverlap(val.startDate, val.endDate, startSmart, endSmart)
+      ) || acc,
+    false
+  )
 }

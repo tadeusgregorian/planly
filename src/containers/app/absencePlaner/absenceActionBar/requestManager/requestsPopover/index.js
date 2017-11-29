@@ -46,7 +46,6 @@ export default class RequestsPopover extends PureComponent{
             key={a.id}
             userName={this.getUserName(a.user)}
             rangeStr={this.getRangeStr(a)}
-            totalDays={a.totalDays}
             arrowClicked={()=>this.props.jumpToRequest(a)}
             contentClicked={()=>this.props.openRequest(a)}
           />

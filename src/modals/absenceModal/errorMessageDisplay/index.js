@@ -3,7 +3,7 @@ import React from 'react'
 import './styles.css'
 
 type Props = {
-  msg: 'loading' | 'overlapping' | 'multiyear'
+  msg: 'overlapping' | 'multiyear'
 }
 
 export default ({msg}: Props) => {
@@ -12,7 +12,6 @@ export default ({msg}: Props) => {
     switch (msg) {
       case 'overlapping': return 'Zeitraum überschneidet sich mit einem anderen Abwesenheits-Eintrag.'
       case 'multiyear':   return 'Abwesenheit darf nicht zwischen zwei Jahren liegen.'
-      case 'loading':     return 'loading...'
       default: return ''
     }
   }

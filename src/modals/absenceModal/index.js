@@ -8,37 +8,35 @@ import omit from 'lodash/omit'
 
 import getCurrentUser from 'selectors/currentUser'
 import { openModal } from 'actions/ui/modals'
-import { saveAbsenceToDB, checkOverlappings, removeAbsenceFromDB } from 'actions/absence'
-import { generateGuid, momToSmart, smartToMom } from 'helpers/index'
-import { getEffectiveDays, getTotalDays, getButtonsToShow } from './localHelpers'
-import type { Store, User, Absence, WorkDays, AbsenceType, AbsenceTypeFilter, AbsenceStatus, AccountPreferences } from 'types/index'
+import { saveAbsenceToDB, removeAbsenceFromDB } from 'actions/absence'
+import { generateGuid, momToSmart } from 'helpers/index'
+import { getEffectiveDays, getTotalDays, getButtonsToShow, absenceOverlaps } from './localHelpers'
+import type { Store, User, Absence, AbsenceType, AbsenceTypeFilter, AbsenceStatus, AccountPreferences, BundeslandCode } from 'types/index'
 
 import ErrorMessageDisplay from './errorMessageDisplay'
 import AbsenceDetailsDisplay from './absenceDetailsDisplay'
 import AbsenceTypeSelect from './absenceTypeSelect'
 import AbsenceNotesSection from './absenceNotesSection'
 import DisplayVacationRequest from './displayVacationRequest'
-import AbsenceConfigs from './absenceConfigs'
 import SModal from 'components/sModal'
 import SButton from 'components/sButton'
 import './styles.css'
+
+type ErrorMesage = false | 'overlapping' | 'multiyear'
 
 type State = {
   id: string,
   user: string,
   type: AbsenceType | '',
-  year: number,
   status: AbsenceStatus,
+  year: number,
   startDate: ?number,
   endDate: ?number,
   totalDays: ?number,
   effectiveDays: ?number,
   note: ?string,
-  workDays: ?WorkDays,
-  unpaid: ?true,
-  avgDailyMins: number,
   focusedInput: any,
-  errorMessage: false | 'loading' | 'overlapping' | 'multiyear'
+  errorMessage: ErrorMesage
 }
 
 type OwnProps = {
@@ -49,6 +47,7 @@ type OwnProps = {
 
 type ConProps = {
   user: User,
+  absences: Array<Absence>,
   currentUser: User,
   preferences: AccountPreferences,
   currentYear: number,
@@ -64,25 +63,21 @@ class AbsenceModal extends PureComponent{
 
   constructor(props){
     super(props)
-    const { absence, user, currentYear, currentMonth, currentType } = props
+    const { absence, currentYear, currentMonth, currentType } = props
     const adminMode = !!this.props.currentUser.isAdmin
     const initialType = adminMode ? ( currentType === 'all' ? '' : currentType ) : 'vac' // nonAdmin can only have VAC; ALL is treated as no type selected
-
 
     this.state = {
       id:             absence ? absence.id            : generateGuid(),
       user:           absence ? absence.user          : props.userID,
       type:           absence ? absence.type          : initialType,
-      year:           absence ? absence.year          : moment().year(),
-      status:         absence ? absence.status        : this.getDefault_status(),
+      status:         absence ? absence.status        : adminMode ? 'accepted' : 'requested',
+      year:           absence ? absence.year          : currentYear,
       startDate:      absence ? absence.startDate              : null,
       endDate:        absence ? absence.endDate                : null,
       totalDays:      absence ? absence.totalDays              : null,
       effectiveDays:  absence ? absence.effectiveDays          : null,
       note:           absence ? (absence.note        || '')    : '',
-      workDays:       absence ? (absence.workDays    || null)  : props.user.workDays,
-      unpaid:         absence ? (absence.unpaid      || null)  : null,
-      avgDailyMins:   user.avgDailyMins,
       focusedInput:   null, // we omit this before saving to db!
       errorMessage:   false, // we omit this before saving to db!
     }
@@ -90,50 +85,28 @@ class AbsenceModal extends PureComponent{
     this.currentMom = moment().year(currentYear).month(currentMonth)
   }
 
-  // returns the useAvgHours-Setting for a specific AbsenceType
-  getUseAvgHours = (): true | null => {
-    const isVac = this.state.type === 'vac'
-    if(isVac) return this.props.preferences.useAvgHoursForVac ? true : null
-    return null
-  }
-
-  getDefault_status = (): AbsenceStatus =>
-    this.props.currentUser.isAdmin ? 'accepted' : 'requested'
-
-  changeType = (type: AbsenceType) => { this.setState({ type }) }
+  changeType  = (type: AbsenceType)         => { this.setState({ type }) }
+  setErrorMsg = (errorMessage: ErrorMesage) => { this.setState({ errorMessage }) }
 
   datesChanged = (d: {startDate: ?moment, endDate: ?moment}) => {
-    const {startDate, endDate} = d
-    const bundesland = this.props.preferences.bundesland || 'HH' // ( just to satisfy flow, at this point Bundesland is defos not null )
+    const { id } = this.state
+    const { userID, absences } = this.props
+    const { startDate, endDate } = d
+    const bundesland: BundeslandCode = (this.props.preferences.bundesland: any) // at this moment bundesland is set - flow-fix
     this.setState({
       startDate:      startDate ? momToSmart(startDate) : null,
       endDate:        endDate   ? momToSmart(endDate): null,
-      year:           moment(startDate).year(),
       totalDays:      getTotalDays(startDate, endDate),
-      effectiveDays:  getEffectiveDays(startDate, endDate, this.state.workDays, bundesland),
-      errorMessage:   !!(startDate && endDate) ? 'loading' : false
+      effectiveDays:  getEffectiveDays(startDate, endDate, bundesland),  // @TODO: getEffectiveDays needs to know to count saturday or sunday ?
     })
 
-    // checking if selected Range is Valid here
-
-    if(startDate && endDate){
-      if( endDate.year() !== startDate.year() ){
-        this.setState({errorMessage: 'multiyear'})
-      }else{
-        checkOverlappings(startDate, endDate, this.props.userID, this.state.id)
-          .then((res: boolean)=> this.setState({errorMessage: res && 'overlapping'}))
-      }
-    }
-  }
-
-  workDaysChanged = (workDays: WorkDays) => {
-    const startDate = this.state.startDate ? smartToMom(this.state.startDate) : null
-    const endDate =   this.state.endDate   ? smartToMom(this.state.endDate) : null
-    this.setState({ workDays, effectiveDays:  getEffectiveDays(startDate, endDate, workDays, 'HH') })
+    if(!startDate || !endDate) return // if both dates are set -> check for validity of selected range
+    if(endDate.year() !== startDate.year())                        return this.setErrorMsg('multiyear')
+    if(absenceOverlaps(startDate, endDate, absences, userID, id )) return this.setErrorMsg('overlapping')
+    this.setErrorMsg(false)
   }
 
   changeNote    = (note) => this.setState({ note })
-  toggleUnpaid  = ()     => this.setState({ unpaid: this.state.unpaid ? null : true })
   acceptRequest = ()     => this.saveAbsence({ ...this.state, status: 'accepted'})
 
   removeAbsence = () => {
@@ -142,12 +115,10 @@ class AbsenceModal extends PureComponent{
   }
 
   saveAbsence   = (absenceDirty) => {
-    const cleanAbsence = omit(absenceDirty, ['focusedInput', 'errorMessage'])
+    const cleanAbsence = omit(absenceDirty, ['focusedInput', 'errorMessage', 'totalDays'])
     saveAbsenceToDB({
       ...cleanAbsence,
       note: this.state.note || null, // turning '' to null
-      useAvgHours: this.getUseAvgHours()
-
     })
     this.props.closeModal()
   }
@@ -161,7 +132,7 @@ class AbsenceModal extends PureComponent{
 
   render(){
     const { closeModal, user, currentUser, currentType } = this.props
-    const { type, startDate, endDate, focusedInput, note, totalDays, status, errorMessage, unpaid, effectiveDays } = this.state
+    const { type, startDate, endDate, focusedInput, note, status, errorMessage, totalDays, effectiveDays } = this.state
     const adminMode = !!currentUser.isAdmin
     const isComplete = startDate && endDate && type && !errorMessage
     const accepted = status === 'accepted'
@@ -199,7 +170,6 @@ class AbsenceModal extends PureComponent{
             }
             { startDate && endDate &&  errorMessage && <ErrorMessageDisplay msg={errorMessage} /> }
             <AbsenceNotesSection note={note} changeNote={this.changeNote} />
-            { adminMode && <AbsenceConfigs unpaid={unpaid} toggleUnpaid={this.toggleUnpaid}/> }
   				</fb>
   			</SModal.Body>
         <SModal.Footer>
@@ -220,6 +190,7 @@ const actionCreators = {
 
 const mapStateToProps = (state: Store, ownProps: OwnProps) => ({
   currentUser: getCurrentUser(state),
+  absences: state.absencePlaner.absences,
   user: (state.core.users.find(u => u.id === ownProps.userID): any), // -> telling Flow to shut up. Result must be a User
   preferences: state.core.accountDetails.preferences,
   currentYear: state.ui.absence.currentYear,

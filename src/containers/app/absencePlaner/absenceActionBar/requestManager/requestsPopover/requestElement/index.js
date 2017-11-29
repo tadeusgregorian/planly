@@ -6,7 +6,6 @@ import './styles.css'
 type Props = {
   userName: string,
   rangeStr: string,
-  totalDays: number,
   arrowClicked: Function,
   contentClicked: Function
 }

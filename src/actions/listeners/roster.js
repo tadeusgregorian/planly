@@ -12,7 +12,6 @@ const getWeekAndBranch = (getState) => ({
 
 export const setInitialRosterListeners: ThunkAction = () => (dispatch, getState) => {
   setRosterListeners()(dispatch, getState)
-  //setShiftEditsListener(dispatch, getState)
   setTemplatesFlatListener(dispatch, getState)
   setWeekSumsListener(dispatch, getState)
   setCorrectionsListener(dispatch, getState)
