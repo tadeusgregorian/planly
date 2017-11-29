@@ -35,6 +35,15 @@ export default (props: Props) => {
     }
   }
 
+  const onKeyDownOnBreak = (e: SyntheticKeyboardEvent) => {
+    const inputEmpty = props.breakMinutes.length === 0
+    const wannaJumpLeft = e.key === 'Backspace' || e.key === 'ArrowLeft'
+    if(inputEmpty && wannaJumpLeft) {
+      e.preventDefault()
+      props.focusEndTime()
+    }
+  }
+
   const onFocus = ({target}) => {
     target.selectionStart = target.selectionEnd = target.value.length
   }
@@ -79,6 +88,7 @@ export default (props: Props) => {
             type="text"
             placeholder='min'
             maxLength="3"
+            onKeyDown={onKeyDownOnBreak}
             ref={props.getBreakRef}
           />
         </fb>

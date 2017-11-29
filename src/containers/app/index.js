@@ -31,7 +31,7 @@ class App extends PureComponent {
         <Topbar />
           <fb className="appMainContent">
             <Switch>
-              <Route path='/app/dienstplan' component={Roster} />
+              <Route path='/app/dienstplan' render={() => <Roster { ...{ currentUser }} />} />
               <Route path='/app/abwesenheit' component={AbsencePlaner} />
               <Route path='/app/einstellungen' render={() => isAdmin ? <AdminPanel { ...this.props } /> : <Redirect to='/app/dienstplan'/> } />
               <Redirect to='/app/dienstplan'/>

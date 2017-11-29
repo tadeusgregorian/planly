@@ -24,6 +24,12 @@ export const extendForDB = (absence: AbsencePreDB): AbsenceDB => {
   return { ...absence, yearUser, touchingWeeks, startWeekDay, endWeekDay }
 }
 
+// export const toRequest = (absence: AbsencePreDB): VacRequest => {
+//   const yearUser = absence.year + absence.user
+//   const { id, user,  }
+//   return {  }
+// }
+
 export const rangesOverlap = (xS: number, xE: number, yS:number, yE:number): boolean => {
   return yS <= xE && yE >= xS
 }
