@@ -2,7 +2,7 @@
 import React, { PureComponent } from 'react'
 import sortBy from 'lodash/sortBy'
 import AbsenceRow from './absenceRow'
-import type { User, Absence, AbsenceType, Position } from 'types/index'
+import type { User, Absence, AbsenceType, Position, AbsenceCorrection } from 'types/index'
 
 import './styles.css'
 
@@ -16,6 +16,8 @@ type Props = {
   adminMode: boolean,
   type: AbsenceType | 'all',
   positions: Array<Position>,
+  currentVacDays: {[user: string]: number },
+  absenceCorrections: Array<AbsenceCorrection>
 }
 
 export default class CalendarBody extends PureComponent {
@@ -25,7 +27,16 @@ export default class CalendarBody extends PureComponent {
     this.props.positions.find(p => p.id === user.position)
 
   render() {
-    const { users, absences, year, month, adminMode, absenceSums, type } = this.props
+    const {
+      users,
+      absences,
+      year,
+      month,
+      adminMode,
+      absenceSums,
+      type,
+      absenceCorrections,
+      currentVacDays } = this.props
 
     return(
       <fb className="absenceCalendarBodyMain">
@@ -40,6 +51,8 @@ export default class CalendarBody extends PureComponent {
             type={type}
             absentDays={absentDays && absentDays.days}
             absences={userAbsences}
+            currentVacDays={currentVacDays[u.id]}
+            absenceCorrection={absenceCorrections.find(a => a.user === u.id)}
             adminMode={adminMode} />
           )}
         )}

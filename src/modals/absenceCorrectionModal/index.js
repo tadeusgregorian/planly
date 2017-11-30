@@ -17,6 +17,7 @@ import './styles.css'
 type OwnProps = {
   closeModal: Function,
   user: string,
+  vacDays: ?number,
 }
 
 type ConProps = {
@@ -39,8 +40,10 @@ class AbsenceCorrectionModal extends PureComponent{
   constructor(props: OwnProps & ConProps){
     super(props)
 
+    const { vacDays } = this.props
+
     this.state = {
-      vacDays:            this.getDefault('vacDays'),
+      vacDays:            (vacDays && vacDays.toString()) || '', // we access the vacDays passed through the own props ( it might me vacDays of past Years correction )
       vacDaysTransfered:  this.getDefault('vacDaysTransfered'),
       vacDaysCorrected:   this.getDefault('vacDaysCorrected'),
       extraDays:          this.getDefault('extraDays'),
@@ -89,7 +92,7 @@ class AbsenceCorrectionModal extends PureComponent{
               <fb className='inpWrapper'><input value={vacDaysTransfered} onChange={this.onTransferedDaysChanged} placeholder='0' /></fb>
             </Row>
             <Row label='Urlaubsanspruch 2017 Korrektur'>
-              <fb className='inpWrapper'><input value={vacDaysCorrected} onChange={this.onVacDaysCorrectedChanged} placeholder='' /></fb>
+              <fb className='inpWrapper'><input value={vacDaysCorrected} onChange={this.onVacDaysCorrectedChanged} placeholder='0' /></fb>
             </Row>
             <fb style={{height: 30}} />
             <Row label='eingetragener Urlaub 2017'>
@@ -115,7 +118,9 @@ const mapStateToProps = (state: Store, ownProps: OwnProps) => ({
   year: state.ui.absence.currentYear,
   //$FlowFixMe -> we are sure that this returns a number
   absentDays: getAbsenceSums(state).find(s => s.user === ownProps.user).days,
-  absenceCorrection: state.absencePlaner.absenceCorrections.find(ac => ac.user === ownProps.user) // dont need to filter for year -> cause we have always only
+  absenceCorrection: state.absencePlaner.absenceCorrections.find(ac => {
+    return ac.user === ownProps.user && ac.year === state.ui.absence.currentYear
+  })
 })
 
 const connector: Connector<OwnProps, OwnProps & ConProps> = connect(mapStateToProps, actionCreators)

@@ -1,5 +1,6 @@
 //@flow
 import moment from 'moment'
+import { doubleD } from './roster'
 
 export * from './dateHelpers'
 export * from './roster'
@@ -74,7 +75,7 @@ export const smartToMom = (smartDate: number): moment => {
 
 export const momToSmartWeek = (mom: moment): number => {
   const year = moment(mom).year()
-  const week = moment(mom).week()
+  const week = doubleD(moment(mom).week())
   return parseInt((year + '' + week), 10)
 }
 

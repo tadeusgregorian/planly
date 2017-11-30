@@ -5,7 +5,8 @@ import type { Connector } from 'react-redux'
 
 import CalendarHead from './calendarHead'
 import CalendarBody from './calendarBody'
-import type { User, Store, Absence, AbsenceType, Position, BundeslandCode } from 'types/index'
+import getCurrentVacDays from 'selectors/currentVacDays'
+import type { User, Store, Absence, AbsenceType, Position, BundeslandCode, AbsenceCorrection } from 'types/index'
 import './styles.css'
 
 type OwnProps = {
@@ -22,7 +23,9 @@ type ConProps = {
   month: number,
   type: AbsenceType | 'all',
   positions: Array<Position>,
-  bundesland: BundeslandCode
+  currentVacDays: { [userID: string]: number },
+  bundesland: BundeslandCode,
+  absenceCorrections: Array<AbsenceCorrection>,
 }
 
 type Props = OwnProps & ConProps
@@ -31,7 +34,19 @@ class AbsenceCalendar extends PureComponent {
   props: Props
 
   render() {
-    const { users, absences, year, month, branch, adminMode, absenceSums, type, positions, bundesland } = this.props
+    const {
+      users,
+      absences,
+      year,
+      month,
+      branch,
+      adminMode,
+      absenceSums,
+      type,
+      positions,
+      bundesland,
+      absenceCorrections,
+      currentVacDays } = this.props
 
     return(
       <fb className="absenceCalendarMain">
@@ -52,6 +67,8 @@ class AbsenceCalendar extends PureComponent {
           users={users}
           adminMode={adminMode}
           positions={positions}
+          currentVacDays={currentVacDays}
+          absenceCorrections={absenceCorrections}
         />
       </fb>
     )
@@ -67,6 +84,8 @@ const mapStateToProps = (state: Store, ownProps: OwnProps) => {
     year: state.ui.absence.currentYear,
     month: state.ui.absence.currentMonth,
     type: state.ui.absence.currentType,
+    currentVacDays: getCurrentVacDays(state),
+    absenceCorrections: state.absencePlaner.absenceCorrections.filter(a => a.year === state.ui.absence.currentYear),
     bundesland: (state.core.accountDetails.preferences.bundesland: any),
   }
 }

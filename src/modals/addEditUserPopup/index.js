@@ -2,6 +2,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import omit from 'lodash/omit'
+import mapValues from 'lodash/mapValues'
 import { Toast } from 'helpers/iziToast'
 import { saveUserToDB, addInvitationJob } from 'actions/users'
 import EmailStatus 			from './emailStatus'
@@ -10,15 +11,15 @@ import SModal 					from 'components/sModal'
 import SButton 					from 'components/sButton'
 import FlatInput 				from 'components/flatInput'
 import FlatFormRow 			from 'components/flatFormRow'
-import WorkDaysPicker 	from 'components/workDaysPicker'
 
 import ErrorMessageBar  	from './errorMessageBar'
 import PositionSelect  		from './positionSelect'
 import BranchSelect 			from './branchSelect'
+import WeeklyHoursInput 	from './weeklyHoursInput'
 
-import { getNextID, isValidEmail, isIntStr, isFloatStr, inpToInt, replaceDotsWithCommas } from 'helpers/index'
-import { floatToMins, minsToFloat, getAvgDailyMins, minsToDetailedTime } from './localHelpers'
-import type { WorkDays, UserStatus, Store } from 'types/index'
+import { getNextID, isValidEmail, isFloatStr } from 'helpers/index'
+import { floatToMins, minsToFloat } from './localHelpers'
+import type { UserStatus, Store, User } from 'types/index'
 import './styles.css'
 
 class AddEditUserPopup extends PureComponent {
@@ -29,9 +30,7 @@ class AddEditUserPopup extends PureComponent {
 		branches: 				{},
 		position: 				string,
 		status: 					UserStatus,
-		workDays: 				WorkDays,
-		weeklyHours: 			string,
-		vacDays: 					string,
+		weeklyHours: 			{ [smartWeek: string]: string },
 		errorText: 				string,
 	}
 
@@ -50,11 +49,16 @@ class AddEditUserPopup extends PureComponent {
 			branches: 				user ? user.branches 		: getDefaultBranch(),
 			position: 				user ? user.position 		: 'p001',
 			status: 					user ? user.status 			: 'NOT_INVITED',
-			workDays: 				user ? user.workDays 		: { mo: 1, tu: 1, we: 1, th: 1, fr: 1, sa: 1 },
-			vacDays:   				user ? user.vacDays			: '',
-			weeklyHours: 			user ? minsToFloat(user.weeklyMins) 		: '', // gets stripped away before saving to DB
-			errorText: 				'', 																					 // gets stripped away before saving to DB
+			weeklyHours:      this.getDefault_weeklyHours(),  // we display weeklyHours -> but store the weeklyMins as integers in DB
+			errorText: 				'',  // gets stripped away before saving to DB
 		}
+	}
+
+	getDefault_weeklyHours = () => {
+		const { user } = this.props
+		return user
+			? mapValues(user.weeklyMins, (mins => minsToFloat(mins)))
+			: { '200001': '' } // 200001 this is the default -> we dont pick the current smartWeek -> so shifts can be created for the past
 	}
 
 	onSaveClicked = (invite: boolean) => {
@@ -66,22 +70,17 @@ class AddEditUserPopup extends PureComponent {
 		if(!isValidEmail(email))  				 errorText = 'Bitte geben Sie eine gültige Email-Adresse an'
 		if(name === '') 									 errorText = 'Bitte geben Sie einen Benutzernamen ein.'
 
-		if(errorText){
-			this.setState({errorText})
-		} else {
-			this.saveUser(invite)
-			this.props.closeModal()
-		}
+		if(errorText) return this.setState({errorText}) // dont proceed here, if errorText is not falsy
+		this.saveUser(invite)
+		this.props.closeModal()
 	}
 
 	saveUser = (sendInvite: boolean) => {
-		const { weeklyHours, vacDays, workDays } = this.state
-		let dbUser  = {
+		const { weeklyHours } = this.state
+		let dbUser: User  = {
 			...this.props.user,   // props like 'isAdmin' are not in state, thats why doing ...user ( from props )
-			...omit(this.state, ['errorText', 'avgHours', 'avgMins', 'weeklyHours']),
-			avgDailyMins: getAvgDailyMins(workDays, weeklyHours),
-			vacDays:			vacDays ? inpToInt(vacDays) : null,
-			weeklyMins: 	floatToMins(weeklyHours)
+			...omit(this.state, ['errorText', 'weeklyHours']), // weeklyHours is just to display it here -> we store it as weeklyMins on DB
+			weeklyMins: mapValues(weeklyHours, (mins => floatToMins(mins)))
 		}
 
 		sendInvite && this.sendInvitation()
@@ -99,7 +98,6 @@ class AddEditUserPopup extends PureComponent {
 
 	updateUser = (key, newValue) => this.setState({[key]: newValue })
 
-	initialOvertimeChanged 		= (val) => this.updateUser('initialOvertime', val)
 	nameInputChanged 					= (val) => this.updateUser('name', val)
 	positionChanged 					= (val) => this.updateUser('position', val.value)
 	branchesChanged 					= (val) => this.updateUser('branches', val.reduce((acc, val) => ({ ...acc, [val.value]: true }) , {}))
@@ -113,21 +111,13 @@ class AddEditUserPopup extends PureComponent {
 	}
 
 	weeklyHoursChanged 	= (weeklyHours) => isFloatStr(weeklyHours) 	&& this.setState({ weeklyHours })
-	onVacDaysChanged 		= (vacDays) 		=> isIntStr(vacDays) 	 			&& this.setState({ vacDays })
-	avgDailyMinsChanged = (target, inp) => isIntStr(inp) 		   			&& this.setState({[target]: inp})
-	workDaysChanged 		= (workDays) 		=> this.setState({ workDays })
 
 	render() {
-		const { name, email, weeklyHours, position, branches, status, workDays, vacDays } = this.state
+		const { name, email, weeklyHours, position, branches, status } = this.state
 		const allBranches 	= this.props.branches
 		const allPositions 	= this.props.positions
 		const editMode 			= !!this.props.user
-		const avgHours 			= Math.round(getAvgDailyMins(workDays, weeklyHours) / 60 * 100) / 100
-		const avgHoursStr 	= replaceDotsWithCommas(avgHours) + ' Stunden'
 		const validEmail    = isValidEmail(email)
-
-		const avgTimeStr    = minsToDetailedTime(getAvgDailyMins(workDays, weeklyHours))
-		const avgTimeTTip   = 'Durchschnittliche tägliche Arbeitszeit: ' + avgTimeStr
 
 
 		return (
@@ -152,14 +142,7 @@ class AddEditUserPopup extends PureComponent {
 								</FlatFormRow>
 							}
 							<FlatFormRow label='Wochenstunden'>
-								<FlatInput value={weeklyHours} onInputChange={this.weeklyHoursChanged} defaultText='0'/>
-							</FlatFormRow>
-							<FlatFormRow label='Urlaubstage'>
-								<FlatInput value={vacDays} onInputChange={this.onVacDaysChanged} defaultText='0'/>
-							</FlatFormRow>
-							<FlatFormRow label='Arbeitstage'>
-								<WorkDaysPicker workDays={workDays} onChange={this.workDaysChanged} />
-								{ !!avgHours && <fb className='avgDailyHours'  data-balloon={avgTimeTTip} >&Oslash; {avgHoursStr}</fb> }
+								<WeeklyHoursInput weeklyHours={weeklyHours} setWeeklyHours={(weeklyHours) => this.setState({ weeklyHours })} extendable={editMode}/>
 							</FlatFormRow>
 						</fb>
 					</fb>

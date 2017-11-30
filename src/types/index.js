@@ -65,13 +65,10 @@ export type User = {
   position: string,
   branches: {},
   email: ?string,
-  weeklyMins: number,
+  weeklyMins: { [ weekID: string]: number },
   status: UserStatus,
   isAdmin?: true | null, // can be set to null -> so it gets removed on DB
   isSuperAdmin?: true,
-  workDays: WorkDays,
-  vacDays?: number,
-  avgDailyMins: number,
   deleted?: true | null, // can be set to null -> so it gets removed on DB
 }
 

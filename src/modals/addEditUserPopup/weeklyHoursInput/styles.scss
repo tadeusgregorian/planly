@@ -7,50 +7,79 @@
     flex-direction: column;
 
     .weeklyHoursRow{
-      height: 44px;
+      height: 38px;
+      align-self: stretch;
       border-bottom: 1px solid #e5e5e5;
 
       .dateInfo{
         align-items: center;
         padding-left: 12px;
-        background-color: #f1f1f1;
         color: #a2a2a2;
         font-weight: 300;
+        border-right: 1px solid #e5e5e5;
+
+        &:not(.active){
+          background-color: #f1f1f1;
+        }
+
+        .dateInfoText{
+          width: 60px;
+        }
       }
     }
 
-    .datePicker{
-      height: 43px;
-      border-top: none;
-      border-bottom: none;
-      border-left: 1px solid #f1f1f1;
-      border-right: 1px solid #e5e5e5;
-      padding: 0 8px;
-      font-size: 16px;
-      margin-left: 0px;
-      max-width: 100px;
-      text-align: center;
-      background-color: #f1f1f1;
-      color: #a2a2a2;
-      font-weight: 300;
+    .datePickerWrapper{
+      height: 100%;
+      align-items: center;
 
-      &.active{
-        cursor: pointer;
-        color: #5a5a5a;
-        background-color: #f1f1f1;
-        font-weight: 400;
+      &:hover{
+        background: #d7edff;
+      }
 
-        &:hover{
-          background-color: #e5e5e5;
+      >*{
+        height: 100%;
+        display: flex;
+        align-items: center;
+      }
+
+      .datePicker{
+        height: 100%;
+        border-top: none;
+        border-bottom: none;
+        border: none;
+        padding: 0 8px;
+        font-size: 16px;
+        margin-left: 0px;
+        max-width: 100px;
+        text-align: center;
+        background: none;
+        color: #a2a2a2;
+        font-weight: 300;
+
+        &.active{
+          cursor: pointer;
+          color: #5a5a5a;
+          font-weight: 400;
+
+          &:hover{
+            //background-color: #e5e5e5;
+          }
         }
       }
     }
   }
 
+  &:hover{
+    .actionButtons{
+      display: flex;
+    }
+  }
+
   .actionButtons{
     position: absolute;
-    bottom: 9px;
-    right: 10px;
+    bottom: 5px;
+    right: 5px;
+    display: none;
 
     .lightButton{
       cursor: pointer;

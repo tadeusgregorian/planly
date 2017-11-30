@@ -1,11 +1,11 @@
 //@flow
-import React from 'react'
+import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import cn from 'classnames'
 
 import { openModal } from 'actions/ui/modals'
-import type { Store, User, AbsenceType, AbsenceCorrection } from 'types/index'
+import type { User, AbsenceType, AbsenceCorrection } from 'types/index'
 import './styles.css'
 
 type OwnProps = {
@@ -14,22 +14,29 @@ type OwnProps = {
   daysSum: number,
   year: number,
   type: AbsenceType | 'all',
+  currentVacDays: ?number,
+  absenceCorrection: ?AbsenceCorrection,
 }
 
 type ConProps = {
-  absenceCorrection: ?AbsenceCorrection ,
-  openModal: Function
+  openModal: Function,
 }
 
 type Props = OwnProps & ConProps
 
-const SumsDisplay = ({ adminMode, type, user, year, daysSum, openModal, absenceCorrection }: Props) => {
+class SumsDisplay extends PureComponent{
+  props: Props
 
-  const daysSumClicked = () => {
-    adminMode && type === 'vac' && openModal('ABSENCE_CORRECTION', { user: user.id, absentDays: daysSum })
+  daysSumClicked = () => {
+    const { adminMode, type, user, currentVacDays, daysSum, openModal } = this.props
+    adminMode && type === 'vac' && openModal('ABSENCE_CORRECTION', {
+      user: user.id,
+      vacDays: currentVacDays,
+      absentDays: daysSum,
+    })
   }
 
-  const getTypeDaysGerman = (type) => {
+  getTypeDaysGerman = (type) => {
     switch (type) {
       case 'vac':   return 'Urlaubstage'
       case 'ill':   return 'Krankheitstage'
@@ -38,38 +45,37 @@ const SumsDisplay = ({ adminMode, type, user, year, daysSum, openModal, absenceC
     }
   }
 
-  const propToInt = (obj: ?{}, prop: string) => obj ? ( obj[prop] || 0 ) : 0
+  propToInt = (obj: ?{}, prop: string) => obj ? ( obj[prop] || 0 ) : 0
 
-  const vacMode           = type === 'vac'
-  const vacDays           = user.vacDays
-  const extraDays         = propToInt(absenceCorrection, 'extraDays')
-  const transferedDays    = propToInt(absenceCorrection, 'transferedDays')
-  const vacDaysCorrected  = propToInt(absenceCorrection, 'vacDaysCorrected')
-  const resultingVacDays  = vacDaysCorrected || vacDays + transferedDays
+  render(){
+    const { adminMode, type, daysSum, year, currentVacDays, absenceCorrection } = this.props
 
-  return(
-    <fb
-      className={cn({ absenceSumsDisplayMain: 1, adminMode, vacMode })}
-      data-balloon={'Summe der ' + getTypeDaysGerman(type) + ' in ' + year}
-      data-balloon-pos='right'
-      onClick={daysSumClicked}
-    >
-      <fb className='count'>{daysSum + extraDays}</fb>
-      { vacMode && vacDays && <fb className='vacDays'>{'/ ' + resultingVacDays }</fb>}
-      { absenceCorrection && adminMode && <fb className='editedIcon icon icon-mode_edit'></fb> }
-    </fb>
-  )
+    const vacMode           = type === 'vac'
+    const extraDays         = this.propToInt(absenceCorrection, 'extraDays')
+    const vacDaysTransfered = this.propToInt(absenceCorrection, 'vacDaysTransfered')
+    const vacDaysCorrected  = this.propToInt(absenceCorrection, 'vacDaysCorrected')
+
+    const resultingVacDays  = vacDaysCorrected || currentVacDays + vacDaysTransfered
+
+    return(
+      <fb
+        className={cn({ absenceSumsDisplayMain: 1, adminMode, vacMode })}
+        data-balloon={'Summe der ' + this.getTypeDaysGerman(type) + ' in ' + year}
+        data-balloon-pos='right'
+        onClick={this.daysSumClicked}
+      >
+        <fb className='count'>{daysSum + extraDays}</fb>
+        { vacMode && !!currentVacDays && <fb className='vacDays'>{'/ ' + resultingVacDays }</fb>}
+        {/* { currentCorrection && adminMode && <fb className='editedIcon icon icon-mode_edit'></fb> } */}
+      </fb>
+    )
+  }
 }
+
 
 const actionCreators = {
   openModal
 }
 
-const mapStateToProps = (state: Store, ownProps: OwnProps) => ({
-  absenceCorrection: ownProps.type === 'vac'
-    ? state.absencePlaner.absenceCorrections.find(ac => ac.user === ownProps.user.id)
-    : null
-})
-
-const connector: Connector<OwnProps, Props> = connect(mapStateToProps, actionCreators)
+const connector: Connector<OwnProps, Props> = connect(null, actionCreators)
 export default connector(SumsDisplay)

@@ -42,13 +42,10 @@ const getEmptyAccount = (email): DBAccount => ({
       email: email,
       position: 'p001',
       branches: { b001: true },
-      weeklyMins: 2400,
+      weeklyMins: { '200001': 2400 },
       status: 'ACTIVE',
       isAdmin: true,
       isSuperAdmin: true, // SuperAdmin is only the creator of the account.
-      initialOvertime: { smartWeek: momToSmartWeek(moment()), hours: 0 },
-      workDays: { mo: 1, tu: 1, we: 1, th: 1, fr: 1, sa: 1 },
-      avgDailyMins: 520,
     }
   },
   branches: {

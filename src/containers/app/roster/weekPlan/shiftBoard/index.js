@@ -5,7 +5,7 @@ import type { Connector } from 'react-redux'
 import cn from 'classnames'
 
 import { getDay, getOvertimeStatus } from './localHelpers'
-import type { User, Shifts, CellRef, Store, ShiftRef, Position, Correction, ExtraHours, Absence } from 'types/index'
+import type { User, Shifts, CellRef, Store, ShiftRef, Position, Correction, ExtraHours } from 'types/index'
 import getCurrentUser from 'selectors/currentUser'
 import getInitialStartWeeks from 'selectors/initialStartWeeks'
 import getCurrentWeekSums from 'selectors/weekSumsOfCurrentWeek'
@@ -13,6 +13,7 @@ import getCurrentOvertimes from 'selectors/overtimesOfCurrentWeek'
 import getCurrentCorrections from 'selectors/correctionsOfCurrentWeek'
 import getVisibleUsers from 'selectors/visibleUsersOfShiftBoard'
 import getAbsentDaysOfUsers from 'selectors/absentDaysOfUsers'
+import getCurrentWeeklyMins from 'selectors/currentWeeklyMins'
 import type { AbsentDaysOfUsers } from 'selectors/absentDaysOfUsers'
 //import getUsersAdjustedToWeek from 'selectors/usersAdjustedToWeek'
 
@@ -45,6 +46,7 @@ type ConProps = {
   absentDaysOfUsers: AbsentDaysOfUsers,
   currentUser: User,
   focusedShiftRef: ?ShiftRef,
+  currentWeeklyMins: {[weekID: string]: number}
 }
 
 type Props = OwnProps & ConProps
@@ -69,6 +71,7 @@ class ShiftBoard extends PureComponent{
       absentDaysOfUsers,
       currentWeekSums,
       currentOvertimes,
+      currentWeeklyMins,
       currentCorrections } = this.props
 
     return <UserRow
@@ -84,6 +87,7 @@ class ShiftBoard extends PureComponent{
       timeDetailsVisible={timeDetailsVisible}
       userID={userID}
       currentUser={currentUser}
+      weeklyMins={currentWeeklyMins[userID]}
       shifts={shifts.filter(s => s.user === userID)}
       extraHours={extraHours.filter(e => e.user === userID)}
       absentDays={absentDaysOfUsers[userID] || {}} // we need to OR here, cause openUser is causeing undefined here
@@ -141,6 +145,7 @@ const mapStateToProps = (state: Store) => ({
   visibleUsers: getVisibleUsers(state),
   absentDaysOfUsers: getAbsentDaysOfUsers(state),
   focusedShiftRef: state.ui.roster.shiftBoard.focusedShiftRef,
+  currentWeeklyMins: getCurrentWeeklyMins(state),
   currentUser: getCurrentUser(state)
 })
 

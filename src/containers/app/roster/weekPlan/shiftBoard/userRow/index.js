@@ -29,6 +29,7 @@ type Props = {
   currentUser: User,
   focusedShiftRef: ?ShiftRef,
   cellUnderMouse: ?CellRef,
+  weeklyMins: ?number,
   absentDays: { [ weekDay: number ]: AbsenceType },
 }
 
@@ -52,11 +53,11 @@ export default class UserRow extends PureComponent{
       currentUser,
       focusedShiftRef,
       cellUnderMouse,
+      weeklyMins,
       absentDays } = this.props
 
       const isAdmin      = currentUser.isAdmin
       const isOwnRow     = currentUser.id === userID
-      const weeklyMins   = user ? user.weeklyMins : 0
       const weekSum      = templateMode ? calculateWeekSum(shifts) : this.props.weekSum
       const isAuthorized = isAdmin || isOwnRow
 
@@ -76,7 +77,7 @@ export default class UserRow extends PureComponent{
               user={user}
               position={position}
               weekSum={weekSum}
-              weeklyMins={weeklyMins}
+              weeklyMins={(weeklyMins || 0)}
               overtime={overtime}
               currentUser={currentUser}
               timeDetailsVisible={timeDetailsVisible}
@@ -109,7 +110,7 @@ export default class UserRow extends PureComponent{
           })}
         </fb>
         { !templateMode && timeDetailsVisible && <OvertimeCell
-          overtime={overtime + weekSum - weeklyMins}
+          overtime={overtime + weekSum - ( weeklyMins || 0 )}
           status={overtimeStatus}
           type='POST'
           empty={isOpen || !isAuthorized}
