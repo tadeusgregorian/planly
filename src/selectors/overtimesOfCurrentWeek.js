@@ -48,11 +48,7 @@ const getCurrentOvertimes = (
       const initialStartWeek = initialStartWeeks[user]
       if(currentWeekID < initialStartWeek) return;
 
-      const currentWeekMom = smartWeekToMom(currentWeekID)
-      const startWeekMom = smartWeekToMom(initialStartWeek)
-      const totalWeeks = Math.round(currentWeekMom.diff(startWeekMom, 'days') / 7)
-      const userObj: User = (users.find(u => u.id === user): any) // telling flow there is definitely a User comming out
-      const plannedMinutes = userObj.weeklyMins * totalWeeks
+      const plannedMinutes = 100000 //@TODO come back and do the coding here!
       currentTotalMins[user] = currentTotalMins[user] - plannedMinutes
     })
 
