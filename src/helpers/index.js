@@ -1,6 +1,7 @@
 //@flow
 import moment from 'moment'
-import { doubleD } from './roster'
+import { doubleD, getYear, getWeek  } from './roster'
+import { weeksInYear_DE } from 'constants/roster'
 
 export * from './dateHelpers'
 export * from './roster'
@@ -126,3 +127,25 @@ export const onMobile = () => {
 }
 
 export const inp = (e) => e.target.value
+
+
+
+export const weeksDiff = (startWeek: number, endWeek: number) => {
+  if( !parseInt(startWeek, 10) || !parseInt(endWeek, 10)){
+    throw new Error('weeksDiff accepts only numbers tade. got: ' + startWeek + ' ' + endWeek)
+  }
+  if(startWeek >= endWeek) return 0
+
+  const sw = { year: getYear(startWeek), week: getWeek(startWeek) }
+  const ew = { year: getYear(endWeek), week: getWeek(endWeek) }
+
+  if(sw.year === ew.year) return ew.week - sw.week
+
+  let count = 0;
+  for(let i = sw.year; i<= ew.year; i++){
+    if(i === sw.year) count += weeksInYear_DE[i] - sw.week
+    if(i === ew.year) count += ew.week
+    if(i !== sw.year && i !== ew.year) count += weeksInYear_DE[i]
+  }
+  return count
+}
