@@ -1,7 +1,7 @@
 //@flow
 import { createSelector } from 'reselect'
 import getInitialStartWeeks from './initialStartWeeks'
-import { smartWeekToMom } from 'helpers/index'
+import getCurrentWeeklyMinsSums from './currentWeeklyMinsSums'
 import type { User, Correction } from 'types/index'
 
 const getCurrentWeekID    = (state: Store) => state.ui.roster.currentWeekID
@@ -13,11 +13,12 @@ const extractUser = (weekSumsKey) => weekSumsKey.substr(0,4)
 const extractWeek = (weekSumsKey) => weekSumsKey.slice(-6)
 
 const getCurrentOvertimes = (
-  currentWeekID:     string,
-  corrections:       Array<Correction>,
-  initialStartWeeks: {[userID: string]: string},
-  weekSums:          {[string]: number},
-  users:              Array<User>
+  currentWeekID:         string,
+  corrections:           Array<Correction>,
+  initialStartWeeks:     {[userID: string]: string},
+  currentWeeklyMinsSums: {[userID: string]: number},
+  weekSums:              {[userID_weekID: string]: number},
+  users:                 Array<User>
 ): {[string]: number} => {
 
     if(!corrections.length) return {}
@@ -44,11 +45,7 @@ const getCurrentOvertimes = (
     })
 
     Object.keys(currentTotalMins).forEach(user =>  { // here we remove the minutes the user had to work between startWeek and currentWeek
-
-      const initialStartWeek = initialStartWeeks[user]
-      if(currentWeekID < initialStartWeek) return;
-
-      const plannedMinutes = 100000 //@TODO come back and do the coding here!
+      const plannedMinutes   = currentWeeklyMinsSums[user]
       currentTotalMins[user] = currentTotalMins[user] - plannedMinutes
     })
 
@@ -59,5 +56,6 @@ export default createSelector([
   getCurrentWeekID,
   getCorrections,
   getInitialStartWeeks,
+  getCurrentWeeklyMinsSums,
   getWeekSums,
   getUsers], getCurrentOvertimes)

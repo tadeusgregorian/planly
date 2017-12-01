@@ -3,7 +3,9 @@
 import firebase from 'firebase'
 import moment from 'moment'
 import { generateGuid, momToSmartWeek } from 'helpers/index'
+import { beginningOfTime } from 'constants/roster'
 import type { User, Position, Branch } from 'types/index'
+
 
 export const createAccount = (firebaseUserID: string, email: string) => {
   const accountID = generateGuid()
@@ -42,7 +44,7 @@ const getEmptyAccount = (email): DBAccount => ({
       email: email,
       position: 'p001',
       branches: { b001: true },
-      weeklyMins: { '200001': 2400 },
+      weeklyMins: { [beginningOfTime]: 2400 },
       status: 'ACTIVE',
       isAdmin: true,
       isSuperAdmin: true, // SuperAdmin is only the creator of the account.

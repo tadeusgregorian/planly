@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react'
 import FlatInput from 'components/flatInput'
 import moment from 'moment'
 import omit from 'lodash/omit'
+import { beginningOfTime } from 'constants/roster'
 import { withoutProp, momToSmartWeek, smartWeekToMom, isFloatStr } from 'helpers/index.js'
 import DatePicker from 'react-datepicker';
 import cn from 'classnames'
@@ -72,7 +73,7 @@ export default class WeeklyHoursInput extends PureComponent{
   renderSinglerow = () => (
     <fb className="inputWrapper">
       <FlatInput
-        value={this.props.weeklyHours['200001']}
+        value={this.props.weeklyHours[beginningOfTime]}
         onInputChange={this.editLatest}
         defaultText='z.B. 40' />
     </fb>

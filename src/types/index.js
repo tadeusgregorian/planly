@@ -153,10 +153,14 @@ export type Shift = {
 }
 
 export type Shifts = Array<Shift>
-// export type DBShift = {
-//   branchDay: string,
-//   userDay: string
-// } & PreDBShift
+
+export type MiniShift = {
+  id: string,
+  branch: string,
+  day: Day,
+  mins: number,
+  user: string
+}
 
 export type CellRef = {
   day: Day,

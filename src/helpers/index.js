@@ -128,9 +128,7 @@ export const onMobile = () => {
 
 export const inp = (e) => e.target.value
 
-
-
-export const weeksDiff = (startWeek: number, endWeek: number) => {
+export const weeksDiff = (startWeek: string, endWeek: string) => {
   if( !parseInt(startWeek, 10) || !parseInt(endWeek, 10)){
     throw new Error('weeksDiff accepts only numbers tade. got: ' + startWeek + ' ' + endWeek)
   }

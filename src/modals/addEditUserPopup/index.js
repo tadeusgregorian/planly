@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import omit from 'lodash/omit'
 import mapValues from 'lodash/mapValues'
+import { beginningOfTime } from 'constants/roster'
 import { Toast } from 'helpers/iziToast'
 import { saveUserToDB, addInvitationJob } from 'actions/users'
 import EmailStatus 			from './emailStatus'
@@ -58,7 +59,7 @@ class AddEditUserPopup extends PureComponent {
 		const { user } = this.props
 		return user
 			? mapValues(user.weeklyMins, (mins => minsToFloat(mins)))
-			: { '200001': '' } // 200001 this is the default -> we dont pick the current smartWeek -> so shifts can be created for the past
+			: { [beginningOfTime]: '' } // its the default -> we dont pick the current smartWeek -> so shifts can be created for the past
 	}
 
 	onSaveClicked = (invite: boolean) => {

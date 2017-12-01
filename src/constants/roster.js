@@ -11,6 +11,8 @@ export const popOptionsHeight = 81;
 export const weekDays = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
 export const weekDaysGerman = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']
 
+export const beginningOfTime = '200001'
+
 export const weeksInYear_DE = {
   '2015': 53,
   '2016': 52,

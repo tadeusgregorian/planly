@@ -23,14 +23,14 @@ export const setRosterListeners: ThunkAction = () => (dispatch, getState: GetSta
   setShiftWeekListener(dispatch, getState)
   setExtraHoursListener(dispatch, getState)
   setDayNotesListener(dispatch, getState)
-  setWeekAbsenceListener()(dispatch, getState) // curreid cause Mobile is calling this as a Thunk
+
 }
 
-export const setWeekAbsenceListener = () => (dispatch: Dispatch, getState: GetState) => {
-  const weekID = getState().ui.roster.currentWeekID
-  const path   = getFBPath('absencesWeekly', [weekID])
-  createFirebaseListener(dispatch, getState, 'weekAbsences', path)
-}
+// export const setWeekAbsenceListener = () => (dispatch: Dispatch, getState: GetState) => {
+//   const weekID = getState().ui.roster.currentWeekID
+//   const path   = getFBPath('absencesWeekly', [weekID])
+//   createFirebaseListener(dispatch, getState, 'weekAbsences', path)
+// }
 
 const setExtraHoursListener = (dispatch: Dispatch, getState: GetState) => {
   const { weekID, branch } = getWeekAndBranch(getState)

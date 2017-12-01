@@ -18,7 +18,7 @@ const nonWorkersHidden = simpleReducer({
   remove_shiftWeek     : false,
 })
 
-const timeDetailsVisible = (state = false, a) => {
+const timeDetailsVisible = (state = true, a) => {  // @TODO set default to false again 
   if(a.type === 'TOGGLE_SHIFTBOARD_TIME_DETAILS') return !state
   return state
 }
