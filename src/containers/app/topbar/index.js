@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom'
 import { logoutFromFirebase } from 'actions/auth'
 
 import getCurrentUser from 'selectors/currentUser'
+import UserOptions from './userOptions'
 import TopbarButton from './topbarButton'
 import type { User, Store } from 'types/index'
 import './styles.css'
@@ -19,18 +20,18 @@ type Props = {
 
   const logoutPressed = () => { logoutFromFirebase() }
   const isAdmin = currentUser && currentUser.isAdmin
+  const userName = currentUser && currentUser.name
 
   return(
     <fb className="topbarMain">
       <fb className='centered'>
         <fb className="side left">
-                       <TopbarButton label='Dienstplan'      to='/app/dienstplan'    notifications={shiftEditsCount}/>
-                       <TopbarButton label='Abwesenheit'     to='/app/abwesenheit'   notifications={vacRequestsCount} />
+                       <TopbarButton label='Dienstplan'      to='/app/dienstplan'    notifications={isAdmin && shiftEditsCount}/>
+                       <TopbarButton label='Abwesenheit'     to='/app/abwesenheit'   notifications={isAdmin && vacRequestsCount} />
           { isAdmin && <TopbarButton label='Einstellungen'   to='/app/einstellungen' /> }
         </fb>
         <fb className="side right">
-          <fb className='userName'>{currentUser && currentUser.name}</fb>
-          <fb className="icon logoutIcon icon-arrow-right2" onClick={logoutPressed} />
+          <UserOptions logout={logoutPressed} userName={userName} />
         </fb>
       </fb>
     </fb>

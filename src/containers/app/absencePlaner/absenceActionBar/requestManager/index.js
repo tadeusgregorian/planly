@@ -51,10 +51,9 @@ class RequestManager extends PureComponent {
     const startMonth = smartToMom(vacRequest.startDate).month() // watch out months go from 0 - 11, also currentMonth: 0 - 11
 
     currentBranch !== 'all' && !user.branches[currentBranch] && setCurrentBranch('all')
-    currentType   !== 'all' && currentType !== 'vac'         && setCurrentType('all')
-    currentYear   !== vacRequest.year                        && setCurrentYear(smartDateToYear(vacRequest.startDate))
+    currentType   !== 'all' && currentType !== 'vac'         && setCurrentType('vac')
+    currentYear   !== vacRequest.year                        && setCurrentYear(vacRequest.year)
     currentMonth  !== startMonth                             && setCurrentMonth(startMonth)
-
   }
 
   render(){

@@ -35,7 +35,7 @@ class TemplateActionBar extends PureComponent {
     const tempsFlatOfBranch = templatesFlat.filter(t => t.branch === currentBranch)
 
     return(
-      <fb className="actionBarMain">
+      <fb className="template_actionBarMain">
         <fb className='headline'>Vorlage</fb>
         <TemplateSelect
           templatesFlat={tempsFlatOfBranch}

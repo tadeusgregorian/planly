@@ -6,10 +6,13 @@ type Props = {
   totalDays: ?number,
   effectiveDays: ?number,
   adminMode: boolean,
+  excludingSaturdays: boolean,
   openEffectiveDaysModal: Function,
 }
 
 export default (props: Props) => {
+  const saturdaysText = props.excludingSaturdays ? ', Samstage' : ''
+  const effectiveDaysBalloon = `ohne Feiertage${ saturdaysText } und Sonntage`
 
   return(
     <fb className="absenceDetailsDisplayMain">
@@ -19,7 +22,7 @@ export default (props: Props) => {
         <fb className='count totalDays'>{props.totalDays}</fb>
       </fb>
       <fb className='col effective'>
-        <fb className='label effective'>Tage effektiv</fb>
+        <fb className='label effective' data-balloon={effectiveDaysBalloon}>Tage effektiv</fb>
         <fb className='count effective'>{props.effectiveDays}</fb>
       </fb>
       { props.adminMode &&

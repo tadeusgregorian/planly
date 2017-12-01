@@ -9,7 +9,7 @@ import omit from 'lodash/omit'
 import getCurrentUser from 'selectors/currentUser'
 import { openModal } from 'actions/ui/modals'
 import { saveAbsenceToDB, removeAbsenceFromDB } from 'actions/absence'
-import { generateGuid, momToSmart } from 'helpers/index'
+import { generateGuid, momToSmart, smartDatesDiff } from 'helpers/index'
 import { getEffectiveDays, getTotalDays, getButtonsToShow, absenceOverlaps } from './localHelpers'
 import type { Store, User, Absence, AbsenceType, AbsenceTypeFilter, AbsenceStatus, AccountPreferences, BundeslandCode } from 'types/index'
 
@@ -32,7 +32,6 @@ type State = {
   year: number,
   startDate: ?number,
   endDate: ?number,
-  totalDays: ?number,
   effectiveDays: ?number,
   note: ?string,
   focusedInput: any,
@@ -75,7 +74,6 @@ class AbsenceModal extends PureComponent{
       year:           absence ? absence.year          : currentYear,
       startDate:      absence ? absence.startDate              : null,
       endDate:        absence ? absence.endDate                : null,
-      totalDays:      absence ? absence.totalDays              : null,
       effectiveDays:  absence ? absence.effectiveDays          : null,
       note:           absence ? (absence.note        || '')    : '',
       focusedInput:   null, // we omit this before saving to db!
@@ -90,15 +88,16 @@ class AbsenceModal extends PureComponent{
 
   datesChanged = (d: {startDate: ?moment, endDate: ?moment}) => {
     const { id } = this.state
-    const { userID, absences } = this.props
+    const { userID, absences, preferences } = this.props
     const { startDate, endDate } = d
-    const bundesland: BundeslandCode = (this.props.preferences.bundesland: any) // at this moment bundesland is set - flow-fix
+    const { bundesland, excludingSaturdays } = preferences
     this.setState({
       startDate:      startDate ? momToSmart(startDate) : null,
       endDate:        endDate   ? momToSmart(endDate): null,
-      totalDays:      getTotalDays(startDate, endDate),
-      effectiveDays:  getEffectiveDays(startDate, endDate, bundesland),  // @TODO: getEffectiveDays needs to know to count saturday or sunday ?
+      effectiveDays:  getEffectiveDays(startDate, endDate, bundesland, excludingSaturdays),
     })
+
+    console.log(getTotalDays(startDate, endDate));
 
     if(!startDate || !endDate) return // if both dates are set -> check for validity of selected range
     if(endDate.year() !== startDate.year())                        return this.setErrorMsg('multiyear')
@@ -115,7 +114,7 @@ class AbsenceModal extends PureComponent{
   }
 
   saveAbsence   = (absenceDirty) => {
-    const cleanAbsence = omit(absenceDirty, ['focusedInput', 'errorMessage', 'totalDays'])
+    const cleanAbsence = omit(absenceDirty, ['focusedInput', 'errorMessage'])
     saveAbsenceToDB({
       ...cleanAbsence,
       note: this.state.note || null, // turning '' to null
@@ -131,8 +130,8 @@ class AbsenceModal extends PureComponent{
   }
 
   render(){
-    const { closeModal, user, currentUser, currentType } = this.props
-    const { type, startDate, endDate, focusedInput, note, status, errorMessage, totalDays, effectiveDays } = this.state
+    const { closeModal, user, currentUser, currentType, preferences } = this.props
+    const { type, startDate, endDate, focusedInput, note, status, errorMessage, effectiveDays } = this.state
     const adminMode = !!currentUser.isAdmin
     const isComplete = startDate && endDate && type && !errorMessage
     const accepted = status === 'accepted'
@@ -163,8 +162,9 @@ class AbsenceModal extends PureComponent{
             { startDate && endDate && !errorMessage &&
               <AbsenceDetailsDisplay
                 adminMode={adminMode}
-                totalDays={totalDays}
+                totalDays={smartDatesDiff(startDate, endDate)}
                 effectiveDays={effectiveDays}
+                excludingSaturdays={preferences.excludingSaturdays}
                 openEffectiveDaysModal={this.openEffectiveDaysModal}
               />
             }

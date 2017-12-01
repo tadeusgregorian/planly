@@ -226,10 +226,9 @@ export type TemplatesFlat = Array<TemplateFlat>
 export type BundeslandCode = 'BE'|'BB'|'HB'|'HH'|'HE'|'MV'|'NI'|'NW'|'RP'|'SL'|'SN'|'ST'|'SH'|'TH'
 
 export type AccountPreferences = {
-  workdaysPerWeek: number,
-  useAvgHoursForVac?: true,
-  useAvgHoursForIll?: true,
-  bundesland?: BundeslandCode,
+  excludingSunndays: boolean,
+  excludingSaturdays: boolean,
+  bundesland: BundeslandCode,
 }
 
 export type AccountDetails = {

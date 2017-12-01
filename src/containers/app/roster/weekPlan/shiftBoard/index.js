@@ -74,6 +74,8 @@ class ShiftBoard extends PureComponent{
       currentWeeklyMins,
       currentCorrections } = this.props
 
+      console.log(currentWeekSums);
+
     return <UserRow
       key={userID}
       isOpen={isOpen}

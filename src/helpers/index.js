@@ -74,6 +74,13 @@ export const smartToMom = (smartDate: number): moment => {
   return moment(smartDate, 'YYYYMMDD')
 }
 
+export const smartDatesDiff = (smart1: number, smart2: number) => {
+  const mom1 = smartToMom(smart1)
+  const mom2 = smartToMom(smart2)
+  if(!mom1 || !mom2) return 0
+  return mom2.diff(mom1, 'days') + 1
+}
+
 export const momToSmartWeek = (mom: moment): number => {
   const year = moment(mom).year()
   const week = doubleD(moment(mom).week())

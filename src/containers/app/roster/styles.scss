@@ -1,9 +1,9 @@
 .rosterMain{
 
-  overflow: scroll;
   flex-direction: column;
   align-items: center;
   width: 100vw;
+  overflow: visible;
 
   ::-webkit-scrollbar {
       -webkit-appearance: none;

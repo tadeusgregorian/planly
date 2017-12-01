@@ -1,8 +1,7 @@
 //@flow
 
 import firebase from 'firebase'
-import moment from 'moment'
-import { generateGuid, momToSmartWeek } from 'helpers/index'
+import { generateGuid } from 'helpers/index'
 import { beginningOfTime } from 'constants/roster'
 import type { User, Position, Branch } from 'types/index'
 
@@ -33,8 +32,8 @@ const getEmptyAccount = (email): DBAccount => ({
     creationDate: firebase.database.ServerValue.TIMESTAMP,
     preferences: {
       bundesland: 'HH',
-      useAvgHoursForVac: true,
-      workDaysPerWeek: 6,
+      excludingSaturdays: false,
+      excludingSunndays: true,
     }
   },
   users: {
