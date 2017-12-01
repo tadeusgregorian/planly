@@ -2,7 +2,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
-import type { Store, Shifts } from 'types/index'
+import type { Store } from 'types/index'
 import moment from 'moment'
 import { setRosterListeners, setInitialRosterListeners } from 'actions/listeners/roster'
 import { setAbsencesListener } from 'actions/listeners/absencePlaner'
@@ -15,7 +15,6 @@ import type { DataStatus } from 'types/index'
 import './styles.css'
 
 type ConnectedProps = {
-  shifts: Shifts,
   currentBranch: string,
   currentWeekID: string,
   templateMode: boolean,
@@ -56,7 +55,7 @@ class WeekPlan extends PureComponent{
         <fb className='shiftWeekMain'>
           { !templateMode ? <ActionBar /> : <TemplateActionBar /> }
           <WithMouseEvents>
-            <ShiftBoard shifts={this.props.shifts} templateMode={templateMode} loading={!shiftsLoaded} />
+            <ShiftBoard templateMode={templateMode} loading={!shiftsLoaded} />
           </WithMouseEvents>
         </fb>
       </fb>
@@ -74,7 +73,6 @@ const mapStateToProps = (state: Store) => ({
   currentBranch: state.ui.roster.currentBranch,
   currentWeekID: state.ui.roster.currentWeekID,
   templateMode: state.ui.roster.templateMode,
-  shifts: state.roster.shiftWeek,
   shiftWeekDataStatus: state.roster.shiftWeekDataStatus,
 })
 

@@ -21,7 +21,10 @@ export default class ShiftActionBar extends PureComponent {
   props: Props
   state = { fadeIn: false }
 
-  componentDidMount = () => { setTimeout(()=>this.setState({ fadeIn: true }), 1) }
+  componentDidMount = () => {
+    console.log('DID MOUNT');
+    setTimeout(()=> this.setState({ fadeIn: true }), 1)
+  }
 
   render(){
     const {

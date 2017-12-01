@@ -1,20 +1,17 @@
 //@flow
 import { db } from '../firebaseInit'
 import { getFBPath } from './../actionHelpers'
-import { weekDays } from 'constants/roster'
 import type { ExtraHours, ExtraHoursDB, GetState, ThunkAction } from 'types/index'
+import { updateWeekSums } from './weekSums'
 
 export const saveExtraHoursToDB:ThunkAction = (extraHours: ExtraHours, deleteIt = false) => (disp, getState: GetState) => {
-  const { id, user, day, mins} = extraHours
+  const { id } = extraHours
   const branch         = getState().ui.roster.currentBranch
   const weekID         = getState().ui.roster.currentWeekID
   const extraHoursDB   = extendExtraHours(extraHours, branch)
-  const mini           = { weekDay: weekDays.indexOf(day), mins }
 
   const update1 = {[ getFBPath('extraHours',     [weekID, id]) ]:       deleteIt ? null : extraHoursDB }
-  const update2 = {[ getFBPath('miniShiftWeeks', [weekID, user, id]) ]: deleteIt ? null : mini }
-
-  db().ref().update({ ...update1, ...update2 })
+  db().ref().update(update1).then(updateWeekSums(getState, [extraHours.user]))
 }
 
 

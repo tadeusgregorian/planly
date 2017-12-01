@@ -28,6 +28,7 @@ import './styles.css'
 type OwnProps = {
   shift: PreShift,
   inCreation?: boolean,
+  focused: boolean,
 }
 
 type ConProps = {
@@ -97,9 +98,15 @@ class ModifyShiftBox extends PureComponent{
     }
   }
 
-  componentWillMount    = () => {if(!this.props.inCreation) this.populateState()}
-  componentWillUnmount  = () => window.removeEventListener('keydown', this.onKeyDown)
+  componentWillMount    = () => {
+    if(!this.props.inCreation) this.populateState()
+  }
+  componentWillUnmount  = () => {
+    window.removeEventListener('keydown', this.onKeyDown)
+  }
   componentDidMount     = () => {
+    console.log('focused', this.props.focused);
+
     window.addEventListener('keydown', this.onKeyDown)
     setTimeout(()=>this.setState({ fadeIn: true }), 1)
   }
@@ -149,8 +156,8 @@ class ModifyShiftBox extends PureComponent{
       const minimalShift = zipShift(shiftInput)
       let shift = { ...minimalShift, day, user, id, note, location, position }
 
+      unfocusShift() // need to unfocus shift before saving Shift -> this causes an additional flash-mount-unmount otherwise. // -> inCreation prop is causing this issue.
       this.isAdmin ? saveShiftToDB(shift) : saveShiftEditToDB(shift, minimalShift)
-      unfocusShift()
     }
   }
 

@@ -14,6 +14,7 @@ import getCurrentCorrections from 'selectors/correctionsOfCurrentWeek'
 import getVisibleUsers from 'selectors/visibleUsersOfShiftBoard'
 import getAbsentDaysOfUsers from 'selectors/absentDaysOfUsers'
 import getCurrentWeeklyMins from 'selectors/currentWeeklyMins'
+import getShiftsOfCurrentBranch from 'selectors/shiftsOfCurrentBranch'
 import type { AbsentDaysOfUsers } from 'selectors/absentDaysOfUsers'
 //import getUsersAdjustedToWeek from 'selectors/usersAdjustedToWeek'
 
@@ -22,7 +23,6 @@ import UserRow from './userRow'
 import './styles.css'
 
 type OwnProps = {
-  shifts: Shifts,
   loading: boolean,
   templateMode: boolean,
   isDragging?: ?boolean,    // comes from HOC // there is a ? before the colon -> because flow thows error cause of injection of props
@@ -133,7 +133,7 @@ const mapStateToProps = (state: Store) => ({
   branch: state.ui.roster.currentBranch,
   users: state.core.users,
   positions: state.core.positions,
-  shifts: state.roster.shiftWeek,
+  shifts: getShiftsOfCurrentBranch(state),
   extraHours: state.roster.extraHours,
   extraHoursMode: state.ui.roster.extraHoursMode,
   timeDetailsVisible: state.ui.roster.shiftBoard.timeDetailsVisible,

@@ -23,7 +23,6 @@ export const setRosterListeners: ThunkAction = () => (dispatch, getState: GetSta
   setShiftWeekListener(dispatch, getState)
   setExtraHoursListener(dispatch, getState)
   setDayNotesListener(dispatch, getState)
-
 }
 
 // export const setWeekAbsenceListener = () => (dispatch: Dispatch, getState: GetState) => {
@@ -33,19 +32,17 @@ export const setRosterListeners: ThunkAction = () => (dispatch, getState: GetSta
 // }
 
 const setExtraHoursListener = (dispatch: Dispatch, getState: GetState) => {
-  const { weekID, branch } = getWeekAndBranch(getState)
+  const { weekID } = getWeekAndBranch(getState)
   const path      = getFBPath('extraHours', [weekID])
-  const queryRef  = db().ref(path).orderByChild('branch').equalTo(branch)
 
-  createFirebaseListener(dispatch, getState, 'extraHours', path, queryRef)
+  createFirebaseListener(dispatch, getState, 'extraHours', path)
 }
 
 const setShiftWeekListener = (dispatch, getState: any) => {
-  const { weekID, branch } = getWeekAndBranch(getState)
-  const path        = getFBPath('shiftWeeks', [weekID])
-  const queryRef    = db().ref(path).orderByChild('branch').equalTo(branch)
+  const { weekID } = getWeekAndBranch(getState)
+  const path       = getFBPath('shiftWeeks', [weekID])
 
-  createFirebaseListener(dispatch, getState, 'shiftWeek', path, queryRef)
+  createFirebaseListener(dispatch, getState, 'shiftWeek', path)
 }
 
 export const setShiftWeekListener_mobile = () => (dispatch: Dispatch, getState: GetState) => {

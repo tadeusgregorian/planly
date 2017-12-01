@@ -2,7 +2,8 @@
 import { db } from '../firebaseInit'
 import { getFBPath } from './../actionHelpers'
 import { generateGuid } from 'helpers/index'
-import { toDBShift, getMini, fetchTemplateWeek } from './localHelpers'
+import { toDBShift, fetchTemplateWeek } from './localHelpers'
+import { updateWeekSums } from './weekSums'
 import type { GetState, ThunkAction, Shift } from 'types/index'
 
   export const savelWeekAsTemplate: ThunkAction = (name: string) => (dispatch, getState: GetState) => {
@@ -39,9 +40,11 @@ export const importTemplateWeek: ThunkAction = (tempID: string) => (dispatch, ge
 
   return fetchTemplateWeek(tempID).then(shifts => {
     const updates = {}
-    shifts.forEach(s => updates[getFBPath('miniShiftWeeks', [weekID, s.user, s.id])] = getMini(s))
-    shifts.forEach(s => updates[getFBPath('shiftWeeks',     [weekID, s.id])]         = toDBShift(s, branch))
-    return db().ref().update(updates)
+    shifts.forEach(s => updates[getFBPath('shiftWeeks', [weekID, s.id])] = toDBShift(s, branch))
+    return db().ref().update(updates).then(() => {
+      const usersInvolved = shifts.reduce((acc, val) => !acc.includes(val.user) ? [ val.user , ...acc ] : acc , [])
+      updateWeekSums(getState, usersInvolved)
+    })
   })
 }
 

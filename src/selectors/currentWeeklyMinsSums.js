@@ -18,7 +18,6 @@ const createRangesArray = (weeklyMins: {[string]: number}, initialStartWeek: str
   })
 
   rangesArray.push({ sw:currentWeek, mins: 0}) // this mins can be anything -> the value of mins is not being used later on
-  console.log(rangesArray);
   return rangesArray
 }
 
