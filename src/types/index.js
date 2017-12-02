@@ -93,7 +93,8 @@ export type Location = {
 export type Branch = {
   id: string,
   name: string,
-  locations?: {[string]: ?Location}
+  locations?: {[string]: ?Location},
+  deleted?: boolean,
 }
 
 export type Branches = Array<Branch>

@@ -18,6 +18,7 @@ export default ({
 	iStyle,
 	rounded, // gives more border-radius to the inputfield
 	autoFocus,
+	width,
 	autocompleteOn }) => {
 
 	const getBackgroundImage = () => {
@@ -41,7 +42,7 @@ export default ({
 	}
 
 	return(
-		<div className='inputMinimalMain'>
+		<div className='inputMinimalMain' style={{ width }}>
 			<input
 				value={value}
 				type={getType()}

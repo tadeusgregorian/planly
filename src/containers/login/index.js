@@ -1,5 +1,7 @@
 //@flow
 import React, { PureComponent } from 'react';
+import { connect } from 'react-redux'
+import type { Connector } from 'react-redux'
 import { signInWithEmailAndPassword, checkIfEmailExists, sendPasswordResetEmail } from 'actions/auth';
 import InputMinimal from 'components/inputMinimal'
 import SButton from 'components/sButton'
@@ -10,12 +12,14 @@ import './styles.css'
 type State = {
 	password: string,
 	username: string,
-	passwordForgotten: boolean,
-	loading: boolean,
+	passwordForgotten: boolean
 }
 
+type Props = {
+	authenticate: Function
+}
 
-export default class Login extends PureComponent {
+class Login extends PureComponent {
 	state: State
 
 	constructor() {
@@ -23,8 +27,7 @@ export default class Login extends PureComponent {
 		this.state = {
 			username: '',
 			password: '',
-			passwordForgotten: false,
-			loading: false
+			passwordForgotten: false
 		}
 	}
 
@@ -35,12 +38,9 @@ export default class Login extends PureComponent {
 	}
 
 	tryToLogin = () => {
-		this.setState({loading: true})
+		this.props.authenticate()
 		signInWithEmailAndPassword(this.state.username, this.state.password)
-			.catch((e) => {
-				this.setState({password: '', loading: false})
-				Toast.error('Email oder Passowort falsch')
-			})
+			.catch((e) => { this.setState({ password: '' }) })
 	}
 
 requestPWLink = async (email: string) => {
@@ -56,7 +56,7 @@ requestPWLink = async (email: string) => {
 	}
 
 	render() {
-		const { password, username, passwordForgotten, loading } = this.state
+		const { password, username, passwordForgotten } = this.state
 		if(passwordForgotten) return <PasswordForgotten requestPWLink={this.requestPWLink}/>
 
 		return (
@@ -71,7 +71,7 @@ requestPWLink = async (email: string) => {
 						<InputMinimal defaultText="Email" 		value={username} onInputChange={val => this.setState({username: val})} icon='email' iStyle={{fontSize: 16}} rounded autoFocus email/>
 						<InputMinimal defaultText="Passwort" 	value={password} onInputChange={val => this.setState({password: val})} icon='lock'  iStyle={{fontSize: 16}} rounded onEnter={this.tryToLogin} password/>
 						<SButton
-							label={loading ? '...' : 'Einloggen'}
+							label='Einloggen'
 							onClick={this.tryToLogin}
 							sStyle={{alignSelf: 'stretch', marginLeft: 2, marginRight: -2, marginTop: 8}}
 							color='#2ecc71'
@@ -83,3 +83,10 @@ requestPWLink = async (email: string) => {
 		)
 	}
 }
+
+const actionCreators = {
+	authenticate: () => ({ type: 'USER_IS_AUTHENTICATING' })
+}
+
+const connector: Connector<{}, Props> = connect(null, actionCreators)
+export default connector(Login)

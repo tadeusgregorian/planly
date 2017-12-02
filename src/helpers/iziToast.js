@@ -17,5 +17,5 @@ export const Toast = {
   success: (text) => iziToast.show({ iconColor: '#2ecc71', icon: 'icon icon-checkmark2',    title: text }),
   warning: (text) => iziToast.show({ iconColor: '#f39c12', icon: 'icon icon-warning',       title: text }),
   info:    (text) => iziToast.show({ iconColor: '#3498db', icon: 'icon icon-info',          title: text }),
-  error:   (text) => iziToast.show({ iconColor: '#e74c3c', icon: 'icon icon-cancel-circle', title: text }),
+  error:   (text) => iziToast.show({ iconColor: '#e74c3c', icon: 'icon icon-error', title: text }),
 }

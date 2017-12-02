@@ -5,14 +5,15 @@ import omit from 'lodash/omit'
 import mapValues from 'lodash/mapValues'
 import { beginningOfTime } from 'constants/roster'
 import { Toast } from 'helpers/iziToast'
-import { saveUserToDB, addInvitationJob } from 'actions/users'
-import EmailStatus 			from './emailStatus'
+import { saveUserToDB, addInvitationJob, deleteUser } from 'actions/users'
+import { openModal } from 'actions/ui/modals'
 
 import SModal 					from 'components/sModal'
 import SButton 					from 'components/sButton'
 import FlatInput 				from 'components/flatInput'
 import FlatFormRow 			from 'components/flatFormRow'
 
+import EmailStatus 				from './emailStatus'
 import ErrorMessageBar  	from './errorMessageBar'
 import PositionSelect  		from './positionSelect'
 import BranchSelect 			from './branchSelect'
@@ -113,18 +114,29 @@ class AddEditUserPopup extends PureComponent {
 
 	weeklyHoursChanged 	= (weeklyHours) => isFloatStr(weeklyHours) 	&& this.setState({ weeklyHours })
 
+	tryToDeleteUser = () => {
+		const props = {
+			onAccept: ()=>deleteUser(this.state.id).then(this.props.closeModal),
+			acceptBtnLabel: 'Löschen',
+			acceptBtnRed: true,
+			title: 'Mitarbeiter löschen',
+			text: `Soll der Mitarbeiter ${this.state.name} wirklich gelöscht werden ?`
+		}
+		this.props.openModal('CONFIRMATION', props)
+	}
+
 	render() {
-		const { name, email, weeklyHours, position, branches, status } = this.state
+		const { name, email, weeklyHours, position, branches, status, id } = this.state
+		const { user } = this.props
 		const allBranches 	= this.props.branches
 		const allPositions 	= this.props.positions
 		const editMode 			= !!this.props.user
 		const validEmail    = isValidEmail(email)
 
-
 		return (
-			<SModal.Main title={ editMode ? 'Mitarbeiter bearbeiten' : 'Neuer Mitarbeiter' } onClose={this.props.closeModal}>
+			<SModal.Main title={ editMode ? 'Mitarbeiter bearbeiten' : 'Neuer Mitarbeiter' } onClose={this.props.closeModal} className='addEditUserPopupMain'>
 				<SModal.Body>
-					<fb className="addEditUserPopup">
+					<fb className="addEditUserPopupBody">
 						<fb className='mainForm'>
 							<ErrorMessageBar errorText={this.state.errorText} />
 							<FlatFormRow label='Name'>
@@ -149,12 +161,17 @@ class AddEditUserPopup extends PureComponent {
 					</fb>
 				</SModal.Body>
 				<SModal.Footer>
+					{ editMode && <fb onClick={this.tryToDeleteUser} data-balloon={'Mitarbeiter löschen'}><fb className='icon icon-bin deleteBtn' /></fb> }
 					<SButton right label='speichern' onClick={()=>this.onSaveClicked(false)} color={ (editMode || !validEmail) && '#2ECC71' } />
 					{ !editMode && <SButton label='speichern & einladen' onClick={()=>this.onSaveClicked(true)} color='#2ECC71' disabled={ !validEmail } /> }
 				</SModal.Footer>
 			</SModal.Main>
 		)
 	}
+}
+
+const actionCreators = {
+	openModal
 }
 
 const mapStateToProps = (state: Store) => ({
@@ -164,4 +181,4 @@ const mapStateToProps = (state: Store) => ({
 	accountID: state.auth.accountID
 })
 
-export default connect(mapStateToProps)(AddEditUserPopup)
+export default connect(mapStateToProps, actionCreators)(AddEditUserPopup)

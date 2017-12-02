@@ -9,6 +9,7 @@ export const changeCurrentBranch: ThunkAction = (branchID: string) => (dispatch,
 
    tempMode && dispatch({ type: 'SET_CURRENT_WEEK_ID', payload: tempID })
   !tempMode && localStorage.setItem('currentBranch', branchID )
+  console.log(branchID);
   dispatch({ type: 'SET_CURRENT_BRANCH', payload: branchID })
 }
 

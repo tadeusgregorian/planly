@@ -4,10 +4,13 @@ import { Route, withRouter, Redirect, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Topbar from './topbar'
 import Roster from './roster'
-import AbsencePlaner from './absencePlaner'
-import AdminPanel from './adminPanel'
 import appDataLoaded from 'selectors/appDataLoaded'
 import getCurrentUser from 'selectors/currentUser'
+
+import AbsencePlaner  from './absencePlaner'
+import AdminPanel     from './adminPanel'
+import UserProfile    from './userProfile'
+
 import { openModal } from 'actions/ui/modals'
 import type { Store } from 'types/index'
 import './styles.css'
@@ -31,8 +34,9 @@ class App extends PureComponent {
         <Topbar />
           <fb className="appMainContent">
             <Switch>
-              <Route path='/app/dienstplan' render={() => <Roster { ...{ currentUser }} />} />
-              <Route path='/app/abwesenheit' component={AbsencePlaner} />
+              <Route path='/app/dienstplan'    render={() => <Roster { ...{ currentUser }} />} />
+              <Route path='/app/abwesenheit'   component={AbsencePlaner} />
+              <Route path='/app/profil'        component={UserProfile} />
               <Route path='/app/einstellungen' render={() => isAdmin ? <AdminPanel { ...this.props } /> : <Redirect to='/app/dienstplan'/> } />
               <Redirect to='/app/dienstplan'/>
             </Switch>

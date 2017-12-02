@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import Select from 'react-select';
+import getActiveBranches from 'selectors/activeBranches'
 
 import { openAbsenceModal } from 'actions/ui/modals'
 import { setCurrentBranch, setCurrentYear, setCurrentMonth, setCurrentType } from 'actions/ui/absence'
@@ -113,7 +114,7 @@ const actionCreators = {
 }
 
 const mapStateToProps = (state: Store) => ({
-  branches: state.core.branches,
+  branches: getActiveBranches(state),
   currentBranch: state.ui.absence.currentBranch,
   currentYear: state.ui.absence.currentYear,
   currentMonth: state.ui.absence.currentMonth,

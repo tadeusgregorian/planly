@@ -1,47 +1,48 @@
-.addEditUserPopup{
-	flex-direction: column;
-	overflow-y: auto;
-	min-width: 700px;
-	font-size: 16px;
-	overflow: visible;
-	color: grey;
-	margin: 8px;
-
-	>*{
-		&:not(:last-of-type){
-			margin-bottom: 8px;
-		}
-	}
-
-	.mainForm{
+.addEditUserPopupMain{
+	.addEditUserPopupBody{
 		flex-direction: column;
-		//background-color: white;
-		border-radius: 2px;
-		border: 1px solid #d6d5d5;
+		overflow-y: auto;
+		min-width: 700px;
+		font-size: 16px;
 		overflow: visible;
-		box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.1);
-		z-index: 2;
+		color: grey;
+		margin: 8px;
 
-
-		.flatFormRowMain{
-			&:last-child{
-				border-bottom: none;
+		>*{
+			&:not(:last-of-type){
+				margin-bottom: 8px;
 			}
 		}
 
-		.avgDailyHours{
-			margin-right: 14px;
-			font-size: 14px;
-    	color: #80848b;
+		.mainForm{
+			flex-direction: column;
+			//background-color: white;
+			border-radius: 2px;
+			border: 1px solid #d6d5d5;
+			overflow: visible;
+			box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.1);
+			z-index: 2;
+
+
+			.flatFormRowMain{
+				&:last-child{
+					border-bottom: none;
+				}
+			}
+
+			.avgDailyHours{
+				margin-right: 14px;
+				font-size: 14px;
+	    	color: #80848b;
+			}
 		}
 	}
 
-	.footerInfoText{
-		font-size: 14px;
-		justify-content: center;
-		align-items: center;
-		color: #6d6d6d;
-		padding-left: 10px;
-		font-weight: 300;
+	.deleteBtn{
+		background: #e8e8e8;
+		padding: 0px 10px;
+		border-radius: 2px;
+		color: grey;
+		cursor: pointer;
 	}
 }

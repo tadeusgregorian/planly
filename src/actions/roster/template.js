@@ -6,7 +6,7 @@ import { toDBShift, fetchTemplateWeek } from './localHelpers'
 import { updateWeekSums } from './weekSums'
 import type { GetState, ThunkAction, Shift } from 'types/index'
 
-  export const savelWeekAsTemplate: ThunkAction = (name: string) => (dispatch, getState: GetState) => {
+  export const saveWeekAsTemplate: ThunkAction = (name: string) => (dispatch, getState: GetState) => {
   const branch    = getState().ui.roster.currentBranch
   const shifts    = getState().roster.shiftWeek
 
@@ -17,8 +17,8 @@ import type { GetState, ThunkAction, Shift } from 'types/index'
   const update1 =  {[getFBPath('templatesFlat',  [tempID])]:  flatTemp}
   const update2 =  {[getFBPath('shiftWeeks',     [tempID])]:  tempWeek}
 
-  db().ref().update({ ...update1, ...update2})
-  dispatch({ type: 'ENTER_TEMPLATE_MODE', payload: tempID })
+  return db().ref().update({ ...update1, ...update2})
+  //dispatch({ type: 'ENTER_TEMPLATE_MODE', payload: tempID })
 }
 
 export const saveTemplateName = (tempID: string, name: string) => {

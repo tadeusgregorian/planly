@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import cn from 'classnames'
 import getCurrentUser from 'selectors/currentUser'
+import getActiveBranches from 'selectors/activeBranches'
 import {
   changeCurrentBranch,
   leaveTemplateMode,
@@ -75,7 +76,7 @@ const actionsToProps = {
 
 const mapStateToProps = (state: Store) => ({
   currentBranch: state.ui.roster.currentBranch,
-  branches: state.core.branches,
+  branches: getActiveBranches(state),
   templateMode: state.ui.roster.templateMode,
   currentUser: getCurrentUser(state)
 })

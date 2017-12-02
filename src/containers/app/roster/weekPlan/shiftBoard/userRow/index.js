@@ -30,6 +30,7 @@ type Props = {
   focusedShiftRef: ?ShiftRef,
   cellUnderMouse: ?CellRef,
   weeklyMins: ?number,
+  ghost: boolean,
   absentDays: { [ weekDay: number ]: AbsenceType },
 }
 
@@ -54,7 +55,8 @@ export default class UserRow extends PureComponent{
       focusedShiftRef,
       cellUnderMouse,
       weeklyMins,
-      absentDays } = this.props
+      absentDays,
+      ghost } = this.props
 
       const isAdmin      = currentUser.isAdmin
       const isOwnRow     = currentUser.id === userID
@@ -81,6 +83,7 @@ export default class UserRow extends PureComponent{
               overtime={overtime}
               currentUser={currentUser}
               timeDetailsVisible={timeDetailsVisible}
+              ghost={ghost}
             />
           : <OpenUserCell />
         }

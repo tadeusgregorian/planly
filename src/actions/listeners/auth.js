@@ -5,6 +5,7 @@ import { checkClientDate } from '../clientDateCheck'
 import { createCookie, deleteCookie } from './localHelpers';
 import { getDomain } from 'configs/index'
 import type { GetState } from 'types/index'
+import { Toast } from 'helpers/iziToast'
 
 
 export const setAuthStateListener = (initializor: Function) => {
@@ -24,12 +25,12 @@ export const setAuthStateListener = (initializor: Function) => {
       firebase.database().ref('allUsers/' + user.uid).once('value')
         .then(snap => {
 
-          if(!snap.val()) {
-            console.log('uid not found in allUsers List');
+          if(!snap.val() || snap.val().deleted){
+            Toast.error('Benutzer nicht aktiviert')
             return firebase.auth().signOut()
           }
 
-          console.log('not here ?');
+
           createCookie('loggedIn', 'true', getDomain(), 1000)
 
           dispatch({type: 'USER_LOGGED_IN' })

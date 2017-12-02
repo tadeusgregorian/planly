@@ -1,10 +1,21 @@
 .addEditBranchPopupMain{
-  min-width: 600px;
-  flex-direction: column;
 
-  .flatFormRowMain{
-    &:last-child{
-      border-bottom: none;
+  .addEditBranchPopupContent{
+    min-width: 600px;
+    flex-direction: column;
+
+    .flatFormRowMain{
+      &:last-child{
+        border-bottom: none;
+      }
     }
+  }
+
+  .deleteBtn{
+    background: #e8e8e8;
+    padding: 0px 10px;
+    border-radius: 2px;
+    color: grey;
+    cursor: pointer;
   }
 }

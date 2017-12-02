@@ -10,10 +10,7 @@ import './styles.css';
 
 class AdminpanelUsers extends React.Component {
 
-	tryToDeleteUser = () => { console.log('tryToDeleteUser')}
-	openReactivateUserPopup = () => { console.log('openReactivateUserPopup')}
 	openAddEditUserPopup = (user = null) => this.props.openModal('ADD_EDIT_USER', { user })
-
 
 	render() {
 		return (
@@ -29,7 +26,7 @@ class AdminpanelUsers extends React.Component {
 					<fb className='item status'>Status</fb>
 				</fb>
 				<fb className='usersList'>
-				{sortBy(this.props.users, ['name']).map(user => (
+				{sortBy(this.props.users, ['name']).filter(u => !u.deleted).map(user => (
 					<UserElement
 						user={user}
 						userClicked={this.openAddEditUserPopup}

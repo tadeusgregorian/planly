@@ -1,13 +1,14 @@
 //@flow
-
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import SModal from 'components/sModal'
 import SButton from 'components/sButton'
 import FlatInput from 'components/flatInput'
 import FlatFormRow from 'components/flatFormRow'
-import { saveBranchToDB } from 'actions/index'
+import { saveBranchToDB, deleteBranch } from 'actions/index'
 import { getNextID } from 'helpers/index'
+import { openModal } from 'actions/ui/modals'
+
 
 import type { Branch, Location } from 'types/index'
 
@@ -17,7 +18,9 @@ import './styles.css';
 type Props = {
 	closeModal: Function,
 	branches: Array<Branch>,
-	branch: Branch
+	branch: Branch,
+	openModal: Function,
+	deleteBranch: (branchID: string)=>any,
 }
 
 type State = {
@@ -43,7 +46,6 @@ class AddEditBranchPopup extends PureComponent {
 		}
 	}
 
-
 	saveButtonClicked = () => {
 		saveBranchToDB(this.state)
 		this.props.closeModal()
@@ -59,13 +61,27 @@ class AddEditBranchPopup extends PureComponent {
 		this.setState({ locations: { ...this.state.locations, ...newLoc }})
 	}
 
+	tryToDeleteBranch = () => {
+		const props = {
+			onAccept: () => this.props.deleteBranch(this.state.id).then(this.props.closeModal),
+			acceptBtnLabel: 'Löschen',
+			acceptBtnRed: true,
+			title: 'Filiale löschen',
+			text: `Soll die Filiale ${this.state.name} wirklich gelöscht werden ?`
+		}
+		this.props.openModal('CONFIRMATION', props)
+	}
+
 	render() {
 		const { name, locations } = this.state
+		const activeBranches = this.props.branches.filter(b => !b.deleted)
+		const creationMode = !this.props.branch
+		const title = !creationMode ? 'Filiale bearbeiten' : 'Filiale erstellen'
 
 		return (
-			<SModal.Main title={ this.props.branch ? 'Filiale bearbeiten' : 'Filiale erstellen' } onClose={this.props.closeModal}>
+			<SModal.Main title={title} onClose={this.props.closeModal} className='addEditBranchPopupMain'>
 				<SModal.Body>
-					<fb className="addEditBranchPopupMain">
+					<fb className="addEditBranchPopupContent">
 						<FlatFormRow label='Name der Filiale'>
 								<FlatInput value={name} onInputChange={(inp) => this.setState({name: inp})} autoFocus/>
 						</FlatFormRow>
@@ -75,8 +91,12 @@ class AddEditBranchPopup extends PureComponent {
 					</fb>
 				</SModal.Body>
 				<SModal.Footer>
-					<SButton
-						right
+					{ !creationMode && activeBranches.length > 1 &&
+						<fb onClick={this.tryToDeleteBranch} data-balloon={'Filiale löschen'}>
+							<fb className='icon icon-bin deleteBtn' />
+						</fb>
+						}
+					<SButton right
 						label='speichern'
 						onClick={this.saveButtonClicked}
 						disabled={!name}
@@ -88,8 +108,13 @@ class AddEditBranchPopup extends PureComponent {
 	}
 }
 
+const actionCreators = {
+	openModal,
+	deleteBranch
+}
+
 const mapStateToProps = (state) => ({
 	branches: state.core.branches,
 })
 
-export default connect(mapStateToProps)(AddEditBranchPopup)
+export default connect(mapStateToProps, actionCreators)(AddEditBranchPopup)

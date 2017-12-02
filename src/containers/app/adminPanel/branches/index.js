@@ -18,7 +18,7 @@ class AdminpanelBranchs extends React.Component {
 					<fb className="headlineText">Filialen verwalten</fb>
 					<SButton slick icon='icon-add' label='Filiale hinzufügen' onClick={() => this.openAddEditBranchPopup()} />
 				</fb>
-				{this.props.branches.map(branch => (
+				{this.props.branches.filter(b => !b.deleted).map(branch => (
 					<BranchElement
 						branch={branch}
 						branchClicked={this.openAddEditBranchPopup}
@@ -26,7 +26,7 @@ class AdminpanelBranchs extends React.Component {
 					/>))
 				}
 			</div>
-		);
+		)
 	}
 }
 

@@ -7,13 +7,23 @@ import type { User } from 'types/index'
 import moment from 'moment'
 
 export function deleteUser(userID: string) {
-	const now = moment().toISOString()
-	db().ref(getFBPath('users')).child(userID).child('deleted').set(now)
+	const smartDateToday = parseInt(moment().format('YYYYMMDD'), 10)
+
+	return db().ref('/allUsers').orderByChild('userID').equalTo(userID).once('child_added')
+		.then((snap) => {
+			const firebaseUserID = snap.key
+
+			const updates = {}
+			updates[`/allUsers/${firebaseUserID}/deleted`] = smartDateToday
+			updates[getFBPath('users', [userID, 'deleted'])] = smartDateToday
+
+			return db().ref().update(updates)
+		})
 }
 
-export function reactivateUser(userID: string) {
-	db().ref(getFBPath('users')).child(userID).child('deleted').set(null)
-}
+// export function reactivateUser(userID: string) {
+// 	db().ref(getFBPath('users')).child(userID).child('deleted').set(null)
+// }
 
 export function saveUserToDB(user: User) {
 	db().ref(getFBPath('users')).child(user.id).set(user)

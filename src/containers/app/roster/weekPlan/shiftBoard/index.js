@@ -31,7 +31,6 @@ type OwnProps = {
 
 type ConProps = {
   branch: string,
-  users: Array<User>,
   positions: Array<Position>,
   shifts: Shifts,
   extraHours: Array<ExtraHours>,
@@ -46,7 +45,8 @@ type ConProps = {
   absentDaysOfUsers: AbsentDaysOfUsers,
   currentUser: User,
   focusedShiftRef: ?ShiftRef,
-  currentWeeklyMins: {[weekID: string]: number}
+  currentWeeklyMins: {[weekID: string]: number},
+  currentBranch: string
 }
 
 type Props = OwnProps & ConProps
@@ -72,9 +72,8 @@ class ShiftBoard extends PureComponent{
       currentWeekSums,
       currentOvertimes,
       currentWeeklyMins,
-      currentCorrections } = this.props
-
-      console.log(currentWeekSums);
+      currentCorrections,
+      currentBranch } = this.props
 
     return <UserRow
       key={userID}
@@ -97,6 +96,7 @@ class ShiftBoard extends PureComponent{
       highlightedDay={extraHoursMode ? getDay(cellUnderMouse, userID) : false} // could do && cause of random Flow issue
       focusedShiftRef={focusedShiftRef}
       cellUnderMouse={cellUnderMouse && cellUnderMouse.user === userID ? cellUnderMouse : null}
+      ghost={user ? (!user.branches[currentBranch] || !!user.deleted) : false } // if user is deleted or not in Brnach anymore.
     />
   }
 
@@ -133,7 +133,6 @@ class ShiftBoard extends PureComponent{
 
 const mapStateToProps = (state: Store) => ({
   branch: state.ui.roster.currentBranch,
-  users: state.core.users,
   positions: state.core.positions,
   shifts: getShiftsOfCurrentBranch(state),
   extraHours: state.roster.extraHours,
@@ -148,7 +147,8 @@ const mapStateToProps = (state: Store) => ({
   absentDaysOfUsers: getAbsentDaysOfUsers(state),
   focusedShiftRef: state.ui.roster.shiftBoard.focusedShiftRef,
   currentWeeklyMins: getCurrentWeeklyMins(state),
-  currentUser: getCurrentUser(state)
+  currentUser: getCurrentUser(state),
+  currentBranch: state.ui.roster.currentBranch,
 })
 
 const connector: Connector<OwnProps, Props> = connect(mapStateToProps)

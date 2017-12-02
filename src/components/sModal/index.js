@@ -6,11 +6,12 @@ type PropsMain = {
 	title: string,
 	children: any,
 	onClose: Function,
-	unclosable: ?boolean | ?string
+	unclosable: ?boolean | ?string,
+	className: ?string,
 }
 
-const SModalMain = ({title, children, onClose, unclosable}: PropsMain) => (
-	<fb className="sModalContainer">
+const SModalMain = ({title, children, onClose, unclosable, className}: PropsMain) => (
+	<fb className={'sModalContainer' + (className ? ' ' + className: '')}>
 		<fb className='sModalMain'>
 			<fb className='sModalHead'>
 				<fb className='sModalTitle'><span className="titleSpan">{title}</span></fb>

@@ -4,7 +4,8 @@ import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import SModal  from 'components/sModal'
 import SButton from 'components/sButton'
-import { savelWeekAsTemplate } from 'actions/roster/template'
+import { saveWeekAsTemplate } from 'actions/roster/template'
+import { Toast } from 'helpers/iziToast'
 import './styles.css'
 
 type OwnProps = {
@@ -12,7 +13,7 @@ type OwnProps = {
 }
 
 type ConProps = {
-  savelWeekAsTemplate: (string)=>any
+  saveWeekAsTemplate: (string)=>any
 }
 
 type Props = OwnProps & ConProps
@@ -32,7 +33,8 @@ class SaveTemplateModal extends PureComponent{
 
   saveClicked = () => {
     const { name } = this.state
-    this.props.savelWeekAsTemplate(name)
+    this.props.saveWeekAsTemplate(name)
+      .then(Toast.success('Wochenplan als vorlage gespeichert: ' + name ))
     this.props.closeModal()
   }
 
@@ -59,7 +61,7 @@ class SaveTemplateModal extends PureComponent{
 }
 
 const actionCreators = {
-  savelWeekAsTemplate
+  saveWeekAsTemplate
 }
 
 const connector: Connector<OwnProps, OwnProps & ConProps> = connect(null, actionCreators)

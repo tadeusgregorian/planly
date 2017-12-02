@@ -12,8 +12,8 @@ type Props = {
 
 export default (props: Props) => {
 
-	const {userClicked, user, position, branches } = props
-	const {deleted, name} = user
+	const { userClicked, user, position, branches } = props
+	const { name } = user
 
 	const displayBranches = () =>
 		branches.reduce((acc, val) =>  acc + ( acc && ' / ' ) + val.name, '')
@@ -27,13 +27,13 @@ export default (props: Props) => {
 		}
 	}
 
-	if(deleted) {
-		return (
-			<fb className='adminPanelUserItem deleted'>
-				<fb className="userName">{name}</fb>
-			</fb>
-		)
-	}
+	// if(deleted) {
+	// 	return (
+	// 		<fb className='adminPanelUserItem deleted'>
+	// 			<fb className="userName">{name}</fb>
+	// 		</fb>
+	// 	)
+	// }
 
 	return(
 		<fb className='adminPanelUserItem' onClick={() => userClicked(user)}>

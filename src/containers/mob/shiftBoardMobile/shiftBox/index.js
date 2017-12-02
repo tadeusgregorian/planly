@@ -3,6 +3,7 @@ import React from 'react'
 import cn from 'classnames'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
+import getActiveBranches from 'selectors/activeBranches'
 import { shiftToString } from 'helpers/roster'
 import type { Store, Shift, User, Branch, PlanMode } from 'types/index'
 import './styles.css'
@@ -55,7 +56,7 @@ const shiftBox = (props: Props) => {
 
 const mapStateToProps = (state: Store) => ({
   users: state.core.users,
-  branches: state.core.branches,
+  branches: getActiveBranches(state),
   planMode: state.ui.roster.planMode,
 })
 
