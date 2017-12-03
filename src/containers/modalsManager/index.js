@@ -1,24 +1,29 @@
 // cant use flow here cause its so complicated with the props / types flowing through the switch case ...
+
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import { closeModal } from 'actions/ui'
 import type { Store } from 'types/index'
-import ShiftNoteModal         from 'modals/shiftNoteModal'
-import AbsenceModal           from 'modals/absenceModal'
-import AbsenceCorrectionModal from 'modals/absenceCorrectionModal'
-import AddEditBranchPopup     from 'modals/addEditBranchPopup'
-import AddEditPositionPopup   from 'modals/addEditPositionPopup'
-import AddEditUserPopup       from 'modals/addEditUserPopup'
-import ExtraHoursModal        from 'modals/extraHoursModal'
-import ImportTemplateModal    from 'modals/importTemplateModal'
-import InitialOvertimeModal   from 'modals/initialOvertimeModal'
-import SaveAsTemplateModal    from 'modals/saveAsTemplateModal'
-import CreateTemplateModal    from 'modals/createTemplateModal'
-import DayNoteModal           from 'modals/dayNoteModal'
-import PickBundesland         from 'modals/pickBundesland'
-import ConfirmationPopup      from 'modals/confirmationPopup'
-import EditAbsenceDaysModal   from 'modals/editAbsenceDaysModal'
+
+import ShiftNoteModal         from 'modals/roster/shiftNoteModal'
+import ExtraHoursModal        from 'modals/roster/extraHoursModal'
+import ImportTemplateModal    from 'modals/roster/importTemplateModal'
+import InitialOvertimeModal   from 'modals/roster/initialOvertimeModal'
+import SaveAsTemplateModal    from 'modals/roster/saveAsTemplateModal'
+import CreateTemplateModal    from 'modals/roster/createTemplateModal'
+import DayNoteModal           from 'modals/roster/dayNoteModal'
+
+import AbsenceModal           from 'modals/absence/absenceModal'
+import AbsenceCorrectionModal from 'modals/absence/absenceCorrectionModal'
+import EditAbsenceDaysModal   from 'modals/absence/editAbsenceDaysModal'
+import AbsenceSettingsModal   from 'modals/absence/absenceSettingsModal'
+
+import AddEditBranchPopup     from 'modals/adminPanel/addEditBranchPopup'
+import AddEditPositionPopup   from 'modals/adminPanel/addEditPositionPopup'
+import AddEditUserPopup       from 'modals/adminPanel/addEditUserPopup'
+
+import ConfirmationPopup      from 'modals/general/confirmationPopup'
 
 import './styles.css'
 
@@ -53,10 +58,10 @@ class ModalsManager extends PureComponent {
             case 'SAVE_AS_TEMPLATE'     : return <SaveAsTemplateModal { ...props } />
             case 'CREATE_NEW_TEMPLATE'  : return <CreateTemplateModal { ...props } />
             case 'DAY_NOTE'             : return <DayNoteModal { ...props } />
-            case 'BUNDESLAND'           : return <PickBundesland { ...props } />
             case 'CONFIRMATION'         : return <ConfirmationPopup { ...props } />
             case 'EDIT_ABSENCE_DAYS'    : return <EditAbsenceDaysModal { ...props } />
             case 'ABSENCE_CORRECTION'   : return <AbsenceCorrectionModal { ...props } />
+            case 'ABSENCE_SETTINGS'     : return <AbsenceSettingsModal { ...props } />
             default: return null
           }
         })}

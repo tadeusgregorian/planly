@@ -6,7 +6,7 @@ import type { Connector } from 'react-redux'
 import { setAbsencesListener           } from 'actions/listeners/absencePlaner'
 import { setAbsenceCorrectionsListener } from 'actions/listeners/absencePlaner'
 import { getClickedAbsenceID, getClickedUserID } from './localHelpers'
-import { openAbsenceModal } from 'actions/ui/modals'
+import { openAbsenceModal, openModal } from 'actions/ui/modals'
 import { setCurrentType } from 'actions/ui/absence'
 
 import getCurrentUser from 'selectors/currentUser'
@@ -16,7 +16,7 @@ import getAbsenceSums from 'selectors/absenceSums'
 import AbsenceActionBar from './absenceActionBar'
 import AbsenceCalendar from './absenceCalendar'
 import AbsenceSubBar from './absenceSubBar'
-import type { User, Store, DataStatus, Absence, AbsenceTypeFilter } from 'types/index'
+import type { User, Store, DataStatus, Absence, AbsenceTypeFilter, AccountPreferences } from 'types/index'
 import './styles.css'
 
 type OwnProps = {}
@@ -30,7 +30,9 @@ type ConProps = {
   setCurrentType: (AbsenceTypeFilter)=>any,
   openAbsenceModal: (string, (Absence | void))=>{},
   setAbsencesListener: (number)=>any,
-  setAbsenceCorrectionsListener: ()=>any
+  setAbsenceCorrectionsListener: ()=>any,
+  openModal: (string)=>any,
+  preferences: AccountPreferences,
 }
 type Props = OwnProps & ConProps
 
@@ -38,9 +40,12 @@ class AbsencePlaner extends PureComponent {
   props: Props
 
   componentDidMount = () => {
+    const { currentYear, preferences } = this.props
     document.addEventListener('click', this.clickDetected)
-    this.props.setAbsencesListener(this.props.currentYear)
+    this.props.setAbsencesListener(currentYear)
     this.props.setAbsenceCorrectionsListener()
+    console.log(typeof preferences.excludingSaturdays);
+    typeof preferences.excludingSaturdays === 'undefined' && this.props.openModal('ABSENCE_SETTINGS')
   }
 
   componentWillUnmount  = () => {
@@ -94,6 +99,7 @@ const actionCreators = {
   setAbsenceCorrectionsListener,
   setCurrentType,
   openAbsenceModal,
+  openModal
 }
 
 const mapStateToProps = (state: Store) => ({
@@ -103,6 +109,7 @@ const mapStateToProps = (state: Store) => ({
   absenceSums: getAbsenceSums(state),
   currentType: state.ui.absence.currentType,
   absencesDS: state.absencePlaner.absencesDataStatus,
+  preferences: state.core.accountDetails.preferences,
 })
 
 const connector: Connector<OwnProps, Props> = connect(mapStateToProps, actionCreators)

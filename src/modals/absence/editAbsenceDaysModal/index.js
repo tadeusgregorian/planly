@@ -17,7 +17,7 @@ type State = {
   effectiveDays: string,
 }
 
-export default class ExtraHoursModal extends PureComponent{
+export default class EditAbsenceDaysModal extends PureComponent{
   state: State
   props: Props
 
