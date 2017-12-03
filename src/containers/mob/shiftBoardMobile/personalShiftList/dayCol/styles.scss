@@ -1,28 +1,35 @@
 .shiftBoardDayColMain{
-  flex-direction: column;
+  flex-direction: row;
   flex: 0 0 auto;
+  align-items: stretch;
+  padding: 4px 0px;
 
   .dayHead{
+    padding-top: 2px;
     color: #8b8f94;
-    height: 22px;
     padding-left: 4px;
     font-weight: 100;
-    margin-top: 4px;
-    border-bottom: 1px solid #0192dd;
-    margin-bottom: 6px;
-
+    width: 60px;
+    flex-direction: column;
+    margin-right: 8px;
+    height: 50px;
 
     .weekDay{
-      margin-right: 5px;
       font-weight: 600;
-      color: #0093dc;
       text-transform: uppercase;
+      font-size: 28px;
+      justify-content: center;
+      font-size: 24px;
+      color: #008cd4;
+    }
+
+    .date{
+      justify-content: center;
+      color: #56acda;
     }
 
     &.isEmpty{
-      border-bottom: 1px solid lightgrey;
       opacity: 0.6;
-      padding-left: 12px;
 
       .weekDay{
         font-weight: 400;
@@ -33,11 +40,10 @@
         color: #adadad;
       }
     }
-
-    .date{
-      color: #65b9e4;
-    }
   }
 
-
+  .shiftsWrapper{
+    flex: 1 1 auto;
+    flex-direction: column;
+  }
 }

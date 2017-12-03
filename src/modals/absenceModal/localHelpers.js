@@ -1,8 +1,10 @@
 //@flow
 import moment from 'moment'
 import { momToSmart } from 'helpers/index'
-
+import { db } from 'actions/firebaseInit'
+import { getFBPath } from 'actions/actionHelpers'
 import type { BundeslandCode, User, Absence, AbsenceStatus } from 'types/index'
+import values from 'lodash/values'
 
 // const numToWeekDay = (num: number): Day => {
 //   return weekDays[num]
@@ -56,17 +58,23 @@ const rangesOverlap: RangesOverlap  = (xStart, xEnd, yStart, yEnd) => {
   return yStart <= xEnd && yEnd >= xStart
 }
 
-type         AbsenceOverlaps = (moment, moment, Array<Absence>, string, string) => boolean
-export const absenceOverlaps: AbsenceOverlaps = (start, end, absences, user, absenceID): boolean => {
+type         CheckOverlapping = (moment, moment, string, string) => Promise<boolean>
+export const checkOverlapping: CheckOverlapping = (start, end, user, absenceID) => {
   const startSmart = momToSmart(start)
   const endSmart   = momToSmart(end)
 
-  return absences.filter(a => a.user === user).reduce(
-    (acc, val) =>
+  return db().ref(getFBPath('absences')).orderByChild('user').equalTo(user).once('value').then(snap => {
+    const absences: Array<Absence> = snap.val() ? values(snap.val()) : []
+
+    console.log(absences);
+
+    return absences.filter(a => a.user === user).reduce(
+      (acc, val) =>
       (
         absenceID !== val.id && // otherwiese it overlaps with itselefe when editing Absence.
         rangesOverlap(val.startDate, val.endDate, startSmart, endSmart)
       ) || acc,
-    false
-  )
+      false
+    )
+  })
 }

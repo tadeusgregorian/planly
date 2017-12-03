@@ -33,8 +33,7 @@ export type Absence = { // this is the absence Obj we get from the DB ( Firebase
   startDate: number,//
   endDate: number,//
   effectiveDays: number,//
-  note?: ?string, //
-  user_startDate: string,
+  note?: ?string //
 }
 
 export type AbsenceCorrection = {

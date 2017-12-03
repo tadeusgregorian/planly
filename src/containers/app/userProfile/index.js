@@ -16,8 +16,8 @@ export default class UserProfile extends PureComponent {
 			<fb className="userProfileMain">
 				<fb className='userProfile-body edgebox'>
 					<fb className='userProfile-navbar'>
-						<NavLink activeClassName="selected" className="navbar-item" to={`${baseUrl}email`}>Email Ändern</NavLink>
-						<NavLink activeClassName="selected" className="navbar-item" to={`${baseUrl}passwort`}>Passowrt Ändern</NavLink>
+						<NavLink activeClassName="selected" className="navbar-item" to={`${baseUrl}email`}>Email Adresse</NavLink>
+						<NavLink activeClassName="selected" className="navbar-item" to={`${baseUrl}passwort`}>Mein Passwort</NavLink>
 					</fb>
 					<fb className='userProfileContent'>
 						<Route path='/app/profil' exact		render={() => <Redirect to="/app/profil/email" />} />

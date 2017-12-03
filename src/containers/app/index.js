@@ -11,18 +11,11 @@ import AbsencePlaner  from './absencePlaner'
 import AdminPanel     from './adminPanel'
 import UserProfile    from './userProfile'
 
-import { openModal } from 'actions/ui/modals'
 import type { Store } from 'types/index'
 import './styles.css'
 
 
 class App extends PureComponent {
-
-  componentDidUpdate = (prevProps) => {
-    const justLoaded = !prevProps.appDataLoaded && this.props.appDataLoaded
-    justLoaded && !this.props.preferences.bundesland && this.props.openModal('BUNDESLAND')
-  }
-
   render = () => {
     const { currentUser, appDataLoaded } = this.props
     const isAdmin = currentUser && currentUser.isAdmin
@@ -46,15 +39,9 @@ class App extends PureComponent {
   }
 }
 
-
-const actionCreators = {
-  openModal
-}
-
 const mapStateToProps = (state: Store) => ({
   appDataLoaded: appDataLoaded(state),
   currentUser: getCurrentUser(state),
-  preferences: state.core.accountDetails.preferences,
 })
 
-export default withRouter(connect(mapStateToProps, actionCreators)(App))
+export default withRouter(connect(mapStateToProps)(App))

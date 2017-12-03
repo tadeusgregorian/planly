@@ -29,6 +29,11 @@ class Container extends PureComponent {
     }
   }
 
+  componentWillReceiveProps = (np) => {
+    const { dbVersion } = this.props // if dbVersions was loaded and now changed -> reload!
+    dbVersion && dbVersion !== np.dbVersion && window.location.reload();
+  }
+
   render() {
     const { authState }     =  this.props
     const loggedIn 					=  authState === 'loggedIn'
@@ -66,6 +71,7 @@ const mapStateToProps = (state: Store) => ({
   firebaseInitialized: state.firebaseInitialized,
 	firebaseAuthListener: state.firebaseListeners.firebaseAuth,
   authState: state.auth.authState,
+  dbVersion: state.dbVersion,
   modals: state.ui.modals
 })
 

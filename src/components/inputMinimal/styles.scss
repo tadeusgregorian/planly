@@ -25,18 +25,19 @@
 		background-color: 'white'
 	}
 
-	input[type=text],[type=email]::placeholder{
+	input[type=text]::placeholder,[type=email]::placeholder{
 		color: #a7a7a7;
 	}
 	input[type=password]::placeholder{
 		color: #a7a7a7;
 	}
 
-	input[type=text],[type=email]:focus {
+	input[type=text]:focus,[type=email]:focus {
 		border: 1px solid #7adaff;
 		box-shadow: none;
 		outline: none;
 	}
+
 	input[type=password]:focus {
 		border: 1px solid #7adaff;
 		box-shadow: none;

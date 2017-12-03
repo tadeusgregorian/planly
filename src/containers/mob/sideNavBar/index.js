@@ -5,6 +5,7 @@ import type { Connector } from 'react-redux'
 import { changeCurrentBranch } from 'actions/ui/roster'
 import { closeSideNav } from 'actions/ui/index'
 import { logoutFromFirebase } from 'actions/auth'
+import getActiveBranches from 'selectors/activeBranches'
 import NavAnimator from './navAnimator'
 import Options from './options'
 import BranchPick from './branchPick'
@@ -73,7 +74,7 @@ const actionCreators = {
 
 const mapStateToProps = (state: Store) => ({
   sideNav: state.ui.sideNav,
-  branches: state.core.branches,
+  branches: getActiveBranches(state),
 })
 
 const connector: Connector<{}, Props> = connect(mapStateToProps, actionCreators)

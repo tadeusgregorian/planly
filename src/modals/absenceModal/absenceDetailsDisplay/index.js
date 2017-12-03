@@ -4,6 +4,7 @@ import './styles.css'
 
 type Props = {
   totalDays: ?number,
+  loading: boolean,
   effectiveDays: ?number,
   adminMode: boolean,
   excludingSaturdays: boolean,
@@ -13,6 +14,13 @@ type Props = {
 export default (props: Props) => {
   const saturdaysText = props.excludingSaturdays ? ', Samstage' : ''
   const effectiveDaysBalloon = `ohne Feiertage${ saturdaysText } und Sonntage`
+
+  if(props.loading) return(
+    <fb className="absenceDetailsDisplayMain">
+      <fb className='label'></fb>
+      <fb>loading...</fb>
+    </fb>
+  )
 
   return(
     <fb className="absenceDetailsDisplayMain">

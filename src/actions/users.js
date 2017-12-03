@@ -29,6 +29,14 @@ export function saveUserToDB(user: User) {
 	db().ref(getFBPath('users')).child(user.id).set(user)
 }
 
+export function updateUserEmail(userID: string, firebaseUID: string, email: string): Promise<any> {
+	const updates = {
+		[getFBPath('users', [userID, 'email'])]: email,
+		[`/allUsers/${firebaseUID}/email`]: email
+	}
+	return db().ref().update(updates)
+}
+
 type JobData = {userID: string, email: string, name: string, accountID:string}
 export const addInvitationJob = ({ userID, email, name, accountID }: JobData) => {
 

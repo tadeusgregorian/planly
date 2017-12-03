@@ -1,3 +1,18 @@
 .teamShiftListMain{
   flex-direction: column;
+
+  .noShifts{
+    padding-top: 12px;
+    flex-direction: column;
+    color: grey;
+
+    .icon{
+      font-size: 26px;
+      margin-bottom: 8px;
+    }
+
+    .text{
+      justify-content: center;
+    }
+  }
 }

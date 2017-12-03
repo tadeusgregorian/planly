@@ -1,10 +1,13 @@
-
+//@flow
+import { db } from 'actions/firebaseInit'
 import { createFirebaseListener } from './firebaseHelpers'
 import { setRequestedAbsencesListener } from './absencePlaner'
 import { setShiftEditsListener } from './roster'
 import { getFBPath } from '../actionHelpers'
+import type { GetState } from 'types/index'
 
-export const registerInitialListeners = () => (disp, getS) => {
+export const registerInitialListeners = () => (disp: Dispatch, getS: GetState) => {
+  setDbVersionListener(disp,getS)
   setAccountDetailsListener(disp, getS)
   registerUsersListener(disp, getS)
   registerPositionsListener(disp, getS)
@@ -14,6 +17,11 @@ export const registerInitialListeners = () => (disp, getS) => {
   setShiftEditsListener(disp, getS)
   setRequestedAbsencesListener(disp, getS)
 }
+
+const setDbVersionListener = (disp, GetS) =>
+  db().ref('/dbVersion').on('value', snap => {
+    disp({ type: 'value_received_dbVersion', payload: snap.val() })
+  })
 
 const setAccountDetailsListener = (disp, getS) =>
 	createFirebaseListener(disp, getS, 'accountDetails', getFBPath('accountDetails'))

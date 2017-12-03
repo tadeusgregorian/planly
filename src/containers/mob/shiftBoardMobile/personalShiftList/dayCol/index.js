@@ -17,11 +17,13 @@ export default (props: Props) => {
     <fb className="shiftBoardDayColMain">
       <fb className={'dayHead' + (!shifts.length ? ' isEmpty' : '')} >
         <fb className='weekDay'>{mom.format('dd')}</fb>
-        <fb className='date'>{mom.format('D MMM')}</fb>
+        <fb className='date'>{mom.format('D MMM').slice(0, -1)}</fb>
       </fb>
+      <fb className='shiftsWrapper'>
       { shifts.map( s =>
         <ShiftBox key={s.id} shift={s} />
       )}
+    </fb>
     </fb>
   )
 }

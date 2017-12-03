@@ -10,8 +10,8 @@ import getCurrentUser from 'selectors/currentUser'
 import { openModal } from 'actions/ui/modals'
 import { saveAbsenceToDB, removeAbsenceFromDB } from 'actions/absence'
 import { generateGuid, momToSmart, smartDatesDiff } from 'helpers/index'
-import { getEffectiveDays, getTotalDays, getButtonsToShow, absenceOverlaps } from './localHelpers'
-import type { Store, User, Absence, AbsenceType, AbsenceTypeFilter, AbsenceStatus, AccountPreferences, BundeslandCode } from 'types/index'
+import { getEffectiveDays, getButtonsToShow, checkOverlapping } from './localHelpers'
+import type { Store, User, Absence, AbsenceType, AbsenceTypeFilter, AbsenceStatus, AccountPreferences } from 'types/index'
 
 import ErrorMessageDisplay from './errorMessageDisplay'
 import AbsenceDetailsDisplay from './absenceDetailsDisplay'
@@ -35,7 +35,8 @@ type State = {
   effectiveDays: ?number,
   note: ?string,
   focusedInput: any,
-  errorMessage: ErrorMesage
+  errorMessage: ErrorMesage,
+  loading: boolean,
 }
 
 type OwnProps = {
@@ -46,7 +47,6 @@ type OwnProps = {
 
 type ConProps = {
   user: User,
-  absences: Array<Absence>,
   currentUser: User,
   preferences: AccountPreferences,
   currentYear: number,
@@ -78,6 +78,7 @@ class AbsenceModal extends PureComponent{
       note:           absence ? (absence.note        || '')    : '',
       focusedInput:   null, // we omit this before saving to db!
       errorMessage:   false, // we omit this before saving to db!
+      loading:        false, // we omit this before saving to db!
     }
 
     this.currentMom = moment().year(currentYear).month(currentMonth)
@@ -88,20 +89,22 @@ class AbsenceModal extends PureComponent{
 
   datesChanged = (d: {startDate: ?moment, endDate: ?moment}) => {
     const { id } = this.state
-    const { userID, absences, preferences } = this.props
+    const { userID, currentYear, preferences } = this.props
     const { startDate, endDate } = d
     const { bundesland, excludingSaturdays } = preferences
     this.setState({
+      year:           startDate ? startDate.year()      : currentYear,
       startDate:      startDate ? momToSmart(startDate) : null,
-      endDate:        endDate   ? momToSmart(endDate): null,
+      endDate:        endDate   ? momToSmart(endDate)   : null,
       effectiveDays:  getEffectiveDays(startDate, endDate, bundesland, excludingSaturdays),
+      loading:        true,
     })
 
-    console.log(getTotalDays(startDate, endDate));
-
     if(!startDate || !endDate) return // if both dates are set -> check for validity of selected range
-    if(endDate.year() !== startDate.year())                        return this.setErrorMsg('multiyear')
-    if(absenceOverlaps(startDate, endDate, absences, userID, id )) return this.setErrorMsg('overlapping')
+    if(endDate.year() !== startDate.year())              return this.setErrorMsg('multiyear')
+    checkOverlapping(startDate, endDate, userID, id).then((isOverlapping) => {
+      this.setState({ loading: false, errorMessage: isOverlapping ? 'overlapping' : false })
+    })
     this.setErrorMsg(false)
   }
 
@@ -114,7 +117,7 @@ class AbsenceModal extends PureComponent{
   }
 
   saveAbsence   = (absenceDirty) => {
-    const cleanAbsence = omit(absenceDirty, ['focusedInput', 'errorMessage'])
+    const cleanAbsence = omit(absenceDirty, ['focusedInput', 'errorMessage', 'loading'])
     saveAbsenceToDB({
       ...cleanAbsence,
       note: this.state.note || null, // turning '' to null
@@ -131,7 +134,7 @@ class AbsenceModal extends PureComponent{
 
   render(){
     const { closeModal, user, currentUser, currentType, preferences } = this.props
-    const { type, startDate, endDate, focusedInput, note, status, errorMessage, effectiveDays } = this.state
+    const { type, startDate, endDate, focusedInput, note, status, errorMessage, effectiveDays, loading } = this.state
     const adminMode = !!currentUser.isAdmin
     const isComplete = startDate && endDate && type && !errorMessage
     const accepted = status === 'accepted'
@@ -162,6 +165,7 @@ class AbsenceModal extends PureComponent{
             { startDate && endDate && !errorMessage &&
               <AbsenceDetailsDisplay
                 adminMode={adminMode}
+                loading={loading}
                 totalDays={smartDatesDiff(startDate, endDate)}
                 effectiveDays={effectiveDays}
                 excludingSaturdays={preferences.excludingSaturdays}
@@ -190,7 +194,6 @@ const actionCreators = {
 
 const mapStateToProps = (state: Store, ownProps: OwnProps) => ({
   currentUser: getCurrentUser(state),
-  absences: state.absencePlaner.absences,
   user: (state.core.users.find(u => u.id === ownProps.userID): any), // -> telling Flow to shut up. Result must be a User
   preferences: state.core.accountDetails.preferences,
   currentYear: state.ui.absence.currentYear,

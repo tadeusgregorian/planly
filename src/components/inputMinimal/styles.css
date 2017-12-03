@@ -19,11 +19,11 @@
     background-size: 20px 20px;
     background-position: 96% 50%;
     background-color: 'white'; }
-  .inputMinimalMain input[type=text], .inputMinimalMain [type=email]::placeholder {
+  .inputMinimalMain input[type=text]::placeholder, .inputMinimalMain [type=email]::placeholder {
     color: #a7a7a7; }
   .inputMinimalMain input[type=password]::placeholder {
     color: #a7a7a7; }
-  .inputMinimalMain input[type=text], .inputMinimalMain [type=email]:focus {
+  .inputMinimalMain input[type=text]:focus, .inputMinimalMain [type=email]:focus {
     border: 1px solid #7adaff;
     box-shadow: none;
     outline: none; }

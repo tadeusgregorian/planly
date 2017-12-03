@@ -60,7 +60,7 @@ class ShiftBoardMobile extends PureComponent {
     return(
       <fb className='shiftBoardMobileMain' >
       { inTeamMode
-          ? <TeamShiftList {...{ shifts }} />
+          ? <TeamShiftList {...{ shifts, isLoading }} />
           : <PersonalShiftList {...{ shifts }} weekID={currentWeekID} />
       }
       <fb className={cn({loadingLayer: 1, isLoading })}>loading...</fb>

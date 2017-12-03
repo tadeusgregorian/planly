@@ -5,7 +5,6 @@ import { getFBPath } from './../actionHelpers'
 import type { Absence, AbsenceCorrection } from 'types/index'
 
 export const saveAbsenceToDB = (absence: Absence) => {
-
   const request = absence.status === 'requested' ? absence : null // delete just in case...
   const updates = {}
 

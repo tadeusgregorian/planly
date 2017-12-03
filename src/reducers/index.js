@@ -9,6 +9,7 @@ import firebaseListeners from './firebaseListeners'
 import ui from './ui'
 import roster from './roster'
 import absencePlaner from './absencePlaner'
+import dbVersion from './dbVersion'
 import type { Roster } from './roster'
 import type { AbsencePlaner } from './absencePlaner'
 import type { Ui } from './ui'
@@ -25,7 +26,8 @@ export type RootReducer = {
 	firebaseListeners: FirebaseListeners,
 	ui: Ui,
 	roster: Roster,
-	absencePlaner: AbsencePlaner
+	absencePlaner: AbsencePlaner,
+	dbVersion: ?number,
 }
 
 const appReducer = combineReducers({
@@ -37,13 +39,14 @@ const appReducer = combineReducers({
 	ui,
 	roster,
 	absencePlaner,
+	dbVersion
 })
 
+// this is to get a clean Store after logout
 const rootReducer = (state: any, action: {}) => {
   if (action.type === 'USER_LOGGED_OUT') {
     state = undefined
   }
-
   return appReducer(state, action)
 }
 
