@@ -40,3 +40,8 @@ export const minsToDetailedTime = (mins: number): string => {
   const additionalMins     = minToTime(mins).minutes
   return `${extractedHours} Stunden ${additionalMins} Minuten`
 }
+
+export const getLatest = (weeklyHours: { [smartWeek: string]: string }) => {
+  const latestSmartWeek =  Object.keys(weeklyHours).reduce((acc, val) => acc > val ? acc : val , '0')
+  return weeklyHours[latestSmartWeek]
+}

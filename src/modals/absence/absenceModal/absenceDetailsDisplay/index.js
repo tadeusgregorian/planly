@@ -7,13 +7,11 @@ type Props = {
   loading: boolean,
   effectiveDays: ?number,
   adminMode: boolean,
-  excludingSaturdays: boolean,
   openEffectiveDaysModal: Function,
 }
 
 export default (props: Props) => {
-  const saturdaysText = props.excludingSaturdays ? ', Samstage' : ''
-  const effectiveDaysBalloon = `ohne Feiertage${ saturdaysText } und Sonntage`
+  const effectiveDaysBalloon = 'Summe der Tage, an denen der Mitarbeiter arbeiten würde.'
 
   if(props.loading) return(
     <fb className="absenceDetailsDisplayMain">

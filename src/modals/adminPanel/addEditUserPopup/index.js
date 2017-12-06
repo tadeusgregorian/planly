@@ -12,6 +12,7 @@ import SModal 					from 'components/sModal'
 import SButton 					from 'components/sButton'
 import FlatInput 				from 'components/flatInput'
 import FlatFormRow 			from 'components/flatFormRow'
+import WorkDaysPicker		from 'components/workDaysPicker'
 
 import EmailStatus 				from './emailStatus'
 import ErrorMessageBar  	from './errorMessageBar'
@@ -19,9 +20,9 @@ import PositionSelect  		from './positionSelect'
 import BranchSelect 			from './branchSelect'
 import WeeklyHoursInput 	from './weeklyHoursInput'
 
-import { getNextID, isValidEmail, isFloatStr } from 'helpers/index'
-import { floatToMins, minsToFloat } from './localHelpers'
-import type { UserStatus, Store, User } from 'types/index'
+import { getNextID, isValidEmail, isFloatStr, replaceDotsWithCommas } from 'helpers/index'
+import { floatToMins, minsToFloat, getAvgDailyMins, minsToDetailedTime, getLatest } from './localHelpers'
+import type { UserStatus, Store, User, WorkDays } from 'types/index'
 import './styles.css'
 
 class AddEditUserPopup extends PureComponent {
@@ -33,6 +34,7 @@ class AddEditUserPopup extends PureComponent {
 		position: 				string,
 		status: 					UserStatus,
 		weeklyHours: 			{ [smartWeek: string]: string },
+		workDays: 				WorkDays,
 		errorText: 				string,
 	}
 
@@ -52,6 +54,7 @@ class AddEditUserPopup extends PureComponent {
 			position: 				user ? user.position 		: 'p001',
 			status: 					user ? user.status 			: 'NOT_INVITED',
 			weeklyHours:      this.getDefault_weeklyHours(),  // we display weeklyHours -> but store the weeklyMins as integers in DB
+			workDays: 				user ? user.workDays 		: { mo: 1, tu: 1, we: 1, th: 1, fr: 1, sa: 1 },
 			errorText: 				'',  // gets stripped away before saving to DB
 		}
 	}
@@ -126,12 +129,19 @@ class AddEditUserPopup extends PureComponent {
 	}
 
 	render() {
-		const { name, email, weeklyHours, position, branches, status, id } = this.state
-		const { user } = this.props
+		const { name, email, weeklyHours, position, branches, status, workDays } = this.state
+
 		const allBranches 	= this.props.branches
 		const allPositions 	= this.props.positions
 		const editMode 			= !!this.props.user
 		const validEmail    = isValidEmail(email)
+
+		console.log(weeklyHours);
+		console.log(workDays);
+		const avgHours 			= Math.round(getAvgDailyMins(workDays, getLatest(weeklyHours)) / 60 * 100) / 100
+		const avgHoursStr 	= replaceDotsWithCommas(avgHours) + ' Stunden'
+		const avgTimeStr    = minsToDetailedTime(getAvgDailyMins(workDays, getLatest(weeklyHours)))
+		const avgTimeTTip   = 'Durchschnittliche tägliche Arbeitszeit: ' + avgTimeStr
 
 		return (
 			<SModal.Main title={ editMode ? 'Mitarbeiter bearbeiten' : 'Neuer Mitarbeiter' } onClose={this.props.closeModal} className='addEditUserPopupMain'>
@@ -157,6 +167,10 @@ class AddEditUserPopup extends PureComponent {
 							<FlatFormRow label='Wochenstunden'>
 								<WeeklyHoursInput weeklyHours={weeklyHours} setWeeklyHours={(weeklyHours) => this.setState({ weeklyHours })} extendable={editMode}/>
 							</FlatFormRow>
+							<FlatFormRow label='Arbeitstage'>
+								<WorkDaysPicker workDays={workDays} onChange={(wd) => this.setState({ workDays: wd })} noEmpty />
+								<fb className='avgDailyHours'  data-balloon={avgTimeTTip} >&Oslash; {avgHoursStr}</fb>
+						</FlatFormRow>
 						</fb>
 					</fb>
 				</SModal.Body>

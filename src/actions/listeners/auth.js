@@ -22,25 +22,33 @@ export const setAuthStateListener = (initializor: Function) => {
         return
       }
 
-      firebase.database().ref('allUsers/' + user.uid).once('value')
-        .then(snap => {
+      const _user      = firebase.database().ref('allUsers/' + user.uid).once('value')
+      const _dbVersion = firebase.database().ref('dbVersion').once('value')
 
-          if(!snap.val() || snap.val().deleted){
-            Toast.error('Benutzer nicht aktiviert')
-            return firebase.auth().signOut()
-          }
+      Promise.all([_user, _dbVersion]).then(results => {
 
+        const user      = results[0].val()
+        const dbVersion = results[1].val()
 
-          createCookie('loggedIn', 'true', getDomain(), 1000)
+        if(dbVersion === 'maintenance') return signOut('Wartung. In Kürze wieder da.')
+        if(!user || user.deleted) return signOut('Benutzer nicht aktiviert')
 
-          dispatch({type: 'USER_LOGGED_IN' })
-          dispatch({type: 'SET_ACCOUNT_ID',       payload: snap.val().account})
-          dispatch({type: 'SET_CURRENT_USER_ID',  payload: snap.val().userID})
+        createCookie('loggedIn', 'true', getDomain(), 1000)
 
-          window.accountID = snap.val().account // this is little hacky.. so helper function can have access to accountID without getState()
-          checkClientDate(dispatch)
-          initializor()
-        })
+        dispatch({type: 'USER_LOGGED_IN' })
+        dispatch({type: 'SET_ACCOUNT_ID',       payload: user.account})
+        dispatch({type: 'SET_CURRENT_USER_ID',  payload: user.userID})
+
+        window.accountID = user.account // this is little hacky.. so helper function can have access to accountID without getState()
+        checkClientDate(dispatch)
+        initializor()
+      })
     })
   }
+}
+
+
+const signOut = (text: string) => {
+  text && Toast.error(text)
+  firebase.auth().signOut()
 }

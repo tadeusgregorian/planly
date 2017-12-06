@@ -31,7 +31,6 @@ path /accounts/{accID}/absencePlaner/weeklyAbsences/{weekID}/{aID} is WeeklyAbse
 
 path /accounts/{accID}/roster/corrections/{corID} is Correction;
 path /accounts/{accID}/roster/extraHours/{weekID}/{eID} is ExtraHours;
-path /accounts/{accID}/roster/miniShiftWeeks/{weekID}/{uID}/{shiftID} is MiniShiftWeek;
 path /accounts/{accID}/roster/shiftWeeks/{weekID}/{shiftID} is Shift;
 path /accounts/{accID}/roster/templatesFlat/{tempID} is TemplateFlat;
 path /accounts/{accID}/roster/weekSums/{sumID} is Number;
@@ -47,29 +46,25 @@ type TransUser {
 }
 
 type WeeklyAbsence {
-  avgDailyMins: Number,
-  firstWeekDay: Number,
+  avgMins: Number,
+  firstDay: Number,
   id: String,
-  lastWeekDay: Number,
+  lastDay: Number,
   type: String,
-  useAvgHours: Boolean|Null,
+  useMins: Boolean|Null,
   user: String,
-  workDays: Object|Null,
+  workDays: Object,
 }
 
 type Absence {
-  avgDailyMins: Number,
+  avgMins: Number,
   effectiveDays: Number,
   endDate: Number,
-  endWeekDay: Number,
   id: String,
   startDate: Number,
-  startWeekDay: Number,
   status: String,
-  totalDays: Number,
   touchingWeeks: Object,
   type: String,
-  useAvgHours: Boolean|Null,
   user: String,
   workDays: Object|Null,
   year: Number,
@@ -116,11 +111,6 @@ type Correction{
   week: String,
 }
 
-type MiniShiftWeek{
-  mins: Number,
-  weekDay: Number,
-}
-
 type Day extends String {
   validate() {this=='mo'||this =='tu'||this =='we'||this=='th'||this=='fr'||this=='sa'||this=='su'}
 }
@@ -149,17 +139,14 @@ type TemplateFlat {
 type User {
   id: String,
   name: String,
-  positions: String,
   branches: Object,
+  email: String|Null,
   position: String,
-  weeklyMins: Number,
+  weeklyMins: Object,
   status: String,
-  avgDailyMins: Number,
-  isAdmins: String | Null,
-  isAdmin: Number | Null,
-  isSuperAdmin: Number | Null,
-  workDays: Object | Null,
-  vacDays: Number | Null,
+  isAdmin: Number|Null,
+  isSuperAdmin: Number|Null,
+  workDays: Object,
   deleted: Boolean|Null
 }
 

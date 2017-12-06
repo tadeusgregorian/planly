@@ -11,13 +11,13 @@ export type ThunkAction = (any, any, any)=> (dispatch: Dispatch, getState: GetSt
 // core-types
 
 export type WorkDays = {
-  mo?: number | null,
-  tu?: number | null,
-  we?: number | null,
-  th?: number | null,
-  fr?: number | null,
-  sa?: number | null,
-  su?: number | null,
+  mo?: 1 | null,
+  tu?: 1 | null,
+  we?: 1 | null,
+  th?: 1 | null,
+  fr?: 1 | null,
+  sa?: 1 | null,
+  su?: 1 | null,
 }
 
 export type AbsenceType = 'vac' | 'ill' | 'extra'
@@ -33,7 +33,22 @@ export type Absence = { // this is the absence Obj we get from the DB ( Firebase
   startDate: number,//
   endDate: number,//
   effectiveDays: number,//
-  note?: ?string //
+  note?: ?string, //
+  avgMins: number,
+  workDays: WorkDays,
+  touchingWeeks: { [smartWeek: string]: string },
+  unpaid?: true,
+}
+
+export type AbsenceWeekly = {
+  id: string,//
+  user: string, //
+  type: AbsenceType,//
+  firstDay: number,
+  lastDay: number,
+  avgMins: number,
+  workDays: WorkDays,
+  unpaid?: true,
 }
 
 export type AbsenceCorrection = {
@@ -41,8 +56,7 @@ export type AbsenceCorrection = {
   user: string,
   year: number,
   extraDays?: number | null,
-  vacDaysTransfered?: number | null,
-  vacDaysCorrected?: number | null,
+  vacDaysCorrection?: number | null,
   vacDays?: number | null,
 }
 
@@ -65,6 +79,7 @@ export type User = {
   branches: {},
   email: ?string,
   weeklyMins: { [ weekID: string]: number },
+  workDays: WorkDays,
   status: UserStatus,
   isAdmin?: true | null, // can be set to null -> so it gets removed on DB
   isSuperAdmin?: true,
@@ -226,9 +241,7 @@ export type TemplatesFlat = Array<TemplateFlat>
 export type BundeslandCode = 'BE'|'BB'|'HB'|'HH'|'HE'|'MV'|'NI'|'NW'|'RP'|'SL'|'SN'|'ST'|'SH'|'TH'
 
 export type AccountPreferences = {
-  excludingSunndays: boolean,
-  excludingSaturdays: boolean,
-  bundesland: BundeslandCode,
+  bundesland: BundeslandCode | false,
 }
 
 export type AccountDetails = {

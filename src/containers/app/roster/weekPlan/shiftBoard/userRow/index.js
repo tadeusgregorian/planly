@@ -9,7 +9,7 @@ import OpenUserCell from './openUserCell'
 
 import { calculateWeekSum } from './localHelpers'
 
-import type { User, Shifts, ShiftRef, Position, AbsenceType, OvertimeStatus, ExtraHours, CellRef } from 'types/index'
+import type { User, Shifts, ShiftRef, Position, AbsenceWeekly, OvertimeStatus, ExtraHours, CellRef } from 'types/index'
 import './styles.css'
 
 type Props = {
@@ -31,7 +31,7 @@ type Props = {
   cellUnderMouse: ?CellRef,
   weeklyMins: ?number,
   ghost: boolean,
-  absentDays: { [ weekDay: number ]: AbsenceType },
+  absences: Array<AbsenceWeekly>
 }
 
 export default class UserRow extends PureComponent{
@@ -55,7 +55,7 @@ export default class UserRow extends PureComponent{
       focusedShiftRef,
       cellUnderMouse,
       weeklyMins,
-      absentDays,
+      absences,
       ghost } = this.props
 
       const isAdmin      = currentUser.isAdmin
@@ -94,12 +94,13 @@ export default class UserRow extends PureComponent{
             const shadowed        = shadowedDay === day
             const highlighted     = highlightedDay === day
             const blocked         = !isAdmin && currentUser.id !== userID
+            const absence         = absences.find(a => a.firstDay <= dayNum && a.lastDay >= dayNum)
             //const absence         = absences.reduce((acc, abs) => dayNum >= abs.firstWeekDay && dayNum <= abs.lastWeekDay && abs.type , false) // holds the absenceType if is absent
             return <ShiftCell
               day={day}
               user={userID}
               key={day}
-              absence={ absentDays[dayNum] || false }
+              absent={absence && absence.type}
               blocked={blocked}
               shifts={dayShifts}
               extraHours={extraHoursOfDay}

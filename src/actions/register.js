@@ -31,9 +31,8 @@ const getEmptyAccount = (email): DBAccount => ({
   accountDetails: {
     creationDate: firebase.database.ServerValue.TIMESTAMP,
     preferences: {
-      bundesland: 'HH',
-      excludingSaturdays: false,
-      excludingSunndays: true,
+      bundesland: false, // not yet set
+      workdays: false, // not yet set -> can be 5 or 6
     }
   },
   users: {
@@ -44,6 +43,7 @@ const getEmptyAccount = (email): DBAccount => ({
       position: 'p001',
       branches: { b001: true },
       weeklyMins: { [beginningOfTime]: 2400 },
+      workDays: { mo: 1, tu: 1, we: 1, th: 1, fr: 1 },
       status: 'ACTIVE',
       isAdmin: true,
       isSuperAdmin: true, // SuperAdmin is only the creator of the account.

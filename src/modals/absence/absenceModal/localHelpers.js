@@ -3,7 +3,8 @@ import moment from 'moment'
 import { momToSmart } from 'helpers/index'
 import { db } from 'actions/firebaseInit'
 import { getFBPath } from 'actions/actionHelpers'
-import type { BundeslandCode, User, Absence, AbsenceStatus } from 'types/index'
+import { weekDays } from 'constants/roster'
+import type { BundeslandCode, User, Absence, AbsenceStatus, WorkDays } from 'types/index'
 import values from 'lodash/values'
 
 // const numToWeekDay = (num: number): Day => {
@@ -15,8 +16,8 @@ export const getTotalDays = (start: ?moment, end: ?moment): number | null => {
   return moment(end).diff(start, 'days') + 1
 }
 
-type         GetEffectiveDays = (?moment, ?moment, BundeslandCode, boolean) => number | null
-export const getEffectiveDays: GetEffectiveDays = (start, end, bundesland, excludingSaturdays ) => {
+type         GetEffectiveDays = (?moment, ?moment, BundeslandCode | false, WorkDays) => number | null
+export const getEffectiveDays: GetEffectiveDays = (start, end, bundesland, workDays ) => {
   if(!start || !end) return null
   let excludedsCount = 0
   const totalDays = moment(end).diff(start, 'days') + 1
@@ -27,11 +28,9 @@ export const getEffectiveDays: GetEffectiveDays = (start, end, bundesland, exclu
 
     // $FlowFixMe -> moment-feiertage hat moment extended -> moment doesnt get that.
     const isHoliday   = curDay.isHoliday(bundesland)
-    const isSaturday  = curWeekDay === 5
-    const isSunday    = curWeekDay === 6
+    const notWorking  = !workDays[weekDays[curWeekDay]]
 
-
-    if( (excludingSaturdays && isSaturday) || isSunday || isHoliday) ++excludedsCount
+    if( notWorking || isHoliday) ++excludedsCount
   }
   return totalDays - excludedsCount
 }

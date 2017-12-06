@@ -44,8 +44,7 @@ class AbsencePlaner extends PureComponent {
     document.addEventListener('click', this.clickDetected)
     this.props.setAbsencesListener(currentYear)
     this.props.setAbsenceCorrectionsListener()
-    console.log(typeof preferences.excludingSaturdays);
-    typeof preferences.excludingSaturdays === 'undefined' && this.props.openModal('ABSENCE_SETTINGS')
+    !preferences.bundesland && this.props.openModal('ABSENCE_SETTINGS')
   }
 
   componentWillUnmount  = () => {

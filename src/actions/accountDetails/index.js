@@ -15,6 +15,7 @@ export const saveUseAvgHoursForIll = (useAvgHours: boolean) => {
   db().ref(getFBPath('accountDetails', ['preferences', 'useAvgHoursForIll'])).set(useAvgHours)
 }
 
-export const saveBundeslandToDB = (code: BundeslandCode) => {
-  db().ref(getFBPath('accountDetails', ['preferences', 'bundesland'])).set(code)
+export const saveAbsenceSettings = (bundesland: BundeslandCode): Promise<*> => {
+  const updates = { [getFBPath('accountDetails', ['preferences', 'bundesland'])]: bundesland }
+  return db().ref().update(updates)
 }

@@ -7,7 +7,8 @@ const authState = simpleReducer({
 	default: 								'isAuthenticating',
 	USER_LOGGED_IN: 				'loggedIn',
 	USER_LOGGED_OUT: 				'loggedOut',
-	USER_IS_AUTHENTICATING: 'isAuthenticating'
+	USER_IS_AUTHENTICATING: 'isAuthenticating',
+	AUTH_FAILED: 						'loggedOut',
 })
 
 type AccountID = string | null

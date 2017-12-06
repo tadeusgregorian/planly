@@ -8,15 +8,17 @@ import './styles.css'
 
 type Props = {
   onChange: (WorkDays) => any,
-  workDays: ?WorkDays,
+  workDays: WorkDays,
+  noEmpty?: boolean,
 }
 
 export default class WorkDaysPicker extends PureComponent{
   props: Props
 
   dayClicked = (weekDay: string) => {
-    const { workDays } = this.props
+    const { workDays, noEmpty } = this.props
     const removing = has(workDays,weekDay)
+    if(noEmpty && removing && Object.keys(workDays).length === 1) return // if noEmpty and its last one -> get out here
     const newWorkDays = removing ? omit(workDays, weekDay) : { ...workDays, [weekDay]: 1 }
     this.props.onChange(newWorkDays)
   }

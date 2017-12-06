@@ -12,7 +12,6 @@ export type TargetKey =
 | 'absencesWeekly'
 | 'absenceCorrections'
 | 'vacationRequests'
-| 'miniShiftWeeks'
 | 'weekSums'
 | 'corrections'
 | 'extraHours'
@@ -31,7 +30,6 @@ export const getFBPath	= (target: TargetKey, childPaths?: Array<string>): string
     shiftEdits: 		    '/roster/shiftEdits/',
     extraHours:         '/roster/extraHours/',
     corrections:        '/roster/corrections/',
-    miniShiftWeeks:     '/roster/miniShiftWeeks/',
     templatesFlat: 	    '/roster/templatesFlat/',
     absences:           '/absencePlaner/absences/',
     absenceCorrections: '/absencePlaner/absenceCorrections/',

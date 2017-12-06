@@ -16,6 +16,7 @@ import './styles.css'
 
 
 class App extends PureComponent {
+
   render = () => {
     const { currentUser, appDataLoaded } = this.props
     const isAdmin = currentUser && currentUser.isAdmin

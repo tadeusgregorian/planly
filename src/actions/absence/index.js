@@ -2,13 +2,14 @@
 
 import { db } from '../firebaseInit'
 import { getFBPath } from './../actionHelpers'
-import type { Absence, AbsenceCorrection } from 'types/index'
+import { extendForDB } from './localHelpers'
+import type { Absence, AbsenceCorrection, User } from 'types/index'
 
-export const saveAbsenceToDB = (absence: Absence) => {
+export const saveAbsenceToDB = (user: User, absence: Absence) => {
   const request = absence.status === 'requested' ? absence : null // delete just in case...
   const updates = {}
 
-  updates[getFBPath('absences', [absence.id])] = absence
+  updates[getFBPath('absences', [absence.id])] = extendForDB(user, absence)
   updates[getFBPath('vacationRequests', [absence.id])] = request
 
   db().ref().update(updates)

@@ -3,7 +3,8 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux'
 import { Route, BrowserRouter as Router, Redirect, Switch } from 'react-router-dom'
 import { initFirebase } from 'actions/index'
-import { setAuthStateListener, registerInitialListeners } from 'actions/listeners'
+import { setAuthStateListener } from 'actions/listeners/auth'
+import { registerInitialListeners } from 'actions/listeners/init'
 import { initIziToast } from 'helpers/iziToast'
 import { onMobile } from 'helpers/index'
 import ModalsManager from './modalsManager'
@@ -25,21 +26,25 @@ class Container extends PureComponent {
   componentDidMount = () => {
     if(!this.props.firebaseInitialized) this.props.initFirebase() // making sure we initialize Firebase only once...
     if(!this.props.firebaseAuthListener){
+      if(this.props.dbVersion === 'maintenance') return // under construction -> dont attach listeners!
       this.props.setAuthStateListener(this.props.registerInitialListeners)
     }
   }
 
   componentWillReceiveProps = (np) => {
     const { dbVersion } = this.props // if dbVersions was loaded and now changed -> reload!
-    dbVersion && dbVersion !== np.dbVersion && window.location.reload();
+    dbVersion && dbVersion !== np.dbVersion && console.log('this now reload');
+    //dbVersion && dbVersion !== np.dbVersion && window.location.reload();
   }
 
   render() {
-    const { authState }     =  this.props
-    const loggedIn 					=  authState === 'loggedIn'
-    const isAuthenticating 	=  authState === 'isAuthenticating'
+    const { authState, dbVersion }     = this.props
+    const loggedIn 					= authState === 'loggedIn'
+    const isAuthenticating 	= authState === 'isAuthenticating'
+    const underConstruciton = dbVersion === 'maintenance'
 
     if(isAuthenticating)  return (<fb>authenticating...</fb>)
+    if(underConstruciton) return (<fb>Running Updates. We will be back soon.</fb>)
 
     return (
       <Router>

@@ -89,14 +89,15 @@ class AbsenceModal extends PureComponent{
 
   datesChanged = (d: {startDate: ?moment, endDate: ?moment}) => {
     const { id } = this.state
-    const { userID, currentYear, preferences } = this.props
+    const { userID, user, currentYear, preferences } = this.props
     const { startDate, endDate } = d
-    const { bundesland, excludingSaturdays } = preferences
+    const { bundesland } = preferences
+
     this.setState({
       year:           startDate ? startDate.year()      : currentYear,
       startDate:      startDate ? momToSmart(startDate) : null,
       endDate:        endDate   ? momToSmart(endDate)   : null,
-      effectiveDays:  getEffectiveDays(startDate, endDate, bundesland, excludingSaturdays),
+      effectiveDays:  getEffectiveDays(startDate, endDate, bundesland, user.workDays),
       loading:        true,
     })
 
@@ -118,7 +119,7 @@ class AbsenceModal extends PureComponent{
 
   saveAbsence   = (absenceDirty) => {
     const cleanAbsence = omit(absenceDirty, ['focusedInput', 'errorMessage', 'loading'])
-    saveAbsenceToDB({
+    saveAbsenceToDB(this.props.user, {
       ...cleanAbsence,
       note: this.state.note || null, // turning '' to null
     })
@@ -168,7 +169,6 @@ class AbsenceModal extends PureComponent{
                 loading={loading}
                 totalDays={smartDatesDiff(startDate, endDate)}
                 effectiveDays={effectiveDays}
-                excludingSaturdays={preferences.excludingSaturdays}
                 openEffectiveDaysModal={this.openEffectiveDaysModal}
               />
             }

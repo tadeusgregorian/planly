@@ -5,18 +5,18 @@ import type { Connector } from 'react-redux'
 import cn from 'classnames'
 
 import { getDay, getOvertimeStatus } from './localHelpers'
-import type { User, Shifts, CellRef, Store, ShiftRef, Position, Correction, ExtraHours } from 'types/index'
+import type { User, Shifts, CellRef, Store, ShiftRef, Position, Correction, ExtraHours, AbsenceWeekly } from 'types/index'
 import getCurrentUser from 'selectors/currentUser'
 import getInitialStartWeeks from 'selectors/initialStartWeeks'
 import getCurrentWeekSums from 'selectors/weekSumsOfCurrentWeek'
 import getCurrentOvertimes from 'selectors/overtimesOfCurrentWeek'
 import getCurrentCorrections from 'selectors/correctionsOfCurrentWeek'
 import getVisibleUsers from 'selectors/visibleUsersOfShiftBoard'
-import getAbsentDaysOfUsers from 'selectors/absentDaysOfUsers'
+
 import getCurrentWeeklyMins from 'selectors/currentWeeklyMins'
 import getShiftsOfCurrentBranch from 'selectors/shiftsOfCurrentBranch'
-import type { AbsentDaysOfUsers } from 'selectors/absentDaysOfUsers'
-//import getUsersAdjustedToWeek from 'selectors/usersAdjustedToWeek'
+
+
 
 import ShiftBoardHead from './shiftBoardHead'
 import UserRow from './userRow'
@@ -42,7 +42,7 @@ type ConProps = {
   initialStartWeeks: {[userID: string]: string},
   currentCorrections: {[userID: string]: Correction},
   visibleUsers: Array<User>,
-  absentDaysOfUsers: AbsentDaysOfUsers,
+  absences: Array<AbsenceWeekly>,
   currentUser: User,
   focusedShiftRef: ?ShiftRef,
   currentWeeklyMins: {[weekID: string]: number},
@@ -68,7 +68,7 @@ class ShiftBoard extends PureComponent{
       focusedShiftRef,
       cellUnderMouse,
       positions,
-      absentDaysOfUsers,
+      absences,
       currentWeekSums,
       currentOvertimes,
       currentWeeklyMins,
@@ -91,7 +91,7 @@ class ShiftBoard extends PureComponent{
       weeklyMins={currentWeeklyMins[userID]}
       shifts={shifts.filter(s => s.user === userID)}
       extraHours={extraHours.filter(e => e.user === userID)}
-      absentDays={absentDaysOfUsers[userID] || {}} // we need to OR here, cause openUser is causeing undefined here
+      absences={absences.filter(a => a.user === userID)}
       shadowedDay={isDragging ? getDay(cellUnderMouse, userID) : false} // could do && cause of random Flow issue
       highlightedDay={extraHoursMode ? getDay(cellUnderMouse, userID) : false} // could do && cause of random Flow issue
       focusedShiftRef={focusedShiftRef}
@@ -144,10 +144,10 @@ const mapStateToProps = (state: Store) => ({
   currentOvertimes: getCurrentOvertimes(state),
   currentCorrections: getCurrentCorrections(state),
   visibleUsers: getVisibleUsers(state),
-  absentDaysOfUsers: getAbsentDaysOfUsers(state),
   focusedShiftRef: state.ui.roster.shiftBoard.focusedShiftRef,
   currentWeeklyMins: getCurrentWeeklyMins(state),
   currentUser: getCurrentUser(state),
+  absences: state.roster.absencesWeekly,
   currentBranch: state.ui.roster.currentBranch,
 })
 

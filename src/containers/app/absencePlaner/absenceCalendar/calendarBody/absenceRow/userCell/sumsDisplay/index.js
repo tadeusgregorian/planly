@@ -52,10 +52,10 @@ class SumsDisplay extends PureComponent{
 
     const vacMode           = type === 'vac'
     const extraDays         = this.propToInt(absenceCorrection, 'extraDays')
-    const vacDaysTransfered = this.propToInt(absenceCorrection, 'vacDaysTransfered')
+    const vacDaysCorrection = this.propToInt(absenceCorrection, 'vacDaysCorrection')
     const vacDaysCorrected  = this.propToInt(absenceCorrection, 'vacDaysCorrected')
 
-    const resultingVacDays  = vacDaysCorrected || currentVacDays + vacDaysTransfered
+    const resultingVacDays  = vacDaysCorrected || currentVacDays + vacDaysCorrection
 
     return(
       <fb

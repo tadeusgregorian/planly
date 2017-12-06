@@ -11,7 +11,7 @@ type Props = {
   day: Day,
   user: string,
   focusedShiftRef: ?ShiftRef,
-  absence: AbsenceType | false,
+  absent: AbsenceType | false,
   shadowed?: boolean,
   highlighted?: boolean,
   shifts: Shifts,
@@ -39,7 +39,7 @@ export default class ShiftCell extends PureComponent {
       style,
       cssClasses,
       blocked,
-      absence,
+      absent,
       hovered,
       templateMode,
       highlighted } = this.props
@@ -51,7 +51,7 @@ export default class ShiftCell extends PureComponent {
     const dummyShift:PreShift = { s: 0, e: 0, b: 0, user, day, id: focusedShiftID }
     const cssClassesObj       = cssClasses ? cssClasses.reduce((acc, val) => ({ ...acc, [val]: true }), {}) : {} // turnes the classesArray to an obj for classnames
     const absenceIconMap      = { vac: 'icon icon-beach_access', ill: 'icon icon-healing', extra: 'icon icon-star4' }
-    const absenceIconClass    = absence && absenceIconMap[absence]
+    const absenceIconClass    = absent && absenceIconMap[absent]
     const isEmpty             = !shifts.length && !inCreation && !extraHours.length
     const showExtendBtn       = hovered && !highlighted && !shadowed && !fsr && !isEmpty
     const showCreateBox       = hovered && !highlighted && !shadowed && !fsr &&  isEmpty
@@ -80,7 +80,7 @@ export default class ShiftCell extends PureComponent {
         { inCreation    && <ShiftBox shift={dummyShift} focused inCreation/> }
         { showCreateBox && <fb className='createShiftBox'>+</fb> }
         { shadowed      && <fb className='dropZone'></fb> }
-        { absence       && !focusedShift && <fb className='absenceLayer'><fb className={absenceIconClass} /></fb> }
+        { absent        && !focusedShift && <fb className='absenceLayer'><fb className={absenceIconClass} /></fb> }
         { highlighted   && <fb className='highlightedCell' />}
         { showExtendBtn && <fb className='extendCellBtn' data-type='extend-cell-btn'>+</fb> }
       </fb>

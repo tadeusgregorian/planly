@@ -23,25 +23,24 @@ export const setRosterListeners: ThunkAction = () => (dispatch, getState: GetSta
   setShiftWeekListener(dispatch, getState)
   setExtraHoursListener(dispatch, getState)
   setDayNotesListener(dispatch, getState)
+  setAbsencesWeeklyListener(dispatch, getState)
 }
 
-// export const setWeekAbsenceListener = () => (dispatch: Dispatch, getState: GetState) => {
-//   const weekID = getState().ui.roster.currentWeekID
-//   const path   = getFBPath('absencesWeekly', [weekID])
-//   createFirebaseListener(dispatch, getState, 'weekAbsences', path)
-// }
+export const setAbsencesWeeklyListener = (dispatch: Dispatch, getState: GetState) => {
+  const weekID = getState().ui.roster.currentWeekID
+  const path   = getFBPath('absencesWeekly', [weekID])
+  createFirebaseListener(dispatch, getState, 'absencesWeekly', path)
+}
 
 const setExtraHoursListener = (dispatch: Dispatch, getState: GetState) => {
   const { weekID } = getWeekAndBranch(getState)
   const path      = getFBPath('extraHours', [weekID])
-
   createFirebaseListener(dispatch, getState, 'extraHours', path)
 }
 
 const setShiftWeekListener = (dispatch, getState: any) => {
   const { weekID } = getWeekAndBranch(getState)
   const path       = getFBPath('shiftWeeks', [weekID])
-
   createFirebaseListener(dispatch, getState, 'shiftWeek', path)
 }
 

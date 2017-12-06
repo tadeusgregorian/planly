@@ -2,7 +2,7 @@
 import { db } from '../firebaseInit'
 import values from 'lodash/values'
 import type { PreShift, Shift, User } from 'types/index'
-import { weekDays } from 'constants/roster'
+//import { weekDays } from 'constants/roster'
 import { getFBPath } from './../actionHelpers'
 
 export const toDBShift = (sh: PreShift, branch: string): Shift => ({
@@ -23,17 +23,17 @@ export const getShiftUpdate = (preShift: PreShift, weekID: string , branch: stri
   return {[ getFBPath('shiftWeeks', [weekID, shift.id])]: data}
 }
 
-export const getMiniShiftUpdate = (shift: PreShift, weekID: string, remove: boolean = false) => {
-  const miniShift   = getMini(shift)
-  const data        = remove ? null : miniShift
-  return {[ getFBPath('miniShiftWeeks', [weekID, shift.user, shift.id]) ]: data}
-}
+// export const getMiniShiftUpdate = (shift: PreShift, weekID: string, remove: boolean = false) => {
+//   const miniShift   = getMini(shift)
+//   const data        = remove ? null : miniShift
+//   return {[ getFBPath('miniShiftWeeks', [weekID, shift.user, shift.id]) ]: data}
+// }
 
-export const getMini = (shift: PreShift): {mins: number, weekDay: number} => {
-  const mins = shift.e - shift.s - ( shift.b || 0)
-  const weekDay = weekDays.indexOf(shift.day) // as number ( 0 - 6 ) instead of type: ('mo' - 'su')
-  return { mins, weekDay }
-}
+// export const getMini = (shift: PreShift): {mins: number, weekDay: number} => {
+//   const mins = shift.e - shift.s - ( shift.b || 0)
+//   const weekDay = weekDays.indexOf(shift.day) // as number ( 0 - 6 ) instead of type: ('mo' - 'su')
+//   return { mins, weekDay }
+// }
 
 export const fetchTemplateWeek = (tempID: string): Promise<Array<Shift>> => (
   db().ref(getFBPath('shiftWeeks', [tempID])).once('value').then(snap => {
