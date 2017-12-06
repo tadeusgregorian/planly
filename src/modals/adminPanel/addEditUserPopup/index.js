@@ -136,12 +136,12 @@ class AddEditUserPopup extends PureComponent {
 		const editMode 			= !!this.props.user
 		const validEmail    = isValidEmail(email)
 
-		console.log(weeklyHours);
-		console.log(workDays);
 		const avgHours 			= Math.round(getAvgDailyMins(workDays, getLatest(weeklyHours)) / 60 * 100) / 100
 		const avgHoursStr 	= replaceDotsWithCommas(avgHours) + ' Stunden'
 		const avgTimeStr    = minsToDetailedTime(getAvgDailyMins(workDays, getLatest(weeklyHours)))
 		const avgTimeTTip   = 'Durchschnittliche tägliche Arbeitszeit: ' + avgTimeStr
+
+		console.log(weeklyHours);
 
 		return (
 			<SModal.Main title={ editMode ? 'Mitarbeiter bearbeiten' : 'Neuer Mitarbeiter' } onClose={this.props.closeModal} className='addEditUserPopupMain'>

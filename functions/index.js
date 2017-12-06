@@ -1,6 +1,6 @@
 const functions       = require('firebase-functions')
 
-//const sumsUpdater         = require('./sumsUpdater')
+const sumsUpdater         = require('./sumsUpdater')
 const getUser             = require('./getUser')
 const activateUser        = require('./activateUser')
 const sendInvitationMail  = require('./mailSender')
@@ -18,14 +18,14 @@ exports.absenceFanOut = functions.database
     return absenceHandler.fanOutAbsence(rootRef, { accountID, absencePrev, absenceNew })
   })
 
-  // exports.absencesWeeklyChanged = functions.database
-  // .ref('/accounts/{accountID}/absencePlaner/absencesWeekly/{weekID}/{absenceID}')
-  // .onWrite(event => {
-  //   const { accountID, weekID } = event.params
-  //   const { user } = event.data.val() || event.data.previous.val()
-  //   const rootRef = event.data.adminRef.root
-  //   return sumsUpdater.updateWeekSums(rootRef, { accountID, weekID, userID: user })
-  // })
+  exports.absencesWeeklyChanged = functions.database
+  .ref('/accounts/{accountID}/absencePlaner/absencesWeekly/{weekID}/{absenceID}')
+  .onWrite(event => {
+    const { accountID, weekID } = event.params
+    const { user } = event.data.val() || event.data.previous.val()
+    const rootRef = event.data.adminRef.root
+    return sumsUpdater.updateWeekSums(rootRef, { accountID, weekID, userID: user })
+  })
 
 exports.onEmailInviteAdded = functions.database
   .ref('/emailInvites/{inviteID}')

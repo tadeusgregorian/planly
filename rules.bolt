@@ -10,6 +10,11 @@ path /allUsers {
   write() { auth.uid !== null }
 }
 
+path /dbVersion {
+  read() { true }
+  write() { false }
+}
+
 path /emailInvites {
   read() { auth.uid !== null }
   write() { auth.uid !== null }
@@ -68,7 +73,6 @@ type Absence {
   user: String,
   workDays: Object|Null,
   year: Number,
-  yearUser: String,
   unpaid: Boolean|Null,
   note: String|Null
 }

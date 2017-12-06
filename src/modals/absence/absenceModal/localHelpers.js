@@ -65,8 +65,6 @@ export const checkOverlapping: CheckOverlapping = (start, end, user, absenceID) 
   return db().ref(getFBPath('absences')).orderByChild('user').equalTo(user).once('value').then(snap => {
     const absences: Array<Absence> = snap.val() ? values(snap.val()) : []
 
-    console.log(absences);
-
     return absences.filter(a => a.user === user).reduce(
       (acc, val) =>
       (

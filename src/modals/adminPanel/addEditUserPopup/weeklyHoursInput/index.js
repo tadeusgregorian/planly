@@ -70,14 +70,17 @@ export default class WeeklyHoursInput extends PureComponent{
     return currentWeek <= nextAvailableWeek ? nextAvailableWeek : currentWeek
   }
 
-  renderSinglerow = () => (
+  renderSinglerow = () => {
+    console.log(this.props.weeklyHours)
+    console.log(this.props.weeklyHours[beginningOfTime])
+    return(
     <fb className="inputWrapper">
       <FlatInput
         value={this.props.weeklyHours[beginningOfTime]}
         onInputChange={this.editLatest}
         defaultText='z.B. 40' />
-    </fb>
-  )
+    </fb>)
+  }
 
   renderMultirow = () => {
     const { weeklyHours } = this.props
