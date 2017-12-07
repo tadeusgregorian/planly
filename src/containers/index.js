@@ -33,8 +33,7 @@ class Container extends PureComponent {
 
   componentWillReceiveProps = (np) => {
     const { dbVersion } = this.props // if dbVersions was loaded and now changed -> reload!
-    dbVersion && dbVersion !== np.dbVersion && console.log('this now reload');
-    //dbVersion && dbVersion !== np.dbVersion && window.location.reload();
+    dbVersion && dbVersion !== np.dbVersion && window.location.reload();
   }
 
   render() {

@@ -3,6 +3,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
+import cn from 'classnames'
 import { isIntStr, generateGuid, inp } from 'helpers/index'
 import { saveAbsenceCorrectionToDB } from 'actions/absence'
 import getAbsenceSums from 'selectors/absenceSums'
@@ -17,7 +18,7 @@ import './styles.css'
 type OwnProps = {
   closeModal: Function,
   user: string,
-  vacDays: ?number,
+  vacDays: ?number, // this is passed seperatly -> it may come from AbsenceCorretion from a past year -> we preserve this data.
 }
 
 type ConProps = {
@@ -27,9 +28,11 @@ type ConProps = {
 }
 
 type State = {
-  extraDays: string,
   vacDays: string,
   vacDaysCorrection: string,
+  vacDaysCorNegative: boolean,
+  extraDays: string,
+  extraDaysNegative: boolean,
 }
 
 class AbsenceCorrectionModal extends PureComponent{
@@ -39,31 +42,43 @@ class AbsenceCorrectionModal extends PureComponent{
   constructor(props: OwnProps & ConProps){
     super(props)
 
-    const { vacDays } = this.props
+    const { vacDays, absenceCorrection } = this.props
+    const absCor = absenceCorrection
 
     this.state = {
       vacDays:            (vacDays && vacDays.toString()) || '', // we access the vacDays passed through the own props ( it might me vacDays of past Years correction )
-      vacDaysCorrection:  this.getDefault('vacDaysCorrection'),
-      extraDays:          this.getDefault('extraDays'),
+      vacDaysCorrection:  this.getDefaultToString('vacDaysCorrection'),
+      extraDays:          this.getDefaultToString('extraDays'),
+      vacDaysCorNegative: !!absCor && !!absCor.vacDaysCorrection && absCor.vacDaysCorrection < 0,
+      extraDaysNegative:  !!absCor && !!absCor.extraDays         && absCor.extraDays < 0,
     }
   }
 
-  getDefault = (prop): string => {
+  getDefaultToString = (prop): string => {
     const correction = this.props.absenceCorrection
-    return correction && correction[prop] ? correction[prop].toString() : ''
+    return correction && correction[prop] ? (Math.abs(correction[prop])).toString() : ''
   }
 
-  toNullOrInt = (val) => val ? parseInt(val, 10) : null
+
+  toNullOrInt = (val, negativ) => val ? +val * (negativ ? -1 : 1 ) : null
 
   saveClicked = () => {
     const { absenceCorrection, user, year } = this.props
+    const { vacDays, extraDays, vacDaysCorrection, extraDaysNegative, vacDaysCorNegative } = this.state
 
     const id                = absenceCorrection ? absenceCorrection.id : generateGuid()
-    const vacDays           = this.toNullOrInt(this.state.vacDays)
-    const extraDays         = this.toNullOrInt(this.state.extraDays)
-    const vacDaysCorrection = this.toNullOrInt(this.state.vacDaysCorrection)
+    const _vacDays           = this.toNullOrInt(vacDays)
+    const _extraDays         = this.toNullOrInt(extraDays, extraDaysNegative)
+    const _vacDaysCorrection = this.toNullOrInt(vacDaysCorrection, vacDaysCorNegative)
 
-    const correction = { id, user, year, vacDays, extraDays, vacDaysCorrection }
+    const correction = {
+      id,
+      user,
+      year,
+      vacDays: _vacDays,
+      extraDays: _extraDays,
+      vacDaysCorrection: _vacDaysCorrection,
+    }
     saveAbsenceCorrectionToDB(correction)
     this.props.closeModal()
   }
@@ -74,7 +89,7 @@ class AbsenceCorrectionModal extends PureComponent{
   onExtraDaysChanged = (e)        => isIntStr(inp(e)) && this.setState({ extraDays: inp(e) })
 
   render(){
-    const { extraDays, vacDaysCorrection, vacDays } = this.state
+    const { extraDays, vacDaysCorrection, vacDays, vacDaysCorNegative, extraDaysNegative } = this.state
     const { absentDays, year } = this.props
 
     return(
@@ -85,13 +100,17 @@ class AbsenceCorrectionModal extends PureComponent{
               <fb className='inpWrapper'><input value={vacDays} onChange={this.onVacDaysChanged} placeholder='0' /></fb>
             </Row>
             <Row label={'Korrektur für ' + year} grey>
+              <fb className={cn({signButton: 1, red:   1, active:  vacDaysCorNegative })} onClick={()=>this.setState({ vacDaysCorNegative: true  })}>-</fb>
+              <fb className={cn({signButton: 1, green: 1, active: !vacDaysCorNegative })} onClick={()=>this.setState({ vacDaysCorNegative: false })}>+</fb>
               <fb className='inpWrapper'><input value={vacDaysCorrection} onChange={this.onTransferedDaysChanged} placeholder='0' /></fb>
             </Row>
             <fb style={{height: 30}} />
-            <Row label={'Genommener Urlaub ' + year}>
+            <Row label={'Eingetragene Urlaubstage ' + year}>
               <fb className='daysDisplay'>{absentDays}</fb>
             </Row>
             <Row label={'Korrektur für ' + year} grey>
+              <fb className={cn({signButton: 1, red:   1, active:  extraDaysNegative })} onClick={()=>this.setState({ extraDaysNegative: true })}>-</fb>
+              <fb className={cn({signButton: 1, green: 1, active: !extraDaysNegative })} onClick={()=>this.setState({ extraDaysNegative: false  })}>+</fb>
               <fb className='inpWrapper'><input value={extraDays} onChange={this.onExtraDaysChanged} placeholder='0' /></fb>
             </Row>
   				</fb>

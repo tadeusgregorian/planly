@@ -9,11 +9,12 @@ export const saveExtraHoursToDB:ThunkAction = (extraHours: ExtraHours, deleteIt 
   const branch         = getState().ui.roster.currentBranch
   const weekID         = getState().ui.roster.currentWeekID
   const extraHoursDB   = extendExtraHours(extraHours, branch)
+  //const extraHoursObj  = {  }
 
   const update1 = {[ getFBPath('extraHours',     [weekID, id]) ]:       deleteIt ? null : extraHoursDB }
-  db().ref().update(update1).then(updateWeekSums(getState, [extraHours.user]))
+  const update2 = updateWeekSums(getState, { extraHours: [extraHours] }, deleteIt)
+  db().ref().update( { ...update1, ...update2 })
 }
-
 
 const extendExtraHours = (extraHours: ExtraHours, branch): ExtraHoursDB =>{
   const branchDay = branch + extraHours.day

@@ -1,5 +1,5 @@
 .absenceCorrectionModalDisplayRowMain{
-
+  justify-content: space-between;
   height: 40px;
   color: grey;
   align-items: stretch;
@@ -22,8 +22,8 @@
 
   .content{
     flex: 0 0 auto;
-    width: 60px;
     color: black;
+    padding: 5px 0px;
   }
 
   .unit{

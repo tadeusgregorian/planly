@@ -6,10 +6,40 @@
   .daysDisplay{
     justify-content: center;
     flex: 1 1 auto;
+    width: 44px;
+  }
+
+  .signButton{
+    color: #b9b9b9;
+    background: #e6e6e6;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 4px;
+    border-radius: 2px;
+    width: 34px;
+    cursor: pointer;
+
+    &.active{
+      color: white;
+      &.green{
+        background: #6dd66e;
+      }
+      &.red{
+        background: #ff4848;
+      }
+    }
+
+    &:hover:not(.active){
+      background-color: lightgrey;
+      color: grey;
+    }
   }
 
   .inpWrapper{
-    width: 100%;
+    width: 44px;
+    height: 100%;
 
     input{
       width: 100%;

@@ -17,15 +17,13 @@ import DayNoteModal           from 'modals/roster/dayNoteModal'
 import AbsenceModal           from 'modals/absence/absenceModal'
 import AbsenceCorrectionModal from 'modals/absence/absenceCorrectionModal'
 import EditAbsenceDaysModal   from 'modals/absence/editAbsenceDaysModal'
-import AbsenceSettingsModal   from 'modals/absence/absenceSettingsModal'
+//import AbsenceSettingsModal   from 'modals/absence/absenceSettingsModal'
 
 import AddEditBranchPopup     from 'modals/adminPanel/addEditBranchPopup'
 import AddEditPositionPopup   from 'modals/adminPanel/addEditPositionPopup'
 import AddEditUserPopup       from 'modals/adminPanel/addEditUserPopup'
 
 import ConfirmationPopup      from 'modals/general/confirmationPopup'
-
-import './styles.css'
 
 type Props = {
   modals: Array<{modalID: string, props?: {}}> ,
@@ -61,7 +59,6 @@ class ModalsManager extends PureComponent {
             case 'CONFIRMATION'         : return <ConfirmationPopup { ...props } />
             case 'EDIT_ABSENCE_DAYS'    : return <EditAbsenceDaysModal { ...props } />
             case 'ABSENCE_CORRECTION'   : return <AbsenceCorrectionModal { ...props } />
-            case 'ABSENCE_SETTINGS'     : return <AbsenceSettingsModal { ...props } />
             default: return null
           }
         })}

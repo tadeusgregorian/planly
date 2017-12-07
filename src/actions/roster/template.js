@@ -39,12 +39,11 @@ export const importTemplateWeek: ThunkAction = (tempID: string) => (dispatch, ge
   const branch  = getState().ui.roster.currentBranch
 
   return fetchTemplateWeek(tempID).then(shifts => {
-    const updates = {}
-    shifts.forEach(s => updates[getFBPath('shiftWeeks', [weekID, s.id])] = toDBShift(s, branch))
-    return db().ref().update(updates).then(() => {
-      const usersInvolved = shifts.reduce((acc, val) => !acc.includes(val.user) ? [ val.user , ...acc ] : acc , [])
-      updateWeekSums(getState, usersInvolved)
-    })
+    const shiftUpdates = {}
+    shifts.forEach(s => shiftUpdates[getFBPath('shiftWeeks', [weekID, s.id])] = toDBShift(s, branch))
+    const weekSumsUpdates = updateWeekSums(getState, { shifts })
+    const updatesExt = { ...shiftUpdates, ...weekSumsUpdates }
+    db().ref().update(updatesExt)
   })
 }
 

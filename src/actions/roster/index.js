@@ -12,7 +12,9 @@ export const saveShiftToDB:ThunkAction = (shift: PreShift, deleteIt = false) => 
   const weekID        = getState().ui.roster.currentWeekID
 
   const update1       = getShiftUpdate(shift, weekID, branch, deleteIt)
-  db().ref().update( update1 ).then(updateWeekSums(getState, [shift.user]))
+  const update2       = updateWeekSums(getState, {shifts: [shift]}  , deleteIt)
+  //console.log({ ...update1, ...update2 });
+  db().ref().update({ ...update1, ...update2 })
 }
 
 export const saveShiftEditToDB:ThunkAction = (shift: PreShift, shiftEdit: MinimalShift ) => (disp, getState) => {
@@ -20,20 +22,22 @@ export const saveShiftEditToDB:ThunkAction = (shift: PreShift, shiftEdit: Minima
   const branch  = getState().ui.roster.currentBranch
   const update1 = {[ getFBPath('shiftEdits',     [shift.id]) ]: { shiftID: shift.id, branch, weekID }}
   const update2 = {[ getFBPath('shiftWeeks',     [weekID, shift.id, 'edit']) ]: shiftEdit }
-  db().ref().update({ ...update1, ...update2 }).then(updateWeekSums(getState, [shift.user]))
+  db().ref().update({ ...update1, ...update2 })
 }
 
 export const acceptEdit: ThunkAction = (shift: PreShift) => (disp, getState) => {
   const weekID  = getState().ui.roster.currentWeekID
   const newShift: MinimalShift = ( shift.edit: any)
 
-  const updates = {}
-  updates[ getFBPath('shiftWeeks',     [weekID, shift.id, 's']) ] = newShift.s
-  updates[ getFBPath('shiftWeeks',     [weekID, shift.id, 'e']) ] = newShift.e
-  updates[ getFBPath('shiftWeeks',     [weekID, shift.id, 'b']) ] = newShift.b
-  updates[ getFBPath('shiftWeeks',     [weekID, shift.id, 'edit'])] = null
-  updates[ getFBPath('shiftEdits',     [shift.id]) ] =  null
-  db().ref().update(updates).then(updateWeekSums(getState, [shift.user]))
+  const update1 = {}
+  update1[ getFBPath('shiftWeeks',     [weekID, shift.id, 's']) ] = newShift.s
+  update1[ getFBPath('shiftWeeks',     [weekID, shift.id, 'e']) ] = newShift.e
+  update1[ getFBPath('shiftWeeks',     [weekID, shift.id, 'b']) ] = newShift.b
+  update1[ getFBPath('shiftWeeks',     [weekID, shift.id, 'edit'])] = null
+  update1[ getFBPath('shiftEdits',     [shift.id]) ] =  null
+  const update2 = updateWeekSums(getState, { shifts: [shift]})
+
+  db().ref().update({ ...update1, ...update2 })
 }
 
 export const rejectEdit: ThunkAction = (shift: Shift) => (disp, getState) => {
