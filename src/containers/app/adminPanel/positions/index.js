@@ -62,8 +62,8 @@ class AdminpanelPositions extends React.Component {
 		return (
 			<div className="adminpanelPositions">
 				<fb className="headline">
-					<fb className="headlineText">Filialen verwalten</fb>
-					<SButton slick icon='icon-add' label='Position hinzufügen' onClick={() => this.openAddEditPositionPopup()} />
+					<fb className="headlineText">Rollen verwalten</fb>
+					<SButton slick icon='icon-add' label='Rolle hinzufügen' onClick={() => this.openAddEditPositionPopup()} />
 				</fb>
 				<SortableList
 					useDragHandle={true}

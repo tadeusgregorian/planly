@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import { changeCurrentBranch } from 'actions/ui/roster'
 import { closeSideNav } from 'actions/ui/index'
-import { logoutFromFirebase } from 'actions/auth'
+import { logOut } from 'actions/auth'
 import getActiveBranches from 'selectors/activeBranches'
 import NavAnimator from './navAnimator'
 import Options from './options'
@@ -59,7 +59,7 @@ class SideNavBar extends PureComponent {
               { options && 'Optionen' }
               { branchPick && 'Standort Wählen' }
             </header>
-            { options    && <Options    {...{ logoutFromFirebase }} /> }
+            { options    && <Options    {...{ logOut }} /> }
             { branchPick && <BranchPick {...{ branches, branchPicked }} /> }
           </nav>
         </aside>

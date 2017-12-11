@@ -5,7 +5,7 @@ import type { Connector } from 'react-redux'
 import cn from 'classnames'
 import values from 'lodash/values'
 
-import { timeInpOK, withColon, from4To5, shiftDataValid, zipShift, shiftToShiftInput } from './localHelpers'
+import { timeInpOK, withColon, from4To5, shiftDataValid, zipShift, shiftToShiftInput, shiftTimesIdentical } from './localHelpers'
 import { toggleOptions, unfocusShift }     from 'actions/ui/roster'
 import { openNotesModal }                  from 'actions/ui/modals'
 import { saveShiftToDB, saveShiftEditToDB, updateNoteOfShift }   from 'actions/roster'
@@ -154,10 +154,11 @@ class ModifyShiftBox extends PureComponent{
 
     if(shiftDataValid(shiftInput)){
       const minimalShift = zipShift(shiftInput)
-      let shift = { ...minimalShift, day, user, id, note, location, position }
+      let newShift = { ...minimalShift, day, user, id, note, location, position }
 
       unfocusShift() // need to unfocus shift before saving Shift -> this causes an additional flash-mount-unmount otherwise. // -> inCreation prop is causing this issue.
-      this.isAdmin ? saveShiftToDB(shift) : saveShiftEditToDB(shift, minimalShift)
+      if(!this.isAdmin && shiftTimesIdentical(shift, newShift)) return 
+      this.isAdmin ? saveShiftToDB(newShift) : saveShiftEditToDB(shift, minimalShift)
     }
   }
 

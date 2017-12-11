@@ -1,5 +1,6 @@
 .inputMinimalMain{
-	width: 100%;
+	padding: 2px;
+	align-self: stretch;
 
 	input[type=text],[type=password],[type=email]{
 		width: 100%;
@@ -8,7 +9,7 @@
     border-radius: 2px;
     border-image: none;
     border-width: 1px;
-    margin: 2px;
+    //margin: 2px;
     box-shadow: none;
     border-color: #d8d8d8;
     border-style: solid;

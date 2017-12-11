@@ -1,7 +1,7 @@
 import React from 'react'
 import './styles.css'
 
-export default ({label, disabled, onClick, color, sStyle, right, left, tabInd, slick, grey, icon, iconStyle, mini}) => {
+export default ({label, disabled, onClick, color, sStyle, right, left, tabInd, slick, grey, icon, iconStyle, mini, className}) => {
 	const colorStyle = {
 		color: 'white',
 		backgroundColor: color,
@@ -65,7 +65,7 @@ export default ({label, disabled, onClick, color, sStyle, right, left, tabInd, s
 
 	return(
 		<fb
-			className='sButton'
+			className={'sButton ' + className || '' }
 			style={getStyle()}
 			onClick={disabled ? null : onClick}
 			tabIndex={tabInd}

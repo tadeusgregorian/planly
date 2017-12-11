@@ -3,18 +3,19 @@
 import firebase from 'firebase'
 import { generateGuid } from 'helpers/index'
 import { beginningOfTime } from 'constants/roster'
-import type { User, Position, Branch } from 'types/index'
+import type { User, Position, Branch, BundeslandCode } from 'types/index'
 
-
-export const createAccount = (firebaseUserID: string, email: string) => {
+type AccData = { name: string, email:string, branch: string, bundesland: BundeslandCode }
+export const createAccount = (firebaseUserID: string, accData: AccData) => {
   const accountID = generateGuid()
   let updates = {}
-  updates['accounts/'+ accountID] = getEmptyAccount(email)
-  updates['allUsers/'+ firebaseUserID] = getFirstUser(accountID, email)
-  firebase.database().ref().update(updates)
+  updates['accountsFlat/'+ accountID]  = accData.email
+  updates['accounts/'+ accountID]      = getEmptyAccount(accData)
+  updates['allUsers/'+ firebaseUserID] = getFirstUserFB(accountID, accData.email)
+  return firebase.database().ref().update(updates)
 }
 
-const getFirstUser = (accountID, email) => ({
+const getFirstUserFB = (accountID, email) => ({
   account: accountID,
   userID: 'u001',
   email: email,
@@ -27,19 +28,19 @@ type DBAccount = {
   positions: { [string]: Position }
 }
 
-const getEmptyAccount = (email): DBAccount => ({
+const getEmptyAccount = (accData: AccData): DBAccount => ({
   accountDetails: {
     creationDate: firebase.database.ServerValue.TIMESTAMP,
     preferences: {
-      bundesland: false, // not yet set
+      bundesland: accData.bundesland, // not yet set
       workdays: false, // not yet set -> can be 5 or 6
     }
   },
   users: {
     u001: {
       id: 'u001',
-      name: 'Tadeus Gregorius',
-      email: email,
+      name: accData.name,
+      email: accData.email,
       position: 'p001',
       branches: { b001: true },
       weeklyMins: { [beginningOfTime]: 2400 },
@@ -52,7 +53,7 @@ const getEmptyAccount = (email): DBAccount => ({
   branches: {
     b001: {
       id: 'b001',
-      name: 'Hauptfiliale'
+      name: accData.branch
     }
   },
   positions: {

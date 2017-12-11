@@ -9,7 +9,7 @@ export const changeCurrentBranch: ThunkAction = (branchID: string) => (dispatch,
 
    tempMode && dispatch({ type: 'SET_CURRENT_WEEK_ID', payload: tempID })
   !tempMode && localStorage.setItem('currentBranch', branchID )
-  console.log(branchID);
+
   dispatch({ type: 'SET_CURRENT_BRANCH', payload: branchID })
 }
 
@@ -70,5 +70,9 @@ export const leaveExtraHoursMode = () =>
 export const hideNonWorkers = (hide: boolean) =>
   ({ type: 'HIDE_NON_WORKES', payload: hide })
 
-export const toggleShiftBoardTimeDetails = () =>
-  ({ type: 'TOGGLE_SHIFTBOARD_TIME_DETAILS'})
+export const toggleShiftBoardTimeDetails: ThunkAction = () => (dispatch, getState) => {
+  const TDVisible = getState().ui.roster.shiftBoard.timeDetailsVisible
+  localStorage.setItem('timeDetailsVisible', TDVisible ? '' : 'true')
+  console.log(TDVisible);
+  dispatch({ type: ( TDVisible ? 'HIDE_ROSTER_TIME_DETAILS' : 'SHOW_ROSTER_TIME_DETAILS') })
+}

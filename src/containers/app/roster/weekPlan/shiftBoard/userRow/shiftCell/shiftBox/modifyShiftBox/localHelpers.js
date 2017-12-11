@@ -71,3 +71,10 @@ export const shiftToShiftInput = (shift: PreShift): ShiftInput => {
   const breakMinutes  = shift.b && Number.isInteger(shift.b) ? shift.b.toString()  : ''
   return { startTime, endTime, breakMinutes }
 }
+
+export const shiftTimesIdentical = (shift1: MinimalShift, shift2: MinimalShift): boolean => {
+  if(shift1.s !== shift2.s) return false
+  if(shift1.e !== shift2.e) return false
+  if(shift1.b !== shift2.b) return false
+  return true
+}

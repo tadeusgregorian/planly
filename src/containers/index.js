@@ -2,6 +2,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux'
 import { Route, BrowserRouter as Router, Redirect, Switch } from 'react-router-dom'
+import { generateGuid } from 'helpers/index'
 import { initFirebase } from 'actions/index'
 import { setAuthStateListener } from 'actions/listeners/auth'
 import { registerInitialListeners } from 'actions/listeners/init'
@@ -24,6 +25,7 @@ initIziToast()
 
 class Container extends PureComponent {
   componentDidMount = () => {
+
     if(!this.props.firebaseInitialized) this.props.initFirebase() // making sure we initialize Firebase only once...
     if(!this.props.firebaseAuthListener){
       if(this.props.dbVersion === 'maintenance') return // under construction -> dont attach listeners!
@@ -33,7 +35,7 @@ class Container extends PureComponent {
 
   componentWillReceiveProps = (np) => {
     const { dbVersion } = this.props // if dbVersions was loaded and now changed -> reload!
-    dbVersion && dbVersion !== np.dbVersion && window.location.reload();
+    dbVersion && np.dbVersion && dbVersion !== np.dbVersion && window.location.reload();
   }
 
   render() {
@@ -48,7 +50,7 @@ class Container extends PureComponent {
     return (
       <Router>
         <fb className="Container_Main">
-          <fb className='Container_Main_Inside'>
+          <fb className='Container_Main_Inside' onClick={() => console.log(generateGuid())}>
             <Switch>
               <Route path='/invite/:accID/:inviteID'  render={(props) =>  <Invite { ...props } /> } />
               <Route path='/register'                 component={Register} />

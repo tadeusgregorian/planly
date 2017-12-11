@@ -4,22 +4,26 @@ import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import type { Store } from 'types/index'
 import { setRosterListeners, setInitialRosterListeners } from 'actions/listeners/roster'
+import { changeCurrentBranch } from 'actions/ui/roster'
 import { setAbsencesListener } from 'actions/listeners/absencePlaner'
 import WithMouseEvents from '../withMouseEvents'
 import ShiftBoard from './shiftBoard'
 import ActionBar from './actionBar'
 import TemplateActionBar from './templateActionBar'
-import type { DataStatus } from 'types/index'
+import getCurrentUser from 'selectors/currentUser'
+import type { DataStatus, User } from 'types/index'
 import './styles.css'
 
 type ConnectedProps = {
   currentBranch: string,
   currentWeekID: string,
+  currentUser: User,
   templateMode: boolean,
   shiftWeekDataStatus: DataStatus,
   setRosterListeners: ()=>any,
   setInitialRosterListeners: ()=>any,
   setAbsencesListener: (number)=>any,
+  changeCurrentBranch: (string)=>any,
 }
 
 type Props = ConnectedProps
@@ -62,6 +66,7 @@ const actionsToProps = {
   setRosterListeners,
   setInitialRosterListeners,
   setAbsencesListener,
+  changeCurrentBranch
 }
 
 const mapStateToProps = (state: Store) => ({
@@ -69,6 +74,7 @@ const mapStateToProps = (state: Store) => ({
   currentWeekID: state.ui.roster.currentWeekID,
   templateMode: state.ui.roster.templateMode,
   shiftWeekDataStatus: state.roster.shiftWeekDataStatus,
+  currentUser: getCurrentUser(state),
 })
 
 const connector: Connector<{}, Props> = connect(mapStateToProps, actionsToProps)

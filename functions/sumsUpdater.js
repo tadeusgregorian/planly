@@ -22,7 +22,7 @@ const curVac = (vacs, day) => {
 
 const earningInVac = (vacs, day) => {
   const vac = curVac(vacs, day)
-  return (vac && vac.workDays[day]) ? vac.avgMins : 0
+  return (vac && vac.workDays[day] && !vac.unpaid) ? vac.avgMins : 0
 }
 
 exports.updateWeekSums = function(rootRef, target) {

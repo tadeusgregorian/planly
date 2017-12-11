@@ -6,9 +6,10 @@ export const extendForDB = (user: User, absence: Absence): Absence => {
   const weekID        = absence.year.toString() + smartToMom(absence.startDate).week() // we take the startWeek to calc the avgMins
   const avgMins       = getAvgMins(user, weekID)
   const touchingWeeks = getTouchingWeeks(absence)
+  const yearUser      = absence.year.toString() + absence.user
   const workDays      = user.workDays
 
-  return { ...absence, avgMins, workDays, touchingWeeks }
+  return { ...absence, avgMins, workDays, touchingWeeks, yearUser }
 }
 
 export const getTouchingWeeks = (absence: Absence ): {} => {

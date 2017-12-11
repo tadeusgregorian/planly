@@ -18,10 +18,11 @@ const nonWorkersHidden = simpleReducer({
   remove_shiftWeek     : false,
 })
 
-const timeDetailsVisible = (state = true, a) => {  // @TODO set default to false again 
-  if(a.type === 'TOGGLE_SHIFTBOARD_TIME_DETAILS') return !state
-  return state
-}
+const timeDetailsVisible = simpleReducer({
+  default                   : localStorage.timeDetailsVisible ? true : false,
+  HIDE_ROSTER_TIME_DETAILS  : false,
+  SHOW_ROSTER_TIME_DETAILS  : true
+})
 
 type OptionsExpanded = boolean
 const optionsExpanded = (state = false, a) => {

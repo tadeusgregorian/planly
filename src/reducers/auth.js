@@ -1,8 +1,8 @@
 //@flow
 import { simpleReducer } from './reducerHelpers'
 import { combineReducers } from 'redux'
+import type { AuthState } from 'types/index'
 
-type AuthState = 'loggedOut' | 'loggedOut' | 'isAuthenticating'
 const authState = simpleReducer({
 	default: 								'isAuthenticating',
 	USER_LOGGED_IN: 				'loggedIn',

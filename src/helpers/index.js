@@ -6,6 +6,11 @@ import { weeksInYear_DE } from 'constants/roster'
 export * from './dateHelpers'
 export * from './roster'
 
+let iterator = 0
+const getIterator = () => {
+  iterator++
+  return doubleD(iterator % 100)
+}
 
 export const generateGuid = () => {
   const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
@@ -21,7 +26,7 @@ export const generateGuid = () => {
     // eslint-disable-next-line
     return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16)
   });
-  return unix + uuid + x1 + x2
+  return unix + uuid + x1 + x2 + getIterator()
 }
 
 export const shadeColor = (color: string, percent: number) => {

@@ -13,6 +13,7 @@ import { generateGuid, momToSmart, smartDatesDiff } from 'helpers/index'
 import { getEffectiveDays, getButtonsToShow, checkOverlapping } from './localHelpers'
 import type { Store, User, Absence, AbsenceType, AbsenceTypeFilter, AbsenceStatus, AccountPreferences } from 'types/index'
 
+import AdvancedSettings from './advancedSettings'
 import ErrorMessageDisplay from './errorMessageDisplay'
 import AbsenceDetailsDisplay from './absenceDetailsDisplay'
 import AbsenceTypeSelect from './absenceTypeSelect'
@@ -33,10 +34,12 @@ type State = {
   startDate: ?number,
   endDate: ?number,
   effectiveDays: ?number,
+  unpaid: true | null,
   note: ?string,
   focusedInput: any,
   errorMessage: ErrorMesage,
   loading: boolean,
+  advancedOpen: boolean,
 }
 
 type OwnProps = {
@@ -75,10 +78,12 @@ class AbsenceModal extends PureComponent{
       startDate:      absence ? absence.startDate              : null,
       endDate:        absence ? absence.endDate                : null,
       effectiveDays:  absence ? absence.effectiveDays          : null,
+      unpaid:         absence ? absence.unpaid                 : null,
       note:           absence ? (absence.note        || '')    : '',
       focusedInput:   null, // we omit this before saving to db!
       errorMessage:   false, // we omit this before saving to db!
       loading:        false, // we omit this before saving to db!
+      advancedOpen:   absence ? (absence.unpaid || false)       : false,
     }
 
     this.currentMom = moment().year(currentYear).month(currentMonth)
@@ -118,7 +123,7 @@ class AbsenceModal extends PureComponent{
   }
 
   saveAbsence   = (absenceDirty) => {
-    const cleanAbsence = omit(absenceDirty, ['focusedInput', 'errorMessage', 'loading'])
+    const cleanAbsence = omit(absenceDirty, ['focusedInput', 'errorMessage', 'loading', 'advancedOpen'])
     saveAbsenceToDB(this.props.user, {
       ...cleanAbsence,
       note: this.state.note || null, // turning '' to null
@@ -134,8 +139,8 @@ class AbsenceModal extends PureComponent{
   }
 
   render(){
-    const { closeModal, user, currentUser, currentType, preferences } = this.props
-    const { type, startDate, endDate, focusedInput, note, status, errorMessage, effectiveDays, loading } = this.state
+    const { closeModal, user, currentUser, currentType } = this.props
+    const { type, startDate, endDate, focusedInput, note, status, errorMessage, effectiveDays, loading, advancedOpen, unpaid } = this.state
     const adminMode = !!currentUser.isAdmin
     const isComplete = startDate && endDate && type && !errorMessage
     const accepted = status === 'accepted'
@@ -174,6 +179,12 @@ class AbsenceModal extends PureComponent{
             }
             { startDate && endDate &&  errorMessage && <ErrorMessageDisplay msg={errorMessage} /> }
             <AbsenceNotesSection note={note} changeNote={this.changeNote} />
+            <AdvancedSettings
+              advancedOpen={advancedOpen}
+              unpaid={unpaid}
+              setAdvancedOpen={(open) => this.setState({ advancedOpen: open })}
+              setUnpaid={(unpaid) => this.setState({ unpaid: unpaid || null })}
+            />
   				</fb>
   			</SModal.Body>
         <SModal.Footer>

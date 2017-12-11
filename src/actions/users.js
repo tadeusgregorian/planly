@@ -54,7 +54,9 @@ export const addInvitationJob = ({ userID, email, name, accountID }: JobData) =>
 	}
 
 	const updates = {}
+
 	updates[ getFBPath('users', [ userID, 'status' ]) ] = 'INVITED'
+	updates[ getFBPath('users', [ userID, 'email' ]) ] = email
 	updates['emailInvites/' + key] = inviteObj
 
 	db().ref().update(updates)

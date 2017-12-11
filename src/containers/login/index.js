@@ -7,6 +7,7 @@ import InputMinimal from 'components/inputMinimal'
 import SButton from 'components/sButton'
 import PasswordForgotten from './passwordForgotten'
 import { Toast } from 'helpers/iziToast'
+import type { Store, AuthState } from 'types/index'
 import './styles.css'
 
 type State = {
@@ -17,6 +18,7 @@ type State = {
 }
 
 type Props = {
+	authState: AuthState,
 	authenticate: Function,
 	authFailed: Function
 }
@@ -40,10 +42,15 @@ class Login extends PureComponent {
 		}
 	}
 
+	// componentWillReceiveProps = (nP) => {
+	// 	const justLoggedOut = this.props.authState !== 'loggedOut' && nP.authState === 'loggedOut'
+	// 	console.log('JUST LOGGED OUT');
+	// }
+
 	tryToLogin = () => {
-		//this.props.authenticate()
 		if(this.props.loading) return
 		this.setState({ loading: true })
+		this.props.authenticate()
 		signInWithEmailAndPassword(this.state.username, this.state.password)
 			.catch((e) => {
 				this.setState({ password: '', loading: false })
@@ -66,6 +73,8 @@ requestPWLink = async (email: string) => {
 	}
 
 	render() {
+		console.log('RENDERR');
+		console.log(this.props);
 		const { password, username, passwordForgotten, loading } = this.state
 		if(passwordForgotten) return <PasswordForgotten requestPWLink={this.requestPWLink}/>
 
@@ -74,7 +83,7 @@ requestPWLink = async (email: string) => {
 				<fb className="loginWrapper">
 					<fb className='toHomepage' onClick={()=> window.location.href = "https://www.aplano.de" }>
 						<fb className='icon icon-navigate_before' />
-						zur Homepage
+						zur Homepages
 					</fb>
 					<fb className='loginBox'>
 						<fb className="title">APLANO</fb>
@@ -83,7 +92,7 @@ requestPWLink = async (email: string) => {
 						<SButton
 							label={loading ? '...' : 'Einloggen' }
 							onClick={this.tryToLogin}
-							sStyle={{alignSelf: 'stretch', marginLeft: 2, marginRight: -2, marginTop: 8}}
+							sStyle={{alignSelf: 'stretch', margin: '8px 2px 0px 2px' }}
 							color='#2ecc71'
 						/>
 						<fb className="passwordForgottenBtn" onClick={() => this.setState({passwordForgotten: true})}>Passwort vergessen?</fb>
@@ -99,5 +108,9 @@ const actionCreators = {
 	authFailed: () => ({ type: 'AUTH_FAILED' })
 }
 
-const connector: Connector<{}, Props> = connect(null, actionCreators)
+const mapStateToProps = (state: Store) => ({
+	authState: state.auth.authState
+})
+
+const connector: Connector<{}, Props> = connect(mapStateToProps, actionCreators)
 export default connector(Login)

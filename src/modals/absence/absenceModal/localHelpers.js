@@ -61,8 +61,9 @@ type         CheckOverlapping = (moment, moment, string, string) => Promise<bool
 export const checkOverlapping: CheckOverlapping = (start, end, user, absenceID) => {
   const startSmart = momToSmart(start)
   const endSmart   = momToSmart(end)
+  const yearUser   = start.year() + user
 
-  return db().ref(getFBPath('absences')).orderByChild('user').equalTo(user).once('value').then(snap => {
+  return db().ref(getFBPath('absences')).orderByChild('yearUser').equalTo(yearUser).once('value').then(snap => {
     const absences: Array<Absence> = snap.val() ? values(snap.val()) : []
 
     return absences.filter(a => a.user === user).reduce(

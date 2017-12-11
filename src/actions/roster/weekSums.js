@@ -25,8 +25,6 @@ export const updateWeekSums = (getState: GetState, changes: Changes, deletion:bo
   const shiftsCleaned = comShifts.filter(s => !(deletion && newShifts[s.id])) // remove from obj -> if we are deleating a shift
   const extrasCleaned = comExtras.filter(e => !(deletion && newExtras[e.id])) // remove from obj -> if we are deleating an extraH
 
-  console.log(extrasCleaned);
-
   const updates = {}
   Object.keys(usersInvolved).forEach(user => {
 
@@ -52,7 +50,7 @@ const curVac = (vacs: Array<AbsenceWeekly>, day: Day): ?AbsenceWeekly => {
 
 const earningInVac = (vacs: Array<AbsenceWeekly>, day: Day): number => {
   const vac = curVac(vacs, day)
-  return (vac && vac.workDays[day]) ? vac.avgMins : 0
+  return (vac && vac.workDays[day] && !vac.unpaid) ? vac.avgMins : 0
 }
 
 const arrayToIDObj = <T: { id: string }>(arr: Array<T>): {[id: string]: T} => (

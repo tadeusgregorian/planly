@@ -4,6 +4,7 @@ import { Route, withRouter, Redirect, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Topbar from './topbar'
 import Roster from './roster'
+import { changeCurrentBranch } from 'actions/ui/roster'
 import appDataLoaded from 'selectors/appDataLoaded'
 import getCurrentUser from 'selectors/currentUser'
 
@@ -16,6 +17,12 @@ import './styles.css'
 
 
 class App extends PureComponent {
+  componentWillReceiveProps = (np) => {
+    np.currentUser &&
+    !np.currentUser.isAdmin &&
+    !np.currentUser.branches[np.currentBranch] &&
+    np.changeCurrentBranch(Object.keys(np.currentUser.branches)[0])
+  }
 
   render = () => {
     const { currentUser, appDataLoaded } = this.props
@@ -40,9 +47,14 @@ class App extends PureComponent {
   }
 }
 
+const actionCreators = {
+  changeCurrentBranch
+}
+
 const mapStateToProps = (state: Store) => ({
   appDataLoaded: appDataLoaded(state),
   currentUser: getCurrentUser(state),
+  currentBranch: state.ui.roster.currentBranch,
 })
 
-export default withRouter(connect(mapStateToProps)(App))
+export default withRouter(connect(mapStateToProps, actionCreators)(App))

@@ -51,7 +51,7 @@ export default ({
 				placeholder={defaultText}
 				onChange={(e)=> onInputChange(e.target.value)}
 				onKeyDown={(e)=> { if(e.key === 'Enter') onEnter && onEnter() }}
-				autoFocus={autoFocus}
+				autoFocus={!!autoFocus}
 				autoComplete={autocompleteOn ? 'on' : 'new-password'}
 			/>
 		</div>

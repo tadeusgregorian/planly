@@ -13,6 +13,10 @@ class AdminpanelUsers extends React.Component {
 	openAddEditUserPopup = (user = null) => this.props.openModal('ADD_EDIT_USER', { user })
 
 	render() {
+
+		console.log(this.props.users);
+		console.log(sortBy(this.props.users, ['name']).filter(u => !u.deleted))
+		
 		return (
 			<div className="adminpanelUsers">
 				<fb className="headline">

@@ -9,6 +9,7 @@ export type Dispatch = (action: Action | ThunkAction | Array<Action>) => any // 
 export type ThunkAction = (any, any, any)=> (dispatch: Dispatch, getState: GetState) => any
 
 // core-types
+export type AuthState = 'loggedOut' | 'loggedOut' | 'isAuthenticating'
 
 export type WorkDays = {
   mo?: 1 | null,
@@ -30,6 +31,7 @@ export type Absence = { // this is the absence Obj we get from the DB ( Firebase
   type: AbsenceType,//
   status: AbsenceStatus,//
   year: number,
+  yearUser: string,
   startDate: number,//
   endDate: number,//
   effectiveDays: number,//
@@ -37,7 +39,7 @@ export type Absence = { // this is the absence Obj we get from the DB ( Firebase
   avgMins: number,
   workDays: WorkDays,
   touchingWeeks: { [smartWeek: string]: string },
-  unpaid?: true,
+  unpaid?: true | null,
 }
 
 export type AbsenceWeekly = {

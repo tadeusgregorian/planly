@@ -1,8 +1,8 @@
 /* eslint-disable */
 
 path / {
-  read() { false }
-  write() { false }
+  read() { auth.token.email === 'admin@aplano.de' }
+  write() { auth.token.email === 'admin@aplano.de' }
 }
 
 path /allUsers {
@@ -22,6 +22,11 @@ path /emailInvites {
 
 path /accounts/{accID} {
   read() { isOwnAccount(accID, auth.uid) }
+  write() { isOwnAccount(accID, auth.uid) }
+}
+
+path /accountsFlat/{accID} { // accountsFlat is just for maintenance purposes
+  read() { false }
   write() { isOwnAccount(accID, auth.uid) }
 }
 
@@ -74,7 +79,8 @@ type Absence {
   workDays: Object|Null,
   year: Number,
   unpaid: Boolean|Null,
-  note: String|Null
+  note: String|Null,
+  yearUser: String|Null
 }
 
 type Location {

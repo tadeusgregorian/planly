@@ -21,7 +21,7 @@ import BranchSelect 			from './branchSelect'
 import WeeklyHoursInput 	from './weeklyHoursInput'
 
 import { getNextID, isValidEmail, isFloatStr, replaceDotsWithCommas } from 'helpers/index'
-import { floatToMins, minsToFloat, getAvgDailyMins, minsToDetailedTime, getLatest } from './localHelpers'
+import { floatToMins, minsToFloat, getAvgDailyMins, minsToDetailedTime, getLatest, areAllValidFloats } from './localHelpers'
 import type { UserStatus, Store, User, WorkDays } from 'types/index'
 import './styles.css'
 
@@ -67,13 +67,15 @@ class AddEditUserPopup extends PureComponent {
 	}
 
 	onSaveClicked = (invite: boolean) => {
-		const { name, email, branches, position } = this.state
+		const { name, email, branches, position, weeklyHours } = this.state
 		let errorText = ''
 
-		if(!Object.keys(branches).length)	 errorText = 'Bitte wählen Sie mindestens eine Filiale aus.'
-		if(!position)											 errorText = 'Bitte wählen Sie eine Position aus.'
-		if(!isValidEmail(email))  				 errorText = 'Bitte geben Sie eine gültige Email-Adresse an'
-		if(name === '') 									 errorText = 'Bitte geben Sie einen Benutzernamen ein.'
+
+		if(!Object.keys(branches).length)	  errorText = 'Bitte wählen Sie mindestens eine Filiale aus.'
+		if(!position)											  errorText = 'Bitte wählen Sie eine Position aus.'
+		if(!areAllValidFloats(weeklyHours)) errorText = 'Wochenstunden ungültig'
+		if(!isValidEmail(email))  				  errorText = 'Bitte geben Sie eine gültige Email-Adresse an'
+		if(name === '') 									  errorText = 'Bitte geben Sie einen Benutzernamen ein.'
 
 		if(errorText) return this.setState({errorText}) // dont proceed here, if errorText is not falsy
 		this.saveUser(invite)
@@ -88,16 +90,15 @@ class AddEditUserPopup extends PureComponent {
 			weeklyMins: mapValues(weeklyHours, (mins => floatToMins(mins)))
 		}
 
-		sendInvite && this.sendInvitation()
 		saveUserToDB(dbUser)
+		sendInvite && this.sendInvitation()
 	}
 
 	sendInvitation = () => {
 		const { name, id, email } = this.state
 		const { accountID } = this.props
 
-		this.setState({ status: 'INVITED' })
-		Toast.success('Einladung gesendet an ' + email )
+		Toast.success('Einladung gesendet an ' + email)
 		addInvitationJob({ name, userID: id, email, accountID })
 	}
 
@@ -140,8 +141,6 @@ class AddEditUserPopup extends PureComponent {
 		const avgHoursStr 	= replaceDotsWithCommas(avgHours) + ' Stunden'
 		const avgTimeStr    = minsToDetailedTime(getAvgDailyMins(workDays, getLatest(weeklyHours)))
 		const avgTimeTTip   = 'Durchschnittliche tägliche Arbeitszeit: ' + avgTimeStr
-
-		console.log(weeklyHours);
 
 		return (
 			<SModal.Main title={ editMode ? 'Mitarbeiter bearbeiten' : 'Neuer Mitarbeiter' } onClose={this.props.closeModal} className='addEditUserPopupMain'>

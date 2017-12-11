@@ -4,6 +4,11 @@ import { replaceCommasWithDots, replaceDotsWithCommas, minToTime } from 'helpers
 export const isValidFloat = (num: string | number) =>
   !isNaN(parseFloat(replaceCommasWithDots(num.toString())))
 
+export const areAllValidFloats = (obj: { [key: string]: string }): boolean =>
+  //$FlowFixMe
+  Object.values(obj).reduce((acc, val) => !isValidFloat(val) ? false : acc , true)
+
+
 
 export const floatToMins = (inp: string | number): number => {
   if(inp === '') return 0

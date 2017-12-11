@@ -71,8 +71,7 @@ export default class WeeklyHoursInput extends PureComponent{
   }
 
   renderSinglerow = () => {
-    console.log(this.props.weeklyHours)
-    console.log(this.props.weeklyHours[beginningOfTime])
+
     return(
     <fb className="inputWrapper">
       <FlatInput

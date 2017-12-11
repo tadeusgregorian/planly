@@ -5,6 +5,7 @@ const trimAbsence = (a, firstDay, lastDay) => {
     type: a.type,
     avgMins: a.avgMins,
     workDays: a.workDays,
+    unpaid: a.unpaid || null,
     firstDay,
     lastDay
   }

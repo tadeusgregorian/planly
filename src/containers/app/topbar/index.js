@@ -2,7 +2,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import { logoutFromFirebase } from 'actions/auth'
+import { logOut } from 'actions/auth'
 
 import getCurrentUser from 'selectors/currentUser'
 import UserOptions from './userOptions'
@@ -14,11 +14,12 @@ type Props = {
   currentUser: User,
   vacRequestsCount: number,
   shiftEditsCount: number,
+  logOut: Function
 }
 
- const Topbar = ( { currentUser, vacRequestsCount, shiftEditsCount }: Props) => {
+ const Topbar = ( { currentUser, vacRequestsCount, shiftEditsCount, logOut }: Props) => {
 
-  const logoutPressed = () => { logoutFromFirebase() }
+  const logoutPressed = () => { logOut() }
   const isAdmin = currentUser && currentUser.isAdmin
   const userName = currentUser && currentUser.name
 
@@ -38,6 +39,10 @@ type Props = {
   )
 }
 
+const actionCreators = {
+  logOut
+}
+
 const mapStateToProps = (state: Store) => ({
   currentUser: getCurrentUser(state),
   vacRequestsCount: state.absencePlaner.vacationRequests.length,
@@ -45,4 +50,4 @@ const mapStateToProps = (state: Store) => ({
 })
 
 
-export default withRouter(connect(mapStateToProps)(Topbar))
+export default withRouter(connect(mapStateToProps, actionCreators)(Topbar))
