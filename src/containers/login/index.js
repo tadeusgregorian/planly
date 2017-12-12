@@ -42,13 +42,9 @@ class Login extends PureComponent {
 		}
 	}
 
-	// componentWillReceiveProps = (nP) => {
-	// 	const justLoggedOut = this.props.authState !== 'loggedOut' && nP.authState === 'loggedOut'
-	// 	console.log('JUST LOGGED OUT');
-	// }
-
 	tryToLogin = () => {
 		if(this.props.loading) return
+		if(this.props.dbVersion === 'maintenance') return Toast.warning('Offline wegen Serverupdates. In Kürze wieder online.')
 		this.setState({ loading: true })
 		this.props.authenticate()
 		signInWithEmailAndPassword(this.state.username, this.state.password)
@@ -61,7 +57,6 @@ class Login extends PureComponent {
 	}
 
 requestPWLink = async (email: string) => {
-		//Toast.info('...')
 		const emailExists = await checkIfEmailExists(email) // @TODO: the function is empty
 		if(emailExists){
 			sendPasswordResetEmail(email)
@@ -73,8 +68,7 @@ requestPWLink = async (email: string) => {
 	}
 
 	render() {
-		console.log('RENDERR');
-		console.log(this.props);
+
 		const { password, username, passwordForgotten, loading } = this.state
 		if(passwordForgotten) return <PasswordForgotten requestPWLink={this.requestPWLink}/>
 
@@ -109,7 +103,8 @@ const actionCreators = {
 }
 
 const mapStateToProps = (state: Store) => ({
-	authState: state.auth.authState
+	authState: state.auth.authState,
+	dbVersion: state.dbVersion
 })
 
 const connector: Connector<{}, Props> = connect(mapStateToProps, actionCreators)

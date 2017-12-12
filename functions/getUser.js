@@ -15,7 +15,6 @@ module.exports = (admin) => {
     const inviteID  = req.params.inviteID
 
     if(!inviteID){
-      console.log('here?');
       res.sendStatus(404)
       throw new Error('Something wrong: inviteID:' + inviteID )
     }
@@ -24,7 +23,6 @@ module.exports = (admin) => {
     return inviteRef.once('value').then(snap => {
 
       const invite = snap.val()
-      console.log(invite);
 
       if(!invite) res.sendStatus(404)
       const { userID, accountID }  = invite

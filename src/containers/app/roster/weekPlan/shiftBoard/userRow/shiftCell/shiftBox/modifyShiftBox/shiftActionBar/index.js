@@ -22,7 +22,6 @@ export default class ShiftActionBar extends PureComponent {
   state = { fadeIn: false }
 
   componentDidMount = () => {
-    console.log('DID MOUNT');
     setTimeout(()=> this.setState({ fadeIn: true }), 1)
   }
 

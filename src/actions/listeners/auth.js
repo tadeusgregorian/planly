@@ -20,15 +20,14 @@ export const setAuthStateListener = (initializor: Function) => (dispatch: Dispat
       return dispatch(logOut())
     }
 
-    const _user      = firebase.database().ref('allUsers/' + user.uid).once('value')
-    const _dbVersion = firebase.database().ref('dbVersion').once('value')
+    const _user = firebase.database().ref('allUsers/' + user.uid).once('value')
 
-    Promise.all([_user, _dbVersion]).then(results => {
 
-      const user      = results[0].val()
-      const dbVersion = results[1].val()
+    Promise.all([_user]).then(results => {
 
-      if(dbVersion === 'maintenance') return dispatch(logOut('Wartung. In Kürze wieder da.'))
+      const user = results[0].val()
+
+
       if(!user || user.deleted) return dispatch(logOut('Account noch nicht aktiviert.'))
 
       createCookie('loggedIn', 'true', getDomain(), 1000)

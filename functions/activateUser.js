@@ -14,8 +14,6 @@ module.exports = (admin) => {
 
     const { accID, userID, firebaseUid }  = req.params
 
-    console.log('MOFO Running - activate-user: ', req.params);
-
     if(!accID || !userID || !firebaseUid){
 
       res.sendStatus(404)

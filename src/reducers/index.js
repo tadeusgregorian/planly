@@ -27,7 +27,7 @@ export type RootReducer = {
 	ui: Ui,
 	roster: Roster,
 	absencePlaner: AbsencePlaner,
-	dbVersion: ?number,
+	dbVersion: number | string | void,
 }
 
 const appReducer = combineReducers({

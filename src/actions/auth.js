@@ -12,7 +12,6 @@ export function signInWithEmailAndPassword (email: string, pw: string) {
 
 export const logOut = (text?: string) => (dispatch: Dispatch) => {
   text && Toast.warning(text)
-	console.log('TADE IM HERE');
   firebase.auth().signOut()
 	dispatch({ type: 'USER_LOGGED_OUT' })
 }

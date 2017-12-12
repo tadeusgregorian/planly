@@ -42,8 +42,6 @@ class ExtraHoursModal extends PureComponent{
   constructor(props: OwnProps & ConProps){
     super(props)
 
-    console.log(props);
-
     const eH = this.props.extraHours
 
     this.state = {

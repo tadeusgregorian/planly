@@ -41,8 +41,6 @@ export default class Register extends PureComponent {
 			loading: false,
 			errorMsg: '',
 		}
-
-		console.log(document.cookie);
 	}
 
 	componentDidMount = () => {

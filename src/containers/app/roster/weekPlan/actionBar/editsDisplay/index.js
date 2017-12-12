@@ -23,7 +23,7 @@ class EditsDisplay extends PureComponent{
   }
 
   togglePopover = () => {
-    console.log(moment().week());
+
     const editsCount = this.props.shiftEdits.length
     editsCount && this.setState({ popOpen: !this.state.popOpen})
   }

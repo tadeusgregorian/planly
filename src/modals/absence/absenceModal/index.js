@@ -78,8 +78,8 @@ class AbsenceModal extends PureComponent{
       startDate:      absence ? absence.startDate              : null,
       endDate:        absence ? absence.endDate                : null,
       effectiveDays:  absence ? absence.effectiveDays          : null,
-      unpaid:         absence ? absence.unpaid                 : null,
-      note:           absence ? (absence.note        || '')    : '',
+      unpaid:         absence ? (absence.unpaid    || null)    : null,
+      note:           absence ? (absence.note      || '')      : '',
       focusedInput:   null, // we omit this before saving to db!
       errorMessage:   false, // we omit this before saving to db!
       loading:        false, // we omit this before saving to db!

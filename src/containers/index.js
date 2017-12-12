@@ -35,6 +35,8 @@ class Container extends PureComponent {
 
   componentWillReceiveProps = (np) => {
     const { dbVersion } = this.props // if dbVersions was loaded and now changed -> reload!
+    console.log(dbVersion);
+    console.log(np.dbVersion);
     dbVersion && np.dbVersion && dbVersion !== np.dbVersion && window.location.reload();
   }
 
@@ -50,7 +52,7 @@ class Container extends PureComponent {
     return (
       <Router>
         <fb className="Container_Main">
-          <fb className='Container_Main_Inside' onClick={() => console.log(generateGuid())}>
+          <fb className='Container_Main_Inside'>
             <Switch>
               <Route path='/invite/:accID/:inviteID'  render={(props) =>  <Invite { ...props } /> } />
               <Route path='/register'                 component={Register} />
