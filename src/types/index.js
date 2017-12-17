@@ -243,7 +243,7 @@ export type TemplatesFlat = Array<TemplateFlat>
 export type BundeslandCode = 'BE'|'BB'|'HB'|'HH'|'HE'|'MV'|'NI'|'NW'|'RP'|'SL'|'SN'|'ST'|'SH'|'TH'
 
 export type AccountPreferences = {
-  bundesland: BundeslandCode | false,
+  bundesland: BundeslandCode,
 }
 
 export type AccountDetails = {

@@ -30,6 +30,7 @@ export const getEffectiveDays: GetEffectiveDays = (start, end, bundesland, workD
     const isHoliday   = curDay.isHoliday(bundesland)
     const notWorking  = !workDays[weekDays[curWeekDay]]
 
+    if(notWorking) console.log(curDay);
     if( notWorking || isHoliday) ++excludedsCount
   }
   return totalDays - excludedsCount

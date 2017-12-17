@@ -18,10 +18,14 @@ import './styles.css'
 
 class App extends PureComponent {
   componentWillReceiveProps = (np) => {
-    np.currentUser &&
-    !np.currentUser.isAdmin &&
-    !np.currentUser.branches[np.currentBranch] &&
-    np.changeCurrentBranch(Object.keys(np.currentUser.branches)[0])
+    if(np.appDataLoaded){
+      if( // this catches bugs that happen when different users signIn on same pc. -> branchID gets stored in localStorage -> so user.branches[currentBranch] may be undefined
+         ( np.currentUser.isAdmin && !np.branches.find(b => b.id === np.currentBranch)) || // if different Aplano Accounts get used -> currentBranch might not exist at all.
+         (!np.currentUser.isAdmin && !np.currentUser.branches[np.currentBranch])
+       ){
+        np.changeCurrentBranch(Object.keys(np.currentUser.branches)[0]) // so just jump to the first branch of the current user.
+      }
+    }
   }
 
   render = () => {
@@ -55,6 +59,7 @@ const mapStateToProps = (state: Store) => ({
   appDataLoaded: appDataLoaded(state),
   currentUser: getCurrentUser(state),
   currentBranch: state.ui.roster.currentBranch,
+  branches: state.core.branches,
 })
 
 export default withRouter(connect(mapStateToProps, actionCreators)(App))

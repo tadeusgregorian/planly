@@ -5,7 +5,7 @@ import type { Connector } from 'react-redux'
 import cn from 'classnames'
 
 import { smartToMom } from 'helpers/index'
-import { smartDateToYear } from 'helpers/roster'
+//import { smartDateToYear } from 'helpers/roster'
 import { setCurrentBranch, setCurrentYear, setCurrentMonth, setCurrentType } from 'actions/ui/absence'
 import { openAbsenceModal } from 'actions/ui/modals'
 
@@ -58,7 +58,7 @@ class RequestManager extends PureComponent {
 
   render(){
     const count = this.props.vacationRequests.length
-    const label = count + (count === 1 ? ' Antrag' : ' Anträge')
+    const label = count + (count === 1 ? ' Urlaubsantrag' : ' Urlaubsanträge')
 
     return(
       <fb className="absenceRequestsManagerMain">

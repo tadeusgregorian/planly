@@ -114,12 +114,23 @@ class AbsenceModal extends PureComponent{
     this.setErrorMsg(false)
   }
 
-  changeNote    = (note) => this.setState({ note })
-  acceptRequest = ()     => this.saveAbsence({ ...this.state, status: 'accepted'})
+  changeNote     = (note) => this.setState({ note })
+  acceptRequest  = ()     => this.saveAbsence({ ...this.state, status: 'accepted'})
+  declineRequest = ()     => this.removeAbsence({ isDecline: true })
 
-  removeAbsence = () => {
-    removeAbsenceFromDB(this.state.id)
-    this.props.closeModal()
+  removeAbsence = ({ isDecline }) => {
+    const modalProps = {
+      title: isDecline ? 'Urlaubsantrag' : 'Uralaub Löschen',
+      text:  isDecline ? 'Urlaubsantrag wirklich ablehnen?' : 'Urlaub wirklich löschen?',
+      acceptBtnRed: true,
+      acceptBtnLabel: 'Löschen',
+      onAccept: () => {
+        removeAbsenceFromDB(this.state.id)
+        this.props.closeModal()
+      }
+    }
+
+    this.props.openModal('CONFIRMATION', modalProps)
   }
 
   saveAbsence   = (absenceDirty) => {
@@ -189,7 +200,7 @@ class AbsenceModal extends PureComponent{
   			</SModal.Body>
         <SModal.Footer>
            {  showBtn.Delete  && <SButton label='Löschen'   onClick={this.removeAbsence} color='#ff3f3f' grey left />}
-           {  showBtn.Reject  && <SButton label='Ablehnen'  onClick={this.removeAbsence} color='#ff3f3f'/>}
+           {  showBtn.Reject  && <SButton label='Ablehnen'  onClick={this.declineRequest} color='#ff3f3f'/>}
            {  showBtn.Accept  && <SButton label='Annehmen'  onClick={this.acceptRequest} color='#00a2ef'         disabled={!isComplete} />}
            {  showBtn.Save    && <SButton label='Speichern' onClick={()=>this.saveAbsence(this.state)}           disabled={!isComplete} color='#00a2ef' />}
            {  showBtn.Request && <SButton label='Urlaub Beantragen' onClick={()=>this.saveAbsence(this.state)}   disabled={!isComplete} color='#00a2ef' /> }

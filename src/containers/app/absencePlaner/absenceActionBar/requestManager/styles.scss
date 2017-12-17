@@ -5,6 +5,10 @@
   z-index: 1;
 
   .requestsBtn{
+    border-color: #d20000;
+    background: #ff3b3b;
+    box-shadow: inset 0px 1px 0px #ffffffa6;
+
     &.disabled{
       box-shadow: none;
       border: none;

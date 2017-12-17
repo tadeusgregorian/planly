@@ -29,6 +29,9 @@ type State = {
 
 export default class Register extends PureComponent {
 	state: State
+	nameEntered: ?string
+	emailEntered: ?string
+
 	constructor(props:Props) {
 		super(props)
 		this.state = {
@@ -47,10 +50,10 @@ export default class Register extends PureComponent {
 		//createCookie('regdata', 'myNamoo/-/email@was.de', 'localhost:3000/', 1)
 		const cookie = getCookieByName('regdata')
 		if(!cookie.includes('/-/')) return
-		const nameEntered = cookie ? cookie.split("/-/")[0] : ''
-		const emailEntered = cookie ? cookie.split("/-/")[1] : ''
+		this.nameEntered = cookie ? cookie.split("/-/")[0] : ''
+		this.emailEntered = cookie ? cookie.split("/-/")[1] : ''
 
-		this.setState({ name: nameEntered, email: emailEntered })
+		this.setState({ name: this.nameEntered, email: this.emailEntered })
 	}
 
 	setError = (msg: string) => this.setState({ errorMsg: msg })
@@ -88,6 +91,8 @@ export default class Register extends PureComponent {
 		const curBundesland = bundesland && bundeslandOptionsExt.find(b => b.code === bundesland)
 		const bundeslandName = curBundesland && curBundesland.name
 
+		const autoFocusUser = !this.nameEntered && !this.emailEntered
+
 		return (
 			<fb className='register-page-main'>
 				<fb className='register-container-wrapper'>
@@ -96,12 +101,12 @@ export default class Register extends PureComponent {
 						<fb className='infoText'>{ errorMsg && <fb className='errorBar' >{errorMsg}</fb> }</fb>
 						<fb className='content'>
 							<fb className='section'>
-								<InputMinimal defaultText="Vorname Nachname" value={name} onInputChange={name => this.setState({ name })} icon='user' />
-								<InputMinimal defaultText="Email" 					 value={email} onInputChange={email => this.setState({ email })} icon='email' />
+								<InputMinimal defaultText="Name" 	value={name} onInputChange={name => this.setState({ name })} icon='user' autoFocus={autoFocusUser}/>
+								<InputMinimal defaultText="Email" value={email} onInputChange={email => this.setState({ email })} icon='email' />
 								<fb className='devider' />
 							</fb>
 							<fb className='section'>
-								<InputMinimal defaultText="Firmenname" value={branch} onInputChange={branch => this.setState({ branch })} autoFocus/>
+								<InputMinimal defaultText="Firmenname" value={branch} onInputChange={branch => this.setState({ branch })} autoFocus={!autoFocusUser}/>
 								<fb className='dropdownWrapper'>
 									<Dropdown
 										value={{value: bundesland, label: bundeslandName}}

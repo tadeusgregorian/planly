@@ -53,6 +53,7 @@ type TransUser {
   userID: String,
   email: String,
   timestamp: Number,
+  deleted: Number|Null,
 }
 
 type WeeklyAbsence {
@@ -157,7 +158,7 @@ type User {
   isAdmin: Number|Null,
   isSuperAdmin: Number|Null,
   workDays: Object,
-  deleted: Boolean|Null
+  deleted: Number|Null
 }
 
 // Functions //
@@ -166,11 +167,11 @@ isOwnAccount(accID, uid) { root.allUsers[uid]['account'] === accID }
 
 // indexing for Query-Optimistion //
 
-path /accounts/{accID}/absencePlaner/absences {
-  index() { ['year'] }
+path /accounts/{accID}/absencePlaner/absences/{absenceID} {
+  index() { ['year', 'yearUser'] }
 }
 
-path /accounts/{accID}/absencePlaner/absenceCorrections {
+path /accounts/{accID}/absencePlaner/absenceCorrections/{correctionID} {
   index() { ['year'] }
 }
 
@@ -184,4 +185,8 @@ path /accounts/{accID}/roster/dayNotes/{weekID} {
 
 path /accounts/{accID}/roster/shiftWeeks/{weekID} {
   index() { ['user', 'branch', 'branchDay'] }
+}
+
+path /allUsers/{fbUserID} {
+  index() { ['userID'] }
 }

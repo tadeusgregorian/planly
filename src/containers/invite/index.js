@@ -2,6 +2,7 @@
 
 import React, { PureComponent } from 'react';
 import firebase from 'firebase'
+import { Toast } from 'helpers/iziToast'
 import { getAppUrl } from 'configs/index'
 import type { User } from 'types/index'
 import './styles.css'
@@ -56,7 +57,11 @@ export default class Invite extends PureComponent {
         const user = JSON.parse(json)
         user && user.id && this.populateState(user)
       })
-      .catch(err => console.log('error tade: ', err))
+      .catch(err => {
+        console.log('error tade: ', err)
+        Toast.error('Einladung nicht gültig.')
+        this.setState({ dataLoaded: true })
+      })
   }
 
   populateState = (u: User) => {
@@ -77,9 +82,11 @@ export default class Invite extends PureComponent {
     if( status === 'ACTIVE')    return this.setError('Zugang ist bereits aktiveirt')
 
     this.setState({ registrating: true })
+    //fetch(getAppUrl() + `/api/activate-user/${accID}/${userID}/${firebaseUid}`)
+
     firebase.auth().createUserWithEmailAndPassword(email, pw1) // trys to signIn after registration -> but gets logged out again -> cause user isnt in allUsers jet
       .then(fbUser => this.createUserEntry(fbUser.uid))
-      .then(res    => this.props.history.push('/login/fresh-user'))
+      .then(res    => { window.location.replace("/login/fresh-user") })
       .catch(error => {
         this.setState({ registrating: false })
         if(error.code === 'auth/email-already-in-use') this.setError('Email-Adresse bereits in Nutzung')
@@ -94,7 +101,10 @@ export default class Invite extends PureComponent {
 
     if(status === 'ACTIVE') return (
       <fb className='inviteUserMain'>
-        <fb className='container'>Zugang bereits Aktiviert</fb>
+        <fb className='container'>
+          <fb className='text'>Zugang bereits Aktiviert</fb>
+        <fb className='soBtn toTheLoginBtn' onClick={() => this.props.history.push('/login/fresh-user')}>Zum Login</fb>
+        </fb>
       </fb>
     )
 

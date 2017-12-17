@@ -10,17 +10,19 @@ type Props = {
   date: ?string, // template weeks have no date eg.: '2.7'
   openNote: (Day)=>void,
   dayNote: ?DayNote,
-  adminMode: boolean
+  adminMode: boolean,
+  isToday: boolean,
+  isHoliday: boolean,
 }
 
-export default ({ day, date, openNote, dayNote, adminMode }: Props) => {
+export default ({ day, date, openNote, dayNote, adminMode, isToday, isHoliday }: Props) => {
   const style = {width: shiftCellWidth}
   const noteStyle = dayNote && { backgroundColor: dayNote.color }
 
   const noteClicked = () => adminMode && openNote(weekDays[day])
 
   return(
-    <fb className={cn({headDayMain: 1, adminMode})} key={day} style={style} data-type='head-day' data-day={day} >
+    <fb className={cn({headDayMain: 1, adminMode, isHoliday })} key={day} style={style} data-type='head-day' data-day={day} >
       { dayNote &&
         <fb
           className='noteBar'
@@ -30,6 +32,11 @@ export default ({ day, date, openNote, dayNote, adminMode }: Props) => {
           data-balloon-pos="down"
         ><div className='text'>{dayNote.note}</div>
       </fb>
+      }
+      { isToday &&
+        <fb className='todayFlagWrapper' data-balloon='HEUTE' >
+          <fb className='todayFlag icon icon-flag' />
+        </fb>
       }
       <fb className='mainRow'>
         <fb className='day'>{weekDaysGerman[day]}</fb>

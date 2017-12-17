@@ -6,12 +6,13 @@ import type { Connector } from 'react-redux'
 import moment from 'moment'
 import { weekDays, overtimeCellWidth } from 'constants/roster'
 import { openModal } from 'actions/ui/modals'
-import { getYear, getWeek } from 'helpers/roster'
 import { hideNonWorkers } from 'actions/ui/roster'
 
-import type { Day, Store, DayNote } from 'types/index'
+import getDayHeadDates from 'selectors/dayHeadDates'
 import UsersHead from './usersHead'
 import DayHead from './dayHead'
+
+import type { Day, Store, DayNote, BundeslandCode } from 'types/index'
 import './styles.css'
 
 type OwnProps = {
@@ -26,22 +27,25 @@ type ConProps = {
   hideNonWorkers: (boolean)=>any,
   dayNotes: Array<DayNote>,
   nonWorkersHidden: boolean,
+  bundeslandCode: BundeslandCode,
+  dayHeadDates: Array<?moment>
 }
+
+type Props = OwnProps & ConProps
 
 type State = {
   dayHovered: string | null
 }
 
 class ShiftBoardHead extends PureComponent {
-  props: OwnProps & ConProps
+  props: Props
   state: State
+  todaySmart: string
 
-  getDate = (day: number) => {
-    if(this.props.templateMode) return null
-    const year = getYear(this.props.weekID)
-    const week = getWeek(this.props.weekID)
-    const mom = moment().year(year).week(week).weekday(day)
-    return mom.format('D.M')
+  constructor(props: Props) {
+    super(props)
+
+    this.todaySmart = moment().format('DDMMYYYY')
   }
 
   openDayNote = (day: Day) => {
@@ -55,7 +59,11 @@ class ShiftBoardHead extends PureComponent {
       dayNotes,
       adminMode,
       hideNonWorkers,
-      nonWorkersHidden } = this.props
+      nonWorkersHidden,
+      bundeslandCode,
+      dayHeadDates } = this.props
+
+      //console.log(getTodaySmart());
 
     return(
       <fb className="shiftBoardHeadMain">
@@ -67,7 +75,10 @@ class ShiftBoardHead extends PureComponent {
           { weekDays.map((w, i) =>
             <DayHead key={i}
               day={i}
-              date={this.getDate(i)}
+              date={dayHeadDates[i] && dayHeadDates[i].format('D.M')}
+              isToday={!!(dayHeadDates[i] && dayHeadDates[i].format('DDMMYYYY') === this.todaySmart)}
+              //$FlowFixMe
+              isHoliday={!!(dayHeadDates[i] && dayHeadDates[i].isHoliday(bundeslandCode))}
               adminMode={adminMode}
               openNote={this.openDayNote}
               dayNote={dayNotes.find(dN => dN.day === w)}/>
@@ -88,7 +99,9 @@ const actionCreators = {
 
 const mapStateToProps = (state: Store) => ({
   dayNotes: state.roster.dayNotes,
-  nonWorkersHidden: state.ui.roster.shiftBoard.nonWorkersHidden
+  nonWorkersHidden: state.ui.roster.shiftBoard.nonWorkersHidden,
+  bundeslandCode: state.core.accountDetails.preferences.bundesland,
+  dayHeadDates: getDayHeadDates(state)
 })
 
 const connector: Connector<OwnProps, OwnProps & ConProps> = connect(mapStateToProps, actionCreators)

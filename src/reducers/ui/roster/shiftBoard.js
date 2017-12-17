@@ -13,9 +13,7 @@ const focusedShiftRef = simpleReducer({
 
 const nonWorkersHidden = simpleReducer({
   default              : false,
-  HIDE_NON_WORKES      : 'PAYLOAD',
-  SET_TEMPLATE_MODE    : false,
-  remove_shiftWeek     : false,
+  HIDE_NON_WORKES      : 'PAYLOAD'
 })
 
 const timeDetailsVisible = simpleReducer({

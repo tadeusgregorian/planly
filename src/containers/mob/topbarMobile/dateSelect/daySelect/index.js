@@ -20,7 +20,7 @@ export default (props: Props) => {
   const week = mom.week()
 
   const momDay  = mom.add( weekDays.indexOf(currentDay) , 'days')
-  const dateStr = momDay.format('dd DD. MMM').slice(0, -1);
+  const dateStr = momDay.format('dddd | DD. MMM').slice(0, -1);
 
   const toPrev = () => {
     currentDay === 'mo' && props.changeCurrentWeekID(getPrevWeekID(currentWeekID))

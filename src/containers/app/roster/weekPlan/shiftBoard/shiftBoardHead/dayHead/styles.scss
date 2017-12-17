@@ -22,6 +22,35 @@
     }
   }
 
+  &.isHoliday{
+    color: #ff6882;
+    font-weight: 500;
+    background: #ff2f752b;
+    box-shadow: inset 0px 0px 0px 1px white;
+  }
+
+  .todayFlagWrapper{
+    position: absolute;
+    height: 100%;
+    align-items: center;
+
+    .todayFlag{
+      top: 2px;
+      left: 2px;
+      padding: 2px 2px;
+      background: #f7b000;
+      color: white;
+      border-radius: 1px;
+      font-weight: 600;
+      font-size: 16px;
+      letter-spacing: 0.7px;
+      /* height: 100%; */
+      align-items: center;
+      align-self: stretch;
+      margin: 1px;
+    }
+  }
+
   .mainRow{
     justify-content: center;
     align-items: center;

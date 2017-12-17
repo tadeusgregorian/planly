@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import type { Store } from 'types/index'
 import { setRosterListeners, setInitialRosterListeners } from 'actions/listeners/roster'
-import { changeCurrentBranch } from 'actions/ui/roster'
 import { setAbsencesListener } from 'actions/listeners/absencePlaner'
 import WithMouseEvents from '../withMouseEvents'
 import ShiftBoard from './shiftBoard'
@@ -23,7 +22,6 @@ type ConnectedProps = {
   setRosterListeners: ()=>any,
   setInitialRosterListeners: ()=>any,
   setAbsencesListener: (number)=>any,
-  changeCurrentBranch: (string)=>any,
 }
 
 type Props = ConnectedProps
@@ -66,7 +64,6 @@ const actionsToProps = {
   setRosterListeners,
   setInitialRosterListeners,
   setAbsencesListener,
-  changeCurrentBranch
 }
 
 const mapStateToProps = (state: Store) => ({

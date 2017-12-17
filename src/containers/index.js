@@ -2,7 +2,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux'
 import { Route, BrowserRouter as Router, Redirect, Switch } from 'react-router-dom'
-import { generateGuid } from 'helpers/index'
+//import { generateGuid } from 'helpers/index'
 import { initFirebase } from 'actions/index'
 import { setAuthStateListener } from 'actions/listeners/auth'
 import { registerInitialListeners } from 'actions/listeners/init'
@@ -35,8 +35,6 @@ class Container extends PureComponent {
 
   componentWillReceiveProps = (np) => {
     const { dbVersion } = this.props // if dbVersions was loaded and now changed -> reload!
-    console.log(dbVersion);
-    console.log(np.dbVersion);
     dbVersion && np.dbVersion && dbVersion !== np.dbVersion && window.location.reload();
   }
 
@@ -56,9 +54,9 @@ class Container extends PureComponent {
             <Switch>
               <Route path='/invite/:accID/:inviteID'  render={(props) =>  <Invite { ...props } /> } />
               <Route path='/register'                 component={Register} />
-              <Route path='/login'    render={()=> !loggedIn ? <Login/>  : <Redirect to={onMobile() ? '/mob' : '/app'} />} />
-              <Route path='/app'      render={()=>  loggedIn ? <App/>    : <Redirect to='/login' /> } />
-              <Route path='/mob'      render={()=>  loggedIn ? <Mob/>    : <Redirect to='/login' /> } />
+              <Route path='/login'     render={()=> !loggedIn ? <Login/>  : <Redirect to={onMobile() ? '/mob' : '/app'} />} />
+              <Route path='/app'       render={()=>  loggedIn ? <App/>    : <Redirect to='/login' /> } />
+              <Route path='/mob'       render={()=>  loggedIn ? <Mob/>    : <Redirect to='/login' /> } />
               <Redirect to='/login' />
             </Switch>
           </fb>

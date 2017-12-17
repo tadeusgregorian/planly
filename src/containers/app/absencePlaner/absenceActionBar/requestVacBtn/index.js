@@ -10,7 +10,7 @@ export default ({onClick}: Props) => {
 
   return(
     <fb className="requestVacBtnMain soBtn" onClick={onClick}>
-      + Urlaubsantrag
+      Urlaub beantragen
     </fb>
   )
 }

@@ -13,7 +13,7 @@ const getAbsencesFiltered = (absences: Array<Absence>, month: number, type: Abse
 
     const monthStart = smartToMom(a.startDate).month()
     const monthEnd = smartToMom(a.endDate).month()
-    return (monthStart === month || monthEnd === month)
+    return (monthStart <= month && monthEnd >= month)
   })
 }
 

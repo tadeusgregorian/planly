@@ -64,14 +64,13 @@ class SumsDisplay extends PureComponent{
         data-balloon-pos='right'
         onClick={this.daysSumClicked}
       >
-        <fb className='count'>{daysSum + extraDays}</fb>
+        <fb className='count'>{daysSum + ( vacMode ? extraDays : 0 )}</fb>
         { vacMode && !!currentVacDays && <fb className='vacDays'>{'/ ' + resultingVacDays }</fb>}
         {/* { currentCorrection && adminMode && <fb className='editedIcon icon icon-mode_edit'></fb> } */}
       </fb>
     )
   }
 }
-
 
 const actionCreators = {
   openModal

@@ -74,7 +74,7 @@ class AddEditUserPopup extends PureComponent {
 		if(!Object.keys(branches).length)	  errorText = 'Bitte wählen Sie mindestens eine Filiale aus.'
 		if(!position)											  errorText = 'Bitte wählen Sie eine Position aus.'
 		if(!areAllValidFloats(weeklyHours)) errorText = 'Wochenstunden ungültig'
-		if(!isValidEmail(email))  				  errorText = 'Bitte geben Sie eine gültige Email-Adresse an'
+		if(email && !isValidEmail(email))  	errorText = 'Falsches Email-Format.'
 		if(name === '') 									  errorText = 'Bitte geben Sie einen Benutzernamen ein.'
 
 		if(errorText) return this.setState({errorText}) // dont proceed here, if errorText is not falsy
@@ -98,6 +98,7 @@ class AddEditUserPopup extends PureComponent {
 		const { name, id, email } = this.state
 		const { accountID } = this.props
 
+		this.setState({ status: 'INVITED' })
 		Toast.success('Einladung gesendet an ' + email)
 		addInvitationJob({ name, userID: id, email, accountID })
 	}
