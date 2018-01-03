@@ -40,9 +40,9 @@ class Container extends PureComponent {
 
   render() {
     const { authState, dbVersion }     = this.props
-    const loggedIn 					= authState === 'loggedIn'
-    const isAuthenticating 	= authState === 'isAuthenticating'
-    const underConstruciton = dbVersion === 'maintenance'
+    const loggedIn 					    = authState === 'loggedIn'
+    const isAuthenticating 	        = authState === 'isAuthenticating'
+    const underConstruciton         = dbVersion === 'maintenance'
 
     if(isAuthenticating)  return (<fb>authenticating...</fb>)
     if(underConstruciton) return (<fb>Running Updates. We will be back soon.</fb>)

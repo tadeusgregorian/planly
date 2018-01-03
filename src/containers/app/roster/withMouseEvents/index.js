@@ -36,6 +36,7 @@ type State = {
   pickedUpShift: ?ShiftRef,
   isDragging: boolean,
   cellUnderMouse: ?CellRef,
+  originCell: ?CellRef,
 }
 
 class WithMouseLogic extends PureComponent<void, Props, State> {
@@ -60,6 +61,7 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
       pickedUpShift: null,
       isDragging: false,
       cellUnderMouse: null,
+      originCell: null,
     }
   }
 
@@ -84,11 +86,10 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
   }
 
   onMouseOver = ({target}: any) => {
-    const { cellUnderMouse } = this.state
+    const { originCell } = this.state
     const newCellUnderMouse = getParentCell(target)
-    if(!sameShiftCells(newCellUnderMouse, cellUnderMouse)){
-      this.setState({ cellUnderMouse: newCellUnderMouse })
-    }
+    const cellUnderMouse = sameShiftCells(newCellUnderMouse, originCell) ? null : newCellUnderMouse
+    this.setState({ cellUnderMouse })
   }
 
   onMouseDown = (e: any) => { // this is used to start a dragging action
@@ -108,6 +109,7 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
   }
 
   onMouseUp = (target: any) => {
+    console.log('onMouseUp');
     this.mouseIsDown = false
     this.mousePosStart = {x: 0, y: 0}
     this.state.isDragging && this.dropShift()
@@ -137,7 +139,7 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
   }
 
   onClick = ({target}: any) => {
-    if(!this.isDragging && !this.props.focusedShiftRef && !this.wasDraggingAround){
+    if(!this.props.focusedShiftRef && !this.wasDraggingAround){
       const targetShift = getParentShift(target)
       const targetCell = getParentCell(target)
 
@@ -159,6 +161,7 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
       if(targetCell && this.adminMode && !targetCell.hasShift)
         return this.props.createShift(targetCell)
     }
+    this.wasDraggingAround = false;
   }
 
   onMouseMove = (e: any) => {
@@ -176,7 +179,9 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
 
   pickUpShift = (shiftRef: ShiftRef, shiftEl: HTMLElement, cellEl: HTMLElement ) => {
     if(this.mouseIsDown){ // if mouse is already up again ( 200ms window ) -> no dragging
-      this.setState({pickedUpShift: shiftRef, isDragging: true})
+      this.wasDraggingAround = true;
+      const originCell = { user: shiftRef.user, day: shiftRef.day, hasShift: true }
+      this.setState({ pickedUpShift: shiftRef, isDragging: true, originCell, cellUnderMouse: null })
 
       const shiftClone = shiftEl.cloneNode(true)
       this.PickedUpElement    = shiftClone
@@ -205,7 +210,7 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
        : copyShiftTo(pickedUpShift.id, user, day )
     }
 
-    this.setState({pickedUpShift: null, isDragging: false})
+    this.setState({ pickedUpShift: null, isDragging: false, originCell: null })
     //$FlowFixMe
     this.PickedUpElement.parentNode.removeChild(this.PickedUpElement)
     const shiftBoard = document.getElementById("shiftBoardMain")
@@ -217,7 +222,7 @@ class WithMouseLogic extends PureComponent<void, Props, State> {
     const { isDragging, cellUnderMouse } = this.state
 
     return (
-        React.cloneElement(this.props.children, { isDragging, cellUnderMouse })
+      React.cloneElement(this.props.children, { isDragging, cellUnderMouse })
     )
   }
 }

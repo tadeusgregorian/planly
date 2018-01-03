@@ -3,7 +3,7 @@ import moment from 'moment'
 import type { Shift, Shifts, MinimalShift, CellRef, Notes } from 'types/index'
 
 export const getRealCurrentWeekID = () :string => {
-  const calendarWeek = moment().week()
+  const calendarWeek =  doubleD(moment().week())
   const year = moment().year()
   return year.toString() + calendarWeek.toString()
 }
@@ -29,7 +29,7 @@ export const smartDateToYear = (smartDate: number): number => {
 }
 
 // turns a num like 8 into '08' and 44 into '44'
-export const doubleD = (num: number) => {
+export const doubleD = (num: number): string => {
   if(!Number.isInteger(num)) throw new Error('Tade - doublD expects Integer number, but got' + num)
   if(num < -9) return num.toString()
   return num > 9 ?    num.toString() : '0' + num

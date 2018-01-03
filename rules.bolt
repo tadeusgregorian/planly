@@ -36,8 +36,8 @@ path /accounts/{accID}/uses/{uID} is User;
 path /accounts/{accID}/positions/{pID} is Position;
 path /accounts/{accID}/branches/{pID} is Branch;
 
-path /accounts/{accID}/absencePlaner/absences/{aID} is Absence;
-path /accounts/{accID}/absencePlaner/weeklyAbsences/{weekID}/{aID} is WeeklyAbsence;
+path /accounts/{accID}/absencePlaner/absences/{absenceID} is Absence;
+path /accounts/{accID}/absencePlaner/weeklyAbsences/{weekID}/{absenceID} is WeeklyAbsence;
 
 path /accounts/{accID}/roster/corrections/{corID} is Correction;
 path /accounts/{accID}/roster/extraHours/{weekID}/{eID} is ExtraHours;
@@ -187,6 +187,6 @@ path /accounts/{accID}/roster/shiftWeeks/{weekID} {
   index() { ['user', 'branch', 'branchDay'] }
 }
 
-path /allUsers/{fbUserID} {
+path /allUsers/{uid} {
   index() { ['userID'] }
 }

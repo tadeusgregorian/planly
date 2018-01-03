@@ -1,20 +1,37 @@
 {
   "rules": {
+    ".read": "auth.token.email == 'admin@aplano.de'",
+    ".write": "auth.token.email == 'admin@aplano.de'",
     "allUsers": {
       ".read": "auth.uid != null",
       ".write": "auth.uid != null",
       "$uid": {
-        ".validate": "newData.hasChildren(['account', 'userID'])",
+        ".validate": "newData.hasChildren(['account', 'userID', 'email', 'timestamp'])",
         "account": {
           ".validate": "newData.isString()"
         },
         "userID": {
           ".validate": "newData.isString()"
         },
+        "email": {
+          ".validate": "newData.isString()"
+        },
+        "timestamp": {
+          ".validate": "newData.isNumber()"
+        },
+        "deleted": {
+          ".validate": "newData.isNumber()"
+        },
         "$other": {
           ".validate": "false"
-        }
+        },
+        ".indexOn": [
+          "userID"
+        ]
       }
+    },
+    "dbVersion": {
+      ".read": "true"
     },
     "emailInvites": {
       ".read": "auth.uid != null",
@@ -26,32 +43,26 @@
         ".write": "newData.parent().parent().child('allUsers').child(auth.uid).child('account').val() == $accID",
         "uses": {
           "$uID": {
-            ".validate": "newData.hasChildren(['id', 'name', 'positions', 'branches', 'position', 'weeklyMins', 'status', 'avgDailyMins'])",
+            ".validate": "newData.hasChildren(['id', 'name', 'branches', 'position', 'weeklyMins', 'status', 'workDays'])",
             "id": {
               ".validate": "newData.isString()"
             },
             "name": {
               ".validate": "newData.isString()"
             },
-            "positions": {
-              ".validate": "newData.isString()"
-            },
             "branches": {
               ".validate": "newData.hasChildren()"
+            },
+            "email": {
+              ".validate": "newData.isString()"
             },
             "position": {
               ".validate": "newData.isString()"
             },
             "weeklyMins": {
-              ".validate": "newData.isNumber()"
+              ".validate": "newData.hasChildren()"
             },
             "status": {
-              ".validate": "newData.isString()"
-            },
-            "avgDailyMins": {
-              ".validate": "newData.isNumber()"
-            },
-            "isAdmins": {
               ".validate": "newData.isString()"
             },
             "isAdmin": {
@@ -63,11 +74,8 @@
             "workDays": {
               ".validate": "newData.hasChildren()"
             },
-            "vacDays": {
-              ".validate": "newData.isNumber()"
-            },
             "deleted": {
-              ".validate": "newData.isBoolean()"
+              ".validate": "newData.isNumber()"
             },
             "$other": {
               ".validate": "false"
@@ -135,8 +143,8 @@
         "absencePlaner": {
           "absences": {
             "$aID": {
-              ".validate": "newData.hasChildren(['avgDailyMins', 'effectiveDays', 'endDate', 'endWeekDay', 'id', 'startDate', 'startWeekDay', 'status', 'totalDays', 'touchingWeeks', 'type', 'user', 'year', 'yearUser'])",
-              "avgDailyMins": {
+              ".validate": "newData.hasChildren(['avgMins', 'effectiveDays', 'endDate', 'id', 'startDate', 'status', 'touchingWeeks', 'type', 'user', 'year'])",
+              "avgMins": {
                 ".validate": "newData.isNumber()"
               },
               "effectiveDays": {
@@ -145,32 +153,20 @@
               "endDate": {
                 ".validate": "newData.isNumber()"
               },
-              "endWeekDay": {
-                ".validate": "newData.isNumber()"
-              },
               "id": {
                 ".validate": "newData.isString()"
               },
               "startDate": {
                 ".validate": "newData.isNumber()"
               },
-              "startWeekDay": {
-                ".validate": "newData.isNumber()"
-              },
               "status": {
                 ".validate": "newData.isString()"
-              },
-              "totalDays": {
-                ".validate": "newData.isNumber()"
               },
               "touchingWeeks": {
                 ".validate": "newData.hasChildren()"
               },
               "type": {
                 ".validate": "newData.isString()"
-              },
-              "useAvgHours": {
-                ".validate": "newData.isBoolean()"
               },
               "user": {
                 ".validate": "newData.isString()"
@@ -181,37 +177,47 @@
               "year": {
                 ".validate": "newData.isNumber()"
               },
+              "unpaid": {
+                ".validate": "newData.isBoolean()"
+              },
+              "note": {
+                ".validate": "newData.isString()"
+              },
               "yearUser": {
-                ".validate": "newData.isNumber()"
+                ".validate": "newData.isString()"
               },
               "$other": {
                 ".validate": "false"
               }
             },
-            ".indexOn": [
-              "year"
-            ]
+            "$absenceID": {
+              ".validate": "true",
+              ".indexOn": [
+                "year",
+                "yearUser"
+              ]
+            }
           },
           "weeklyAbsences": {
             "$weekID": {
               "$aID": {
-                ".validate": "newData.hasChildren(['avgDailyMins', 'firstWeekDay', 'id', 'lastWeekDay', 'type', 'user'])",
-                "avgDailyMins": {
+                ".validate": "newData.hasChildren(['avgMins', 'firstDay', 'id', 'lastDay', 'type', 'user', 'workDays'])",
+                "avgMins": {
                   ".validate": "newData.isNumber()"
                 },
-                "firstWeekDay": {
+                "firstDay": {
                   ".validate": "newData.isNumber()"
                 },
                 "id": {
                   ".validate": "newData.isString()"
                 },
-                "lastWeekDay": {
+                "lastDay": {
                   ".validate": "newData.isNumber()"
                 },
                 "type": {
                   ".validate": "newData.isString()"
                 },
-                "useAvgHours": {
+                "useMins": {
                   ".validate": "newData.isBoolean()"
                 },
                 "user": {
@@ -224,6 +230,13 @@
                   ".validate": "false"
                 }
               }
+            }
+          },
+          "absenceCorrections": {
+            "$correctionID": {
+              ".indexOn": [
+                "year"
+              ]
             }
           }
         },
@@ -270,6 +283,9 @@
                 "user": {
                   ".validate": "newData.isString()"
                 },
+                "note": {
+                  ".validate": "newData.isString()"
+                },
                 "$other": {
                   ".validate": "false"
                 }
@@ -277,24 +293,6 @@
               ".indexOn": [
                 "branch"
               ]
-            }
-          },
-          "miniShiftWeeks": {
-            "$weekID": {
-              "$uID": {
-                "$shiftID": {
-                  ".validate": "newData.hasChildren(['mins', 'weekDay'])",
-                  "mins": {
-                    ".validate": "newData.isNumber()"
-                  },
-                  "weekDay": {
-                    ".validate": "newData.isNumber()"
-                  },
-                  "$other": {
-                    ".validate": "false"
-                  }
-                }
-              }
             }
           },
           "shiftWeeks": {
@@ -342,7 +340,7 @@
                 }
               },
               ".indexOn": [
-                "use",
+                "user",
                 "branch",
                 "branchDay"
               ]
@@ -378,6 +376,11 @@
             }
           }
         }
+      }
+    },
+    "accountsFlat": {
+      "$accID": {
+        ".write": "newData.parent().parent().child('allUsers').child(auth.uid).child('account').val() == $accID"
       }
     }
   }
