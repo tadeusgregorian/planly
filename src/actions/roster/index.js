@@ -35,7 +35,9 @@ export const acceptEdit: ThunkAction = (shift: PreShift) => (disp, getState) => 
   update1[ getFBPath('shiftWeeks',     [weekID, shift.id, 'b']) ] = newShift.b
   update1[ getFBPath('shiftWeeks',     [weekID, shift.id, 'edit'])] = null
   update1[ getFBPath('shiftEdits',     [shift.id]) ] =  null
-  const update2 = updateWeekSums(getState, { shifts: [shift]})
+
+  const shiftEdited = { ...shift, ...shift.edit }
+  const update2 = updateWeekSums(getState, { shifts: [shiftEdited]})
 
   db().ref().update({ ...update1, ...update2 })
 }
@@ -47,12 +49,14 @@ export const rejectEdit: ThunkAction = (shift: Shift) => (disp, getState) => {
   db().ref().update({ ...update1, ...update2})
 }
 
+// used when shift is being dragg-and-dropped from one cell to another
 export const copyShiftTo:ThunkAction = (shiftID: string, user: string, day: Day) => (disp, getState: GetState) => {
   const shift       = getState().roster.shiftWeek.find(s => s.id === shiftID )
   const newShift    = { ...shift, id: generateGuid(), user, day }
   saveShiftToDB(newShift)(disp, getState)
 }
 
+// used when open-shift is dragged to UserCell , or user-shift is dragged to openCell
 type MoveShiftTo = (shiftID: string, userID: string, Day) => (Dispatch, GetState) => void
 export const moveShiftTo: MoveShiftTo = (shiftID, targetUser, targetDay) => (disp, getState) => {
   const shifts          = getState().roster.shiftWeek
