@@ -33,7 +33,7 @@ exports.onEmailInviteAdded = functions.database
     const rootRef = event.data.adminRef.root
     const { inviteID } = event.params
     const { status, accountID, name, url, email } = event.data.val()
-    if(status !== 'PENDING') return
+    if(status !== 'PENDING') return false
     return sendInvitationMail({ rootRef, inviteID, accountID, name, url, email })
   })
 
