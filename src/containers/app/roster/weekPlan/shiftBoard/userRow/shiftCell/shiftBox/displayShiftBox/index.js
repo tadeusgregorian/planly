@@ -8,6 +8,7 @@ import values from 'lodash/values'
 import ShiftTimesBar from '../components/shiftTimesBar'
 import LocationBar   from '../components/locationBar'
 import PositionBar   from '../components/positionBar'
+import OverlapIcon   from '../components/overlapIcon'
 
 import type { Branch, PreShift, Location, Store, Position } from 'types/index'
 import './styles.css'
@@ -20,6 +21,7 @@ type ConProps = {
 type OwnProps = {
   shift: PreShift,
   templateMode?: boolean,
+  overlaps?: ?string,
 }
 
 type Props = OwnProps & ConProps
@@ -28,7 +30,7 @@ class DisplayShiftBox extends PureComponent{
   props: Props
 
   render(){
-    const { shift, branch, positions, templateMode } = this.props
+    const { shift, branch, positions, templateMode, overlaps } = this.props
     const { day, user, id, note, edit, location, position } = shift
 
     const locations: Array<Location> = (branch && branch.locations && values(branch.locations)) || []
@@ -43,6 +45,7 @@ class DisplayShiftBox extends PureComponent{
         data-pos={position || null}
       >
         { note && <fb className='noteIcon icon icon-comment' /> }
+        { overlaps && <OverlapIcon branchName={overlaps} /> }
         <ShiftTimesBar shift={shift} />
         { edit && <fb className='bigRoundEdit icon icon-pen'/> }
         { location && <LocationBar locations={locations} location={location} /> }

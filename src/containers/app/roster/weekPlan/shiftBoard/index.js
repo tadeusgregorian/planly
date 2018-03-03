@@ -12,6 +12,7 @@ import getCurrentWeekSums from 'selectors/weekSumsOfCurrentWeek'
 import getCurrentOvertimes from 'selectors/overtimesOfCurrentWeek'
 import getCurrentCorrections from 'selectors/correctionsOfCurrentWeek'
 import getVisibleUsers from 'selectors/visibleUsersOfShiftBoard'
+import getShiftOverlaps from 'selectors/shiftOverlaps'
 
 import getCurrentWeeklyMins from 'selectors/currentWeeklyMins'
 import getShiftsOfCurrentBranch from 'selectors/shiftsOfCurrentBranch'
@@ -33,6 +34,7 @@ type ConProps = {
   branch: string,
   positions: Array<Position>,
   shifts: Shifts,
+  shiftOverlaps: {[shiftID: string]: string},
   extraHours: Array<ExtraHours>,
   extraHoursMode: boolean,
   timeDetailsVisible: boolean,
@@ -58,6 +60,7 @@ class ShiftBoard extends PureComponent{
     const {
       isDragging,
       shifts,
+      shiftOverlaps,
       extraHours,
       extraHoursMode,
       timeDetailsVisible,
@@ -88,6 +91,7 @@ class ShiftBoard extends PureComponent{
       timeDetailsVisible={timeDetailsVisible}
       userID={userID}
       currentUser={currentUser}
+      shiftOverlaps={shiftOverlaps}
       weeklyMins={currentWeeklyMins[userID]}
       shifts={shifts.filter(s => s.user === userID)}
       extraHours={extraHours.filter(e => e.user === userID)}
@@ -135,6 +139,7 @@ const mapStateToProps = (state: Store) => ({
   branch: state.ui.roster.currentBranch,
   positions: state.core.positions,
   shifts: getShiftsOfCurrentBranch(state),
+  shiftOverlaps: getShiftOverlaps(state),
   extraHours: state.roster.extraHours,
   extraHoursMode: state.ui.roster.extraHoursMode,
   timeDetailsVisible: state.ui.roster.shiftBoard.timeDetailsVisible,

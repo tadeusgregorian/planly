@@ -15,6 +15,7 @@ type Props = {
   shadowed?: boolean,
   highlighted?: boolean,
   shifts: Shifts,
+  shiftOverlaps: {[shiftID: string]: string},
   extraHours: Array<ExtraHours>,
   position?: Position, // for open Shifts only
   shiftType: 'openshift' | 'usershift',
@@ -36,6 +37,7 @@ export default class ShiftCell extends PureComponent {
       user,
       shadowed,
       shiftType,
+      shiftOverlaps,
       style,
       cssClasses,
       blocked,
@@ -72,6 +74,7 @@ export default class ShiftCell extends PureComponent {
             key={shift.id}
             shift={shift}
             templateMode={templateMode}
+            overlaps={shiftOverlaps[shift.id]}
             focused={   !!focusedShift && focusedShift.id === shift.id} />
         )}
         { extraHours.map(e =>

@@ -14,6 +14,7 @@ import './styles.css'
 
 type ConProps = {
   closeSideNav: Function,
+  logOut: Function,
   sideNav: SideNav,
   branches: Array<Branch>,
   changeCurrentBranch: (string)=>any,
@@ -59,7 +60,7 @@ class SideNavBar extends PureComponent {
               { options && 'Optionen' }
               { branchPick && 'Standort Wählen' }
             </header>
-            { options    && <Options    {...{ logOut }} /> }
+            { options    && <Options    logOut={this.props.logOut} /> }
             { branchPick && <BranchPick {...{ branches, branchPicked }} /> }
           </nav>
         </aside>
@@ -69,7 +70,8 @@ class SideNavBar extends PureComponent {
 
 const actionCreators = {
   closeSideNav,
-  changeCurrentBranch
+  changeCurrentBranch,
+  logOut
 }
 
 const mapStateToProps = (state: Store) => ({

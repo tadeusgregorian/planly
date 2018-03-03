@@ -7,8 +7,8 @@ import { updateWeekSums } from './weekSums'
 import type { GetState, ThunkAction, Shift } from 'types/index'
 
   export const saveWeekAsTemplate: ThunkAction = (name: string) => (dispatch, getState: GetState) => {
-  const branch    = getState().ui.roster.currentBranch
-  const shifts    = getState().roster.shiftWeek
+  const branch = getState().ui.roster.currentBranch
+  const shifts = getState().roster.shiftWeek.filter(s => s.branch === branch ) // shifts contains shifts of all branches ! -> need to filter here!
 
   const tempID    = generateGuid()
   const flatTemp  = { id: tempID, name, branch }

@@ -31,6 +31,7 @@ type Props = {
   cellUnderMouse: ?CellRef,
   weeklyMins: ?number,
   ghost: boolean,
+  shiftOverlaps: {[shiftID: string]: string},
   absences: Array<AbsenceWeekly>
 }
 
@@ -56,6 +57,7 @@ export default class UserRow extends PureComponent{
       cellUnderMouse,
       weeklyMins,
       absences,
+      shiftOverlaps,
       ghost } = this.props
 
       const isAdmin      = currentUser.isAdmin
@@ -103,6 +105,7 @@ export default class UserRow extends PureComponent{
               absent={absence && absence.type}
               blocked={blocked}
               shifts={dayShifts}
+              shiftOverlaps={shiftOverlaps}
               extraHours={extraHoursOfDay}
               shiftType='usershift'
               shadowed={shadowed}

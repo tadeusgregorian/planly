@@ -12,6 +12,7 @@ type Props = {
   focused: boolean,
   inCreation?: boolean,
   templateMode?: boolean,
+  overlaps?: ?string,
 }
 
 export default class ShiftBox extends PureComponent{
