@@ -1,7 +1,5 @@
 //@flow
 import React, { PureComponent } from 'react'
-import { connect } from 'react-redux'
-import type { Connector } from 'react-redux'
 import WeeklyTimes from './weeklyTimes'
 import MonthlyTimes from './monthlyTimes'
 import cn from 'classnames'

@@ -1,7 +1,6 @@
 //@flow
 import React, { PureComponent } from 'react'
 import cn from 'classnames'
-import moment from 'moment'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import type { Store, ShiftEdits } from 'types/index'

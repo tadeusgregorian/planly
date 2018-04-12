@@ -2,8 +2,7 @@
 import { db } from '../firebaseInit'
 import { getFBPath } from './../actionHelpers'
 import { generateGuid } from 'helpers/index'
-import { toDBShift, fetchTemplateWeek } from './localHelpers'
-import { updateWeekSums } from './weekSums'
+import { fetchTemplateWeek } from './localHelpers'
 import { saveShiftToDB } from './index';
 import type { GetState, ThunkAction, Shift } from 'types/index'
 

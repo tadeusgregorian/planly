@@ -108,7 +108,7 @@ export default class NavAnimator {
   // }
 
   onTransitionEnd (evt) {
-    if (evt.propertyName != this.transitionEndProperty && evt.elapsedTime!= this.transitionEndTime){
+    if (evt.propertyName !== this.transitionEndProperty && evt.elapsedTime !== this.transitionEndTime){
       return;
     }
 

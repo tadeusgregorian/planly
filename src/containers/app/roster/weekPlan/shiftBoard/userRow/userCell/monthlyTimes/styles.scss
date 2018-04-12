@@ -1,5 +1,15 @@
 .monthlyTimesMain{
   color: #a7a7a7;
-  font-weight: 400;
   font-size: 12px;
+
+  .month{
+    margin-right: 4px;
+    font-weight: 400;
+    color: #45b3e8;
+  }
+
+  .istTime{
+    margin-right: 3px;
+    font-weight: 400;
+  }
 }
