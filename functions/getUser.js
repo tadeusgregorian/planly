@@ -1,7 +1,6 @@
 const express = require('express')
 const app = express();
 
-
 module.exports = (admin) => {
 
   app.use(function(req, res, next) {
