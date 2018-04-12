@@ -81,6 +81,8 @@ export type User = {
   branches: {},
   email: ?string,
   weeklyMins: { [ weekID: string]: number },
+  monthlyMins?: { [ monthID: string]: number },
+  monthly?: true,
   workDays: WorkDays,
   status: UserStatus,
   isAdmin?: true | null, // can be set to null -> so it gets removed on DB

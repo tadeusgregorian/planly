@@ -13,6 +13,7 @@ import SButton 					from 'components/sButton'
 import FlatInput 				from 'components/flatInput'
 import FlatFormRow 			from 'components/flatFormRow'
 import WorkDaysPicker		from 'components/workDaysPicker'
+import SSwitch          from 'components/sSwitch/index';
 
 import EmailStatus 				from './emailStatus'
 import ErrorMessageBar  	from './errorMessageBar'
@@ -33,6 +34,8 @@ class AddEditUserPopup extends PureComponent {
 		branches: 				{},
 		position: 				string,
 		status: 					UserStatus,
+    monthly:          ?true,
+    monthlyHours:     ?{ [smartMonth: string]: string },
 		weeklyHours: 			{ [smartWeek: string]: string },
 		workDays: 				WorkDays,
 		errorText: 				string,
@@ -47,27 +50,34 @@ class AddEditUserPopup extends PureComponent {
 		const getFreshUserID		= () => getNextID('u', users.length + 1)
 
 		this.state = {
-			id: 							user ? user.id 					: getFreshUserID(),
-			name: 						user ? user.name 				: '',
-			email: 						user ? user.email 			: '',
-			branches: 				user ? user.branches 		: getDefaultBranch(),
-			position: 				user ? user.position 		: 'p001',
-			status: 					user ? user.status 			: 'NOT_INVITED',
+			id: 							user ? user.id 					    : getFreshUserID(),
+			name: 						user ? user.name 				    : '',
+			email: 						user ? user.email 			    : '',
+			branches: 				user ? user.branches 		    : getDefaultBranch(),
+			position: 				user ? user.position 		    : 'p001',
+			status: 					user ? user.status 			    : 'NOT_INVITED',
+      monthly:          user ? user.monthly || null : null,
+      workDays: 				user ? user.workDays 		    : { mo: 1, tu: 1, we: 1, th: 1, fr: 1, sa: 1 },
+      monthlyHours:     this.getDefault_monthlyHours(),
 			weeklyHours:      this.getDefault_weeklyHours(),  // we display weeklyHours -> but store the weeklyMins as integers in DB
-			workDays: 				user ? user.workDays 		: { mo: 1, tu: 1, we: 1, th: 1, fr: 1, sa: 1 },
 			errorText: 				'',  // gets stripped away before saving to DB
 		}
 	}
 
 	getDefault_weeklyHours = () => {
-		const { user } = this.props
-		return user
-			? mapValues(user.weeklyMins, (mins => minsToFloat(mins)))
+		return this.props.user
+			? mapValues(this.props.user.weeklyMins, (mins => minsToFloat(mins)))
 			: { [beginningOfTime]: '' } // its the default -> we dont pick the current smartWeek -> so shifts can be created for the past
 	}
 
+	getDefault_monthlyHours = () => {
+		return this.props.user && this.props.user.monthlyMins
+			? mapValues(this.props.user.monthlyMins, (mins => minsToFloat(mins)))
+			: null
+	}
+
 	onSaveClicked = (invite: boolean) => {
-		const { name, email, branches, position, weeklyHours } = this.state
+		const { name, email, branches, position, weeklyHours, monthlyHours, monthly } = this.state
 		let errorText = ''
 
 
@@ -76,6 +86,9 @@ class AddEditUserPopup extends PureComponent {
 		if(!areAllValidFloats(weeklyHours)) errorText = 'Wochenstunden ungültig'
 		if(email && !isValidEmail(email))  	errorText = 'Falsches Email-Format.'
 		if(name === '') 									  errorText = 'Bitte geben Sie einen Benutzernamen ein.'
+    if(monthly && (!monthlyHours || !areAllValidFloats(monthlyHours))) {
+      errorText = 'Bitte geben Sie einen Benutzernamen ein.'
+    }
 
 		if(errorText) return this.setState({errorText}) // dont proceed here, if errorText is not falsy
 		this.saveUser(invite)
@@ -83,11 +96,12 @@ class AddEditUserPopup extends PureComponent {
 	}
 
 	saveUser = (sendInvite: boolean) => {
-		const { weeklyHours } = this.state
+		const { weeklyHours, monthlyHours } = this.state
 		let dbUser: User  = {
 			...this.props.user,   // props like 'isAdmin' are not in state, thats why doing ...user ( from props )
-			...omit(this.state, ['errorText', 'weeklyHours']), // weeklyHours is just to display it here -> we store it as weeklyMins on DB
-			weeklyMins: mapValues(weeklyHours, (mins => floatToMins(mins)))
+			...omit(this.state, ['errorText', 'weeklyHours', 'monthlyHours']), // weeklyHours and monthlyHours is just to display it here -> we store it as weeklyMins on DB
+			weeklyMins: mapValues(weeklyHours, (h => floatToMins(h))),
+      monthlyMins: monthlyHours ? mapValues(monthlyHours, (h => floatToMins(h))) : null
 		}
 
 		saveUserToDB(dbUser)
@@ -119,6 +133,17 @@ class AddEditUserPopup extends PureComponent {
 
 	weeklyHoursChanged 	= (weeklyHours) => isFloatStr(weeklyHours) 	&& this.setState({ weeklyHours })
 
+  accountTypeChanged = (type) => {
+    // 0 is weekly, 1 is monthly
+    this.updateUser('monthly', type === 0 ? null : true)
+
+    if (type === 0) this.updateUser('monthlyHours', null)
+    if (type === 1) {
+      this.updateUser('weeklyHours', { [beginningOfTime]: 0 })
+      this.updateUser('monthlyHours', { [beginningOfTime]: 0 })
+    }
+  }
+
 	tryToDeleteUser = () => {
 		const props = {
 			onAccept: ()=>deleteUser(this.state.id).then(this.props.closeModal),
@@ -131,7 +156,7 @@ class AddEditUserPopup extends PureComponent {
 	}
 
 	render() {
-		const { name, email, weeklyHours, position, branches, status, workDays } = this.state
+		const { name, email, weeklyHours, monthlyHours, position, branches, status, workDays, monthly } = this.state
 
 		const allBranches 	= this.props.branches
 		const allPositions 	= this.props.positions
@@ -164,8 +189,17 @@ class AddEditUserPopup extends PureComponent {
 									<BranchSelect branches={allBranches} selected={branches} onChange={this.branchesChanged} />
 								</FlatFormRow>
 							}
-							<FlatFormRow label='Wochenstunden'>
-								<WeeklyHoursInput weeklyHours={weeklyHours} setWeeklyHours={(weeklyHours) => this.setState({ weeklyHours })} extendable={editMode}/>
+              <FlatFormRow label='Arbeitszeit'>
+                <SSwitch
+                  options={['wöchentlich', 'monatlich']}
+                  onChange={this.accountTypeChanged}
+                  selected={monthly ? 1 : 0} />
+              </FlatFormRow>
+							<FlatFormRow label={monthly ? 'Monatsstunden' : 'Wochenstunden' }  >
+                { monthly && monthlyHours // checking for monthlyHours aswell just to silence FLOW
+                    ? <FlatInput value={monthlyHours[beginningOfTime]} onInputChange={(h) => this.updateUser('monthlyHours', { [beginningOfTime]: h })} />
+                    : <WeeklyHoursInput weeklyHours={weeklyHours} setWeeklyHours={(weeklyHours) => this.setState({ weeklyHours })} extendable={editMode}/>
+                }
 							</FlatFormRow>
 							<FlatFormRow label='Arbeitstage'>
 								<WorkDaysPicker workDays={workDays} onChange={(wd) => this.setState({ workDays: wd })} noEmpty />

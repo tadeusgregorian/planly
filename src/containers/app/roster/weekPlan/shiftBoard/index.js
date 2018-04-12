@@ -87,6 +87,7 @@ class ShiftBoard extends PureComponent{
       overtime={currentOvertimes[userID]}
       correction={currentCorrections[userID]}
       overtimeStatus={getOvertimeStatus(currentWeekID, initialStartWeeks[userID])}
+      currentWeekID={currentWeekID}
       templateMode={templateMode}
       timeDetailsVisible={timeDetailsVisible}
       userID={userID}

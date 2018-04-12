@@ -1,0 +1,34 @@
+@import 'styles/colors.scss';
+//@import './color.scss';
+
+.sswitchMain{
+  margin: 4px;
+  height: 30px;
+  border: 1px solid #0077cc;
+  border-radius: 2px;
+  overflow: hidden;
+
+  .switchOption{
+    padding: 0px 20px;
+    min-width: 100px;
+    align-self: stretch;
+    color: #bbbbbb;
+
+    &:not(.selected){
+      cursor: pointer;
+    }
+
+    &.selected{
+      background: #0293ff;
+      color: white;
+      box-shadow: inset 0 1px 0 #66bfff;
+    }
+
+    &:not(.selected):hover{
+      color: #169eff;
+    }
+
+    align-items: center;
+    justify-content: center;
+  }
+}

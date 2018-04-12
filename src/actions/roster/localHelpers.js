@@ -1,8 +1,12 @@
 //@flow
+import { momToSmart } from 'helpers/index';
+
 import { db } from '../firebaseInit'
+import omit from 'lodash/omit';
 import values from 'lodash/values'
 import type { PreShift, Shift, User } from 'types/index'
-//import { weekDays } from 'constants/roster'
+import { weekDays } from 'constants/roster'
+import { weekIDToMoment } from 'helpers/roster'
 import { getFBPath } from './../actionHelpers'
 
 export const toDBShift = (sh: PreShift, branch: string): Shift => ({
@@ -23,7 +27,6 @@ export const getShiftUpdate = (preShift: PreShift, weekID: string , branch: stri
   return {[ getFBPath('shiftWeeks', [weekID, shift.id])]: data}
 }
 
-//$FlowFixMe -> dont know why this is a proglem here
 export const fetchTemplateWeek = (tempID: string): Promise<Array<Shift>> => (
   db().ref(getFBPath('shiftWeeks', [tempID])).once('value').then(snap => {
     return snap.val() ? values(snap.val()) : []
@@ -33,4 +36,13 @@ export const fetchTemplateWeek = (tempID: string): Promise<Array<Shift>> => (
 export const getUserPos = (users: Array<User>, userID: string): string => {
   const user: User = (users.find(u => u.id === userID):any)
   return user.position
+}
+
+export const getShiftPerMonthUpdate = (preShift: PreShift, weekID: string , branch: string, remove: boolean = false) => {
+  const shift      = omit(toDBShift(preShift, branch), ['edit', 'branchDay'] )
+  shift.mins       = shift.e - shift.s - shift.b
+  shift.date       = momToSmart(weekIDToMoment(weekID).weekday(weekDays.indexOf(shift.day)))
+  const smartMonth = shift.date.toString().substr(0,6)
+  const data      = remove ? null : shift
+  return  {[ getFBPath('shiftsPM', [smartMonth, shift.id]) ]: data }
 }

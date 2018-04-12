@@ -6,7 +6,12 @@ import { goToLastWeek, goToNextWeek } from 'actions/ui/roster'
 import { getWeek } from 'helpers/index'
 import './styles.css'
 
+import moment from 'moment'
+
 const WeekSelect = ({currentWeekID, goToNextWeek, goToLastWeek}) => {
+
+  console.log('HERE###:')
+  console.log(moment().year(2018).week(53).startOf('week'))
 
   return(
     <fb className="weekSelectorMain">

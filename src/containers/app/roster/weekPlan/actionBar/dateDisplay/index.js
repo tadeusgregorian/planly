@@ -3,11 +3,16 @@ import React, { PureComponent } from 'react'
 //import type Moment from 'moment'
 import './styles.css'
 
+import moment from 'moment'
+
 //type propType = {mom: Moment, value: string, onClick: () => any}
 
 export default class DateDisplay extends PureComponent{
 
   render(){
+
+
+
     const mymom = this.props.mom.format('D. MMM YYYY')
     return(
       <fb className="actionBarDateDisplayMain" onClick={this.props.onClick}>

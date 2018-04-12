@@ -17,6 +17,7 @@ type Props = {
   userID: string,
   isOpen: boolean,
   shifts: Shifts,
+  currentWeekID: string,
   extraHours: Array<ExtraHours>,
   templateMode: boolean,
   timeDetailsVisible: boolean,
@@ -44,6 +45,7 @@ export default class UserRow extends PureComponent{
       userID, // we cant just pass user-Object here ( cause userObj might be null in case of openShiftsRow !)
       isOpen,
       shifts,
+      currentWeekID,
       extraHours,
       templateMode,
       timeDetailsVisible,
@@ -60,14 +62,15 @@ export default class UserRow extends PureComponent{
       shiftOverlaps,
       ghost } = this.props
 
-      const isAdmin      = currentUser.isAdmin
-      const isOwnRow     = currentUser.id === userID
-      const weekSum      = templateMode ? calculateWeekSum(shifts) : this.props.weekSum
-      const isAuthorized = isAdmin || isOwnRow
+      const isAdmin        = currentUser.isAdmin
+      const isOwnRow       = currentUser.id === userID
+      const weekSum        = templateMode ? calculateWeekSum(shifts) : this.props.weekSum
+      const isAuthorized   = isAdmin || isOwnRow
+      const userIsMonthly  = user ? !!user.monthly : false
 
     return(
       <fb className="userRowMain">
-        { !templateMode && timeDetailsVisible &&
+        { !templateMode && timeDetailsVisible && !userIsMonthly &&
           <OvertimeCell
             overtime={overtime}
             status={overtimeStatus}
@@ -85,6 +88,7 @@ export default class UserRow extends PureComponent{
               overtime={overtime}
               currentUser={currentUser}
               timeDetailsVisible={timeDetailsVisible}
+              currentWeekID={currentWeekID}
               ghost={ghost}
             />
           : <OpenUserCell />
@@ -120,7 +124,7 @@ export default class UserRow extends PureComponent{
           overtime={overtime + weekSum - ( weeklyMins || 0 )}
           status={overtimeStatus}
           type='POST'
-          empty={isOpen || !isAuthorized}
+          empty={isOpen || !isAuthorized || userIsMonthly}
           userID={userID}
         /> }
       </fb>

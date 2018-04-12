@@ -4,6 +4,7 @@ import { getFBPath } from './../actionHelpers'
 import { generateGuid } from 'helpers/index'
 import { toDBShift, fetchTemplateWeek } from './localHelpers'
 import { updateWeekSums } from './weekSums'
+import { saveShiftToDB } from './index';
 import type { GetState, ThunkAction, Shift } from 'types/index'
 
   export const saveWeekAsTemplate: ThunkAction = (name: string) => (dispatch, getState: GetState) => {
@@ -34,18 +35,8 @@ export const createNewTemplate: ThunkAction = (name: string) => (dispatch, getSt
   dispatch({ type: 'SET_CURRENT_WEEK_ID', payload: tempID })
 }
 
-export const importTemplateWeek: ThunkAction = (tempID: string) => (dispatch, getState: GetState) => {
-  const weekID  = getState().ui.roster.currentWeekID
-  const branch  = getState().ui.roster.currentBranch
-
-  return fetchTemplateWeek(tempID).then(shifts => {
-    const shiftUpdates = {}
-    shifts.forEach(s => shiftUpdates[getFBPath('shiftWeeks', [weekID, s.id])] = toDBShift(s, branch))
-    const weekSumsUpdates = updateWeekSums(getState, { shifts })
-    const updatesExt = { ...shiftUpdates, ...weekSumsUpdates }
-    db().ref().update(updatesExt)
-  })
-}
+export const importTemplateWeek: ThunkAction = (tempID: string) => (dispatch, getState: GetState) =>
+  fetchTemplateWeek(tempID).then(shifts => saveShiftToDB(shifts)(dispatch, getState))
 
 const createTemplateWeek = (shifts: Array<Shift>, branch: string): {[id: string]: Shift} => {
   const tempWeek = {}

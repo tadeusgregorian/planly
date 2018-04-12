@@ -1,0 +1,28 @@
+.times {
+  font-size: 12px;
+  margin-left: 1px;
+
+  .currentWeek{
+    color: #a7a7a7;
+
+    .istTime{
+      margin-right: 3px;
+      font-weight: 400;
+
+      &.negative{
+        //color: #ff4a4a;
+        // font-weight: 400;
+      }
+
+      &.positive{
+        // font-weight: 400;
+        // color: grey;
+      }
+    }
+  }
+
+  .overtime{
+    color: red;
+    margin-right: 4px;
+  }
+}

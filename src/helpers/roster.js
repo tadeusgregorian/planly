@@ -17,11 +17,11 @@ export const getWeek = (weekID: string | number) =>
   parseInt(weekID.toString().substr(4, 2), 10)
 
 export const weekIDToMoment = (sw: string): moment => {
-  return moment().year(getYear(sw)).week(getWeek(sw)).startOf('week')
+  return moment().weekYear(getYear(sw)).week(getWeek(sw)).startOf('week')
 }
 
 export const momentToWeekID = (mom: moment): string => {
-  return mom.year() + doubleD(mom.week())
+  return mom.weekYear() + doubleD(mom.week())
 }
 
 export const smartDateToYear = (smartDate: number): number => {

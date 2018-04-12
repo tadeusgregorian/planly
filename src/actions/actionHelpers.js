@@ -16,6 +16,8 @@ export type TargetKey =
 | 'corrections'
 | 'extraHours'
 | 'dayNotes'
+| 'shiftsPM'
+| 'extraHoursPM'
 
 // This function holds the Information, where in the FirebaseDB each Node sits
 // If childPaths provided it concats the childPaths to a path-string.
@@ -31,6 +33,8 @@ export const getFBPath	= (target: TargetKey, childPaths?: Array<string>): string
     extraHours:         '/roster/extraHours/',
     corrections:        '/roster/corrections/',
     templatesFlat: 	    '/roster/templatesFlat/',
+    shiftsPM:           '/roster/shiftsPM/',
+    extraHoursPM:       '/roster/extraHoursPM/',
     absences:           '/absencePlaner/absences/',
     absenceCorrections: '/absencePlaner/absenceCorrections/',
     absencesWeekly:     '/absencePlaner/absencesWeekly/',
