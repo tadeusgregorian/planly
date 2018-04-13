@@ -1,0 +1,15 @@
+.durationInputModalContent{
+  padding: 22px 22px;
+  color: #636363;
+  font-size: 16px;
+  min-width: 400px;
+  max-width: 500px;
+  justify-content: flex-start;
+  flex-direction: column;
+
+  .text{
+    margin-bottom: 20px;
+    text-align: center;
+    line-height: 24px;
+  }
+}

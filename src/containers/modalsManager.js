@@ -24,6 +24,7 @@ import AddEditPositionPopup   from 'modals/adminPanel/addEditPositionPopup'
 import AddEditUserPopup       from 'modals/adminPanel/addEditUserPopup'
 
 import ConfirmationPopup      from 'modals/general/confirmationPopup'
+import DurationInputModal     from 'modals/general/durationInputModal/index';
 
 type Props = {
   modals: Array<{modalID: string, props?: {}}> ,
@@ -59,6 +60,7 @@ class ModalsManager extends PureComponent {
             case 'CONFIRMATION'         : return <ConfirmationPopup { ...props } />
             case 'EDIT_ABSENCE_DAYS'    : return <EditAbsenceDaysModal { ...props } />
             case 'ABSENCE_CORRECTION'   : return <AbsenceCorrectionModal { ...props } />
+            case 'DURATION_INPUT'       : return <DurationInputModal { ...props } />
             default: return null
           }
         })}

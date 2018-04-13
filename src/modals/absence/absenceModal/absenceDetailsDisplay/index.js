@@ -11,6 +11,8 @@ type Props = {
   avgMins: number,
   openEffectiveDaysModal: Function,
   openTimeInputModal: Function,
+  unpaid: true | null,
+  showAvgMins?: boolean,
 }
 
 export default (props: Props) => {
@@ -43,18 +45,20 @@ export default (props: Props) => {
         </fb>
         }
       </fb>
-      <fb className='col hoursPerDay marginLeft'>
-        <fb className='label time' data-balloon={hoursPerDayExpl}>Stunden<br/>pro Tag</fb>
-        <fb className='count'>{minToTimeString(props.avgMins, false)}</fb>
-        { props.adminMode &&
-        <fb data-balloon='bearbeiten'>
-          <fb
-            className='icon icon-pencil editIcon'
-            onClick={props.openTimeInputModal}
-          />
+      { props.showAvgMins &&
+        <fb className='col hoursPerDay marginLeft'>
+          <fb className='label time' data-balloon={hoursPerDayExpl}>Stunden<br/>pro Tag</fb>
+          <fb className='count'>{props.unpaid ? 0 : minToTimeString(props.avgMins, false)}</fb>
+          { props.adminMode && !props.unpaid &&
+          <fb data-balloon='bearbeiten'>
+            <fb
+              className='icon icon-pencil editIcon'
+              onClick={props.openTimeInputModal}
+            />
+          </fb>
+          }
         </fb>
-        }
-      </fb>
+      }
     </fb>
   )
 }

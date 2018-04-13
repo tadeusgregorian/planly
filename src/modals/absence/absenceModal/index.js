@@ -10,8 +10,9 @@ import getCurrentUser from 'selectors/currentUser'
 import { openModal } from 'actions/ui/modals'
 import { saveAbsenceToDB, removeAbsenceFromDB } from 'actions/absence'
 import { generateGuid, momToSmart, smartDatesDiff } from 'helpers/index'
-import { getEffectiveDays, getButtonsToShow, checkOverlapping } from './localHelpers'
-import type { Store, User, Absence, AbsenceType, AbsenceTypeFilter, AbsenceStatus, AccountPreferences } from 'types/index'
+import { momentToWeekID } from 'helpers/roster';
+import { getEffectiveDays, getButtonsToShow, checkOverlapping, getAvgMinsOfUser } from './localHelpers'
+import type { Store, User, Absence, AbsenceType, AbsenceTypeFilter, AbsenceStatus, AccountPreferences, WorkDays } from 'types/index'
 
 import AdvancedSettings from './advancedSettings'
 import ErrorMessageDisplay from './errorMessageDisplay'
@@ -33,6 +34,8 @@ type State = {
   year: number,
   startDate: ?number,
   endDate: ?number,
+  avgMins: number,
+  workDays: WorkDays,
   effectiveDays: ?number,
   unpaid: true | null,
   note: ?string,
@@ -40,6 +43,7 @@ type State = {
   errorMessage: ErrorMesage,
   loading: boolean,
   advancedOpen: boolean,
+  modified: { avgMins?: true, effectiveDays?: true }
 }
 
 type OwnProps = {
@@ -65,13 +69,14 @@ class AbsenceModal extends PureComponent{
 
   constructor(props){
     super(props)
-    const { absence, currentYear, currentMonth, currentType } = props
+    const { absence, currentYear, currentMonth, currentType, user } = props
     const adminMode = !!this.props.currentUser.isAdmin
     const initialType = adminMode ? ( currentType === 'all' ? '' : currentType ) : 'vac' // nonAdmin can only have VAC; ALL is treated as no type selected
 
     this.state = {
       id:             absence ? absence.id            : generateGuid(),
       user:           absence ? absence.user          : props.userID,
+      workDays:       absence ? absence.workDays      : user.workDays,
       type:           absence ? absence.type          : initialType,
       status:         absence ? absence.status        : adminMode ? 'accepted' : 'requested',
       year:           absence ? absence.year          : currentYear,
@@ -80,6 +85,8 @@ class AbsenceModal extends PureComponent{
       effectiveDays:  absence ? absence.effectiveDays          : null,
       unpaid:         absence ? (absence.unpaid    || null)    : null,
       note:           absence ? (absence.note      || '')      : '',
+      avgMins:        absence ? absence.avgMins                : 0,
+      modified:       absence ? (absence.modified  || {})      : {},
       focusedInput:   null, // we omit this before saving to db!
       errorMessage:   false, // we omit this before saving to db!
       loading:        false, // we omit this before saving to db!
@@ -93,25 +100,35 @@ class AbsenceModal extends PureComponent{
   setErrorMsg = (errorMessage: ErrorMesage) => { this.setState({ errorMessage }) }
 
   datesChanged = (d: {startDate: ?moment, endDate: ?moment}) => {
-    const { id } = this.state
-    const { userID, user, currentYear, preferences } = this.props
+    const { id, modified } = this.state
+    const { userID, user, preferences } = this.props
     const { startDate, endDate } = d
     const { bundesland } = preferences
 
     this.setState({
-      year:           startDate ? startDate.year()      : currentYear,
       startDate:      startDate ? momToSmart(startDate) : null,
       endDate:        endDate   ? momToSmart(endDate)   : null,
-      effectiveDays:  getEffectiveDays(startDate, endDate, bundesland, user.workDays),
-      loading:        true,
     })
 
-    if(!startDate || !endDate) return // if both dates are set -> check for validity of selected range
-    if(endDate.year() !== startDate.year())              return this.setErrorMsg('multiyear')
-    checkOverlapping(startDate, endDate, userID, id).then((isOverlapping) => {
-      this.setState({ loading: false, errorMessage: isOverlapping ? 'overlapping' : false })
-    })
-    this.setErrorMsg(false)
+    if(startDate && endDate){
+      if(endDate.year() !== startDate.year()) return this.setErrorMsg('multiyear')
+
+      this.setState({
+        loading:       true,
+        errorMessage:  false,
+        year:          startDate.year(),
+      })
+
+      !modified.avgMins && this.setState({ avgMins: getAvgMinsOfUser(user, momentToWeekID(startDate)) })
+      !modified.effectiveDays && this.setState({ effectiveDays: getEffectiveDays(startDate, endDate, bundesland, user.workDays) })
+
+      checkOverlapping(startDate, endDate, userID, id).then((isOverlapping) => {
+        this.setState({
+          loading: false,
+          errorMessage: isOverlapping ? 'overlapping' : false
+        })
+      })
+    }
   }
 
   changeNote     = (note) => this.setState({ note })
@@ -150,12 +167,20 @@ class AbsenceModal extends PureComponent{
   }
 
   openTimeInputModal = () => {
-    console.log('OPEN_TIMES_INPUT_ MODALLLL')
+    const { avgMins, modified } = this.state
+    const modalProps = {
+      title: 'Stunden pro Urlaubstag bearbeiten',
+      text: 'Zeit die pro effektivem Urlaubstag auf das Stundenkonto gutgeschrieben wird',
+      onInputConfirmed: ({mins}) => this.setState({ avgMins: mins, modified: { ...modified, avgMins: true} }),
+      initialMins: avgMins,
+      noNegatives: true,
+    }
+    this.props.openModal('DURATION_INPUT', modalProps)
   }
 
   render(){
     const { closeModal, user, currentUser, currentType } = this.props
-    const { type, startDate, endDate, focusedInput, note, status, errorMessage, effectiveDays, loading, advancedOpen, unpaid } = this.state
+    const { type, startDate, endDate, focusedInput, note, status, errorMessage, effectiveDays, loading, advancedOpen, unpaid, avgMins } = this.state
     const adminMode = !!currentUser.isAdmin
     const isComplete = startDate && endDate && type && !errorMessage
     const accepted = status === 'accepted'
@@ -191,7 +216,9 @@ class AbsenceModal extends PureComponent{
                   effectiveDays={effectiveDays}
                   openEffectiveDaysModal={this.openEffectiveDaysModal}
                   openTimeInputModal={this.openTimeInputModal}
-                  avgMins={4}
+                  avgMins={avgMins}
+                  unpaid={unpaid}
+                  showAvgMins={type === 'vac'}
                 />
             }
             { startDate && endDate &&  errorMessage && <ErrorMessageDisplay msg={errorMessage} /> }
@@ -205,7 +232,7 @@ class AbsenceModal extends PureComponent{
   				</fb>
   			</SModal.Body>
         <SModal.Footer>
-           {  showBtn.Delete  && <SButton label='Löschen'   onClick={this.removeAbsence} color='#ff3f3f' grey left />}
+           {  showBtn.Delete  && <SButton label='Löschen'   onClick={this.removeAbsence} grey left />}
            {  showBtn.Reject  && <SButton label='Ablehnen'  onClick={this.declineRequest} color='#ff3f3f'/>}
            {  showBtn.Accept  && <SButton label='Annehmen'  onClick={this.acceptRequest} color='#00a2ef'         disabled={!isComplete} />}
            {  showBtn.Save    && <SButton label='Speichern' onClick={()=>this.saveAbsence(this.state)}           disabled={!isComplete} color='#00a2ef' />}

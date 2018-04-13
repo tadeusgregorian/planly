@@ -7,18 +7,8 @@ import { weekDays } from 'constants/roster'
 import type { BundeslandCode, User, Absence, AbsenceStatus, WorkDays } from 'types/index'
 import values from 'lodash/values'
 
-// const numToWeekDay = (num: number): Day => {
-//   return weekDays[num]
-// }
-
-export const getTotalDays = (start: ?moment, end: ?moment): number | null => {
-  if(!start || !end) return null
-  return moment(end).diff(start, 'days') + 1
-}
-
-type         GetEffectiveDays = (?moment, ?moment, BundeslandCode | false, WorkDays) => number | null
+type         GetEffectiveDays = (moment, moment, BundeslandCode | false, WorkDays) => number
 export const getEffectiveDays: GetEffectiveDays = (start, end, bundesland, workDays ) => {
-  if(!start || !end) return null
   let excludedsCount = 0
   const totalDays = moment(end).diff(start, 'days') + 1
 
@@ -76,4 +66,11 @@ export const checkOverlapping: CheckOverlapping = (start, end, user, absenceID) 
       false
     )
   })
+}
+
+export const getAvgMinsOfUser = (user: User, weekID: string) => {
+  const daysCount           = Object.keys(user.workDays).length
+  const smartWeekyArr       = Object.keys(user.weeklyMins).sort()
+  const latestRelevantEntry = smartWeekyArr.reduce((acc, val) => val > acc && val <= weekID ? val : acc, smartWeekyArr[0])
+  return user.weeklyMins[latestRelevantEntry] / daysCount
 }

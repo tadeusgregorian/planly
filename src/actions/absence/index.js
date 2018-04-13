@@ -12,6 +12,8 @@ export const saveAbsenceToDB = (user: User, absence: Absence) => {
   updates[getFBPath('absences', [absence.id])] = extendForDB(user, absence)
   updates[getFBPath('vacationRequests', [absence.id])] = request
 
+  console.log(extendForDB(user, absence))
+
   db().ref().update(updates)
 }
 

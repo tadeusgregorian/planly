@@ -4,7 +4,8 @@ import FlatInput from 'components/flatInput'
 import moment from 'moment'
 import omit from 'lodash/omit'
 import { beginningOfTime } from 'constants/roster'
-import { withoutProp, momToSmartWeek, smartWeekToMom, isFloatStr } from 'helpers/index.js'
+import { withoutProp, smartWeekToMom, isFloatStr } from 'helpers/index.js'
+import {momentToWeekID} from 'helpers/roster';
 import DatePicker from 'react-datepicker';
 import cn from 'classnames'
 import 'react-datepicker/dist/react-datepicker.css';
@@ -62,10 +63,10 @@ export default class WeeklyHoursInput extends PureComponent{
     return true
   }
 
-  nextAvailableDate = (): number => {
+  nextAvailableDate = (): string => {
     const latestMom         = smartWeekToMom(this.latestCreatedDate())
-    const nextAvailableWeek = momToSmartWeek(latestMom.add(7, 'days'))
-    const currentWeek       = momToSmartWeek(moment())
+    const nextAvailableWeek = momentToWeekID(latestMom.add(7, 'days'))
+    const currentWeek       = momentToWeekID(moment())
 
     return currentWeek <= nextAvailableWeek ? nextAvailableWeek : currentWeek
   }
@@ -97,7 +98,7 @@ export default class WeeklyHoursInput extends PureComponent{
                 <fb className='datePickerWrapper'>
                   <DatePicker
                     selected={initial ? smartWeekToMom(smartWeeksArr[1]) : smartWeekToMom(smartWeek)} // if INITIAL we show: biz Zum 11.11.11 -> 40 Stunden
-                    onChange={(newSW) => this.replaceLastDate(momToSmartWeek(newSW), weeklyHours[smartWeek])}
+                    onChange={(newSW) => this.replaceLastDate(momentToWeekID(newSW), weeklyHours[smartWeek])}
                     filterDate={this.dateAllowed}
                     disabled={!isLatest}
                     className={cn({datePicker: true, active: isLatest})}

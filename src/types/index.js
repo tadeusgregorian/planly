@@ -37,6 +37,7 @@ export type Absence = { // this is the absence Obj we get from the DB ( Firebase
   effectiveDays: number,//
   note?: ?string, //
   avgMins: number,
+  modified?: ?{ avgMins?: true, effectiveDays?: true },
   workDays: WorkDays,
   touchingWeeks: { [smartWeek: string]: string },
   unpaid?: true | null,

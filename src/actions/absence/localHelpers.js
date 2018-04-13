@@ -3,13 +3,10 @@ import { smartToMom, doubleD } from 'helpers/index'
 import type { Absence, User } from 'types/index'
 
 export const extendForDB = (user: User, absence: Absence): Absence => {
-  const weekID        = absence.year.toString() + smartToMom(absence.startDate).week() // we take the startWeek to calc the avgMins
-  const avgMins       = getAvgMins(user, weekID)
   const touchingWeeks = getTouchingWeeks(absence)
   const yearUser      = absence.year.toString() + absence.user
-  const workDays      = user.workDays
 
-  return { ...absence, avgMins, workDays, touchingWeeks, yearUser }
+  return { ...absence, touchingWeeks, yearUser }
 }
 
 export const getTouchingWeeks = (absence: Absence ): {} => {
@@ -44,10 +41,3 @@ const getFirstWeek = (touchingWeeks) =>
 
 const getLastWeek = (touchingWeeks) =>
   Object.keys(touchingWeeks).sort().reverse()[0]
-
-export const getAvgMins = (user: User, weekID) => {
-  const daysCount      = Object.keys(user.workDays).length
-  const smartWeekyArr  = Object.keys(user.weeklyMins).sort()
-  const latestEntry    = smartWeekyArr.reduce((acc, val) => val > acc && val <= weekID ? val : acc, smartWeekyArr[0])
-  return user.weeklyMins[latestEntry] / daysCount
-}
