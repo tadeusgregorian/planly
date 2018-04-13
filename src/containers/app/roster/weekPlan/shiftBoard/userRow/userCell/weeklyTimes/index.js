@@ -14,7 +14,7 @@ export default ({ weekSum, weeklyMins }) => {
   return (
     <fb className='times'>
       <fb className='currentWeek'>
-        <fb className={cn({ istTime: 1, negative, positive })}  >{minToTimeString(weekSum)}</fb>
+        <fb className={cn({ istTime: 1, negative, positive })}  >{minToTimeString(weekSum, false)}</fb>
         <fb className='sollTime'>{' / ' + sollTime + ' h'}</fb>
       </fb>
     </fb>

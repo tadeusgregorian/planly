@@ -142,7 +142,7 @@
         },
         "absencePlaner": {
           "absences": {
-            "$aID": {
+            "$absenceID": {
               ".validate": "newData.hasChildren(['avgMins', 'effectiveDays', 'endDate', 'id', 'startDate', 'status', 'touchingWeeks', 'type', 'user', 'year'])",
               "avgMins": {
                 ".validate": "newData.isNumber()"
@@ -190,17 +190,14 @@
                 ".validate": "false"
               }
             },
-            "$absenceID": {
-              ".validate": "true",
-              ".indexOn": [
-                "year",
-                "yearUser"
-              ]
-            }
+            ".indexOn": [
+              "year",
+              "yearUser"
+            ]
           },
           "weeklyAbsences": {
             "$weekID": {
-              "$aID": {
+              "$absenceID": {
                 ".validate": "newData.hasChildren(['avgMins', 'firstDay', 'id', 'lastDay', 'type', 'user', 'workDays'])",
                 "avgMins": {
                   ".validate": "newData.isNumber()"
@@ -233,11 +230,9 @@
             }
           },
           "absenceCorrections": {
-            "$correctionID": {
-              ".indexOn": [
-                "year"
-              ]
-            }
+            ".indexOn": [
+              "year"
+            ]
           }
         },
         "roster": {
@@ -372,6 +367,20 @@
             "$weekID": {
               ".indexOn": [
                 "branch"
+              ]
+            }
+          },
+          "shiftsPM": {
+            "$monthID": {
+              ".indexOn": [
+                "user"
+              ]
+            }
+          },
+          "extraHoursPM": {
+            "$monthID": {
+              ".indexOn": [
+                "user"
               ]
             }
           }

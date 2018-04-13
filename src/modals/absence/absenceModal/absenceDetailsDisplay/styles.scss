@@ -5,26 +5,43 @@
   color: #313131;
   background: none;
   background: whitesmoke;
-  padding-top: 4px !important;
-  padding-bottom: 4px !important;
+  padding-top: 7px !important;
+  padding-bottom: 7px !important;
 
   .col{
     align-items: center;
+
+    &.edgeRight{
+      border-right: 1px solid #e0e0e0;
+      padding-right: 16px;
+    }
+
+    &.marginLeft{
+      margin-left: 20px;
+    }
 
     .label{
       font-weight: 300;
       margin-right: 10px;
       color: #00a1f0;
 
+
+
       &.effective{
-        margin-left: 26px;
         color: orange;
+      }
+
+      &.time{
+        color: #8c8d8e;
       }
     }
 
     .count{
       font-weight: 400;
       color: #686868;
+      margin-left: 4px;
+      font-size: 18px;
+      margin-top: 2px;
     }
   }
 

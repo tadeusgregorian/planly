@@ -21,7 +21,7 @@ import PositionSelect  		from './positionSelect'
 import BranchSelect 			from './branchSelect'
 import WeeklyHoursInput 	from './weeklyHoursInput'
 
-import { getNextID, isValidEmail, isFloatStr, replaceDotsWithCommas } from 'helpers/index'
+import { getNextID, isValidEmail, isFloatStr, replaceDotsWithCommas, minToTimeString } from 'helpers/index'
 import { floatToMins, minsToFloat, getAvgDailyMins, minsToDetailedTime, getLatest, areAllValidFloats } from './localHelpers'
 import type { UserStatus, Store, User, WorkDays } from 'types/index'
 import './styles.css'
@@ -163,8 +163,8 @@ class AddEditUserPopup extends PureComponent {
 		const editMode 			= !!this.props.user
 		const validEmail    = isValidEmail(email)
 
-		const avgHours 			= Math.round(getAvgDailyMins(workDays, getLatest(weeklyHours)) / 60 * 100) / 100
-		const avgHoursStr 	= replaceDotsWithCommas(avgHours) + ' Stunden'
+    const avgMins       = getAvgDailyMins(workDays, getLatest(weeklyHours))
+		const avgHoursStr 	= minToTimeString(avgMins, false) + ' Stunden'
 		const avgTimeStr    = minsToDetailedTime(getAvgDailyMins(workDays, getLatest(weeklyHours)))
 		const avgTimeTTip   = 'Durchschnittliche tägliche Arbeitszeit: ' + avgTimeStr
 

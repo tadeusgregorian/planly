@@ -9,23 +9,26 @@ type Props = {
   negative: boolean,
   hours: string,
   minutes: string,
-  negativeChanged: Function,
-  hoursChanged: Function,
-  minutesChanged: Function,
+  negativeChanged: (boolean)=>any,
+  hoursChanged: (string)=>any,
+  minutesChanged: (string)=>any,
+  noNegatives?: true,
 }
 
 export default (props: Props) => {
-  const { negative, hours, minutes, negativeChanged, hoursChanged, minutesChanged } = props
+  const { negative, hours, minutes, negativeChanged, hoursChanged, minutesChanged, noNegatives } = props
 
   const onHoursChange = (e) => isIntStr(e.target.value) && hoursChanged(e.target.value)
   const onMinutesChange = (e) => isIntStr(e.target.value) && minutesChanged(e.target.value)
 
   return(
     <fb className='absoluteTimeInputMain'>
-      <fb className='minusPlusWrapper'>
-        <fb className={cn({minus: 1, option: 1, selected: negative})} onClick={()=>negativeChanged(true)}>-</fb>
-        <fb className={cn({plus: 1, option: 1, selected: !negative})} onClick={()=>negativeChanged(false)}>+</fb>
-      </fb>
+      { !noNegatives &&
+        <fb className='minusPlusWrapper'>
+          <fb className={cn({minus: 1, option: 1, selected: negative})} onClick={()=>negativeChanged(true)}>-</fb>
+          <fb className={cn({plus: 1, option: 1, selected: !negative})} onClick={()=>negativeChanged(false)}>+</fb>
+        </fb>
+      }
       <fb className='timesWrapper'>
         <fb className='inputWrapper hours'><input type='text' value={hours} onChange={onHoursChange}/></fb>
         <fb className='unit'>Std</fb>

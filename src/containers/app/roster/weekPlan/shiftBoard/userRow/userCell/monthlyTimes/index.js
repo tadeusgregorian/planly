@@ -120,11 +120,13 @@ class MonthlyTimes extends PureComponent {
       this.removeExtraHoursListener(prevMom.format('YYYYMM'))
       this.setListener('shifts', this.getShiftsRef(curMom.format('YYYYMM'), userID))
       this.setListener('extraHours', this.getExtraHoursRef(curMom.format('YYYYMM'), userID))
+      console.log('MONTH UPDATA')
     }
 
     if(yearChanged){
       this.removeAbsencesListener()
       this.setListener('absences', this.getAbsencesRef(curMom.year().toString(), userID))
+      console.log('YEAR UPDATA')
     }
   }
 
@@ -146,7 +148,7 @@ class MonthlyTimes extends PureComponent {
     const monthlyMins = Object.values(user.monthlyMins)[0]
     const monthlyHours = Math.round((monthlyMins / 60) * 100) / 100
     const month = weekIDToMoment(currentWeekID).format('MMM').toUpperCase().substr(0,3)
-    const sumTime = minToTimeString(sum)
+    const sumTime = minToTimeString(sum, false)
 
 
     return (

@@ -52,11 +52,12 @@ export const minToTime = (mins: number): {hours: number, minutes: number} => {
   return { hours, minutes }
 }
 
-export const minToTimeString = (mins: number): string => {
+export const minToTimeString = (mins: number, withTrailingZero: boolean = true): string => {
   const hours = Math.abs(Math.floor(mins / 60))
   const minutes = Math.abs(mins) % 60
   const sign = (mins < 0) ? '- ' : ''
-  return sign + doubleD(hours) + ':' + doubleD(minutes)
+  const hoursStr = withTrailingZero ? doubleD(hours) : hours
+  return sign + hoursStr + ':' + doubleD(minutes)
 }
 
 export const shiftToString = (shift: MinimalShift): string =>

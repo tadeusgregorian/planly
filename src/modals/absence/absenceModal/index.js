@@ -149,6 +149,10 @@ class AbsenceModal extends PureComponent{
     })
   }
 
+  openTimeInputModal = () => {
+    console.log('OPEN_TIMES_INPUT_ MODALLLL')
+  }
+
   render(){
     const { closeModal, user, currentUser, currentType } = this.props
     const { type, startDate, endDate, focusedInput, note, status, errorMessage, effectiveDays, loading, advancedOpen, unpaid } = this.state
@@ -180,13 +184,15 @@ class AbsenceModal extends PureComponent{
               </fb>
             }
             { startDate && endDate && !errorMessage &&
-              <AbsenceDetailsDisplay
-                adminMode={adminMode}
-                loading={loading}
-                totalDays={smartDatesDiff(startDate, endDate)}
-                effectiveDays={effectiveDays}
-                openEffectiveDaysModal={this.openEffectiveDaysModal}
-              />
+                <AbsenceDetailsDisplay
+                  adminMode={adminMode}
+                  loading={loading}
+                  totalDays={smartDatesDiff(startDate, endDate)}
+                  effectiveDays={effectiveDays}
+                  openEffectiveDaysModal={this.openEffectiveDaysModal}
+                  openTimeInputModal={this.openTimeInputModal}
+                  avgMins={4}
+                />
             }
             { startDate && endDate &&  errorMessage && <ErrorMessageDisplay msg={errorMessage} /> }
             <AbsenceNotesSection note={note} changeNote={this.changeNote} />

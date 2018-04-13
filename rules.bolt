@@ -167,11 +167,11 @@ isOwnAccount(accID, uid) { root.allUsers[uid]['account'] === accID }
 
 // indexing for Query-Optimistion //
 
-path /accounts/{accID}/absencePlaner/absences/{absenceID} {
+path /accounts/{accID}/absencePlaner/absences {
   index() { ['year', 'yearUser'] }
 }
 
-path /accounts/{accID}/absencePlaner/absenceCorrections/{correctionID} {
+path /accounts/{accID}/absencePlaner/absenceCorrections {
   index() { ['year'] }
 }
 
@@ -189,4 +189,12 @@ path /accounts/{accID}/roster/shiftWeeks/{weekID} {
 
 path /allUsers/{uid} {
   index() { ['userID'] }
+}
+
+path /accounts/{accID}/roster/shiftsPM/{monthID} {
+  index() { ['user'] }
+}
+
+path /accounts/{accID}/roster/extraHoursPM/{monthID} {
+  index() { ['user'] }
 }
