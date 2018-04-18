@@ -10,10 +10,12 @@ import './styles.css'
 type Props = {
   shifts: Array<Shift>,
   weekID: string,
+  focusedShift: ?string,
+  shiftClicked: (id: string)=>any
 }
 
 export default (props: Props) => {
-  const { shifts, weekID } = props
+  const { shifts, weekID, focusedShift, shiftClicked } = props
   const mom = weekIDToMoment(weekID)
 
   return(
@@ -22,7 +24,9 @@ export default (props: Props) => {
         <DayCol
           key={i}
           mom={moment(mom).add(i, 'days')}
+          focusedShift={focusedShift}
           shifts={shifts.filter(s => s.day === day )}
+          shiftClicked={shiftClicked}
         />
       )}
     </fb>

@@ -172,12 +172,16 @@ path /accounts/{accID}/absencePlaner/absences {
   index() { ['year', 'yearUser'] }
 }
 
+path /accounts/{accID}/absencePlaner/absencesWeekly/{weekID} {
+  index() { ['user'] }
+}
+
 path /accounts/{accID}/absencePlaner/absenceCorrections {
   index() { ['year'] }
 }
 
 path /accounts/{accID}/roster/extraHours/{weekID} {
-  index() { ['branch'] }
+  index() { ['user', 'branch'] }
 }
 
 path /accounts/{accID}/roster/dayNotes/{weekID} {
@@ -192,10 +196,10 @@ path /allUsers/{uid} {
   index() { ['userID'] }
 }
 
-path /accounts/{accID}/roster/shiftsPM/{monthID} {
+path /accounts/{accID}/roster/shiftList {
   index() { ['user'] }
 }
 
-path /accounts/{accID}/roster/extraHoursPM/{monthID} {
+path /accounts/{accID}/roster/extraHoursList {
   index() { ['user'] }
 }

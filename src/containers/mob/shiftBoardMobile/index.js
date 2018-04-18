@@ -7,10 +7,11 @@ import cn from 'classnames'
 import getShiftsFiltered from 'selectors/shiftsFiltered_mobile'
 import { setShiftWeekListener_mobile } from 'actions/listeners/roster'
 import { setAbsencesListener } from 'actions/listeners/absencePlaner'
+import getCurrentUser from 'selectors/currentUser'
 import TeamShiftList from './teamShiftList'
 import PersonalShiftList from './personalShiftList'
 import { getYear } from 'helpers/index'
-import type { Store, PlanMode, Shift, DataStatus } from 'types/index'
+import type { Store, PlanMode, Shift, DataStatus, User } from 'types/index'
 import './styles.css'
 
 type Props = {
@@ -20,8 +21,11 @@ type Props = {
   currentWeekID: string,
   shiftWeek: Array<Shift>,
   shiftWeekDS: DataStatus,
+  focusedShift: ?string,
+  currentUser: User,
   setShiftWeekListener_mobile: Function,
   setAbsencesListener: Function,
+  focusShift: (shiftID: string)=>any
 }
 
 class ShiftBoardMobile extends PureComponent {
@@ -50,9 +54,17 @@ class ShiftBoardMobile extends PureComponent {
     if(yearChanged) setAbsencesListener(getYear(np.currentWeekID))
   }
 
+  shiftClicked = (shiftID) => {
+    const { currentUser, shiftWeek } = this.props
+    const shift: Shift = (shiftWeek.find(s => s.id === shiftID): any)
+    if(currentUser.isAdmin || shift.user === currentUser.id ){
+      this.props.focusShift(shiftID)
+    }
+  }
+
 
   render(){
-    const { shiftWeekDS, planMode, shiftWeek, currentWeekID } = this.props
+    const { shiftWeekDS, planMode, shiftWeek, currentWeekID, focusedShift } = this.props
     const shifts = shiftWeek
     const inTeamMode = planMode === 'TEAM'
     const isLoading = shiftWeekDS !== 'LOADED'
@@ -60,8 +72,13 @@ class ShiftBoardMobile extends PureComponent {
     return(
       <fb className='shiftBoardMobileMain' >
       { inTeamMode
-          ? <TeamShiftList {...{ shifts, isLoading }} />
-          : <PersonalShiftList {...{ shifts }} weekID={currentWeekID} />
+          ? <TeamShiftList
+              {...{ shifts, isLoading, focusedShift }}
+              shiftClicked={this.shiftClicked}  />
+          : <PersonalShiftList
+              {...{ shifts, focusedShift }}
+              weekID={currentWeekID}
+              shiftClicked={this.shiftClicked} />
       }
       <fb className={cn({loadingLayer: 1, isLoading })}>loading...</fb>
       </fb>
@@ -72,15 +89,18 @@ class ShiftBoardMobile extends PureComponent {
 const actionCreators = {
   setShiftWeekListener_mobile,
   setAbsencesListener,
+  focusShift: (id) => ({ type: 'FOCUS_SHIFT_MOB', payload: id })
 }
 
 const mapStateToProps = (state: Store) => ({
   planMode: state.ui.roster.planMode,
+  currentUser: getCurrentUser(state),
   currentDay: state.ui.roster.currentDay,
   currentBranch: state.ui.roster.currentBranch,
   currentWeekID: state.ui.roster.currentWeekID,
   shiftWeek: getShiftsFiltered(state),
   shiftWeekDS: state.roster.shiftWeekDataStatus,
+  focusedShift: state.ui.roster.mobile.focusedShift
 })
 
 const connector: Connector<{}, Props> = connect(mapStateToProps, actionCreators)

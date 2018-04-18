@@ -21,7 +21,7 @@ import PositionSelect  		from './positionSelect'
 import BranchSelect 			from './branchSelect'
 import WeeklyHoursInput 	from './weeklyHoursInput'
 
-import { getNextID, isValidEmail, isFloatStr, replaceDotsWithCommas, minToTimeString } from 'helpers/index'
+import { getNextID, isValidEmail, isFloatStr, minToTimeString } from 'helpers/index'
 import { floatToMins, minsToFloat, getAvgDailyMins, minsToDetailedTime, getLatest, areAllValidFloats } from './localHelpers'
 import type { UserStatus, Store, User, WorkDays } from 'types/index'
 import './styles.css'

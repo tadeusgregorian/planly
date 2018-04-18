@@ -8,10 +8,12 @@ import './styles.css'
 type Props = {
   shifts: Array<Shift>,
   mom: moment,
+  shiftClicked: (string)=>any,
+  focusedShift: ?string,
 }
 
 export default (props: Props) => {
-  const { mom, shifts } = props
+  const { mom, shifts, shiftClicked, focusedShift } = props
 
   return(
     <fb className="shiftBoardDayColMain">
@@ -21,7 +23,12 @@ export default (props: Props) => {
       </fb>
       <fb className='shiftsWrapper'>
       { shifts.map( s =>
-        <ShiftBox key={s.id} shift={s} />
+        <ShiftBox
+          key={s.id}
+          shift={s}
+          shiftClicked={shiftClicked}
+          focused={focusedShift === s.id}
+        />
       )}
     </fb>
     </fb>

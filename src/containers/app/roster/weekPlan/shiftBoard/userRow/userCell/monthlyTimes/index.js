@@ -45,10 +45,10 @@ class MonthlyTimes extends PureComponent {
   allLoaded = () => !this.shLoading && !this.exLoading && !this.abLoading
 
   getShiftsRef = (monthID, userID) =>
-    db().ref(getFBPath('shiftsPM', [monthID])).orderByChild('user').equalTo(userID)
+    db().ref(getFBPath('shiftList')).orderByChild('userMonthID').equalTo(userID + '_' + monthID)
 
   getExtraHoursRef = (monthID, userID) =>
-    db().ref(getFBPath('extraHoursPM', [monthID])).orderByChild('user').equalTo(userID)
+    db().ref(getFBPath('extraHoursList')).orderByChild('userMonthID').equalTo(userID + '_' + monthID)
 
   getAbsencesRef = (year, userID) =>
     db().ref(getFBPath('absences')).orderByChild('yearUser').equalTo(year + userID)
@@ -137,8 +137,8 @@ class MonthlyTimes extends PureComponent {
     this.removeAbsencesListener()
   }
 
-  removeShiftsListener     = (monthID) => db().ref(getFBPath('shiftsPM', [monthID])).off('value', this.shiftsListener)
-  removeExtraHoursListener = (monthID) => db().ref(getFBPath('extraHoursPM', [monthID])).off('value', this.extraHoursListener)
+  removeShiftsListener     = (monthID) => db().ref(getFBPath('shiftList')).off('value', this.shiftsListener)
+  removeExtraHoursListener = (monthID) => db().ref(getFBPath('extraHoursList')).off('value', this.extraHoursListener)
   removeAbsencesListener   = ()        => db().ref(getFBPath('absences')).off('value', this.absencesListener);
 
   render() {

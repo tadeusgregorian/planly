@@ -12,6 +12,7 @@ import SModal             from 'components/sModal'
 import SButton            from 'components/sButton'
 
 import type { Store, User, ExtraHours, Day } from 'types/index'
+import type {SaveExtraHoursToDBParams} from 'actions/roster/extraHours';
 
 import './styles.css'
 
@@ -25,7 +26,7 @@ type OwnProps = {
 type ConProps = {
   extraHours: ?ExtraHours,
   users: Array<User>,
-  saveExtraHoursToDB: (ExtraHours, ?boolean)=>any,
+  saveExtraHoursToDB: (SaveExtraHoursToDBParams)=>any,
 }
 
 type State = {
@@ -68,13 +69,13 @@ class ExtraHoursModal extends PureComponent{
     const id = extraHours ? extraHours.id : generateGuid()
     const newExtraHours = { id, user, day, mins, note: note || null }
 
-    this.props.saveExtraHoursToDB(newExtraHours)
+    this.props.saveExtraHoursToDB({ extraHours: [newExtraHours] })
     this.props.closeModal()
   }
 
   removeClicked = () => {
     if(!this.props.extraHours) return // this should never happen.
-    this.props.saveExtraHoursToDB(this.props.extraHours, true)
+    this.props.saveExtraHoursToDB({ extraHours: [this.props.extraHours], deleteIt: true})
     this.props.closeModal()
   }
 

@@ -21,14 +21,22 @@ const currentUserID = simpleReducer({
 	SET_CURRENT_USER_ID: 'PAYLOAD'
 })
 
+type ClientDevice = 'DESKTOP' | 'MOBILE'
+const clientDevice = simpleReducer({
+  default:              'DESKTOP',
+	SET_CLIENT_TO_MOBILE: 'MOBILE'
+})
+
 export type Auth = {
 	authState: AuthState,
 	accountID: AccountID,
-	currentUserID: CurrentUserID
+	currentUserID: CurrentUserID,
+  clientDevice: ClientDevice
 }
 
 export default combineReducers({
 	authState,
 	accountID,
-	currentUserID
+	currentUserID,
+  clientDevice
 })

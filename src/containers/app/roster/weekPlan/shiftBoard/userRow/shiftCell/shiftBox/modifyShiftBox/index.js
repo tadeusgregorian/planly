@@ -23,6 +23,7 @@ import LocationBar      from '../components/locationBar'
 import ShiftActionBar   from './shiftActionBar'
 
 import type { PreShift, ShiftRef, Position, User, Store, MinimalShift, Branch, Location } from 'types/index'
+import type { SaveShiftToDBParams } from 'actions/roster/index';
 import './styles.css'
 
 type OwnProps = {
@@ -39,7 +40,7 @@ type ConProps = {
   focusedShiftRef: ?ShiftRef,
   branch: ?Branch,
   toggleOptions: ()=>{},
-  saveShiftToDB: (Array<PreShift>, ?boolean)=>any,
+  saveShiftToDB: (SaveShiftToDBParams)=>any,
   saveShiftEditToDB: (PreShift, MinimalShift)=>any,
   openNotesModal: (string, Function)=>any,
   unfocusShift: ()=>{},
@@ -157,12 +158,12 @@ class ModifyShiftBox extends PureComponent{
 
       unfocusShift() // need to unfocus shift before saving Shift -> this causes an additional flash-mount-unmount otherwise. // -> inCreation prop is causing this issue.
       if(!this.isAdmin && shiftTimesIdentical(shift, newShift)) return
-      this.isAdmin ? saveShiftToDB([newShift]) : saveShiftEditToDB(shift, minimalShift)
+      this.isAdmin ? saveShiftToDB({ shifts: [newShift] }) : saveShiftEditToDB(shift, minimalShift)
     }
   }
 
   deleteShift = () => {
-    this.props.saveShiftToDB([this.props.shift], true)
+    this.props.saveShiftToDB({ shifts: [this.props.shift], deleteIt: true })
     this.props.unfocusShift()
   }
 

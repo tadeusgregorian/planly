@@ -36,9 +36,20 @@
   }
 
   .content{
-    padding: 5px 8px;
-    background: #daf2ff;
-    border-radius: 2px;
     margin-bottom: 10px;
+    flex-direction: column;
+
+    .section{
+      background: #daf2ff;
+      padding: 5px;
+      border-radius: 2px;
+      margin-bottom: 2px;
+      padding-left: 8px;
+
+      .label{
+        align-items: center;
+        width: 100px;
+      }
+    }
   }
 }

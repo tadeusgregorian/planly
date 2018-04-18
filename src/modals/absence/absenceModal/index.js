@@ -5,11 +5,12 @@ import type { Connector } from 'react-redux'
 import { DateRangePicker } from 'react-dates'
 import moment from 'moment'
 import omit from 'lodash/omit'
+import keys from 'lodash/keys'
 
 import getCurrentUser from 'selectors/currentUser'
 import { openModal } from 'actions/ui/modals'
 import { saveAbsenceToDB, removeAbsenceFromDB } from 'actions/absence'
-import { generateGuid, momToSmart, smartDatesDiff } from 'helpers/index'
+import { generateGuid, momToSmart, smartToMom, smartDatesDiff } from 'helpers/index'
 import { momentToWeekID } from 'helpers/roster';
 import { getEffectiveDays, getButtonsToShow, checkOverlapping, getAvgMinsOfUser } from './localHelpers'
 import type { Store, User, Absence, AbsenceType, AbsenceTypeFilter, AbsenceStatus, AccountPreferences, WorkDays } from 'types/index'
@@ -43,7 +44,7 @@ type State = {
   errorMessage: ErrorMesage,
   loading: boolean,
   advancedOpen: boolean,
-  modified: { avgMins?: true, effectiveDays?: true }
+  modified: { avgMins?: true, effectiveDays?: true } // indicates if a prop is manually modified
 }
 
 type OwnProps = {
@@ -86,11 +87,11 @@ class AbsenceModal extends PureComponent{
       unpaid:         absence ? (absence.unpaid    || null)    : null,
       note:           absence ? (absence.note      || '')      : '',
       avgMins:        absence ? absence.avgMins                : 0,
-      modified:       absence ? (absence.modified  || {})      : {},
+      modified:       absence ? (absence.modified  || {})      : {}, // indicates if a prop is manually modified
       focusedInput:   null, // we omit this before saving to db!
       errorMessage:   false, // we omit this before saving to db!
       loading:        false, // we omit this before saving to db!
-      advancedOpen:   absence ? (absence.unpaid || false)       : false,
+      advancedOpen:   !!(absence && (absence.unpaid || (absence.modified && absence.modified.workDays))),
     }
 
     this.currentMom = moment().year(currentYear).month(currentMonth)
@@ -160,9 +161,15 @@ class AbsenceModal extends PureComponent{
   }
 
   openEffectiveDaysModal = () => {
+    const { effectiveDays, modified } = this.state
     this.props.openModal('EDIT_ABSENCE_DAYS', {
       effectiveDays: this.state.effectiveDays,
-      changeEffectiveDays: (effectiveDays: number)=>this.setState({ effectiveDays })
+      changeEffectiveDays: (_effectiveDays: number)=> {
+        this.setState({
+          effectiveDays: _effectiveDays,
+          modified: effectiveDays !== _effectiveDays ? { ...modified, effectiveDays: true } : modified
+        })
+      }
     })
   }
 
@@ -178,9 +185,28 @@ class AbsenceModal extends PureComponent{
     this.props.openModal('DURATION_INPUT', modalProps)
   }
 
+  changeWorkDays = (_workDays) => {
+    const { modified, startDate, endDate } = this.state
+    const { user, preferences } = this.props
+    const { bundesland } = preferences
+    const same = keys(_workDays).sort().join('') === keys(user.workDays).sort().join('')
+    this.setState({
+      workDays: _workDays,
+      modified: same ? { ...modified, workDays: null } : { ...modified, workDays: true }
+    })
+    if(!modified.avgMins && startDate){
+      const avgMins = getAvgMinsOfUser(user, momentToWeekID(smartToMom(startDate)), _workDays)
+      this.setState({ avgMins })
+    }
+    if(!modified.effectiveDays && startDate && endDate){
+      const effectiveDays = getEffectiveDays(smartToMom(startDate), smartToMom(endDate), bundesland, _workDays)
+      this.setState({ effectiveDays })
+    }
+  }
+
   render(){
     const { closeModal, user, currentUser, currentType } = this.props
-    const { type, startDate, endDate, focusedInput, note, status, errorMessage, effectiveDays, loading, advancedOpen, unpaid, avgMins } = this.state
+    const { type, startDate, endDate, focusedInput, note, status, errorMessage, effectiveDays, loading, advancedOpen, unpaid, avgMins, workDays } = this.state
     const adminMode = !!currentUser.isAdmin
     const isComplete = startDate && endDate && type && !errorMessage
     const accepted = status === 'accepted'
@@ -228,6 +254,9 @@ class AbsenceModal extends PureComponent{
               unpaid={unpaid}
               setAdvancedOpen={(open) => this.setState({ advancedOpen: open })}
               setUnpaid={(unpaid) => this.setState({ unpaid: unpaid || null })}
+              workDays={workDays}
+              changeWorkDays={this.changeWorkDays}
+              type={type}
             />
   				</fb>
   			</SModal.Body>

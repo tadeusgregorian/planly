@@ -16,30 +16,32 @@ export type TargetKey =
 | 'corrections'
 | 'extraHours'
 | 'dayNotes'
-| 'shiftsPM'
-| 'extraHoursPM'
+| 'shiftList'
+| 'extraHoursList'
+| 'weekSumsUpdateRequests'
 
 // This function holds the Information, where in the FirebaseDB each Node sits
 // If childPaths provided it concats the childPaths to a path-string.
 export const getFBPath	= (target: TargetKey, childPaths?: Array<string>): string => {
   const pathfinder = {
-    users: 					    '/users/',
-    branches: 			    '/branches/',
-    positions: 			    '/positions/',
-    accountDetails:     '/accountDetails/',
-    weekSums:           '/roster/weekSums/',
-    shiftWeeks: 		    '/roster/shiftWeeks/',
-    shiftEdits: 		    '/roster/shiftEdits/',
-    extraHours:         '/roster/extraHours/',
-    corrections:        '/roster/corrections/',
-    templatesFlat: 	    '/roster/templatesFlat/',
-    shiftsPM:           '/roster/shiftsPM/',
-    extraHoursPM:       '/roster/extraHoursPM/',
-    absences:           '/absencePlaner/absences/',
-    absenceCorrections: '/absencePlaner/absenceCorrections/',
-    absencesWeekly:     '/absencePlaner/absencesWeekly/',
-    vacationRequests:   '/absencePlaner/vacationRequests/',
-    dayNotes:           '/roster/dayNotes/',
+    users: 					        '/users/',
+    branches: 			        '/branches/',
+    positions: 			        '/positions/',
+    accountDetails:         '/accountDetails/',
+    weekSums:               '/roster/weekSums/',
+    shiftWeeks: 		        '/roster/shiftWeeks/',
+    shiftEdits: 		        '/roster/shiftEdits/',
+    extraHours:             '/roster/extraHours/',
+    corrections:            '/roster/corrections/',
+    templatesFlat: 	        '/roster/templatesFlat/',
+    shiftList:              '/roster/shiftList/',
+    extraHoursList:         '/roster/extraHoursList/',
+    absences:               '/absencePlaner/absences/',
+    absenceCorrections:     '/absencePlaner/absenceCorrections/',
+    absencesWeekly:         '/absencePlaner/absencesWeekly/',
+    vacationRequests:       '/absencePlaner/vacationRequests/',
+    dayNotes:               '/roster/dayNotes/',
+    weekSumsUpdateRequests: '/roster/weekSumsUpdateRequests'
   }
 
 	const accPath  = 'accounts/' + window.accountID

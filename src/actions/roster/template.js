@@ -4,20 +4,24 @@ import { getFBPath } from './../actionHelpers'
 import { generateGuid } from 'helpers/index'
 import { fetchTemplateWeek } from './localHelpers'
 import { saveShiftToDB } from './index';
-import type { GetState, ThunkAction, Shift } from 'types/index'
+import type { GetState, ThunkAction } from 'types/index'
 
-  export const saveWeekAsTemplate: ThunkAction = (name: string) => (dispatch, getState: GetState) => {
+export const saveWeekAsTemplate: ThunkAction = (name: string) => (dispatch, getState: GetState) => {
   const branch = getState().ui.roster.currentBranch
   const shifts = getState().roster.shiftWeek.filter(s => s.branch === branch ) // shifts contains shifts of all branches ! -> need to filter here!
 
-  const tempID    = generateGuid()
-  const flatTemp  = { id: tempID, name, branch }
-  const tempWeek  = createTemplateWeek(shifts, branch)
+  const tempID      = generateGuid()
+  const flatTemp    = { id: tempID, name, branch }
+  const shiftsTemp  = shifts.map(s => ({ ...s, id: generateGuid(), edit: null }))
 
-  const update1 =  {[getFBPath('templatesFlat',  [tempID])]:  flatTemp}
-  const update2 =  {[getFBPath('shiftWeeks',     [tempID])]:  tempWeek}
+  const flatTempUpdate =  {[getFBPath('templatesFlat',  [tempID])]:  flatTemp}
 
-  return db().ref().update({ ...update1, ...update2})
+  return saveShiftToDB({
+    shifts: shiftsTemp,
+    isTemplate: true,
+    weekID: tempID,
+    otherUpdate: flatTempUpdate
+  })(dispatch, getState)
   //dispatch({ type: 'ENTER_TEMPLATE_MODE', payload: tempID })
 }
 
@@ -34,11 +38,9 @@ export const createNewTemplate: ThunkAction = (name: string) => (dispatch, getSt
   dispatch({ type: 'SET_CURRENT_WEEK_ID', payload: tempID })
 }
 
-export const importTemplateWeek: ThunkAction = (tempID: string) => (dispatch, getState: GetState) =>
-  fetchTemplateWeek(tempID).then(shifts => saveShiftToDB(shifts)(dispatch, getState))
-
-const createTemplateWeek = (shifts: Array<Shift>, branch: string): {[id: string]: Shift} => {
-  const tempWeek = {}
-  shifts.forEach(s => tempWeek[s.id] = { ...s, edit: null }) // dont want no edits in the template
-  return tempWeek
+export const importTemplateWeek: ThunkAction = (tempID: string) => (dispatch, getState: GetState) => {
+  return fetchTemplateWeek(tempID).then(shifts => {
+    const shiftsCopy = shifts.map(s => ({ ...s, id: generateGuid() }))
+    return saveShiftToDB({ shifts: shiftsCopy })(dispatch, getState)
+  })
 }

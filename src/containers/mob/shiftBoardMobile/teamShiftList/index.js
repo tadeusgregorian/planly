@@ -6,11 +6,13 @@ import './styles.css'
 
 type Props = {
   shifts: Array<Shift>,
-  isLoading: boolean
+  isLoading: boolean,
+  focusedShift: ?string,
+  shiftClicked: (id: string)=>any
 }
 
 export default (props: Props) => {
-  const { shifts, isLoading } = props
+  const { shifts, isLoading, focusedShift, shiftClicked } = props
 
   return(
     <fb className="teamShiftListMain">
@@ -21,7 +23,12 @@ export default (props: Props) => {
         </fb>
       }
       { shifts.map(s =>
-        <ShiftBox key={s.id} shift={s} />
+        <ShiftBox
+          key={s.id}
+          shift={s}
+          focused={focusedShift === s.id}
+          shiftClicked={shiftClicked}
+        />
       )}
     </fb>
   )

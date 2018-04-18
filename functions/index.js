@@ -18,13 +18,26 @@ exports.absenceFanOut = functions.database
     return absenceHandler.fanOutAbsence(rootRef, { accountID, absencePrev, absenceNew })
   })
 
-  exports.absencesWeeklyChanged = functions.database
+exports.absencesWeeklyChanged = functions.database
   .ref('/accounts/{accountID}/absencePlaner/absencesWeekly/{weekID}/{absenceID}')
   .onWrite(event => {
     const { accountID, weekID } = event.params
     const { user } = event.data.val() || event.data.previous.val()
     const rootRef = event.data.adminRef.root
     return sumsUpdater.updateWeekSums(rootRef, { accountID, weekID, userID: user })
+  })
+
+exports.weekSumsUpdateRequested = functions.database
+  .ref('/accounts/{accountID}/roster/weekSumsUpdateRequests/{weekID}/{userID}')
+  .onWrite(event => {
+    const { accountID, weekID, userID } = event.params
+    if(!event.data.val()) return false
+    console.log({ weekID, userID })
+    const rootRef = event.data.adminRef.root
+    const path = `/accounts/${accountID}/roster/weekSumsUpdateRequests/${weekID}/${userID}`
+    return rootRef.child(path).set(null)
+      .then(() => sumsUpdater.updateWeekSums(rootRef, { accountID, weekID, userID }))
+      .catch((e) => console.log(e.toString()))
   })
 
 exports.onEmailInviteAdded = functions.database

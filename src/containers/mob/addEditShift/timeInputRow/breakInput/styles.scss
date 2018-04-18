@@ -1,0 +1,14 @@
+.breakWrapper{
+  align-self: stretch;
+  flex: 1 1 auto;
+  position: relative;
+
+  input{
+    border: none;
+    background: none;
+    text-align: center;
+    width: 100%;
+    font-size: 24px;
+    color: #1396ff;
+  }
+}

@@ -38,11 +38,29 @@ export const getUserPos = (users: Array<User>, userID: string): string => {
   return user.position
 }
 
-export const getShiftPerMonthUpdate = (preShift: PreShift, weekID: string , branch: string, remove: boolean = false) => {
-  const shift      = omit(toDBShift(preShift, branch), ['edit', 'branchDay'] )
-  shift.mins       = shift.e - shift.s - shift.b
-  shift.date       = momToSmart(weekIDToMoment(weekID).weekday(weekDays.indexOf(shift.day)))
-  const smartMonth = shift.date.toString().substr(0,6)
-  const data      = remove ? null : shift
-  return  {[ getFBPath('shiftsPM', [smartMonth, shift.id]) ]: data }
+export const getShiftListUpdate = (
+  preShift: PreShift,
+  weekID: string ,
+  branch: string,
+  remove: ?boolean = false,
+  isTemplate: ?boolean = false,
+) => {
+
+  const shift       = { ...toDBShift(preShift, branch) }
+  const mom         = !isTemplate && weekIDToMoment(weekID).weekday(weekDays.indexOf(shift.day))
+  shift.weekID      = weekID
+  shift.mins        = shift.e - shift.s - shift.b
+  shift.date        = (isTemplate || !mom) ? null : momToSmart(mom) // templateShift has no date -> marked as null
+  shift.monthID     = (isTemplate || !shift.date) ? null : shift.date.toString().substr(0,6) // templateShift has no date -> marked as null
+  shift.userMonthID = (isTemplate || !shift.monthID) ? null : shift.user + '_' + shift.monthID
+
+  return  {[ getFBPath('shiftList', [shift.id]) ]: remove ? null : shift }
+}
+
+export const getWeekSumsRequestUpdate = (userIDs: Array<string>, weekID: string) => {
+  const updates = {}
+  userIDs.forEach(uid => {
+    updates[ getFBPath('weekSumsUpdateRequests', [weekID, uid])] = true
+  })
+  return updates
 }

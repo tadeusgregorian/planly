@@ -24,12 +24,16 @@ import Mob      from './mob'
 initIziToast()
 
 class Container extends PureComponent {
+
   componentDidMount = () => {
+    console.log(process.env.REACT_APP_CLIENT_DEVICE)
+    console.log(onMobile())
 
     if(!this.props.firebaseInitialized) this.props.initFirebase() // making sure we initialize Firebase only once...
     if(!this.props.firebaseAuthListener){
       if(this.props.dbVersion === 'maintenance') return // under construction -> dont attach listeners!
       this.props.setAuthStateListener(this.props.registerInitialListeners)
+      onMobile() && this.props.setClientToMobile()
     }
   }
 
@@ -67,10 +71,11 @@ class Container extends PureComponent {
   }
 }
 
-const mapDispatchToProps = {
+const actionCreators = {
   initFirebase,
   setAuthStateListener,
-  registerInitialListeners
+  registerInitialListeners,
+  setClientToMobile: () => ({ type: 'SET_CLIENT_TO_MOBILE' })
 }
 
 const mapStateToProps = (state: Store) => ({
@@ -81,4 +86,4 @@ const mapStateToProps = (state: Store) => ({
   modals: state.ui.modals
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Container)
+export default connect(mapStateToProps, actionCreators)(Container)

@@ -48,7 +48,7 @@ class SubBar extends PureComponent {
             <fb className='branchSelector'>
               <Dropdown
                 value={{value: currentBranch, label: currentBranchName}}
-                options={branches.map(b => ({value: b.id, label: b.name}))}
+                options={branches.map(b => ({value: b.id, label: b.name})).filter(opt => opt.value !== currentBranch )}
                 onChange={(opt) => changeCurrentBranch(opt.value)}
               />
             </fb>

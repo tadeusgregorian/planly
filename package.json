@@ -39,6 +39,7 @@
     "start-js": "react-scripts start",
     "start": "npm-run-all -p watch-css start-js",
     "build": "npm run build-css && react-scripts build",
+    "startmob": "REACT_APP_CLIENT_DEVICE=MOBILE npm run start",
     "startprod": "REACT_APP_ENV=production npm run start",
     "buildprod": "REACT_APP_ENV=production npm run build",
     "test": "react-scripts test --env=jsdom",

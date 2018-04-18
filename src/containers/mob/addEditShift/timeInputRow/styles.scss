@@ -1,0 +1,17 @@
+.timeRowMobMain{
+  height: 70px !important;
+
+  .inpWrapper{
+    flex: 1 1;
+    position: relative;
+
+    .label{
+      position: absolute;
+      font-size: 12px;
+      top: 5px;
+      left: 6px;
+      color: #b3b3b3;
+      font-weight: 300;
+    }
+  }
+}

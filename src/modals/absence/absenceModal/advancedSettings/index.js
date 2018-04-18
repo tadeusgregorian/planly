@@ -2,17 +2,22 @@
 import React from 'react'
 import cn from 'classnames'
 import SCheckbox from 'components/sCheckbox'
+import type {WorkDays, AbsenceType} from 'types/index';
+import WorkDaysPicker from 'components/workDaysPicker/index';
 import './styles.css'
 
 type Props = {
   advancedOpen: boolean,
   unpaid: true | null,
+  workDays: WorkDays,
+  type: AbsenceType | '',
   setAdvancedOpen: (boolean)=>any,
   setUnpaid: (boolean)=>any,
+  changeWorkDays: (WorkDays)=>any
 }
 
 export default (props: Props) => {
-  const { advancedOpen, setAdvancedOpen, unpaid, setUnpaid } = props
+  const { advancedOpen, setAdvancedOpen, unpaid, setUnpaid, workDays, changeWorkDays, type } = props
 
   return(
     <fb className='advancedAbsenceModalSettingsMain'>
@@ -24,7 +29,15 @@ export default (props: Props) => {
     </fb>
     { advancedOpen &&
       <fb className='content'>
-        <SCheckbox label='unbezahlt' isChecked={unpaid} onCheck={() => setUnpaid(!unpaid)} />
+        { type === 'vac' &&
+        <fb className="section">
+          <SCheckbox label='unbezahlt' isChecked={unpaid} onCheck={() => setUnpaid(!unpaid)} />
+        </fb>
+        }
+        <fb className="section">
+          <fb className="label">Arbeitstage</fb>
+          <WorkDaysPicker workDays={workDays} onChange={changeWorkDays} />
+        </fb>
       </fb>
     }
   </fb>

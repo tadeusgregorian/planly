@@ -4,11 +4,14 @@ import cn from 'classnames'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import { shiftToString } from 'helpers/roster'
-import type { Store, Shift, User, Branch, PlanMode } from 'types/index'
+import type { Store, Shift, User, Branch, PlanMode, MinimalShift } from 'types/index'
+import {minToTimeString} from 'helpers/roster';
 import './styles.css'
 
 type OwnProps = {
-  shift: Shift
+  shift: Shift,
+  focused: ?boolean,
+  shiftClicked: (id: string)=>any
 }
 
 type ConProps = {
@@ -20,7 +23,7 @@ type ConProps = {
 type Props = OwnProps & ConProps
 
 const shiftBox = (props: Props) => {
-  const { shift, users, branches, planMode } = props
+  const { shift, users, branches, planMode, shiftClicked, focused } = props
   const userObj:?User           = (users.find( u => u.id === shift.user): any)
   const branchObj: Branch       = (branches.find( b => b.id === shift.branch): any)
 
@@ -37,12 +40,32 @@ const shiftBox = (props: Props) => {
   const inTeamMode   = planMode === 'TEAM'
   const inPersMode   = planMode === 'PERSONAL'
 
+  const edit:?MinimalShift = (shift.edit: any)
+  const original = { s: shift.s, e: shift.e, b: shift.b }
+  const sEdited = original.s !== (edit && edit.s)
+  const eEdited = original.e !== (edit && edit.e)
+  const bEdited = original.b !== (edit && edit.b)
+
+
+  const renderEditBar = () => { if(edit) return( // if check only for FLOW
+    <fb className="shiftEditBarMobile">
+      <fb className='startEndTime'>
+        <fb className="text">editert: </fb>
+        <fb className={cn({time: true, boldStyle: sEdited})}>{minToTimeString(edit.s)}</fb>
+        <fb className='seperator'>-</fb>
+        <fb className={cn({time: true, boldStyle: eEdited})}>{minToTimeString(edit.e)}</fb>
+      </fb>
+      { (!!edit.b || bEdited) && <fb className={cn({breakMinutes: true, boldStyle: bEdited})}>{'/ ' + edit.b}</fb>}
+    </fb>
+  )}
+
   return(
-    <fb className={cn({shiftBoxMain: 1, open: openShift})}>
-      <fb className='row'>
+    <fb className={cn({shiftBoxMain: 1, openShift, focused})} onClick={() => shiftClicked(shift.id)} >
+      <fb className='row timeRow'>
         <fb className='shiftTimes' >{ shiftToString(shift) }</fb>
         { !!shift.b && <fb className='breakMins'>{'/' + shift.b + ' min'}</fb> }
       </fb>
+      { !!edit && renderEditBar() }
       <fb className='row secondRow'>
         { inTeamMode  && <fb className='userName'>{ userName }</fb> }
         { inPersMode  && multiBranch && <fb className='branchName'>{ branchObj.name }</fb> }

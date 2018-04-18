@@ -68,9 +68,13 @@ export const checkOverlapping: CheckOverlapping = (start, end, user, absenceID) 
   })
 }
 
-export const getAvgMinsOfUser = (user: User, weekID: string) => {
-  const daysCount           = Object.keys(user.workDays).length
+export const getAvgMinsOfUser = (user: User, weekID: string, workDays: ?WorkDays = null) => {
+  const avgMins =  getWeeklyMinsOfUser(user, weekID) / Object.keys(workDays || user.workDays).length
+  return Math.floor(avgMins)
+}
+
+export const getWeeklyMinsOfUser = (user: User, weekID: string): number => {
   const smartWeekyArr       = Object.keys(user.weeklyMins).sort()
   const latestRelevantEntry = smartWeekyArr.reduce((acc, val) => val > acc && val <= weekID ? val : acc, smartWeekyArr[0])
-  return user.weeklyMins[latestRelevantEntry] / daysCount
+  return user.weeklyMins[latestRelevantEntry]
 }

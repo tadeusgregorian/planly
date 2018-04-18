@@ -105,7 +105,7 @@ class AbsenceCorrectionModal extends PureComponent{
               <fb className='inpWrapper'><input value={vacDaysCorrection} onChange={this.onTransferedDaysChanged} placeholder='0' /></fb>
             </Row>
             <fb style={{height: 30}} />
-            <Row label={'Eingetragene Urlaubstage ' + year}>
+            <Row label={'Genommener Urlaub ' + year}>
               <fb className='daysDisplay'>{absentDays}</fb>
             </Row>
             <Row label={'Korrektur für ' + year} grey>

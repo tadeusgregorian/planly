@@ -1,0 +1,19 @@
+input[type="time"]{
+  height: 25px;
+  width: 70px;
+}
+
+.inputWrapper{
+  align-self: stretch;
+  flex: 1 1 auto;
+  position: relative;
+
+  .overlay{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #f7f7f7;
+    justify-content: center;
+    align-items: center;
+  }
+}

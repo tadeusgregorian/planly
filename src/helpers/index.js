@@ -87,7 +87,7 @@ export const smartDatesDiff = (smart1: number, smart2: number) => {
 }
 
 export const momToSmartWeek = (mom: moment): number => {
-  const year = moment(mom).year()
+  const year = moment(mom).weekYear()
   const week = doubleD(moment(mom).week())
   return parseInt((year + '' + week), 10)
 }
@@ -126,7 +126,9 @@ export const getPagePosOfElement = (elem: HTMLElement) => {
 }
 
 export const onMobile = () => {
- const isMobile =
+  if(process.env.REACT_APP_CLIENT_DEVICE === 'MOBILE') return true
+
+  const isMobile =
       navigator.userAgent.match(/Android/i)
    || navigator.userAgent.match(/webOS/i)
    || navigator.userAgent.match(/iPhone|iPad|iPod/i)
