@@ -60,7 +60,7 @@ const shiftBox = (props: Props) => {
   )}
 
   return(
-    <fb className={cn({shiftBoxMain: 1, openShift, focused})} onClick={() => shiftClicked(shift.id)} >
+    <fb className={cn({shiftBoxMainMob: 1, openShift, focused})} onClick={() => shiftClicked(shift.id)} >
       <fb className='row timeRow'>
         <fb className='shiftTimes' >{ shiftToString(shift) }</fb>
         { !!shift.b && <fb className='breakMins'>{'/' + shift.b + ' min'}</fb> }

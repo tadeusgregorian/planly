@@ -22,11 +22,15 @@ class TimeInput extends PureComponent{
   props: Props;
   ref: any;
 
+  onClick = () => {
+    this.ref && !this.props.focused && this.ref.focus()
+  }
+
   render() {
     const {onTimeChange, time, label, outerClass, innerClass, labelClass, onBlur, onFocus, focused } = this.props
 
     return (
-      <fb className={cn({inputWrapper: 1, [outerClass||'1']: 1 })} onClick={() => this.ref && this.ref.focus()}>
+      <fb className={cn({inputWrapper: 1, [outerClass||'1']: 1 })} onClick={this.onClick}>
           <input
             onBlur={onBlur && onBlur}
             onFocus={onFocus && onFocus}
@@ -36,7 +40,7 @@ class TimeInput extends PureComponent{
             onChange={(e) => {onTimeChange(e.target.value)}}
           />
           { true && <fb className={cn({overlay: 1, [innerClass||'1']: 1, focused })}>{time}</fb> }
-          { label && <fb className={cn({label: 1, [labelClass||'1']: 1, focused })}>{label}</fb> }
+          { label && <fb className={cn({boxLabel: 1, [labelClass||'1']: 1, focused })}>{label}</fb> }
       </fb>
     )
   }

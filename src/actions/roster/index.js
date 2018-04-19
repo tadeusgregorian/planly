@@ -40,7 +40,7 @@ export const saveShiftEditToDB:ThunkAction = (shift: PreShift, shiftEdit: Minima
   const branch  = getState().ui.roster.currentBranch
   const update1 = {[ getFBPath('shiftEdits',     [shift.id]) ]: { shiftID: shift.id, branch, weekID }}
   const update2 = {[ getFBPath('shiftWeeks',     [weekID, shift.id, 'edit']) ]: shiftEdit }
-  db().ref().update({ ...update1, ...update2 })
+  return db().ref().update({ ...update1, ...update2 })
 }
 
 export const acceptEdit: ThunkAction = (shift: PreShift) => (disp, getState) => {

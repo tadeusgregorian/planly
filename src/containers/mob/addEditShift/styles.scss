@@ -56,8 +56,6 @@
 
     .row{
       align-self: stretch;
-      font-size: 24px;
-      height: 40px;
       border-bottom: 1px solid #e2e2e2;
       color: #1396ff;
 
@@ -79,5 +77,31 @@
         color: white;
       }
     }
+  }
+
+  .adminWrapper{
+    flex-direction: column;
+  }
+
+  .infoText{
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0px;
+    font-size: 19px;
+    color: #ffc30c;
+  }
+
+  .selRow{
+    height: 58px;
+    font-size: 20px;
+  }
+
+  .boxLabel{
+    position: absolute;
+    font-size: 12px;
+    top: 5px;
+    left: 6px;
+    color: #b3b3b3;
+    font-weight: 300;
   }
 }

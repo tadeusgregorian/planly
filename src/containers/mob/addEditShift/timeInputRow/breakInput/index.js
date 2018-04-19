@@ -20,11 +20,15 @@ class BreakInput extends PureComponent{
   props: Props;
   ref: any;
 
+  onClick = () => {
+    this.ref && !this.props.focused && this.ref.focus()
+  }
+
   render() {
     const {onChange, value, label, outerClass, labelClass, onBlur, onFocus, focused } = this.props
 
     return (
-      <fb className={cn({breakWrapper: 1, [outerClass||'1']: 1, focused })} onClick={() => this.ref && this.ref.focus()}>
+      <fb className={cn({breakWrapper: 1, [outerClass||'1']: 1, focused })} onClick={this.onClick}>
           <input
             onBlur={onBlur && onBlur}
             onFocus={onFocus && onFocus}
@@ -35,7 +39,7 @@ class BreakInput extends PureComponent{
             value={value}
             onChange={(e) => {onChange(e.target.value)}}
           />
-          { label && <fb className={cn({label: 1, [labelClass||'1']: 1, focused })}>{label}</fb> }
+          { label && <fb className={cn({boxLabel: 1, [labelClass||'1']: 1, focused })}>{label}</fb> }
       </fb>
     )
   }

@@ -1,5 +1,5 @@
-.shiftBoxMain{
-  flex: 1 1 auto;
+.shiftBoxMainMob{
+  flex: 1 0 auto;
   position: relative;
   align-self: stretch;
   //min-height: 50px;
@@ -15,9 +15,7 @@
   }
 
   &.openShift{
-    border: 1px solid #ff6d94;
     box-sizing: border-box;
-    padding-left: 5px;
 
     .row{
       .userName{
