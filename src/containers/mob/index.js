@@ -10,13 +10,17 @@ import SideNavBar from './sideNavBar'
 import ShiftBoardMobile from './shiftBoardMobile'
 import OptionsPanel from './optionsPanel'
 import AddEditShift from './addEditShift'
-import type { AccountPreferences } from 'types/index'
+import SnackBarMob from 'components/snackBarMob'
+import {closeSnackBar} from 'actions/ui/mobile';
+import type { AccountPreferences, SnackNoteMob } from 'types/index'
 import './styles.css'
 
 type Props = {
   appDataLoaded: boolean,
   preferences: AccountPreferences,
-  setClientToMobile: Function
+  snackNote: SnackNoteMob,
+  setClientToMobile: Function,
+  closeSnackBar: Function
 }
 
 class Mob extends PureComponent {
@@ -35,6 +39,7 @@ class Mob extends PureComponent {
   )
 
   render = () => {
+    const { snackNote } = this.props
     if(!this.props.appDataLoaded) return (<fb>Loading...</fb>)
 
     return(
@@ -45,16 +50,24 @@ class Mob extends PureComponent {
           <Redirect to='/mob/shiftBoard'/>
         </Switch>
         <OptionsPanel />
+        <SnackBarMob
+          type='error'
+          text={snackNote && snackNote.text}
+          present={!!snackNote}
+          timeTillVanish={2000}
+          onVanish={this.props.closeSnackBar} />
       </fb>
     )
   }
 }
 
 const actionCreators = {
-  setClientToMobile: () => ({ type: 'SET_CLIENT_TO_MOBILE' })
+  setClientToMobile: () => ({ type: 'SET_CLIENT_TO_MOBILE' }),
+  closeSnackBar,
 }
 
 const mapStateToProps = (state: Store) => ({
+  snackNote: state.ui.mobile.snackNote,
   appDataLoaded: appDataLoaded(state),
   preferences: state.core.accountDetails.preferences,
 })

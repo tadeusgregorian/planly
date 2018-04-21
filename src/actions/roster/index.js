@@ -7,14 +7,14 @@ import { updateWeekSums } from './weekSums'
 import { getShiftUpdate, getShiftListUpdate, getUserPos, getWeekSumsRequestUpdate } from './localHelpers'
 import type { PreShift, Shift, Day, ThunkAction, GetState, MinimalShift } from 'types/index'
 
-export type SaveShiftToDBParams = {
+export type SaveShiftToDBParams = {|
   shifts: Array<PreShift>,
   deleteIt?: boolean,
   otherUpdate?: {},
   weekID?: string,
   branch?: string,
   isTemplate?: boolean,
-}
+|}
 
 export const saveShiftToDB = (params: SaveShiftToDBParams) => (disp: Dispatch, getState: GetState) => {
   const { shifts, deleteIt } = params
@@ -35,11 +35,11 @@ export const saveShiftToDB = (params: SaveShiftToDBParams) => (disp: Dispatch, g
   return db().ref().update({ ...shiftUpdates, ...weekSumUpdates, ...shiftListUpdates, ...otherUpdate })
 }
 
-export const saveShiftEditToDB:ThunkAction = (shift: PreShift, shiftEdit: MinimalShift ) => (disp, getState) => {
+export const saveShiftEditToDB:ThunkAction = (shiftID: string, shiftEdit: MinimalShift ) => (disp, getState) => {
   const weekID  = getState().ui.roster.currentWeekID
   const branch  = getState().ui.roster.currentBranch
-  const update1 = {[ getFBPath('shiftEdits',     [shift.id]) ]: { shiftID: shift.id, branch, weekID }}
-  const update2 = {[ getFBPath('shiftWeeks',     [weekID, shift.id, 'edit']) ]: shiftEdit }
+  const update1 = {[ getFBPath('shiftEdits',     [shiftID]) ]: { shiftID: shiftID, branch, weekID }}
+  const update2 = {[ getFBPath('shiftWeeks',     [weekID, shiftID, 'edit']) ]: shiftEdit }
   return db().ref().update({ ...update1, ...update2 })
 }
 
@@ -47,7 +47,7 @@ export const acceptEdit: ThunkAction = (shift: PreShift) => (disp, getState) => 
   const edit             = (shift.edit: any)
   const newShift         = { ...shift, s: edit.s, e: edit.e, b: edit.b, edit: null }
   const shiftEditsUpdate = {[ getFBPath('shiftEdits', [shift.id]) ]:  null}
-  saveShiftToDB({ shifts: [newShift], otherUpdate: shiftEditsUpdate })(disp, getState)
+  return saveShiftToDB({ shifts: [newShift], otherUpdate: shiftEditsUpdate })(disp, getState)
 }
 
 export const rejectEdit: ThunkAction = (shift: Shift) => (disp, getState) => {
@@ -55,7 +55,7 @@ export const rejectEdit: ThunkAction = (shift: Shift) => (disp, getState) => {
   const update1 = {[ getFBPath('shiftWeeks', [weekID, shift.id, 'edit'])]: null}
   const update2 = {[ getFBPath('shiftList', [shift.id, 'edit'])]: null}
   const update3 = {[ getFBPath('shiftEdits', [shift.id]) ]: null}
-  db().ref().update({ ...update1, ...update2, ...update3 })
+  return db().ref().update({ ...update1, ...update2, ...update3 })
 }
 
 // used when shift is being dragg-and-dropped from one cell to another

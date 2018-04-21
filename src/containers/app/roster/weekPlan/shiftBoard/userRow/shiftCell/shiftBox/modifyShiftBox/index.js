@@ -41,7 +41,7 @@ type ConProps = {
   branch: ?Branch,
   toggleOptions: ()=>{},
   saveShiftToDB: (SaveShiftToDBParams)=>any,
-  saveShiftEditToDB: (PreShift, MinimalShift)=>any,
+  saveShiftEditToDB: (shiftID: string, MinimalShift)=>any,
   openNotesModal: (string, Function)=>any,
   unfocusShift: ()=>{},
   updateNoteOfShift: (string, string)=>any
@@ -158,7 +158,7 @@ class ModifyShiftBox extends PureComponent{
 
       unfocusShift() // need to unfocus shift before saving Shift -> this causes an additional flash-mount-unmount otherwise. // -> inCreation prop is causing this issue.
       if(!this.isAdmin && shiftTimesIdentical(shift, newShift)) return
-      this.isAdmin ? saveShiftToDB({ shifts: [newShift] }) : saveShiftEditToDB(shift, minimalShift)
+      this.isAdmin ? saveShiftToDB({ shifts: [newShift] }) : saveShiftEditToDB(shift.id, minimalShift)
     }
   }
 

@@ -1,6 +1,7 @@
 //@flow
 import { combineReducers } from 'redux'
-import { simpleReducer } from '../../reducerHelpers'
+import { simpleReducer } from '../reducerHelpers'
+import type { SnackNoteMob } from 'types/index'
 
 type FocusedShiftMobile = string | null
 const focusedShift = simpleReducer({
@@ -9,10 +10,17 @@ const focusedShift = simpleReducer({
   UNFOCUS_SHIFT_MOB    : null,
 })
 
+const snackNote = simpleReducer({
+  OPEN_SNACK_BAR_MOB: 'PAYLOAD',
+  CLOSE_SNACK_BAR_MOB: null
+})
+
 export type Mobile = {
-  focusedShift: FocusedShiftMobile
+  focusedShift: FocusedShiftMobile,
+  snackNote: SnackNoteMob
 }
 
 export default combineReducers({
-  focusedShift
+  focusedShift,
+  snackNote
 })

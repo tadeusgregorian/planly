@@ -1,10 +1,6 @@
 .planModeSelectorMain{
-  width: 120px;
-  align-items: stretch;
-  border: 1px solid #008acb;
-  border-radius: 4px;
-  margin-left: 8px;
-  overflow: hidden;
+
+  border-right: 1px solid #e8e8e8;
 
   .sel{
     flex: 1 1 auto;
@@ -13,6 +9,7 @@
     justify-content: center;
     align-self: stretch;
     color: lightgrey;
+    width: 60px;
 
     &.personal{
       font-size: 34px;

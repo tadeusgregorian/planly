@@ -20,7 +20,7 @@ export default (props: Props) => {
   const week = mom.week()
 
   const momDay  = mom.add( weekDays.indexOf(currentDay) , 'days')
-  const _date = momDay.format('dddd | DD. MMM');
+  const _date = momDay.format('dddd - DD. MMM');
   const dateStr = _date.substr(_date.length - 1) === '.' ? _date.slice(0, -1) : _date
 
   const toPrev = () => {

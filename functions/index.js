@@ -28,13 +28,14 @@ exports.absencesWeeklyChanged = functions.database
   })
 
 exports.weekSumsUpdateRequested = functions.database
-  .ref('/accounts/{accountID}/roster/weekSumsUpdateRequests/{weekID}/{userID}')
+  .ref('/accounts/{accountID}/roster/weekSumsUpdateRequests/{weekID}/{requestID}')
   .onWrite(event => {
-    const { accountID, weekID, userID } = event.params
-    if(!event.data.val()) return false
-    console.log({ weekID, userID })
+    const { accountID, weekID, requestID } = event.params
+    const userID = event.data.val()
+    console.log(userID+ ' ' +weekID)
+    if(!userID) return false // this path just got deleted -> no action needed
     const rootRef = event.data.adminRef.root
-    const path = `/accounts/${accountID}/roster/weekSumsUpdateRequests/${weekID}/${userID}`
+    const path = `/accounts/${accountID}/roster/weekSumsUpdateRequests/${weekID}/${requestID}`
     return rootRef.child(path).set(null)
       .then(() => sumsUpdater.updateWeekSums(rootRef, { accountID, weekID, userID }))
       .catch((e) => console.log(e.toString()))

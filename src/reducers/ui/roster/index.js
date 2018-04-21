@@ -6,11 +6,9 @@ import { weekDays } from 'constants/roster'
 import { getRealCurrentWeekID } from 'helpers/roster'
 
 import shiftBoard from './shiftBoard'
-import mobile from './mobile'
 
 import type { Day, PlanMode } from 'types/index'
 import type { ShiftBoard } from './shiftBoard'
-import type { Mobile } from './mobile'
 
 const currentBranch = simpleReducer({
   default: localStorage.currentBranch || 'b001',
@@ -55,8 +53,7 @@ export type Roster = {
   templateMode: boolean,
   shiftBoard: ShiftBoard,
   extraHoursMode: boolean,
-  planMode: PlanMode,
-  mobile: Mobile,
+  planMode: PlanMode
 }
 
 export default combineReducers({
@@ -66,6 +63,5 @@ export default combineReducers({
   templateMode,
   shiftBoard,
   extraHoursMode,
-  planMode,
-  mobile
+  planMode
 })

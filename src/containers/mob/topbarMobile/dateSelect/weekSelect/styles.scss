@@ -14,8 +14,8 @@
 
   .weekDisplay{
     flex: 1 1 auto;
-    border-right: 1px solid lightgrey;
-    border-left: 1px solid lightgrey;
+    border-left: 1px solid rgba(0, 0, 0, 0.078);
+    border-right: 1px solid rgba(0, 0, 0, 0.078);
 
     .week{
       font-weight: 600;
@@ -23,7 +23,7 @@
     }
 
     .dates{
-      color: grey;
+      color: #0072ab;
     }
   }
 }

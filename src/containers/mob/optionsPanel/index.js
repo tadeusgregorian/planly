@@ -6,7 +6,10 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import currentUser from 'selectors/currentUser';
 import type { Store, User, Shift } from 'types/index'
-import {unfocusShift} from 'actions/ui/mobile';
+import {saveShiftToDB, acceptEdit, rejectEdit} from 'actions/roster/index';
+import type {SaveShiftToDBParams} from 'actions/roster/index';
+import {unfocusShift, openSnackBar} from 'actions/ui/mobile';
+import type { PreShift } from 'types/index'
 import './styles.css'
 
 type ConProps = {
@@ -14,6 +17,10 @@ type ConProps = {
   focusedShift: ?string,
   shiftWeek: Array<Shift>,
   unfocusShift: ()=>any,
+  saveShiftToDB: (SaveShiftToDBParams)=>any,
+  openSnackBar: ({ type: string, text: string })=>any,
+  acceptEdit: (PreShift)=>any,
+  rejectEdit: (PreShift)=>any,
 }
 
 type OwnProps = {
@@ -23,8 +30,10 @@ type OwnProps = {
 type Props = ConProps & OwnProps
 
 type State = {
-  visible: boolean,
+  overlayVisible: boolean,
+  buttonsVisible: boolean,
   existent: boolean,
+  confirmationMode: false | 'PICK_UP_OPEN_SHIFT' | 'DELETE'
 }
 
 class OptionsPanel extends PureComponent {
@@ -34,8 +43,10 @@ class OptionsPanel extends PureComponent {
     super(props)
 
     this.state = {
-      visible: false,
-      existent: false
+      overlayVisible: false,
+      buttonsVisible: false,
+      existent: false,
+      confirmationMode: false,
     }
   }
 
@@ -45,18 +56,18 @@ class OptionsPanel extends PureComponent {
 
     if(shiftGotFocused){
       this.setState({ existent: true })
-      setTimeout(() => this.setState({ visible: true }), 1)
+      setTimeout(() => this.setState({ overlayVisible: true, buttonsVisible: true }), 1)
     }
 
     if(shiftGotUnfocused){
-      this.setState({ visible: false })
+      this.setState({ overlayVisible: false, buttonsVisible: false   })
       setTimeout(() => this.setState({ existent: false }), 200)
     }
   }
 
   adminEditedShift = () => ([
-    <fb className="optionBtn" key='1'>Bearbeitung annehmen</fb>,
-    <fb className="optionBtn" key='2'>Bearbeitung ablehnen</fb>
+    <fb className="optionBtn" key='1' onClick={()=>this.resolveEdit('accept')}>Bearbeitung annehmen</fb>,
+    <fb className="optionBtn" key='2' onClick={()=>this.resolveEdit('reject')}>Bearbeitung ablehnen</fb>
   ])
 
   nonAdminEditedShift = () => (
@@ -65,35 +76,87 @@ class OptionsPanel extends PureComponent {
 
   adminCleanShift = () => ([
     <fb className="optionBtn" key='1' onClick={this.toAddEditShift}>Schicht bearbeiten</fb>,
-    <fb className="optionBtn" key='2'>Schicht löschen</fb>
+    <fb className="optionBtn" key='2' onClick={this.delteClicked}>Schicht löschen</fb>
   ])
 
   nonAdminCleanShift = () => (
     <fb className="optionBtn" onClick={this.toAddEditShift}>Schicht bearbeiten</fb>
   )
 
+  renderDeleteConfirm = () => ([
+    <fb key='1' className="optionsHeadline">Schicht wirklich löschen ?</fb>,
+    <fb key='2' className="optionBtn" onClick={this.deleteShift}>Ja</fb>,
+    <fb key='3' className="optionBtn" onClick={this.closePanel}>Nein</fb>
+  ])
+
+  resolveEdit = (actions: 'accept' | 'reject') => {
+    const shift: Shift = (this.getFocusedShift(): any)
+    actions === 'accept' && this.props.acceptEdit(shift)
+    actions === 'reject' && this.props.rejectEdit(shift)
+    this.closePanel()
+  }
+
+  delteClicked = () => {
+    this.setState({ buttonsVisible: false })
+    setTimeout(()=>this.setState({ confirmationMode: 'DELETE', buttonsVisible: true }), 200)
+  }
+
+  deleteShift = () => {
+    const shift: Shift = (this.getFocusedShift(): any)
+    this.props.saveShiftToDB({ shifts: [shift], deleteIt: true })
+      .then(() => {
+        this.closePanel()
+        this.props.openSnackBar({ type: 'SUCCESS', text: 'Schicht gelöscht'})
+      })
+      .catch(() => {
+        this.closePanel()
+        this.props.openSnackBar({ type: 'ERROR', text: 'Fehler'})
+      })
+  }
+
   toAddEditShift = () => {
     this.props.unfocusShift()
     this.props.history.push('/mob/addEditShift/' + (this.props.focusedShift || ''))
   }
 
-  render(){
-    const { currentUser, focusedShift, shiftWeek, unfocusShift } = this.props
-    const { visible, existent } = this.state
-    const { isAdmin } = currentUser
+  closePanel = () => {
+    this.setState({ confirmationMode: false })
+    this.props.unfocusShift()
+  }
+
+  getFocusedShift = (): ?Shift => {
+    //$FlowFixMe
+    const { focusedShift, shiftWeek } = this.props
     const shift = focusedShift && shiftWeek.find(s => s.id === focusedShift)
+    return shift
+  }
+
+  renderContent = () => {
+    const { confirmationMode } = this.state
+    const shift = this.getFocusedShift()
     const isEdited = shift && shift.edit
+    const { isAdmin } = this.props.currentUser
+
+    if(confirmationMode === 'DELETE') return this.renderDeleteConfirm()
+    if(isAdmin  && isEdited) return this.adminEditedShift()
+    if(!isAdmin && isEdited) return this.nonAdminEditedShift()
+    if(isAdmin  && !isEdited) return this.adminCleanShift()
+    if(!isAdmin && !isEdited) return this.nonAdminCleanShift()
+  }
+
+  render(){
+    const { overlayVisible, buttonsVisible , existent, confirmationMode } = this.state
+    const shift = this.getFocusedShift()
     const shiftHasNote = shift && shift.note
 
     return existent ? (
       <fb className={cn({mobileOptionsWrapper: 1})}>
-        <fb className={cn({darkOverlay: 1, visible})} onClick={unfocusShift}></fb>
-        <fb className={cn({mobileOptionsMain: 1, visible})}  onClick={(e) => e.stopPropagation()}>
-          { isAdmin  && isEdited  && this.adminEditedShift() }
-          { !isAdmin && isEdited  && this.nonAdminEditedShift() }
-          { isAdmin  && !isEdited && this.adminCleanShift() }
-          { !isAdmin && !isEdited && this.nonAdminCleanShift() }
-          <fb className="optionBtn">{'Notiz' + (shiftHasNote ? '' : ' hinzufügen') }</fb>
+        <fb className={cn({darkOverlay: 1, visible: overlayVisible})} onClick={this.closePanel}></fb>
+        <fb className={cn({mobileOptionsMain: 1, visible: buttonsVisible})}  onClick={(e) => e.stopPropagation()}>
+          { this.renderContent() }
+          { !confirmationMode &&
+            <fb className="optionBtn">{'Notiz' + (shiftHasNote ? '' : ' hinzufügen') }</fb>
+          }
         </fb>
       </fb>
     )
@@ -102,12 +165,16 @@ class OptionsPanel extends PureComponent {
 }
 
 const actionCreators = {
-  unfocusShift
+  unfocusShift,
+  saveShiftToDB,
+  openSnackBar,
+  acceptEdit,
+  rejectEdit
 }
 
 const mapStateToProps = (state: Store) => ({
   currentUser: currentUser(state),
-  focusedShift: state.ui.roster.mobile.focusedShift,
+  focusedShift: state.ui.mobile.focusedShift,
   shiftWeek: state.roster.shiftWeek
 })
 

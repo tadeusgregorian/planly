@@ -41,7 +41,7 @@ export const getFBPath	= (target: TargetKey, childPaths?: Array<string>): string
     absencesWeekly:         '/absencePlaner/absencesWeekly/',
     vacationRequests:       '/absencePlaner/vacationRequests/',
     dayNotes:               '/roster/dayNotes/',
-    weekSumsUpdateRequests: '/roster/weekSumsUpdateRequests'
+    weekSumsUpdateRequests: '/roster/weekSumsUpdateRequests/'
   }
 
 	const accPath  = 'accounts/' + window.accountID

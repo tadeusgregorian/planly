@@ -19,10 +19,15 @@ export default (props: Props) => {
 
   return(
     <fb className="navigationMain">
-      <fb className='js-menu-show openSideNavBtn icon icon-dehaze' onClick={openOptionsBar}></fb>
       <PlanModeSelector  {...{ planMode, setPlanMode }} />
-      { teamMode && <fb className='branch' onClick={openBranchPick} >{branchName}</fb> }
-      { persMode && <fb className='myPlan'> Mein Dienstplan </fb> }
+      { teamMode &&
+        <fb className='branch' onClick={openBranchPick} >
+          <fb className="icon icon-arrow_drop_down"></fb>
+          {branchName}
+        </fb>
+      }
+      { persMode && <fb className='myPlan'> Mein Wochenplan </fb> }
+      <fb className='js-menu-show openSideNavBtn icon icon-dehaze' onClick={openOptionsBar}></fb>
     </fb>
   )
 }

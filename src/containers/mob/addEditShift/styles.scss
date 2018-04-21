@@ -6,6 +6,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  overflow: hidden;
 
   transition: transform 0.1s ease-in, opacity 0.1s ease-out;
   transform: scale(0.8, 0.8);
@@ -18,13 +19,15 @@
   }
 
   .topbar{
-    height: 44px;
+    height: 48px;
     width: 100%;
-    padding: 4px;
+    padding: 6px;
     justify-content: space-between;
     top: 0px;
     border-bottom: 1px solid #e2e2e2;
     align-items: center;
+    z-index: 1;
+    box-shadow: 0px 1px 6px 0px rgba(0, 0, 0, 0.38);
 
     .btn{
       height: 100%;
@@ -38,9 +41,9 @@
       }
 
       &.right{
-        color: #10a3ff;
-        background: #bbe5ff;
+        color: #f7f7f7;
         border-radius: 2px;
+        background: #1495ff;
       }
     }
   }
@@ -49,6 +52,7 @@
     width: 100%;
     flex: 1 1 auto;
     flex-direction: column;
+    overflow: scroll;
 
     .invisible{
       visibility: hidden;

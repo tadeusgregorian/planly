@@ -284,6 +284,11 @@ export type DayNote = {
 
 export type OvertimeStatus = 'NOT_SET' | 'START_WEEK' | 'STARTED' | 'BEFORE_START'
 
+export type SnackNoteMob = { 
+  text: string,
+  type: 'ERROR' | 'WARNING' | 'SUCCESS'
+}
+
 // ExtraStuff
 
 export type PlanMode = 'PERSONAL' | 'TEAM'

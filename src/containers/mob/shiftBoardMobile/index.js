@@ -2,6 +2,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
+import { withRouter} from 'react-router-dom'
 import moment from 'moment'
 import cn from 'classnames'
 import getShiftsFiltered from 'selectors/shiftsFiltered_mobile'
@@ -14,13 +15,18 @@ import { getYear } from 'helpers/index'
 import type { Store, PlanMode, Shift, DataStatus, User } from 'types/index'
 import './styles.css'
 
-type Props = {
+type OwnProps = {
+  history: any
+}
+
+type ConProps = {
   planMode: PlanMode,
   currentDay: string,
   currentBranch: string,
   currentWeekID: string,
   shiftWeek: Array<Shift>,
   shiftWeekDS: DataStatus,
+  absencesDS: DataStatus,
   focusedShift: ?string,
   currentUser: User,
   setShiftWeekListener_mobile: Function,
@@ -28,14 +34,19 @@ type Props = {
   focusShift: (shiftID: string)=>any
 }
 
+type Props = OwnProps & ConProps
+
 class ShiftBoardMobile extends PureComponent {
 
   componentDidMount = () => {
-    this.props.setShiftWeekListener_mobile()
-    this.props.setAbsencesListener(moment().year())
+    const { shiftWeekDS, absencesDS, setShiftWeekListener_mobile, setAbsencesListener } = this.props
+
+    shiftWeekDS === 'NOT_REQUESTED' && setShiftWeekListener_mobile()
+    absencesDS === 'NOT_REQUESTED' && setAbsencesListener(moment().year())
   }
 
   componentWillReceiveProps = (np: Props) => {
+
     const {
       currentBranch,
       currentWeekID,
@@ -62,18 +73,22 @@ class ShiftBoardMobile extends PureComponent {
     }
   }
 
+  addShiftClicked = () => this.props.history.push('/mob/addEditShift/new')
 
   render(){
-    const { shiftWeekDS, planMode, shiftWeek, currentWeekID, focusedShift } = this.props
+    const { shiftWeekDS, planMode, shiftWeek, currentWeekID, focusedShift, currentUser } = this.props
     const shifts = shiftWeek
     const inTeamMode = planMode === 'TEAM'
     const isLoading = shiftWeekDS !== 'LOADED'
+    const isAdmin = !!currentUser.isAdmin
 
     return(
       <fb className='shiftBoardMobileMain' >
       { inTeamMode
           ? <TeamShiftList
               {...{ shifts, isLoading, focusedShift }}
+              isAdmin={isAdmin}
+              addShiftClicked={this.addShiftClicked}
               shiftClicked={this.shiftClicked}  />
           : <PersonalShiftList
               {...{ shifts, focusedShift }}
@@ -100,8 +115,9 @@ const mapStateToProps = (state: Store) => ({
   currentWeekID: state.ui.roster.currentWeekID,
   shiftWeek: getShiftsFiltered(state),
   shiftWeekDS: state.roster.shiftWeekDataStatus,
-  focusedShift: state.ui.roster.mobile.focusedShift
+  absencesDS: state.absencePlaner.absencesDataStatus,
+  focusedShift: state.ui.mobile.focusedShift
 })
 
-const connector: Connector<{}, Props> = connect(mapStateToProps, actionCreators)
-export default connector(ShiftBoardMobile)
+const connector: Connector<OwnProps, Props> = connect(mapStateToProps, actionCreators)
+export default withRouter(connector(ShiftBoardMobile))

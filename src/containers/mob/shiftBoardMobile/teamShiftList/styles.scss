@@ -15,4 +15,21 @@
       justify-content: center;
     }
   }
+
+  .addShiftBtn{
+    margin-top: 10px;
+    background: #d6dae0;
+    padding: 6px 8px;
+    border-radius: 2px;
+    align-items: center;
+    color: #6f768e;
+    flex: 0 0 auto;
+    margin-bottom: 8px;
+
+    .icon{
+      margin-bottom: 2px;
+      margin-right: 6px;
+      font-size: 19px;
+    }
+  }
 }

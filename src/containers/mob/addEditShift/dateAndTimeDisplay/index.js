@@ -12,7 +12,6 @@ type Props = {
 }
 
 export default ({ branchName, shiftDay, weekID }: Props) => {
-
   const mom = weekIDToMoment(weekID).weekday(weekDays.indexOf(shiftDay))
 
   const _date = mom.format('ddd DD. MMM');

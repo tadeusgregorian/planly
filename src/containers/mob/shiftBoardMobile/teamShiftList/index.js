@@ -8,11 +8,13 @@ type Props = {
   shifts: Array<Shift>,
   isLoading: boolean,
   focusedShift: ?string,
-  shiftClicked: (id: string)=>any
+  isAdmin: boolean,
+  shiftClicked: (id: string)=>any,
+  addShiftClicked: ()=>any,
 }
 
 export default (props: Props) => {
-  const { shifts, isLoading, focusedShift, shiftClicked } = props
+  const { shifts, isLoading, focusedShift, shiftClicked, addShiftClicked, isAdmin } = props
 
   return(
     <fb className="teamShiftListMain">
@@ -29,7 +31,17 @@ export default (props: Props) => {
           focused={focusedShift === s.id}
           shiftClicked={shiftClicked}
         />
-      )}
+      ).concat(
+        isAdmin
+          ? (
+              <fb key='new' className="addShiftBtn" onClick={addShiftClicked}>
+                <fb className="icon icon-add_box"></fb>
+                <fb>Schicht Erstellen</fb>
+              </fb>
+            )
+          : null
+      )
+    }
     </fb>
   )
 }

@@ -2,7 +2,7 @@
 import { momToSmart } from 'helpers/index';
 
 import { db } from '../firebaseInit'
-import omit from 'lodash/omit';
+import {generateGuid} from 'helpers/index';
 import values from 'lodash/values'
 import type { PreShift, Shift, User } from 'types/index'
 import { weekDays } from 'constants/roster'
@@ -60,7 +60,7 @@ export const getShiftListUpdate = (
 export const getWeekSumsRequestUpdate = (userIDs: Array<string>, weekID: string) => {
   const updates = {}
   userIDs.forEach(uid => {
-    updates[ getFBPath('weekSumsUpdateRequests', [weekID, uid])] = true
+    updates[ getFBPath('weekSumsUpdateRequests', [weekID, generateGuid()])] = uid
   })
   return updates
 }

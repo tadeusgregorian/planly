@@ -7,6 +7,7 @@ export const shiftTimesValid = (shiftObj: ShiftInput): boolean => {
   if(endTime.length !== 5) return false
   if(timeStringToMin(startTime) > timeStringToMin(endTime)) return false
   if((timeStringToMin(endTime) - timeStringToMin(startTime) - parseInt(breakMinutes, 10)) < 0) return false
+  console.log('ARE YOU HERE ?')
   return true
 }
 
