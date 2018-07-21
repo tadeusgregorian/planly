@@ -18,6 +18,7 @@ export type Roster = {
   templatesFlat: TemplatesFlat,
   dayNotes: Array<DayNote>,
   shiftWeekDataStatus: DataStatus,
+  absencesWeeklyDataStatus: DataStatus,
 }
 
 export default combineReducers({
@@ -31,4 +32,5 @@ export default combineReducers({
   extraHours: createFirebaseReducer_array('extraHours'),
   dayNotes: createFirebaseReducer_array('dayNotes'),
   shiftWeekDataStatus: createDataStatusReducer('shiftWeek'),
+  absencesWeeklyDataStatus: createDataStatusReducer('absencesWeekly'),
 })

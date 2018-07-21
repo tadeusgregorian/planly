@@ -43,7 +43,7 @@ export type Absence = { // this is the absence Obj we get from the DB ( Firebase
   unpaid?: true | null,
 }
 
-export type AbsenceWeekly = {
+export type AbsenceWeekly = {|
   id: string,//
   user: string, //
   type: AbsenceType,//
@@ -52,7 +52,7 @@ export type AbsenceWeekly = {
   avgMins: number,
   workDays: WorkDays,
   unpaid?: true,
-}
+|}
 
 export type AbsenceCorrection = {
   id: string,
@@ -182,6 +182,8 @@ export type MiniShift = {
   user: string
 }
 
+export type ShiftExtAbs = Shift & { absent: ?AbsenceType }
+
 export type CellRef = {
   day: Day,
   user: string,
@@ -284,7 +286,7 @@ export type DayNote = {
 
 export type OvertimeStatus = 'NOT_SET' | 'START_WEEK' | 'STARTED' | 'BEFORE_START'
 
-export type SnackNoteMob = { 
+export type SnackNoteMob = {
   text: string,
   type: 'ERROR' | 'WARNING' | 'SUCCESS'
 }

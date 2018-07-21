@@ -13,7 +13,7 @@ class AdminpanelUsers extends React.Component {
 	openAddEditUserPopup = (user = null) => this.props.openModal('ADD_EDIT_USER', { user })
 
 	render() {
-		
+
 		return (
 			<div className="adminpanelUsers">
 				<fb className="headline">

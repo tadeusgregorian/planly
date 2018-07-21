@@ -1,11 +1,11 @@
 //@flow
 import React from 'react'
-import type { Shift } from 'types/index'
+import type { ShiftExtAbs } from 'types/index'
 import ShiftBox from '../shiftBox'
 import './styles.css'
 
 type Props = {
-  shifts: Array<Shift>,
+  shifts: Array<ShiftExtAbs>,
   isLoading: boolean,
   focusedShift: ?string,
   isAdmin: boolean,

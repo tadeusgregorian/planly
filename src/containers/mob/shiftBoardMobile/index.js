@@ -3,16 +3,14 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import type { Connector } from 'react-redux'
 import { withRouter} from 'react-router-dom'
-import moment from 'moment'
 import cn from 'classnames'
-import getShiftsFiltered from 'selectors/shiftsFiltered_mobile'
+import getShiftsExtended from  'selectors/shiftsExtended_mobile'
 import { setShiftWeekListener_mobile } from 'actions/listeners/roster'
-import { setAbsencesListener } from 'actions/listeners/absencePlaner'
+import { setAbsencesWeeklyListener } from 'actions/listeners/roster'
 import getCurrentUser from 'selectors/currentUser'
 import TeamShiftList from './teamShiftList'
 import PersonalShiftList from './personalShiftList'
-import { getYear } from 'helpers/index'
-import type { Store, PlanMode, Shift, DataStatus, User } from 'types/index'
+import type { Store, PlanMode, Shift, DataStatus, User, ShiftExtAbs } from 'types/index'
 import './styles.css'
 
 type OwnProps = {
@@ -24,13 +22,13 @@ type ConProps = {
   currentDay: string,
   currentBranch: string,
   currentWeekID: string,
-  shiftWeek: Array<Shift>,
+  shiftWeek: Array<ShiftExtAbs>, // extendes by Selector wih absent
   shiftWeekDS: DataStatus,
   absencesDS: DataStatus,
   focusedShift: ?string,
   currentUser: User,
   setShiftWeekListener_mobile: Function,
-  setAbsencesListener: Function,
+  setAbsencesWeeklyListener: Function,
   focusShift: (shiftID: string)=>any
 }
 
@@ -39,10 +37,10 @@ type Props = OwnProps & ConProps
 class ShiftBoardMobile extends PureComponent {
 
   componentDidMount = () => {
-    const { shiftWeekDS, absencesDS, setShiftWeekListener_mobile, setAbsencesListener } = this.props
+    const { shiftWeekDS, absencesDS, setShiftWeekListener_mobile, setAbsencesWeeklyListener } = this.props
 
     shiftWeekDS === 'NOT_REQUESTED' && setShiftWeekListener_mobile()
-    absencesDS === 'NOT_REQUESTED' && setAbsencesListener(moment().year())
+    absencesDS === 'NOT_REQUESTED' && setAbsencesWeeklyListener()
   }
 
   componentWillReceiveProps = (np: Props) => {
@@ -52,23 +50,26 @@ class ShiftBoardMobile extends PureComponent {
       currentWeekID,
       planMode,
       currentDay,
-      setAbsencesListener,
+      setAbsencesWeeklyListener,
       setShiftWeekListener_mobile } = this.props
 
     const branchChanged   = np.currentBranch          !== currentBranch
     const swChanged       = np.currentWeekID          !== currentWeekID
     const modeChanged     = np.planMode               !== planMode
     const dayChanged      = np.currentDay             !== currentDay
-    const yearChanged     = getYear(np.currentWeekID) !== getYear(currentWeekID)
 
     if(branchChanged || swChanged || modeChanged || dayChanged) setShiftWeekListener_mobile()
-    if(yearChanged) setAbsencesListener(getYear(np.currentWeekID))
+    if(swChanged) setAbsencesWeeklyListener()
   }
 
   shiftClicked = (shiftID) => {
     const { currentUser, shiftWeek } = this.props
     const shift: Shift = (shiftWeek.find(s => s.id === shiftID): any)
-    if(currentUser.isAdmin || shift.user === currentUser.id ){
+    if(
+      currentUser.isAdmin
+      || (shift.user === 'open' && currentUser.position === shift.position)
+      || shift.user === currentUser.id
+    ){
       this.props.focusShift(shiftID)
     }
   }
@@ -103,7 +104,7 @@ class ShiftBoardMobile extends PureComponent {
 
 const actionCreators = {
   setShiftWeekListener_mobile,
-  setAbsencesListener,
+  setAbsencesWeeklyListener,
   focusShift: (id) => ({ type: 'FOCUS_SHIFT_MOB', payload: id })
 }
 
@@ -113,9 +114,9 @@ const mapStateToProps = (state: Store) => ({
   currentDay: state.ui.roster.currentDay,
   currentBranch: state.ui.roster.currentBranch,
   currentWeekID: state.ui.roster.currentWeekID,
-  shiftWeek: getShiftsFiltered(state),
+  shiftWeek: getShiftsExtended(state),
   shiftWeekDS: state.roster.shiftWeekDataStatus,
-  absencesDS: state.absencePlaner.absencesDataStatus,
+  absencesDS: state.roster.absencesWeeklyDataStatus,
   focusedShift: state.ui.mobile.focusedShift
 })
 

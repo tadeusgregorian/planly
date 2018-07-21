@@ -146,7 +146,7 @@ class AddEditUserPopup extends PureComponent {
 
 	tryToDeleteUser = () => {
 		const props = {
-			onAccept: ()=>deleteUser(this.state.id).then(this.props.closeModal),
+			onAccept: ()=> deleteUser(this.state.id).then(this.props.closeModal),
 			acceptBtnLabel: 'Löschen',
 			acceptBtnRed: true,
 			title: 'Mitarbeiter löschen',

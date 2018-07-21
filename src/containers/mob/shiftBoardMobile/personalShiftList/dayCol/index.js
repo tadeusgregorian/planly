@@ -1,12 +1,12 @@
 //@flow
 import React from 'react'
 import moment from 'moment'
-import type { Shift } from 'types/index'
+import type { ShiftExtAbs } from 'types/index'
 import ShiftBox from '../../shiftBox'
 import './styles.css'
 
 type Props = {
-  shifts: Array<Shift>,
+  shifts: Array<ShiftExtAbs>,
   mom: moment,
   shiftClicked: (string)=>any,
   focusedShift: ?string,

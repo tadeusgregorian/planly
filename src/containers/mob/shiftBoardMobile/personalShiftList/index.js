@@ -4,11 +4,11 @@ import moment from 'moment'
 import { weekIDToMoment } from 'helpers/roster'
 import { weekDays } from 'constants/roster'
 import DayCol from './dayCol'
-import type { Shift } from 'types/index'
+import type { ShiftExtAbs} from 'types/index'
 import './styles.css'
 
 type Props = {
-  shifts: Array<Shift>,
+  shifts: Array<ShiftExtAbs>,
   weekID: string,
   focusedShift: ?string,
   shiftClicked: (id: string)=>any

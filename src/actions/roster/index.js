@@ -78,7 +78,7 @@ export const moveShiftTo: MoveShiftTo = (shiftID, targetUser, targetDay) => (dis
   userShiftToOpen && (newShift.position = getUserPos(users, shift.user))
   openShiftToUser && (newShift.position = null)
 
-  saveShiftToDB({ shifts: [newShift]})(disp, getState)
+  return saveShiftToDB({ shifts: [newShift]})(disp, getState)
 }
 
 export const updateNoteOfShift:ThunkAction = (shiftID: string, noteTxt: string) => (disp, getState) => {

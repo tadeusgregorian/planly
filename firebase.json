@@ -11,6 +11,10 @@
     ],
     "rewrites": [
       {
+        "source": "/api/manipulate",
+        "function": "manipulate"
+      },
+      {
         "source": "/api/get-invited-user/**",
         "function": "getUser"
       },

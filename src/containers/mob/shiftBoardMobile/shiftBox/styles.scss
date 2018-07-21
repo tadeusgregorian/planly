@@ -7,6 +7,7 @@
   background: #f9f9f9;
   box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.1);
   flex-direction: column;
+  overflow: hidden;
   color: #4e4e4e;
   padding: 0px;
 
@@ -27,6 +28,10 @@
   &.focused{
     background-color: #3586ff;
     color: #e6f0ff;
+  }
+
+  &.absent{
+    box-shadow: none;
   }
 
   .timeRow{
@@ -81,49 +86,77 @@
   .secondRow{
     justify-content: space-between;
   }
-}
 
-.shiftEditBarMobile{
-  background: #ffaf0e;
-  align-items: center;
-  padding-left: 8px;
-  color: white;
-  font-weight: 300;
-  font-size: 16px;
-  height: 26px;
-  flex: 0 0 auto;
-  justify-content: space-between;
-
-  .text{
-    margin-right: 6px;
-  }
-
-  .boldStyle{
-    font-weight: 600;
+  .shiftEditBarMobile{
+    background: #ffaf0e;
+    align-items: center;
+    padding-left: 8px;
     color: white;
+    font-weight: 300;
+    font-size: 16px;
+    height: 26px;
+    flex: 0 0 auto;
+    justify-content: space-between;
+
+    .text{
+      margin-right: 6px;
+    }
+
+    .boldStyle{
+      font-weight: 600;
+      color: white;
+    }
+
+    .time{
+
+    }
+
+    .seperator{
+      margin: 0px 3px;
+    }
+
+    .breakMinutes{
+      flex: 1;
+      width: 18px;
+      font-size: 12px;
+      margin: 0px;
+      align-self: center;
+      margin-left: 4px;
+    }
+
+    .pencilIcon{
+      justify-content: flex-end;
+      margin-right: 4px;
+      font-size: 13px;
+      color: white;
+    }
   }
 
-  .time{
-
-  }
-
-  .seperator{
-    margin: 0px 3px;
-  }
-
-  .breakMinutes{
-    flex: 1;
-    width: 18px;
-    font-size: 12px;
-    margin: 0px;
-    align-self: center;
-    margin-left: 4px;
-  }
-
-  .pencilIcon{
-    justify-content: flex-end;
-    margin-right: 4px;
-    font-size: 13px;
+  .absenceOverlay{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(29, 49, 58, 0.17);
+    box-shadow: inset 0px 0px 4px 1px rgba(0, 0, 0, 0.10);
     color: white;
+    justify-content: center;
+    align-items: center;
+
+    .icon{
+      font-size: 32px;
+      color: #96a0a7;
+    }
+  }
+
+  .position{
+    background: red;
+    color: #f9f9f9;
+    padding: 0px 6px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 500;
+    height: 20px;
+    margin-right: -4px;
   }
 }

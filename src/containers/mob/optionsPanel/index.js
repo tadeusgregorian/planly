@@ -6,10 +6,10 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import currentUser from 'selectors/currentUser';
 import type { Store, User, Shift } from 'types/index'
-import {saveShiftToDB, acceptEdit, rejectEdit} from 'actions/roster/index';
+import {saveShiftToDB, acceptEdit, rejectEdit, moveShiftTo} from 'actions/roster/index';
 import type {SaveShiftToDBParams} from 'actions/roster/index';
 import {unfocusShift, openSnackBar} from 'actions/ui/mobile';
-import type { PreShift } from 'types/index'
+import type { PreShift, Day } from 'types/index'
 import './styles.css'
 
 type ConProps = {
@@ -21,6 +21,7 @@ type ConProps = {
   openSnackBar: ({ type: string, text: string })=>any,
   acceptEdit: (PreShift)=>any,
   rejectEdit: (PreShift)=>any,
+  moveShiftTo: (shiftID: string, userID: string, Day)=>any
 }
 
 type OwnProps = {
@@ -71,7 +72,7 @@ class OptionsPanel extends PureComponent {
   ])
 
   nonAdminEditedShift = () => (
-    <fb className="optionBtn">Bearbeitung entfernen</fb>
+    <fb className="optionBtn" onClick={()=>this.resolveEdit('reject')}>Bearbeitung entfernen</fb>
   )
 
   adminCleanShift = () => ([
@@ -83,10 +84,20 @@ class OptionsPanel extends PureComponent {
     <fb className="optionBtn" onClick={this.toAddEditShift}>Schicht bearbeiten</fb>
   )
 
+  nonAdminOpenShift = () => (
+    <fb className="optionBtn" onClick={this.takeOpenShift}>Schicht übernehmen</fb>
+  )
+
   renderDeleteConfirm = () => ([
     <fb key='1' className="optionsHeadline">Schicht wirklich löschen ?</fb>,
     <fb key='2' className="optionBtn" onClick={this.deleteShift}>Ja</fb>,
     <fb key='3' className="optionBtn" onClick={this.closePanel}>Nein</fb>
+  ])
+
+  renderPickOpenShiftConfirm = () => ([
+    <fb key='1' className="optionsHeadline">Diese Schicht wirklich Übernehmen ?</fb>,
+    <fb key='2' className="optionBtn" onClick={this.deleteShift}>Ja</fb>,
+    <fb key='3' className="optionBtn" onClick={this.takeOpenShift}>Nein</fb>
   ])
 
   resolveEdit = (actions: 'accept' | 'reject') => {
@@ -96,6 +107,21 @@ class OptionsPanel extends PureComponent {
     this.closePanel()
   }
 
+  takeOpenShift = () => {
+    const shift: Shift = (this.getFocusedShift(): any)
+    //this.props.moveShiftTo(shift.id, this.props.currentUser.id, shift.day)
+    this.doAndClose(
+      this.props.moveShiftTo,
+      [shift.id, this.props.currentUser.id, shift.day],
+      'Schicht Übernommen'
+    )
+  }
+
+  pickOpenShiftClicked = () => {
+    this.setState({ buttonsVisible: false })
+    setTimeout(()=>this.setState({ confirmationMode: 'PICK_UP_OPEN_SHIFT', buttonsVisible: true }), 200)
+  }
+
   delteClicked = () => {
     this.setState({ buttonsVisible: false })
     setTimeout(()=>this.setState({ confirmationMode: 'DELETE', buttonsVisible: true }), 200)
@@ -103,10 +129,14 @@ class OptionsPanel extends PureComponent {
 
   deleteShift = () => {
     const shift: Shift = (this.getFocusedShift(): any)
-    this.props.saveShiftToDB({ shifts: [shift], deleteIt: true })
+    this.doAndClose( this.props.saveShiftToDB, [{ shifts: [shift], deleteIt: true }], 'Schicht gelöscht')
+  }
+
+  doAndClose = (func: Function, params: Array<any>, successText: string) => {
+    func(...params)
       .then(() => {
         this.closePanel()
-        this.props.openSnackBar({ type: 'SUCCESS', text: 'Schicht gelöscht'})
+        this.props.openSnackBar({ type: 'SUCCESS', text: successText})
       })
       .catch(() => {
         this.closePanel()
@@ -134,10 +164,13 @@ class OptionsPanel extends PureComponent {
   renderContent = () => {
     const { confirmationMode } = this.state
     const shift = this.getFocusedShift()
+    const openShift = shift && shift.user === 'open'
     const isEdited = shift && shift.edit
     const { isAdmin } = this.props.currentUser
 
     if(confirmationMode === 'DELETE') return this.renderDeleteConfirm()
+    if(confirmationMode === 'PICK_UP_OPEN_SHIFT') return this.renderPickOpenShiftConfirm()
+    if(!isAdmin && openShift) return this.nonAdminOpenShift()
     if(isAdmin  && isEdited) return this.adminEditedShift()
     if(!isAdmin && isEdited) return this.nonAdminEditedShift()
     if(isAdmin  && !isEdited) return this.adminCleanShift()
@@ -169,7 +202,8 @@ const actionCreators = {
   saveShiftToDB,
   openSnackBar,
   acceptEdit,
-  rejectEdit
+  rejectEdit,
+  moveShiftTo
 }
 
 const mapStateToProps = (state: Store) => ({

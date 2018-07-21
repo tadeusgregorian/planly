@@ -2,6 +2,7 @@ const functions       = require('firebase-functions')
 
 const sumsUpdater         = require('./sumsUpdater')
 const getUser             = require('./getUser')
+const manipulate          = require('./manip')
 const activateUser        = require('./activateUser')
 const sendInvitationMail  = require('./mailSender')
 const absenceHandler      = require('./absenceHandler')
@@ -44,6 +45,7 @@ exports.weekSumsUpdateRequested = functions.database
 exports.onEmailInviteAdded = functions.database
   .ref('/emailInvites/{inviteID}')
   .onWrite(event => {
+    console.log(event.params)
     const rootRef = event.data.adminRef.root
     const { inviteID } = event.params
     const { status, accountID, name, url, email } = event.data.val()
@@ -53,3 +55,4 @@ exports.onEmailInviteAdded = functions.database
 
 exports.getUser = functions.https.onRequest(getUser(admin))
 exports.activateUser = functions.https.onRequest(activateUser(admin))
+exports.manipulate = functions.https.onRequest(manipulate(admin))
