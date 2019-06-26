@@ -20,6 +20,8 @@ export const setAuthStateListener = (initializor: Function) => (dispatch: Dispat
       return dispatch(logOut())
     }
 
+    console.log(user)
+
     const _user = firebase.database().ref('allUsers/' + user.uid).once('value')
 
 
@@ -27,7 +29,8 @@ export const setAuthStateListener = (initializor: Function) => (dispatch: Dispat
 
       const user = results[0].val()
 
-
+      if(!user) console.error('Cant find user in: allUsers')
+      if(user && user.deleted) console.error('User is Deleted')
       if(!user || user.deleted) return dispatch(logOut())
 
       createCookie('loggedIn', 'true', getDomain(), 1000)

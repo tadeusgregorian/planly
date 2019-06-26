@@ -4,7 +4,7 @@ import type { Shift, Shifts, MinimalShift, CellRef, Notes } from 'types/index'
 
 export const getRealCurrentWeekID = () :string => {
   const calendarWeek =  doubleD(moment().week())
-  const year = moment().year()
+  const year = moment().weekYear()
   return year.toString() + calendarWeek.toString()
 }
 

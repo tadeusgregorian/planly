@@ -13,7 +13,7 @@ const getDayHeadDates = (weekID: string, tempMode: boolean): Array< ?moment > =>
 
   const year = getYear(weekID)
   const week = getWeek(weekID)
-  return weekDays.map((wd, i) => moment().year(year).week(week).weekday(i))
+  return weekDays.map((wd, i) => moment().weekYear(year).week(week).weekday(i))
 }
 
 export default createSelector([getCurrentWeekID, getTemplateMode], getDayHeadDates)

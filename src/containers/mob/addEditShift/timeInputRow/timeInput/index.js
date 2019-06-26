@@ -3,7 +3,6 @@ import React, { PureComponent } from 'react'
 import cn from 'classnames'
 import withFocus from 'components/withFocus'
 //import {testingForMobile} from 'configs/index';
-
 import './styles.css'
 
 type Props = {
@@ -23,7 +22,10 @@ class TimeInput extends PureComponent{
   ref: any;
 
   onClick = () => {
-    this.ref && !this.props.focused && this.ref.focus()
+    if (this.ref && !this.props.focused ){
+      this.ref.focus()
+      this.ref.setSelectionRange && this.ref.setSelectionRange(0, 0);
+    }
   }
 
   render() {

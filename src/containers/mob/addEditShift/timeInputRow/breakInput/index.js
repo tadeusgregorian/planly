@@ -21,7 +21,10 @@ class BreakInput extends PureComponent{
   ref: any;
 
   onClick = () => {
-    this.ref && !this.props.focused && this.ref.focus()
+    if (this.ref && !this.props.focused ){
+      this.ref.focus()
+      this.ref.setSelectionRange && this.ref.setSelectionRange(0, 0);
+    }
   }
 
   render() {

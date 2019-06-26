@@ -8,7 +8,10 @@ import type { BundeslandCode, User, Absence, AbsenceStatus, WorkDays } from 'typ
 import values from 'lodash/values'
 
 type         GetEffectiveDays = (moment, moment, BundeslandCode | false, WorkDays) => number
-export const getEffectiveDays: GetEffectiveDays = (start, end, bundesland, workDays ) => {
+export const getEffectiveDays: GetEffectiveDays = (_start, _end, bundesland, workDays ) => {
+  const start = _start.startOf('day') // airBnb-date picker gives 12:00 or 00:00 so we
+  const end = _end.startOf('day')     // set all to 00:00, otherwise .diff is inconsistent.
+
   let excludedsCount = 0
   const totalDays = moment(end).diff(start, 'days') + 1
 
@@ -20,7 +23,6 @@ export const getEffectiveDays: GetEffectiveDays = (start, end, bundesland, workD
     const isHoliday   = curDay.isHoliday(bundesland)
     const notWorking  = !workDays[weekDays[curWeekDay]]
 
-    if(notWorking) console.log(curDay);
     if( notWorking || isHoliday) ++excludedsCount
   }
   return totalDays - excludedsCount
